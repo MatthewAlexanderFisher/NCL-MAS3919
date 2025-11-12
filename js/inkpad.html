@@ -1,0 +1,987 @@
+<style>
+
+
+  .inkpad-toolbar:not(.open){ display:none !important; }
+  .inkpad-toolbar.open{ display:flex; }
+
+  /* Ensure toolbar always clickable (and fast on touch) */
+  .inkpad-toolbar{ pointer-events:auto; }
+  .inkpad-btn{ touch-action:manipulation; user-select:none; }
+
+  /* Nice visual cue when drawing */
+  #inkpad-canvas.drawing { cursor: crosshair !important; }
+  #quarto-content > #inkpad-canvas { padding-top: 0 !important; }
+
+/* And make sure the canvas itself never has padding/margins */
+  #inkpad-canvas { padding: 0 !important; margin: 0; display: block; box-sizing: content-box; }
+
+  /* Floating toolbar */
+  .inkpad-toolbar {
+    position: fixed; z-index: 9999; right: 10px; bottom: 10px;
+    gap: 4px; background: transparent;
+    padding: 2px; border-radius: 8px;
+  }
+  .inkpad-btn {
+    border: 0; border-radius: 10px; padding: 8px 10px; color: var(--brand-fg); cursor: pointer;
+    background: var(--surface); font: 600 12px/1.1;
+  }
+  .inkpad-btn.active { background: var(--brand-teal); color: var(--brand-bg) }
+
+  /* Icon sizing + swapping */
+.inkpad-btn .inkpad-icon { width: 18px; height: 18px; display: block; }
+
+/* Micro-interaction polish (respects currentColor / theme) */
+.inkpad-btn .icon-pen { transition: transform .15s ease; }
+.inkpad-btn:hover .icon-pen { transform: translateY(-1px) rotate(-8deg); }
+@media (prefers-reduced-motion: reduce) {
+  .inkpad-btn .icon-pen { transition: none; }
+}
+
+  /* Canvas overlay (document-sized, scrolls with page) */
+#inkpad-canvas {
+  position: fixed; 
+  top: 0; 
+  left: 0;
+  z-index: 9998;
+  touch-action: none;
+  padding: 0 !important; 
+  margin: 0; 
+  display: block; 
+  box-sizing: content-box;
+  pointer-events: none; /* You're already toggling this in JS */
+}
+
+/*  Hide during print */
+@media print {
+  #inkpad-canvas {
+    display: none !important;
+    position: absolute !important; /* fallback */
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
+
+
+/* ----- Popover ----- */
+.inkpad-popover {
+  position: fixed;
+  right: 10px;
+  bottom: 56px;                /* sits just above the toolbar */
+  z-index: 10000;
+  display: none;
+  padding: 10px;
+  background: var(--surface);
+  color: var(--brand-fg);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.22);
+  width: 240px;
+}
+
+/* little arrow pointing to the toolbar */
+.inkpad-popover::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  bottom: -8px;
+  width: 14px; height: 14px;
+  background: var(--surface);
+  transform: rotate(45deg);
+  box-shadow: 3px 3px 10px rgba(0,0,0,.12);
+}
+
+.inkpad-popover.open { display: block; }
+
+.inkpad-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.inkpad-field:last-child { margin-bottom: 0; }
+
+.inkpad-field label {
+  font: 600 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: var(--brand-fg);
+}
+.inkpad-out {
+  font-weight: 700;
+  color: var(--brand-teal);
+}
+
+/* ----- Color input (tidy circular swatch) ----- */
+#inkpad-color {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  padding: 0;
+  border: 2px solid rgba(0,0,0,.15);
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+}
+#inkpad-color::-webkit-color-swatch-wrapper { padding: 0; }
+#inkpad-color::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+#inkpad-color::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+/* ----- Range sliders (brand-styled, accessible) ----- */
+#inkpad-size,
+#inkpad-eraser-size {
+  width: 100%;
+  height: 28px;                 /* easier to grab on touch */
+  background: transparent;
+  cursor: pointer;
+}
+
+/* WebKit */
+#inkpad-size::-webkit-slider-runnable-track,
+#inkpad-eraser-size::-webkit-slider-runnable-track {
+  height: 6px;
+  background: linear-gradient(90deg, var(--brand-teal), var(--brand-teal)) 0/var(--_fill,0%) 100% no-repeat,
+              color-mix(in oklab, var(--brand-fg) 10%, transparent);
+  border-radius: 999px;
+}
+#inkpad-size::-webkit-slider-thumb,
+#inkpad-eraser-size::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--brand-bg);
+  border: 2px solid var(--brand-teal);
+  margin-top: -6px;            /* centers thumb on 6px track */
+}
+
+/* Firefox */
+#inkpad-size::-moz-range-track,
+#inkpad-eraser-size::-moz-range-track {
+  height: 6px;
+  background: color-mix(in oklab, var(--brand-fg) 10%, transparent);
+  border-radius: 999px;
+}
+#inkpad-size::-moz-range-progress,
+#inkpad-eraser-size::-moz-range-progress {
+  height: 6px;
+  background: var(--brand-teal);
+  border-radius: 999px;
+}
+#inkpad-size::-moz-range-thumb,
+#inkpad-eraser-size::-moz-range-thumb {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--brand-bg);
+  border: 2px solid var(--brand-teal);
+}
+
+/* Improve focus ring for a11y */
+#inkpad-color:focus-visible,
+#inkpad-size:focus-visible,
+#inkpad-eraser-size:focus-visible,
+#inkpad-options:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 2px;
+}
+
+
+/* visually hidden helper */
+.sr-only {
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+/* icons inherit theme via currentColor */
+.inkpad-icon { width: 18px; height: 18px; display: block; }
+
+/* show/hide by state */
+/* --- Toggle: icon swapping --- */
+.inkpad-toggle .icon-pen { display: inline-block; }
+.inkpad-toggle .icon-stop { display: none; }
+.inkpad-toggle[aria-pressed="true"] .icon-pen { display: none; }
+.inkpad-toggle[aria-pressed="true"] .icon-stop { display: inline-block; }
+
+/* --- Toggle: visuals --- */
+.inkpad-toggle {
+  --ink-accent: var(--brand-red); /* customize if you like */
+  --ink-off-border: color-mix(in oklab, var(--brand-fg) 28%, transparent);
+
+  background: var(--brand-bg);
+  color: var(--brand-fg);
+  border: 1.5px solid var(--ink-off-border);
+  padding: 6px 10px;
+}
+
+/* hover/focus when OFF */
+.inkpad-toggle:hover {
+  border-color: var(--brand-fg);
+  background: color-mix(in oklab, var(--brand-bg) 90%, var(--brand-red));
+}
+.inkpad-toggle:focus-visible {
+  outline: 2px solid var(--ink-accent);
+  outline-offset: 2px;
+}
+
+/* ON state = “solid” */
+.inkpad-toggle[aria-pressed="true"] {
+  background: var(--ink-accent);
+  border-color: var(--ink-accent);
+  color: var(--brand-bg); /* makes icon stroke flip to readable */
+}
+
+/* Icon sizing + color via currentColor */
+.inkpad-toggle .inkpad-icon {
+  width: 16px; height: 16px;
+  stroke: currentColor; /* override any inline stroke */
+}
+
+/* Subtle pen tilt only when OFF; never rotate the stop square */
+.inkpad-toggle[aria-pressed="false"] .icon-pen {
+  transform: rotate(-8deg) translateY(-1px);
+}
+.inkpad-toggle .icon-stop { transform: none !important; }
+
+
+
+
+/* Mobile: turn the popover into a bottom sheet */
+@media (max-width: 560px) {
+  .inkpad-popover {
+    right: 10px; left: 10px;
+    bottom: 60px;
+    width: auto;
+  }
+  .inkpad-popover::after { right: 24px; }
+}
+
+.inkpad-btn.active .inkpad-icon { transform: rotate(30deg); transition: transform .15s ease; }
+.inkpad-btn .icon-stop { transform: none !important; }
+
+
+/* Buttons: press/focus feedback + disabled state */
+.inkpad-btn {
+  transition: transform 120ms ease, box-shadow 160ms ease, background 160ms ease, opacity 120ms ease;
+}
+.inkpad-btn:active:not([disabled]) { transform: translateY(1px) scale(0.98); }
+.inkpad-btn:focus-visible { outline: 2px solid var(--brand-red); outline-offset: 2px; }
+.inkpad-btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+/* Quick flash ring when action fires */
+.inkpad-btn.flash { box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-teal) 35%, transparent) inset; }
+@media (prefers-reduced-motion: reduce) {
+  .inkpad-btn { transition: none; }
+}
+
+/* Toast next to the toolbar */
+.inkpad-toast {
+  position: fixed; right: 12px; bottom: 56px; z-index: 10001;
+  background: var(--surface); color: var(--brand-fg); border-radius: 10px;
+  padding: 8px 10px; font: 600 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  opacity: 0; transform: translateY(6px); pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+.inkpad-toast.show { opacity: 1; transform: translateY(0); }
+
+
+/* --- Toggle icon swapping (put these LAST) --- */
+#inkpad-toggle .inkpad-icon { display: none; }                /* hide both */
+#inkpad-toggle[aria-pressed="false"] .icon-pen  { display: inline-block; }
+#inkpad-toggle[aria-pressed="true"]  .icon-stop { display: inline-block; }
+
+
+
+
+</style>
+
+<div class="inkpad-toolbar" id="inkpad-toolbar" aria-label="Ink toolbar" aria-hidden="true">
+<button class="inkpad-btn inkpad-toggle" id="inkpad-toggle" type="button"
+        aria-pressed="false" title="Draw (D)" aria-label="Draw (D)">
+  <span class="sr-only">Toggle ink</span>
+
+  <!-- Start (Pen) -->
+  <svg class="inkpad-icon icon-pen" viewBox="0 0 24 24" fill="none"
+       stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true">
+    <path d="M3 21l3.5-1 9.9-9.9a2.8 2.8 0 0 0 0-4L15 3.7a2.8 2.8 0 0 0-4 0L1 13.7 0 18.5 3 21z"/>
+    <circle cx="12" cy="8.5" r="1"/>
+    <path d="M13 20h8"/>
+  </svg>
+
+  <!-- Stop (Square) -->
+  <svg class="inkpad-icon icon-stop" viewBox="0 0 24 24" fill="none"
+       stroke-linecap="round" stroke-linejoin="round" stroke-width="3" aria-hidden="true">
+    <rect x="6" y="6" width="12" height="12" rx="2"/>
+  </svg>
+</button>
+
+  <button class="inkpad-btn active" id="inkpad-pen"    type="button" title="Pen (P)">Pen</button>
+  <button class="inkpad-btn"         id="inkpad-eraser" type="button" title="Eraser (E)">Eraser</button>
+  <button class="inkpad-btn"         id="inkpad-undo"   type="button" title="Undo (Z)">Undo</button>
+  <button class="inkpad-btn"         id="inkpad-clear"  type="button" title="Clear">Clear</button>
+  <button class="inkpad-btn"         id="inkpad-save"   type="button" title="Save PNG">Save</button>
+  <button class="inkpad-btn" id="inkpad-options" type="button" title="Pen/Eraser options" aria-expanded="false">
+    <svg class="inkpad-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <!-- Feather "settings" glyph -->
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
+                1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51
+                1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06
+                a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09
+                a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06
+                a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9
+                A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09
+                a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06
+                a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9
+                c0 .66.39 1.27 1 1.51.16.06.33.09.51.09H21a2 2 0 1 1 0 4h-.09
+                a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  </button>
+</div>
+<div id="inkpad-toast" class="inkpad-toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+
+<!-- Popover container -->
+<div id="inkpad-popover" class="inkpad-popover" aria-hidden="true">
+  <div class="inkpad-field">
+    <label for="inkpad-color">Pen colour</label>
+    <input id="inkpad-color" type="color" value="#ff0055" />
+  </div>
+
+  <div class="inkpad-field">
+    <label for="inkpad-size">
+      Pen size <span class="inkpad-out" id="inkpad-size-out">3</span>px
+    </label>
+    <input id="inkpad-size" type="range" min="1" max="30" step="0.2" value="3" />
+  </div>
+
+  <div class="inkpad-field">
+    <label for="inkpad-eraser-size">
+      Eraser size <span class="inkpad-out" id="inkpad-eraser-size-out">12</span>px
+    </label>
+    <input id="inkpad-eraser-size" type="range" min="5" max="100" step="1" value="24" />
+  </div>
+</div>
+
+<canvas id="inkpad-canvas" aria-hidden="true"></canvas>
+
+<script>
+(() => {
+  const canvas = document.getElementById('inkpad-canvas');
+  const tb = (id) => document.getElementById(id);
+  const toolbar = document.getElementById('inkpad-toolbar');
+  const key = 'ink:' + location.pathname; // per-page storage key
+  const ctx = canvas.getContext('2d');
+  let drawingEnabled = false;
+  let tool = 'pen'; // 'pen' | 'eraser'
+  let penColor   = '#ff0055';
+  let penSize    = 3;
+  let eraserSize = 12;  // in CSS px
+  let strokes = []; // array of {tool, color, size, points:[{x,y,p}]}
+  let current = null;
+  const baseSize = 3; // base pen size in CSS px
+
+
+const toastEl = document.getElementById('inkpad-toast');
+const undoBtn  = tb('inkpad-undo');
+const clearBtn = tb('inkpad-clear');
+const saveBtn  = tb('inkpad-save');
+
+function flash(el) {
+  if (!el) return;
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 180);
+}
+
+function showToast(msg, ms = 900) {
+  if (!toastEl) return;
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toastEl.classList.remove('show'), ms);
+}
+
+// enable/disable actions based on whether there is anything to operate on
+function hasInk() {
+  return strokes.length > 0 || (current && current.points && current.points.length);
+}
+function updateActionStates() {
+  const enabled = !!hasInk();
+  if (undoBtn)  undoBtn.disabled  = !enabled;
+  if (clearBtn) clearBtn.disabled = !enabled;
+  if (saveBtn)  saveBtn.disabled  = !enabled;
+}
+
+
+  function onButton(id, fn){
+    const el = tb(id);
+    if(!el) return;
+    el.addEventListener('click', (e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      fn(e);
+    }, {passive:false});
+  }
+
+// Popover toggle (pure toggle — no outside-click close)
+const optionsBtn = document.getElementById('inkpad-options');
+const popover    = document.getElementById('inkpad-popover');
+
+if (optionsBtn && popover) {
+  const setPopover = (open) => {
+    popover.classList.toggle('open', open);
+    popover.setAttribute('aria-hidden', String(!open));
+    optionsBtn.setAttribute('aria-expanded', String(open));
+    optionsBtn.classList.toggle('active', open);
+  };
+
+  optionsBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPopover(!popover.classList.contains('open'));
+  });
+
+  // Optional: keep clicks inside from bubbling (not required, but harmless)
+  popover.addEventListener('click', (e) => e.stopPropagation());
+}
+
+function setPopover(open) {
+  popover.classList.toggle('open', open);
+  popover.setAttribute('aria-hidden', String(!open));
+  optionsBtn.setAttribute('aria-expanded', String(open));
+  optionsBtn.classList.toggle('active', open);
+}
+
+popover.addEventListener('click', (e) => e.stopPropagation());
+
+
+  // read a CSS var once (for ring color); fallback if missing
+  const brandTeal = (getComputedStyle(document.documentElement)
+    .getPropertyValue('--brand-teal') || '').trim() || '#00c8ff';
+
+   // live eraser preview in PAGE coords (CSS px)
+  let hoverPage = null;  // {x, y} or null
+
+  function drawEraserPreview() {
+    if (!drawingEnabled || tool !== 'eraser' || !hoverPage) return;
+
+    const r = eraserSize / 2;
+    ctx.save();
+    // we're already in page space (you set a -scroll transform in redraw)
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.lineWidth = 1;
+    // subtle fill + ring; alpha keeps it unobtrusive
+    ctx.fillStyle   = 'rgba(0,0,0,0.06)';                // soft shadow fill
+    ctx.strokeStyle = brandTeal;                         // themed ring
+    ctx.beginPath();
+    ctx.arc(hoverPage.x, hoverPage.y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  const colorInput  = document.getElementById('inkpad-color');
+  const sizeInput   = document.getElementById('inkpad-size');
+  const eraserInput = document.getElementById('inkpad-eraser-size');
+
+  if (colorInput) {
+    colorInput.addEventListener('input', e => { penColor = e.target.value; });
+  }
+  if (sizeInput) {
+    sizeInput.addEventListener('input', e => { penSize = +e.target.value; });
+  }
+  if (eraserInput) {
+    eraserInput.addEventListener('input', e => { eraserSize = +e.target.value; });
+  }
+
+  // --- slider outputs + track fill ---
+  const sizeOut    = document.getElementById('inkpad-size-out');
+  const eraserOut  = document.getElementById('inkpad-eraser-size-out');
+
+  function setRangeFill(el) {
+    const min = +el.min || 0, max = +el.max || 100, val = +el.value || 0;
+    const pct = Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100));
+    el.style.setProperty('--_fill', pct + '%');   // used by your CSS gradient
+  }
+
+  // initial sync
+  if (sizeOut)   sizeOut.textContent   = String(penSize);
+  if (eraserOut) eraserOut.textContent = String(eraserSize);
+  if (sizeInput)   setRangeFill(sizeInput);
+  if (eraserInput) setRangeFill(eraserInput);
+
+  // live updates
+  if (sizeInput) {
+    sizeInput.addEventListener('input', e => {
+        penSize = +e.target.value;
+        if (sizeOut) sizeOut.textContent = String(penSize);
+        setRangeFill(sizeInput);
+    });
+  }
+  if (eraserInput) {
+    eraserInput.addEventListener('input', e => {
+        eraserSize = +e.target.value;
+        if (eraserOut) eraserOut.textContent = String(eraserSize);
+        setRangeFill(eraserInput);
+    });
+  }
+
+  // Size canvas to the full scrollable document (not just the viewport)
+  function docSize() {
+    const d = document.documentElement, b = document.body;
+    const w = Math.max(d.scrollWidth,  b ? b.scrollWidth  : 0, d.clientWidth);
+    const h = Math.max(d.scrollHeight, b ? b.scrollHeight : 0, d.clientHeight);
+    return {w: Math.ceil(w), h: Math.ceil(h)};
+  }
+
+  function fitCanvas() {
+    const dpr = currentDpr();
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    canvas.width  = Math.ceil(w * dpr);
+    canvas.height = Math.ceil(h * dpr);
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+
+    // Set transform in redraw().
+    scheduleRedraw();
+  }
+
+  // Re-measure shortly after load to catch late reflows (math/images)
+  setTimeout(fitCanvas, 500);
+
+
+  // save only serializable fields
+  function save(){
+    try {
+        const lean = strokes.map(({anchorId, tool, color, size, points}) => ({anchorId, tool, color, size, points}));
+        localStorage.setItem(key, JSON.stringify(lean));
+    } catch {}
+  }
+
+  function load(){
+    try {
+        const s = localStorage.getItem(key);
+        strokes = s ? (JSON.parse(s) || []) : [];
+        for (const st of strokes) recomputeMeta(st);
+    } catch { strokes = []; }
+  }
+
+function redraw(){
+  const dpr = currentDpr();
+  const sx = window.scrollX, sy = window.scrollY;
+
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.setTransform(dpr, 0, 0, dpr, -sx * dpr, -sy * dpr);
+
+  const vx0 = sx, vy0 = sy, vx1 = sx + window.innerWidth, vy1 = sy + window.innerHeight;
+
+  // cache anchor offsets this frame
+  const anchorCache = new Map();
+  const infoFor = (id) => {
+    if (!anchorCache.has(id)) anchorCache.set(id, anchorInfo(id));
+    return anchorCache.get(id);
+  };
+
+  for (const s of strokes) {
+    const info = infoFor(s.anchorId || 'global');
+    if (!info.visible) continue;
+    const B = s.localBBox;
+    const absBox = { x0: B.x0 + info.left, y0: B.y0 + info.top, x1: B.x1 + info.left, y1: B.y1 + info.top };
+    if (intersects(absBox, vx0, vy0, vx1, vy1)) drawStrokeAnchored(s, info);
+  }
+  if (current) {
+    const info = infoFor(current.anchorId || 'global');
+    if (info.visible) drawStrokeAnchored(current, info);
+  }
+
+  // draw the eraser halo on top
+  drawEraserPreview();
+}
+
+
+  function styleFor(stroke){
+    if (stroke.tool === 'eraser') {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = stroke.size; // ← eraserSize already baked in
+    } else if (stroke.tool === 'highlight') {
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.strokeStyle = (stroke.color || '#ff0') + '33';
+        ctx.lineWidth = stroke.size * 2;
+    } else {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = stroke.color || penColor;
+        ctx.lineWidth = stroke.size;
+    }
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }
+
+function drawStrokeAnchored(stroke, info){
+  ctx.save();
+  styleFor(stroke);
+  ctx.translate(info.left, info.top);
+
+  if (stroke._isDot) {
+    // Draw like the live case so sizes match
+    const r = (stroke.size || 3) / 2;
+    const p = stroke.points[0];
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, Math.max(1, r), 0, Math.PI*2);
+    ctx.fillStyle = (stroke.tool === 'eraser') ? '#000' : ctx.strokeStyle;
+    ctx.fill();
+  } else if (stroke._localPath) {
+    ctx.stroke(stroke._localPath);
+  } else {
+    // (your existing multi-point fallback)
+    const pts = stroke.points || [];
+    if (!pts.length) { ctx.restore(); return; }
+    if (pts.length === 1) {
+      const r = ctx.lineWidth/2;
+      ctx.beginPath(); ctx.arc(pts[0].x, pts[0].y, Math.max(1,r), 0, Math.PI*2);
+      ctx.fillStyle = (stroke.tool==='eraser') ? '#000' : ctx.strokeStyle;
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i=1;i<pts.length-1;i++){
+        const c=pts[i], n=pts[i+1];
+        ctx.quadraticCurveTo(c.x, c.y, (c.x+n.x)/2, (c.y+n.y)/2);
+      }
+      const last = pts[pts.length-1];
+      ctx.lineTo(last.x, last.y);
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+}
+
+
+
+function setDrawing(enabled){
+  drawingEnabled = enabled;
+  canvas.style.pointerEvents = enabled ? 'auto' : 'none';
+  canvas.classList.toggle('drawing', enabled);
+
+  const drawBtn = tb('inkpad-toggle');
+  drawBtn.classList.toggle('active', enabled);
+  drawBtn.setAttribute('aria-pressed', String(enabled));
+
+  const label = enabled ? 'Stop drawing (D)' : 'Draw (D)';
+  drawBtn.setAttribute('title', label);
+  drawBtn.setAttribute('aria-label', label);
+
+  if (!enabled) hoverPage = null;          
+  scheduleRedraw();
+}
+
+  function setTool(t){
+    tool = t;
+    tb('inkpad-pen').classList.toggle('active', t==='pen');
+    tb('inkpad-eraser').classList.toggle('active', t==='eraser');
+  }
+
+  // performance: cap dpr to avoid excessive sizes on high-dpi screens
+  const DPR_CAP = 1.5;                           // tune if you like
+  function currentDpr(){ return Math.min(window.devicePixelRatio || 1, DPR_CAP); }
+
+  // Throttle redraws to once per frame
+  let raf = 0;
+  function scheduleRedraw(){
+    if (raf) return;
+    raf = requestAnimationFrame(() => { raf = 0; redraw(); });
+  }
+
+  function buildPath2DLocal(stroke){
+    const pts = stroke.points || [];
+    const path = new Path2D();
+    if (!pts.length) return path;
+    if (pts.length === 1) {
+        const size = stroke.size || 3;
+        path.arc(pts[0].x, pts[0].y, Math.max(1, size/2), 0, Math.PI*2);
+        return path;
+    }
+    path.moveTo(pts[0].x, pts[0].y);
+    for (let i=1; i<pts.length-1; i++){
+        const c = pts[i], n = pts[i+1];
+        path.quadraticCurveTo(c.x, c.y, (c.x+n.x)/2, (c.y+n.y)/2);
+    }
+    const last = pts[pts.length-1];
+    path.lineTo(last.x, last.y);
+    return path;
+  }
+
+
+function recomputeMeta(s){
+  if (!s.points?.length) return;
+
+  let b = {x0:s.points[0].x,y0:s.points[0].y,x1:s.points[0].x,y1:s.points[0].y};
+  for (const p of s.points){ if (p.x<b.x0) b.x0=p.x; if (p.y<b.y0) b.y0=p.y; if (p.x>b.x1) b.x1=p.x; if (p.y>b.y1) b.y1=p.y; }
+
+  // mark single-point strokes as dots and expand bbox by radius
+  if (s.points.length === 1) {
+    s._isDot = true;                      // non-serializable flag is fine
+    const pad = (s.size || 3) / 2;
+    b.x0 -= pad; b.y0 -= pad; b.x1 += pad; b.y1 += pad;
+  } else {
+    s._isDot = false;
+  }
+
+  s.localBBox = b;
+
+  // cache path only for multi-point strokes
+  if (!s._isDot) {
+    Object.defineProperty(s, '_localPath', { value: buildPath2DLocal(s), enumerable: false, writable: true });
+  } else {
+    Object.defineProperty(s, '_localPath', { value: null, enumerable: false, writable: true });
+  }
+}
+
+
+  function pushPointDecimated(arr, p, minDist=0.75){ // CSS px
+    const last = arr[arr.length-1];
+    if (!last) { arr.push(p); return true; }
+    const dx = p.x - last.x, dy = p.y - last.y;
+    if (dx*dx + dy*dy < minDist*minDist) return false;
+    arr.push(p); return true;
+  }
+  function expandBBox(b, p){
+    b.x0 = Math.min(b.x0, p.x); b.y0 = Math.min(b.y0, p.y);
+    b.x1 = Math.max(b.x1, p.x); b.y1 = Math.max(b.y1, p.y);
+  }
+  function newBBox(p){ return {x0:p.x, y0:p.y, x1:p.x, y1:p.y}; }
+  function intersects(b, x0,y0,x1,y1){ return !(b.x1 < x0 || b.x0 > x1 || b.y1 < y0 || b.y0 > y1); }
+
+
+  function getAnchorAtPoint(clientX, clientY) {
+    // Temporarily let the page receive the hit
+    const prev = canvas.style.pointerEvents;
+    canvas.style.pointerEvents = 'none';
+    const hit = document.elementFromPoint(clientX, clientY);
+    canvas.style.pointerEvents = prev || (drawingEnabled ? 'auto' : 'none');
+
+    const el = hit?.closest('details, .collapse, .callout, [data-ink-surface]');
+    if (!el) return { id: 'global', el: null };
+    if (!el.id) el.id = 'ink-surface-' + Math.random().toString(36).slice(2,9);
+    return { id: el.id, el };
+  }
+
+
+  function anchorInfo(anchorId) {
+    if (anchorId === 'global') return { left: 0, top: 0, visible: true };
+    const el = document.getElementById(anchorId);
+    if (!el) return { left: 0, top: 0, visible: false };
+
+    const cs = getComputedStyle(el);
+    const visible = cs.display !== 'none' && cs.visibility !== 'hidden';
+    const expanded =
+        (el.tagName.toLowerCase() !== 'details' || el.open) &&
+        (!el.classList.contains('collapse') || el.classList.contains('show'));
+    if (!visible || !expanded) return { left: 0, top: 0, visible: false };
+
+    const r = el.getBoundingClientRect();
+    return { left: r.left + window.scrollX, top: r.top + window.scrollY, visible: true };
+  }
+
+    // pointer in LOCAL anchor coords
+  function pointerPosLocal(e, anchorEl) {
+    if (!anchorEl) return { x: e.pageX, y: e.pageY, p: e.pressure>0?e.pressure:0.5 };
+    const r = anchorEl.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top, p: e.pressure>0?e.pressure:0.5 };
+  }
+
+
+
+  function pointerPos(e){  // page space (CSS px)
+    return { x: e.pageX, y: e.pageY, p: (e.pressure>0 ? e.pressure : 0.5) };
+  }
+
+
+  let currentAnchor = { id: 'global', el: null };
+
+  canvas.addEventListener('pointerdown', (e)=>{
+    if (!drawingEnabled) return;
+    try { canvas.setPointerCapture?.(e.pointerId); } catch {}
+    currentAnchor = getAnchorAtPoint(e.clientX, e.clientY);
+
+    const p = pointerPosLocal(e, currentAnchor.el);
+    current = {
+        anchorId: currentAnchor.id,
+        tool,
+        color: penColor,
+        size: tool === 'eraser' ? eraserSize : penSize,
+        points: [p],
+        localBBox: {x0:p.x,y0:p.y,x1:p.x,y1:p.y}
+    };
+    e.preventDefault();
+    scheduleRedraw();
+  }, {passive:false});
+
+  canvas.addEventListener('pointermove', (e)=>{
+    if (!current) return;
+    const p = pointerPosLocal(e, currentAnchor.el);
+    if (pushPointDecimated(current.points, p)) {
+        current.localBBox.x0 = Math.min(current.localBBox.x0, p.x);
+        current.localBBox.y0 = Math.min(current.localBBox.y0, p.y);
+        current.localBBox.x1 = Math.max(current.localBBox.x1, p.x);
+        current.localBBox.y1 = Math.max(current.localBBox.y1, p.y);
+    }
+    e.preventDefault();
+    scheduleRedraw();
+  }, {passive:false});
+
+// update hover position always while ink is enabled
+canvas.addEventListener('pointermove', (e) => {
+  if (!drawingEnabled) return;
+  hoverPage = { x: e.pageX, y: e.pageY };
+}, { passive: true });
+
+canvas.addEventListener('pointerleave', () => {
+  hoverPage = null;
+  scheduleRedraw();
+});
+
+
+
+  function endStroke(e){
+    if (!current) return;
+    const p = pointerPosLocal(e, currentAnchor.el);
+    if (pushPointDecimated(current.points, p)) {
+        current.localBBox.x0 = Math.min(current.localBBox.x0, p.x);
+        current.localBBox.y0 = Math.min(current.localBBox.y0, p.y);
+        current.localBBox.x1 = Math.max(current.localBBox.x1, p.x);
+        current.localBBox.y1 = Math.max(current.localBBox.y1, p.y);
+    }
+    recomputeMeta(current);                      // builds _localPath
+    strokes.push(current);
+    current = null;
+    try { canvas.releasePointerCapture?.(e.pointerId); } catch {}
+    save();
+    scheduleRedraw();
+    updateActionStates(); 
+
+  }
+
+
+  canvas.addEventListener('pointerup', endStroke);
+  canvas.addEventListener('pointercancel', endStroke);
+  canvas.addEventListener('pointerleave', endStroke);
+
+  // --- hook up the toolbar buttons so clicks always “register” ---
+  onButton('inkpad-toggle', () => setDrawing(!drawingEnabled));
+  onButton('inkpad-pen',    () => setTool('pen'));
+  onButton('inkpad-eraser', () => setTool('eraser'));
+
+onButton('inkpad-undo', () => {
+  if (!strokes.length) { flash(undoBtn); showToast('Nothing to undo'); return; }
+  strokes.pop(); save(); redraw();
+  flash(undoBtn); showToast('Undid last stroke');
+  updateActionStates();
+});
+
+onButton('inkpad-clear', () => {
+  if (!strokes.length) { flash(clearBtn); showToast('Nothing to clear'); return; }
+  if (confirm('Clear all ink on this page?')) {
+    strokes = []; save(); redraw();
+    flash(clearBtn); showToast('Cleared');
+    updateActionStates();
+  }
+});
+
+onButton('inkpad-save', () => {
+  if (!hasInk()) { flash(saveBtn); showToast('Nothing to save'); return; }
+  const url = canvas.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.download = (document.title || 'notes') + '.png';
+  a.href = url; a.click();
+  flash(saveBtn); showToast('Saved PNG');
+});
+
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    // Only when toolbar is visible
+    if (!toolbar.classList.contains('open')) return;
+
+    // Don’t hijack typing in inputs
+    if (e.target && /input|textarea|select|button/i.test(e.target.tagName)) return;
+    if (e.target?.isContentEditable) return;
+
+    const k = e.key.toLowerCase();
+    if (k === 'd') { setDrawing(!drawingEnabled); e.preventDefault(); }
+    else if (k === 'p') { setTool('pen'); e.preventDefault(); }
+    else if (k === 'e') { setTool('eraser'); e.preventDefault(); }
+    else if (k === 'z' && (e.ctrlKey || e.metaKey)) { strokes.pop(); save(); redraw(); e.preventDefault(); }
+  });
+
+  window.addEventListener('resize', fitCanvas, {passive:true});
+
+  // redraw when viewport scrolls
+  window.addEventListener('scroll', scheduleRedraw, { passive: true });
+
+  // redraw for nested scrollable containers (capture phase catches them)
+  document.addEventListener('scroll', scheduleRedraw, { passive: true, capture: true });
+
+  // stay smooth during touch scrolling
+  window.addEventListener('touchmove', scheduleRedraw, { passive: true });
+
+  // handle rotation and tab visibility
+  window.addEventListener('orientationchange', scheduleRedraw, { passive: true });
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) scheduleRedraw();
+  }, { passive: true });
+
+  // respond to DPR changes (pinch-zoom)
+  if (window.matchMedia) {
+    const dppx = Math.round((window.devicePixelRatio || 1) * 10) / 10;
+    const mq = matchMedia(`(resolution: ${dppx}dppx)`);
+    mq.addEventListener?.('change', () => { fitCanvas(); }); // Safari/iOS
+  }
+
+  document.addEventListener('toggle', (e) => {
+    if (e.target.tagName?.toLowerCase() === 'details') requestAnimationFrame(scheduleRedraw);
+  }, true);
+  document.addEventListener('show.bs.collapse', () => scheduleRedraw());
+  document.addEventListener('hide.bs.collapse', () => scheduleRedraw());
+
+  // If a details/collapse uses CSS height transitions, redraw after it ends.
+  document.addEventListener('transitionend', (e) => {
+    const t = e.target;
+    if (!t) return;
+    // common containers that change height
+    if (t.matches?.('details, .collapse, .callout, [data-ink-surface]')) {
+        scheduleRedraw();
+    }
+  }, { passive: true, capture: true });
+
+  // Bootstrap’s final state events 
+  document.addEventListener('shown.bs.collapse',  () => scheduleRedraw());
+  document.addEventListener('hidden.bs.collapse', () => scheduleRedraw());
+
+
+  // --- initialise ---
+  load(); fitCanvas();
+  setDrawing(false);   // ensures initial visual state is consistent
+  setTool('pen');
+  updateActionStates();
+
+  const m = new MutationObserver(() => {
+    const open = toolbar.classList.contains('open');
+    toolbar.setAttribute('aria-hidden', open ? 'false' : 'true');
+  });
+  m.observe(toolbar, {attributes:true, attributeFilter:['class']});
+
+  // keep canvas sized if the document grows (e.g., lazy images)
+  const ro = new ResizeObserver(()=> fitCanvas());
+  ro.observe(document.documentElement);
+})();
+</script>

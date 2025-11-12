@@ -1,0 +1,157 @@
+# Preface {.unnumbered}
+
+Welcome to the online notes for **MAS3919 — Foundations of Machine Learning**.
+
+This course is co-taught for MAS3919 and MAS8607.
+
+Students taking MAS8607 can expect to be examined on at least one of the Advanced Topics, indicated with a $(\star)$ in the table of contents, while these are non-examinable for MAS3919.
+There will be four Exercise Sheets in total, with solutions presented one week later at Problem Classes.
+
+There will be one formative assignment [details] and one summative assignment[details] worth 20% of your overall mark. A written exam forms the remaining 80%.
+
+---
+
+```{=html}
+<details>
+      <summary> Show Module Schedule </summary>
+
+
+<table class="schedule">
+  <thead>
+    <tr>
+      <th scope="col">Teaching week</th>
+      <th scope="col">Week<br>Beginning</th>
+      <th scope="col">Topic</th>
+      <th scope="col">Activities</th>
+      <th scope="col">Assessment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Date</td>
+      <td>Week 1 Content </td>
+      <td>Two in-person lectures</td>
+      <td></td>
+    </tr>
+
+    <tr class="wk-alt">
+      <th scope="row">2</th>
+      <td>Date</td>
+      <td>Week 2 Content </td>
+      <td>Two in-person lectures</td>
+      <td>Assignment</td>
+    </tr>
+
+    <tr>
+      <th scope="row">3</th>
+      <td>Date</td>
+      <td>Week 3 Content</td>
+      <td>Two in-person lectures</td>
+      <td></td>
+    </tr>
+
+    <!-- Highlighted alternating week -->
+    <tr class="wk-alt">
+      <th scope="row"><strong>4</strong></th>
+      <td>Date</td>
+      <td>Content</td>
+      <td>Two in-person lectures</td>
+      <td>
+        <p>Assignment due</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th scope="row">5</th>
+      <td>Date</td>
+      <td>Content</td>
+      <td>Two in-person lectures</td>
+      <td></td>
+    </tr>
+
+    <!-- Highlighted alternating week -->
+    <tr class="wk-alt">
+      <th scope="row"><strong>6</strong></th>
+      <td>Date</td>
+      <td>Content</td>
+      <td>Two in-person lectures</td>
+      <td>
+        <p>Assignment</p>
+      </td>
+    </tr>
+
+    <!-- Enrichment banner -->
+    <tr class="wk-enrich">
+      <th colspan="5" scope="rowgroup"><strong>Enrichment Week</strong></th>
+    </tr>
+
+    <tr>
+      <th scope="row">7</th>
+      <td>Date</td>
+      <td>Content</td>
+      <td>Two in-person lectures</td>
+      <td>
+        <p>Assignemtn due</p>
+      </td>
+    </tr>
+
+    <!-- Highlighted alternating week -->
+    <tr class="wk-alt">
+      <th scope="row"><strong>8</strong></th>
+      <td>Date</td>
+      <td><span>Content</span></td>
+      <td>Two in-person lectures</td>
+      <td>
+        <p>Assignment</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th scope="row">9</th>
+      <td>Date</td>
+      <td>Content</td>
+      <td>Two in-person lectures</td>
+      <td></td>
+    </tr>
+
+    <!-- Highlighted alternating week -->
+    <tr class="wk-alt">
+      <th scope="row"><strong>10</strong></th>
+      <td>Date</td>
+      <td>Content</td>
+      <td>Two in-person lectures</td>
+      <td>Assignment</td>
+    </tr>
+
+    <tr style="">
+      <th scope="row"><strong>11</strong></th>
+      <td>Date</td>
+      <td>Revision Week</td>
+      <td>Two in-person lectures</td>
+      <td></td>
+    </tr>
+
+    <!-- Vacation banner -->
+    <tr class="wk-vac">
+      <th colspan="5" scope="rowgroup">Vacation</th>
+    </tr>
+  </tbody>
+</table>
+
+</details>
+
+
+```
+
+---
+
+## Course Overview
+
+The <span class="xref-no-num">[first section @sec-overview-of-ml ]</span> of these notes aims to provide an overview of the module, and to recap important prerequisites from Stage 2. In many cases we will indicate precisely where concepts can be found (up to minor presentational variation) in the lecture notes from Stage 2. **These notes represent the definitive version of MAS3919 and MAS8607**; in-person lectures are an opportunity to review a subset of the material in real-time,  but are not a substitute for studying these lecture notes in detail. Students are recommended to read through the lecture notes in advance of the lecture, in a *flipped classroom* format.
+
+Distinct from most other modules, we will tend to emphasise understanding of *concepts* as opposed to detailed calculations, and your examination will test your ability both to recall these concepts and to give a coherent written explanation of their relevance in a given context.
+After taking this module you should feel equipped with a broad knowledge of machine learning, enabling you to coherently communicate at a technical level in (e.g.) a job interview for a machine learning engineer post.
+In addition, we will provide practical demonstrations of machine learning in Python; you are strongly encouraged to try these out as homework, as experience of implementing machine learning in Python is a valuable addition to any CV.
+
+These lecture notes are new for 2026 and are therefore bound to contain small errors; we would appreciate these being brought to our attention by emailing <chris.oates@ncl.ac.uk> or <matthew.fisher@ncl.ac.uk>.

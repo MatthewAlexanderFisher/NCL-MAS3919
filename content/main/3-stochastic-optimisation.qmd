@@ -1,0 +1,11 @@
+---
+execute:
+  echo: false
+jupyter: mas2901
+---
+
+# Stochastic Optimisation
+
+## Gradient Descent
+
+## Stochastic Gradient Descent

@@ -1,0 +1,134 @@
+/* =========================
+   Schedule table (clean CSS)
+   ========================= */
+
+/* Soft highlight colours */
+:root{
+  --wk-alt-bg:    var(--surface-weaker);     /* Use subtle surface color for alternating weeks */
+  --wk-alt-text:  var(--brand-fg);
+
+  --wk-enrich-bg: var(--brand-mint);
+  --wk-enrich-text: var(--brand-fg);
+
+  --wk-vac-bg:    var(--brand-mint);
+  --wk-vac-text:  var(--brand-fg);
+}
+
+/* Base table */
+table.schedule{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--brand-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 0.85rem;   /* reduced font size */
+  line-height: 1.35;
+}
+
+/* Caption */
+table.schedule caption{
+  caption-side: top;
+  font-weight: 600;
+  color: var(--fg-strong);
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+}
+
+/* Header cells */
+table.schedule thead th{
+  background: var(--surface);
+  color: var(--fg-strong);
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Body cells */
+table.schedule th,
+table.schedule td{
+  padding: 0.55rem 0.7rem;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+/* Week number column (row header) */
+table.schedule th[scope="row"]{
+  width: 3rem;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+  text-align: center;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--fg-strong);
+}
+
+/* Hover */
+table.schedule tbody tr:hover{
+  background: var(--surface-weak);
+}
+
+/* Alternating highlight week - Fixed to use subtle background */
+table.schedule tbody tr.wk-alt{
+  background: var(--wk-alt-bg) !important;
+  color: var(--wk-alt-text);
+}
+
+/* Enrichment & Vacation banners (centred, bold) */
+table.schedule tbody tr.wk-enrich th,
+table.schedule tbody tr.wk-enrich td{
+  background: var(--wk-enrich-bg);
+  color: var(--wk-enrich-text);
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+table.schedule tbody tr.wk-vac th,
+table.schedule tbody tr.wk-vac td{
+  background: var(--wk-vac-bg);
+  color: var(--wk-vac-text);
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+/* Responsive tweaks */
+@media (max-width: 820px){
+  table.schedule{ font-size: 0.8rem; }
+  table.schedule th,
+  table.schedule td{ padding: 0.45rem 0.55rem; }
+  table.schedule th[scope="row"]{ width: 2.5rem; }
+}
+
+/* Use the same radius as the table */
+table.schedule { --radius: 10px; }
+
+/* Round the top corners of the header row */
+table.schedule thead th:first-child {
+  border-top-left-radius: var(--radius);
+}
+table.schedule thead th:last-child {
+  border-top-right-radius: var(--radius);
+}
+
+/* (Optional) round the bottom corners of the last row */
+table.schedule tbody tr:last-child th:first-child,
+table.schedule tbody tr:last-child td:first-child {
+  border-bottom-left-radius: var(--radius);
+}
+table.schedule tbody tr:last-child th:last-child,
+table.schedule tbody tr:last-child td:last-child {
+  border-bottom-right-radius: var(--radius);
+}
+
+/* Make sure we’re not fighting the model: keep separate borders & no spacing */
+table.schedule {
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden; /* keeps the overall table clipped cleanly */
+}

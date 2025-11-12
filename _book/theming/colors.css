@@ -1,0 +1,27 @@
+
+:root{
+  --brand-blue: #1976d2;
+  --brand-blue-hover:#1565c0;
+  --brand-red:  #d32f2f;
+  --brand-red-hover:#b71c1c;
+}
+
+/* Increase specificity to beat Quarto's .btn/.btn-quarto */
+.btn.btn-resample{
+  background: var(--brand-blue);
+  color:#fff; border:none;
+}
+.btn.btn-resample:hover{ background: var(--brand-blue-hover); }
+
+.btn.btn-reset{
+  background: var(--brand-red);
+  color:#fff; border:none;
+}
+.btn.btn-reset:hover{ background: var(--brand-red-hover); }
+
+/* Nice focus ring */
+.btn.btn-resample:focus-visible,
+.btn.btn-reset:focus-visible{
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}

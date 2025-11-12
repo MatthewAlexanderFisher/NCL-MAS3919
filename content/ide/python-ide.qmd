@@ -1,0 +1,54 @@
+---
+format: html
+number: false
+page-layout: full
+---
+
+# Python IDE {.unnumbered}
+
+```{=html}
+
+<div class="py3grid">
+  <div id="editor" class="panel">
+    <header>Editor</header>
+    <div class="body">
+<textarea
+  id="code"
+  class="editor-text"
+  placeholder="# Write Python code here..."
+  spellcheck="false"
+  autocorrect="off"
+  autocapitalize="off"
+  autocomplete="off"
+  inputmode="none"
+>
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(0, 2*np.pi, 100)
+plt.plot(x, np.sin(x), label='sin(x)')
+plt.plot(x, np.cos(x), label='cos(x)')
+plt.legend()
+plt.title('Trigonometric Functions')
+plt.grid(True, alpha=0.3)
+plt.show()
+</textarea>
+    </div>
+  </div>
+
+  <div id="output" class="panel">
+    <header>
+      <span>Output</span>
+      <div class="toolbar">
+        <button id="runBtn" class="btn" disabled>▶ Run</button>
+        <button id="clearBtn" class="btn">Clear</button>
+        <span id="status">Loading...</span>
+      </div>
+    </header>
+    <div class="body">
+      <div id="terminal"></div>
+    </div>
+  </div>
+</div>
+
+```

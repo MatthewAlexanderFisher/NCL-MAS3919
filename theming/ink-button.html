@@ -1,0 +1,87 @@
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
+  if (!tools) return;
+
+  // Avoid duplicates if hot-reloading / re-running
+  if (document.getElementById('inkpad-header-toggle')) return;
+
+  // Create the Ink button
+  const inkBtn = document.createElement('button');
+  inkBtn.id = 'inkpad-header-toggle';
+  inkBtn.className = 'btn-ink-tool';
+  inkBtn.type = 'button';
+  inkBtn.setAttribute('aria-label', 'Ink controls');
+  inkBtn.setAttribute('title', 'Ink controls (I)');
+  inkBtn.setAttribute('aria-controls', 'inkpad-toolbar');
+  inkBtn.setAttribute('aria-expanded', 'false');
+
+  // Pen icon
+  inkBtn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true">
+        <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+        <path d="M2 2l7.586 7.586"/>
+        <circle cx="11" cy="11" r="2"/>
+      </svg>
+  `;
+
+  // Place it after the zoom toggle, else after colour toggle, else append
+  const zoomToggle  = tools.querySelector('#lecture-zoom-header-toggle');
+  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
+  if (zoomToggle && zoomToggle.parentNode) {
+    zoomToggle.parentNode.insertBefore(inkBtn, zoomToggle.nextSibling);
+  } else if (colorToggle && colorToggle.parentNode) {
+    colorToggle.parentNode.insertBefore(inkBtn, colorToggle.nextSibling);
+  } else {
+    tools.appendChild(inkBtn);
+  }
+
+  // Toggle behaviour: show/hide the floating ink toolbar
+  const toolbar = document.getElementById('inkpad-toolbar'); // your existing floating toolbar
+  const setOpen = (open) => {
+    if (!toolbar) return;
+    toolbar.classList.toggle('open', open);
+    inkBtn.classList.toggle('active', open);
+    inkBtn.setAttribute('aria-expanded', String(open));
+  };
+
+  inkBtn.addEventListener('click', () => {
+    if (!toolbar) return;
+    setOpen(!toolbar.classList.contains('open'));
+  });
+
+  // Keyboard: "I" toggles; "Esc" closes
+  document.addEventListener('keydown', (e) => {
+    if (/input|textarea|select/i.test(e.target.tagName)) return;
+    if (e.key.toLowerCase() === 'i' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      if (!toolbar) return;
+      setOpen(!toolbar.classList.contains('open'));
+    }
+    if (e.key === 'Escape') setOpen(false);
+  });
+});
+</script>
+
+<style>
+/* Header ink button look & feel */
+#quarto-header .btn-ink-tool {
+  background: none; border: 0;
+  padding: .375rem; margin: 0 .25rem;
+  border-radius: .375rem; cursor: pointer;
+  color: var(--bs-navbar-color, currentColor);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .15s ease, opacity .15s ease;
+}
+#quarto-header .btn-ink-tool:hover { opacity: .8; color: var(--brand-teal-hover); background: rgba(255,255,255,0.08);}
+#quarto-header .btn-ink-tool.active {
+  background: color-mix(in srgb, var(--brand-teal) 30%, transparent);
+  /* border: 1px solid var(--brand-teal);  */
+  /* border-radius: .375rem;              */
+}
+.quarto-dark #quarto-header .btn-ink-tool { color: var(--bs-navbar-dark-color, #fff); }
+
+
+</style>

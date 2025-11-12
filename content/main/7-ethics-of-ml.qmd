@@ -1,0 +1,16 @@
+---
+execute:
+  echo: false
+jupyter: mas2901
+---
+
+# Ethics of Machine Learning
+
+::: {.definition #def-adversarial-attacks}
+### Adversarial Attacks
+Adversarial attacks in machine learning refer to techniques used to deceive models by introducing small, intentional perturbations to the input data. This area of study has gained significant attention due to the vulnerabilities it exposes in machine learning systems, particularly in computer vision, natural language processing, and other applications where AI models are deployed.
+
+
+:::
+
+

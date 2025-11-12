@@ -1,0 +1,26 @@
+.callout.callout-style-simple{
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+}
+
+.callout.callout-style-default{
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+}
+
+.callout.callout-style-minimal{
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+}
+
+.callout-header {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.callout-title-container .callout-caption {
+  display: none;
+}

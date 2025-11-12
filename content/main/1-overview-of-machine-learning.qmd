@@ -1,0 +1,734 @@
+---
+execute:
+  echo: false
+jupyter: mas2901
+---
+
+```{ojs}
+// Global helpers (no theme logic needed)
+ACCENT  = "var(--brand-teal)"
+ACCENT2 = "var(--brand-red)"
+GRID    = "var(--border)"
+
+// Numerical helpers
+linspace = (a, b, n=401) => Array.from({length:n}, (_,i)=> a + (b-a)*(i/(n-1)))
+
+// Log-Gamma (Lanczos) and friends (for stable PMFs/PDFs)
+function logGamma(z){
+  const g = 7;
+  const p = [
+    0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+    771.32342877765313, -176.61502916214059, 12.507343278686905,
+    -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+  ];
+  if(z < 0.5){
+    return Math.log(Math.PI) - Math.log(Math.sin(Math.PI*z)) - logGamma(1 - z);
+  }
+  z -= 1;
+  let x = p[0];
+  for(let i=1; i<p.length; i++) x += p[i] / (z + i);
+  const t = z + g + 0.5;
+  return 0.5*Math.log(2*Math.PI) + (z+0.5)*Math.log(t) - t + Math.log(x);
+}
+
+logChoose = (n,k) => logGamma(n+1) - logGamma(k+1) - logGamma(n-k+1)
+
+// Discrete PMFs (stable in log-domain)
+binomPMF = (n,p,k) => Math.exp(logChoose(n,k) + k*Math.log(p) + (n-k)*Math.log(1-p))
+poisPMF  = (lambda,k) => Math.exp(k*Math.log(lambda) - lambda - logGamma(k+1))
+geomPMF1 = (p,k) => p * Math.pow(1-p, k-1) // support {1,2,...}
+negbinPMF = (r,p,x) => {
+  if(x < r) return 0;
+  return Math.exp(logChoose(x-1, r-1) + r*Math.log(p) + (x-r)*Math.log(1-p));
+}
+
+// Continuous PDFs
+normPDF = (x,mu,sig) => Math.exp(-0.5*((x-mu)/sig)**2)/(sig*Math.sqrt(2*Math.PI))
+lognormPDF = (x,mu,sig) => x<=0 ? 0 : Math.exp(-((Math.log(x)-mu)**2)/(2*sig*sig)) / (x*sig*Math.sqrt(2*Math.PI))
+unifPDF = (x,a,b) => (x>a && x<b) ? 1/(b-a) : 0
+expPDF = (x,lambda) => x>0 ? lambda*Math.exp(-lambda*x) : 0
+gammaPDF = (x,a,b) => { // shape a, rate b
+  if(x<=0) return 0;
+  return Math.exp(a*Math.log(b) - logGamma(a) + (a-1)*Math.log(x) - b*x)
+}
+betaPDF = (x,a,b) => {
+  if(x<=0 || x>=1) return 0;
+  const logB = logGamma(a)+logGamma(b)-logGamma(a+b);
+  return Math.exp((a-1)*Math.log(x) + (b-1)*Math.log(1-x) - logB)
+}
+chisqPDF = (x,nu) => gammaPDF(x, nu/2, 1/2)
+tPDF = (x,nu) => {
+  const logC = logGamma((nu+1)/2) - (0.5*Math.log(nu*Math.PI) + logGamma(nu/2));
+  return Math.exp(logC - ((nu+1)/2)*Math.log(1 + (x*x)/nu));
+}
+fPDF = (x,d1,d2) => {
+  if(x<=0) return 0;
+  const logC = logGamma((d1+d2)/2) - (logGamma(d1/2)+logGamma(d2/2)) + (d1/2)*Math.log(d1/d2);
+  return Math.exp(logC + (d1/2 - 1)*Math.log(x) - ((d1+d2)/2)*Math.log(1 + (d1/d2)*x))
+}
+
+// Convenient domain heuristics
+domainNormal = (mu,sig) => [mu - 4*sig, mu + 4*sig]
+domainGamma  = (a,b) => [0, Math.max(5, a/b + 6*Math.sqrt(a)/b)]
+domainExp    = (lambda) => [0, Math.max(5, 6/lambda)]
+domainBeta   = [0,1]
+domainPos    = [0, 10]
+```
+
+
+# Overview of Machine Learning {#sec-overview-of-ml}
+
+::: {.remark #rem-terminology}
+### A comment on terminology
+MAS2909 introduced the term "distribution" as a synonym for "(cumulative) distribution function", and this is classically how the term "distribution" has been used.
+
+However, in recent decade(s) it has become more common to talk about probability measures as "distributions" and to make statements such as "a random variable $X$ has distribution $P$" (a classical statistician would say "$X$ has law $P$").
+
+In our opinion there are good reasons to prefer the modern terminology (for one, this is almost certainly the terminology that you learned at school), and so in this module we will use "distribution" exclusively to mean "probability measure" throughout.
+
+To avoid confusion, if we ever need to refer to a (cumulative) distribution function we shall do so using the acronym CDF.
+:::
+
+## What is Machine Learning? {#sec-what-is-ml}
+
+You might be surprised to learn that *machine learning* is not just a buzzword; it is a rich collection of mathematical concepts that can be rigorously studied.
+
+### Tasks
+
+::: {.definition #def-supervised-learning-task}
+### Supervised Learning Task
+Fix sets $\mathcal{X}$, $\mathcal{Y}$, and $\mathcal{Z}$, a probability distribution $P$ on $\mathcal{X} \times \mathcal{Y}$, and a loss function $L : \mathcal{Y} \times \mathcal{Z} \rightarrow \mathbb{R}$.
+
+Given a *training dataset* $\{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^n$ consisting of $n$ independent samples from $P$, try to find a function $f : \mathcal{X} \rightarrow \mathcal{Z}$ for which 
+$$
+\mathbb{E}_{(\mathbf{X},\mathbf{Y}) \sim P} [ L(\mathbf{Y},f(\mathbf{X})) ]
+$$ 
+is minimal.
+:::
+
+To unpack this definition we are going to recap some of the prerequisite mathematical concepts, which you should have already studied:
+
+::: {.recap #recap-set-notation1}
+###### Set Notation I
+A **set** is a collection of objects, e.g. $\mathbb{N}$ is the set of natural numbers, $\mathbb{N}_0 = \{0\} \cup \mathbb{N}$ is the set of non-negative integers, and $\mathbb{R}$ is the set of real numbers.
+
+Given a pair of sets, say $\mathcal{X}$ and $\mathcal{Y}$, the **Cartesian product** of $\mathcal{X}$ and $\mathcal{Y}$ consists of all (ordered) pairs $(x,y)$ where $x$ is an element of $\mathcal{X}$ and $y$ is an element of $\mathcal{Y}$.
+
+As a shorthand for set membership we can write $x \in \mathcal{X}$ and $y \in \mathcal{Y}$.
+The Cartesian product of $\mathcal{X}$ and $\mathcal{Y}$ is denoted $\mathcal{X} \times \mathcal{Y}$.
+For example, $\mathbb{R} \times \mathbb{R}$ is the two-dimensional Euclidean plane; we often abbreviate this to $\mathbb{R}^2$.
+
+More generally we could consider $d$-fold Cartesian products such as $\mathbb{R}^d$.
+:::
+
+::: {.recap #recap-pmf}
+###### Probability mass functions; Definition 7 in MAS2909
+Let $P$ be a probability distribution on a countable set $\mathcal{X} = \{x_1, x_2, \dots \}$.
+
+Then $P$ is characterised by its *probability mass function* 
+$$
+p : \mathcal{X} \rightarrow [0,\infty).
+$$ 
+Indeed, $P$ assigns an amount of probability $P(S) = \sum_{x \in S} p(x)$ to each $S \subset \mathcal{X}$.
+
+From the definition of a *probability* measure it must hold that $p(\mathcal{X}) = \sum_{x \in \mathcal{X}} p(x) = 1$.
+:::
+
+::: {#exm-binomial-distribution}
+### Binomial Distribution
+The <span class="xref-no-num">[Binomial Distribution @sec-binom]</span>, with $n$ **trials** and **success** parameter $\rho \in [0,1]$, is a probability distribution on $\mathcal{X} = \{0,1,2, \dots , n \}$ with probability mass function 
+$$
+p(x) = \binom{n}{x} \rho^x (1-\rho)^{n-x}.
+$$
+In shorthand this is denoted $\mathrm{Binom}(n,\rho)$.
+
+---
+
+```{=html}
+<details>
+<summary><strong>Show Visualisation</strong></summary>
+```
+
+```{ojs}
+
+{
+  const n = binom_n, p = binom_p;
+  const data = Array.from({ length: n + 1 }, (_, k) => ({ x: k, y: binomPMF(n, p, k) }));
+  const xDomain = Array.from({ length: n + 1 }, (_, k) => k);  // <-- 0..n categories
+
+  const stats = md`**Mean** ${tex`= n\rho`} = ${(n * p).toFixed(2)}; 
+  **Variance** ${tex`= n\rho(1-\rho)`} = ${(n * p * (1 - p)).toFixed(2)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+    y: { label: "PMF" },
+    x: { label: "x", type: "band", domain: xDomain, padding: 0.05 },  // <-- band scale
+    marks: [
+      Plot.barY(data, { x: "x", y: "y", fill: ACCENT }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+
+```
+
+```{ojs}
+viewof binom_n = Inputs.range([1, 200], { value: 20, step: 1,  label: md`${tex`n`}` })
+viewof binom_p = Inputs.range([0.01, 0.99], { value: 0.3, step: 0.01, label: md`${tex`\rho`}` })
+```
+
+
+```{=html}
+</details>
+```
+
+:::
+
+::: {#exm-poisson-distribution}
+### Poisson Distribution
+The <span class="xref-no-num">[Poisson Distribution @sec-pois]</span>, with **rate** parameter $\lambda >0$, is a probability distribution on $\mathcal{X} = \{0,1,2, \dots  \}$ with probability mass function 
+$$
+p(x) = \frac{ e^{-\lambda} \lambda^x }{ x! } .
+$$
+In shorthand this is denoted $\mathrm{Pois}(\lambda)$.
+
+---
+
+```{=html}
+<details>
+<summary><strong>Show Visualisation</strong></summary>
+```
+
+```{ojs}
+
+{
+  // compute locally (no exported names)
+  const L     = pois_lambda;
+  const kmax  = Math.max(15, Math.ceil(L + 6*Math.sqrt(L)));
+  const pois_data = Array.from({length: kmax + 1}, (_, k) => ({ x: k, y: poisPMF(L, k) }));
+
+  // build the UI bits
+  const stats = md`**Mean** ${tex`= \lambda`} = ${L.toFixed(2)}; 
+  **Variance** ${tex`= \lambda`} = ${L.toFixed(2)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+
+    y: { label: "PMF" },
+    x: { label: "x" },
+    marks: [
+      Plot.barY(pois_data, { x: "x", y: "y", fill: "var(--brand-teal)" }),
+      Plot.ruleY([0], { stroke: "var(--border)", strokeOpacity: 0.6 })
+    ]
+  });
+
+  // return both in a single wrapper
+  return html`<div class="dist-panel">
+    <div class="stats">${stats}</div>
+    ${plot}
+  </div>`;
+}
+```
+
+```{ojs}
+viewof pois_lambda = Inputs.range([0.2, 30], {
+  value: 6, step: 0.2, label: md`${tex`\lambda`}`
+})
+```
+
+```{=html}
+</details>
+```
+
+:::
+
+::: {.recap #recap-set-notation2}
+###### Set Notation II
+If a set $\mathcal{X}$ is contained in another set $\mathcal{Y}$ we write $\mathcal{X} \subset \mathcal{Y}$.
+
+In this case, the **indicator function** of the set $\mathcal{X}$ is the function $1_{\mathcal{X}} : \mathcal{Y} \rightarrow \{0,1\}$ for which $f_{\mathcal{X}}(y) = 1$ if and only if $y \in \mathcal{X}$.
+
+For example, $1_{[0,1]}(x)$ is equal to $1$ when $0 \leq x \leq 1$ and equal to $0$ if $x$ lies outside this interval.
+:::
+
+::: {.recap #recap-pdf}
+###### Probability Density Function
+Let $P$ be a sufficiently regular[^absolutely-continuous] probability distribution on $\mathbb{R}^d$.
+
+Then $P$ is characterised by its **probability density function** 
+$$
+p : \mathbb{R}^d \rightarrow [0,\infty).
+$$
+Indeed, $P$ assigns an amount of probability $P(S) = \int 1_S(\mathbf{x}) p(\mathbf{x}) \; \mathrm{d}\mathbf{x}$ to each set $S \subset \mathbb{R}^d$.
+
+From the definition of a **probability measure** it must hold that $\int p(\mathbf{x}) \; \mathrm{d}\mathbf{x} = 1$.
+:::
+
+
+::: {#exm-uniform-distribution}
+### Uniform Distribution; Section 1.4 in MAS2909
+The <span class="xref-no-num">[Uniform Distribution @sec-unif]</span> on an interval $[a,b]$ with $a < b$ has probability density function 
+$$
+p(x) = \frac{1}{b-a} 1_{[a,b]}(x).
+$$
+In shorthand this is denoted $\mathcal{U}(a,b)$. 
+
+---
+
+```{=html}
+<details>
+<summary><strong>Show Visualisation</strong></summary>
+```
+
+```{ojs}
+
+{
+  const a = unif_a, b = unif_b;
+  const data = linspace(a - 1, b + 1, 401).map(x => ({ x, y: unifPDF(x, a, b) }));
+
+  const stats = md`**Mean** ${tex`= (a+b)/2`} = ${(((a+b)/2)).toFixed(2)}; 
+  **Variance** ${tex`= (b-a)^2/12`} = ${(((b-a)**2)/12).toFixed(3)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+ y: { label: "PDF" }, x: { label: "x" },
+    marks: [
+      Plot.lineY(data, { x: "x", y: "y", stroke: ACCENT, strokeWidth: 2 }),
+      Plot.areaY(data, { x: "x", y: "y", fill: ACCENT, fillOpacity: 0.18 }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+```
+
+```{ojs}
+viewof unif_a = Inputs.range([-5, 5], {value: -2, step: 0.1, label: md`${tex`a`}`})
+viewof unif_b = Inputs.range([unif_a + 0.2, unif_a + 10], {value: 3, step: 0.1, label: md`${tex`b`}`})
+```
+
+```{=html}
+</details>
+```
+
+:::
+
+
+::: {#exm-uniform-distribution}
+### Normal Distribution on $\mathbb{R}$; Section 1.4 in MAS2909
+The <span class="xref-no-num">[Normal Distribution @sec-normal]</span>, with **mean** parameter $\mu \in \mathbb{R}$ and **variance** parameter $\sigma^2 > 0$, has probability density function 
+$$
+p(x) = \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left( - \frac{1}{2 \sigma^2} (x-\mu)^2 \right).
+$$
+In shorthand this is denoted $\mathcal{N}(\mu,\sigma^2)$.
+
+---
+
+```{=html}
+<details>
+<summary><strong>Show Visualisation</strong></summary>
+```
+
+
+```{ojs}
+{
+  const μ = norm_mu, σ = norm_sig;
+  const [lo, hi] = domainNormal(μ, σ);
+  const data = linspace(lo, hi).map(x => ({ x, y: normPDF(x, μ, σ) }));
+
+  const stats = md`**Mean** ${tex`= \mu`} = ${μ.toFixed(2)}; 
+  **Variance** ${tex`= \sigma^2`} = ${(σ**2).toFixed(2)}.`;
+
+  const plot = Plot.plot({
+    width, height: 260,
+    style: { background: "var(--plot-panel-bg)", color: "var(--brand-fg)" },
+    x: { label: "x" }, y: { label: "PDF" },
+    marks: [
+      // shaded area under the PDF:
+      Plot.areaY(data, { x: "x", y: "y", fill: ACCENT, fillOpacity: 0.18 }),
+
+      // PDF outline:
+      Plot.lineY(data, { x: "x", y: "y", stroke: ACCENT, strokeWidth: 2 }),
+
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+
+```
+
+```{ojs}
+viewof norm_mu  = Inputs.range([-3, 3], {value: 0, step: 0.05, label: md`${tex`\mu`}`})
+viewof norm_sig = Inputs.range([0.05, 3], {value: 1, step: 0.05, label: md`${tex`\sigma`}`})
+```
+
+```{=html}
+</details>
+```
+
+:::
+
+Random variables were formally defined in MAS2909. Following standard convention, we will use upper-case Roman letters (e.g. $X$) for random variables and lower-case Roman letters (e.g. $x$) for specific values that could be taken by $X$.
+
+::: {.recap #recap-rv-distribution}
+###### Distribution of a Random Variable
+Let $X$ be a random variable taking values in a set $\mathcal{X}$.
+
+The **distribution** of $X$ is the probability distribution $P$ for which $P(S) = \mathrm{Prob}(X \in S)$ for each $S \subset \mathcal{X}$.
+:::
+
+It is common to write $X \sim P$ as shorthand for "$X$ has distribution $P$". Another reasonably common notation, which will be used in this module, is $\mathcal{P}(\mathcal{X})$ to denote the set of probability distributions on a set $\mathcal{X}$.
+
+::: {#exr-coin-tossing}
+### Coin Tossing
+A biased coin, which with probability $0.6$ lands on heads, is tossed $10$ times in total.
+
+What is the probability of observing at least $8$ heads?
+
+```{=html}
+<details>
+<summary><strong>Solution</strong></summary>
+```
+
+Let $X$ denote the number of heads.
+
+Then $X$ is a random variable with distribution $P = \mathrm{Binom}(10,0.6)$.
+We have $P(\{8,9,10\}) = p(8) + p(9) + p(10) = \binom{10}{8} 0.6^8 (1-0.6)^{2} + \binom{10}{9} 0.6^9 (1-0.6)^1 + \binom{10}{10} 0.6^{10} (1-0.6)^0 = 0.1673$ (4 s.f.)
+
+```{=html}
+</details>
+```
+
+:::
+
+::: {#exr-sums-of-rvs}
+### Sums of random variables
+Let $X_1 \sim \mathcal{U}(0,1)$ and $X_2 \sim \mathcal{U}(0,1)$ be independent.
+
+Let $Z = X_1 + X_2$. 
+
+Find a probability density function for $Z$.
+
+*(Hint:  Recall Proposition 1 in MAS2909.)*
+
+```{=html}
+<details>
+<summary><strong>Solution</strong></summary>
+```
+
+From Proposition 1 in MAS2909 we have
+$$
+p(z) = \int 1_{[0,1]}(x) 1_{[0,1]}(z-x) \; \mathrm{d}x 
+$$
+and we can evaluate this integral:
+\begin{align*}
+ p(z)   &= \int 1_{[\max\{0 , z-1 \},\min\{1,z\}]}(x) \; \mathrm{d}x \\
+    &= \max\{ \min\{1,z\} - \max\{0 , z-1 \} , 0 \} \\
+    &= \left\{ \begin{array}{ll} z & 0 < z \leq 1 \\ 2 - z & 1 < z < 2 \\ 0 & \text{otherwise} \end{array} \right.
+\end{align*} 
+This is called the **triangular** distribution.
+```{=html}
+</details>
+```
+
+:::
+
+::: {.recap #recap-prob-calc}
+###### Probabilistic calculus
+Which of the following equivalent statements do you think is most natural?
+
+- $Z = X_1 + X_2$ where $X_1 \sim \mathcal{U}(a,b)$ and $X_2 \sim \mathcal{N}(\mu,\sigma^2)$ are independent
+  
+- $Z$ has probability density function 
+$$
+\frac{1}{b-a} \int 1_{[a,b]}(x) \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left(-\frac{1}{2 \sigma^2} (z - x - \mu)^2 \right) \; \mathrm{d}x
+$$
+
+It of course depends on what we are trying to do - a good rule of thumb is to "use random variables for intuition, and use densities for computation".
+:::
+
+::: {.recap #recap-joint-dist}
+###### Joint Distribution
+Given random variables $X_1$ and $X_2$, we can define a new random variable as $\mathbf{X} = (X_1,X_2)$.
+
+The distribution of $\mathbf{X}$ is called the **joint distribution** of $X_1$ and $X_2$.
+
+The concept naturally extends to more than two random variables as well.
+:::
+
+::: {.recap #recap-marginal}
+###### Marginal Distribution; Section 2.3 of MAS2909
+Given a random variable $\mathbf{X} = (X_1,X_2)$ with probability (mass or) density function $p$.
+
+The distribution of $X_1$ is called the **marginal distribution** of $X_1$; i.e. the probability distribution whose probability (mass or) density function is 
+$$
+p_1(x_1) = \int p(\mathbf{x}) \; \mathrm{d}x_2,
+$$ 
+where $\mathbf{x} = (x_1,x_2)$.
+
+(For probability mass functions this integral should be replaced by a sum.)
+
+Intuitively, the marginal distribution of $X_1$ is just the distribution of $X_1$ if we have not observed $X_2$.
+:::
+
+::: {.recap #recap-conditional}
+###### Conditional Distribution; Section 2.4 of MAS2909
+Given a random variable $\mathbf{X} = (X_1,X_2)$ with probability (mass or) density function $p$, let $p_1$ and $p_2$ denote probability (mass or) density functions for the marginal distributions of $X_1$ and $X_2$.
+
+The **conditional distribution** of $X_1$ given $X_2 = x_2$ is the probability distribution whose probability (mass or) density function is 
+$$
+p(\mathbf{x}) / p_2(x_2),
+$$
+where $\mathbf{x} = (x_1,x_2)$. The associated random variable is usually denoted $X_1 | X_2 = x_2$.
+
+Intuitively, the conditional distribution of $X_1$ given $X_2$ represents our understanding of $X_1$ if we had observed the value of $X_2$ (e.g. our understanding of the weather given we had observed someone putting on a coat).
+:::
+
+::: {.recap #recap-conditional}
+###### Independence; Section 2.5 of MAS2909 
+Two random variables $X_1$ and $X_2$ are **independent** if their joint distribution admits a probability (mass or) density function of the form $p(\mathbf{x}) = p_1(x_1) p_2(x_2)$ where $p_i$ is a probability density function for $X_i$ and $\mathbf{x} = (x_1,x_2)$.
+
+Intuitively, if $X_1$ and $X_2$ are independent, then observing $X_2$ tells us nothing about $X_1$ (and vice versa).
+
+The concept naturally extends to multiple random variables; we say $X_1,\dots,X_n$ are independent if 
+$$
+p(\mathbf{x}) = p_1(x_1) p_2(x_2) \cdots p_n(x_n)
+$$ 
+where $\mathbf{x} = (x_1,\dots,x_n)$.
+
+:::
+
+:::{#exr-mvn}
+### Normal distribution on $\mathbb{R}^d$
+Let $X_1 , \dots X_d$ be independent with $X_i \sim \mathcal{N}(\mu_i , \sigma_i^2)$ for each $i \in \{1,\dots,d\}$. Let $\mathbf{X} = (X_1, \dots , X_d)$.
+
+Show that $\mathbf{X} \sim \mathcal{N}(\bm{\mu},\bm{\Sigma})$ where $\bm{\mu} = (\mu_1,\dots,\mu_d)^\top$ and $\bm{\Sigma} = \mathrm{diag}(\sigma_1^2 , \dots , \sigma_d^2)$.
+
+
+```{=html}
+<details>
+<summary><strong>Solution</strong></summary>
+```
+
+From independence we know that $\mathbf{X}$ has distribution $p(\mathbf{x}) = p_1(x_1) \cdots p_d(x_d)$ where $p_i(x_i) = \frac{1}{\sqrt{2 \pi \sigma_i^2}} \exp( - \frac{1}{2 \sigma_i^2} (x_i-\mu_i)^2 )$.
+
+Algebra gives the result.
+
+```{=html}
+</details>
+```
+
+:::
+
+::: {.recap #recap-notation-expectation}
+###### Notation for Expectations 
+Let $P$ be a probability distribution on a set $\mathcal{X}$ and let $f : \mathcal{X} \rightarrow \mathbb{R}$ be a function of interest.
+
+The following notations are all equivalent and widely-used:
+
+- $\mathbb{E}_{X \sim P}[f(X)]$
+- $\mathbb{E}[f(X)]$ where $X \sim P$
+- $P(f)$
+- $\int f \; \mathrm{d}P$
+- $\int f(x) p(x) \; \mathrm{d}x$ (if $P$ has a probability density function $p$)
+- $\sum_{x \in \mathcal{X}} f(x) p(x)$ (if $P$ has a probability mass function $p$)
+:::
+
+::: {.remark #rem-mas3716}
+### Disclaimer: MAS3716 Prequisite
+This course does not require MAS3716 and so we will not work rigorously with measure theory; any expectations that we write down will always be assumed to exist.
+:::
+
+::: {#exm-exp-loss1}
+### Expected Loss 1
+:::
+
+::: {#exm-exp-loss2}
+### Expected Loss 2
+:::
+
+::: {#exm-exp-loss3}
+### Expected Loss 3
+:::
+
+Now we are ready to unpack @def-supervised-learning-task. The easiest way is to see some examples of supervised learning tasks:
+
+::: {#exm-regression}
+### Regression
+
+Regression models are powerful statistical tools used to understand the relationship between variables and make predictions. At their core, these models aim to identify how one or more **independent variables** (also often called **covariates** or **predictors**), influence a **dependent variable** (also often called a **response variable**) of interest.
+
+For example, suppose we are interested in the (statistical) relationship between the frequency of pedestrians walking up the Queen Victoria Road next to campus and the time of day.
+
+![Map of the main university campus, with the location of the measurements on the Queen Victoria Road highlighted.](figures/map.png){#fig-map width=70%}
+
+The independent variable here is the time of day, which we denote $X$, and the dependent variable is the frequency of pedestrians (i.e. the number of pedestrians per unit time), which we denote $Y$.
+It is reasonable to suppose $X \in \mathbb{R}$ and $Y \in [0,\infty)$.
+
+One can freely access such data via the university's [Urban Observatory](https://urbanobservatory.ac.uk); the data shown below are from September 2025:
+
+![Footfall data for the Queen Victoria Road in September 2025.  The vertical axis represents the frequency of pedestrians.](figures/walking_data.png){#fig-footfall-data width=70%}
+
+Predicting pedestrian footfall has important applications in transport, retail, and public safety; other independent variables that could be of interest in this context include the weather and whether or not large public events (e.g. the freshers' fair) are being held.
+The goal in regression is to directly predict the dependent variable, so that $\mathcal{Z} = \mathcal{Y}$ in the notation of @def-supervised-learning-task.
+
+Simple examples of loss functions, which measure the loss incurred when a true response $y$ is predicted as $y'$, include $L(y,y') = |y-y'|$ and $L(y,y') = (y-y')^2$.
+
+Regression models are widely used in various fields, including economics for forecasting financial trends, in medicine for assessing treatment effects, and in social sciences for understanding behavioral patterns. They provide insights that are crucial for making informed decisions and formulating strategies.
+
+:::
+
+
+::: {#exm-classification}
+### Classification
+
+Continuing on from @exm-regression, how do you think these footfall data on the Queen Victoria Road were collected?
+
+It will not be a surprise to you that CCTV cameras are abundant in large cities such as Newcastle; take a look at the latest feeds for yourself: 
+
+<https://api.newcastle.urbanobservatory.ac.uk/camera/>
+
+Counting the number of people in an image obtained from CCTV is an example of a **classification** task. Classification is a fundamental concept in machine learning that involves categorising data into predefined groups or classes.
+
+Here $\mathbf{X}$ is the CCTV image, which we can consider as an element of $\mathbb{R}^{w \times h \times 3}$, where the image is $w$ pixels wide, $h$ pixels high, and contains information for each of the red, green and blue colour channels, and $Y$ is the number of pedestrians in the image, which is an element of $\mathbb{N}_0$ (here the "classes").
+
+The goal in classification is to directly predict the class, so that $\mathcal{Z} = \mathcal{Y}$ in the notation of @def-supervised-learning-task.
+
+The most common loss function used in classification applications is $L(y,y') = 1$ if $y = y'$, and otherwise $L(y,y') = 0$; in fact, this is sometimes called the **classification loss**, or the **0-1 loss**.
+
+For this footfall application it might also be reasonable to use a loss function such as $L(y,y') = |y-y'|$, which is more tolerant to small counting errors than the 0-1 loss.
+
+(Note that the **scale** of the loss is irrelevant; the supervised learning task is invariant to whether we use the loss function $L(y,y')$ of the loss function $cL(y,y')$ for any constant $c > 0$, since we only care about the function $f$ for which the expected loss is minimised; cf. @def-supervised-learning-task.)
+
+![Several companies have emerged to sell "people counters" as a product. [This image](www.footfallcam.com) is taken from one such company.}.](figures/counting_people.png){#fig-counting-people width=70%}
+
+The independent variable here is the time of day, which we denote $X$, and the dependent variable is the frequency of pedestrians (i.e. the number of pedestrians per unit time), which we denote $Y$.
+It is reasonable to suppose $X \in \mathbb{R}$ and $Y \in [0,\infty)$.
+
+One can freely access such data via the university's [Urban Observatory](https://urbanobservatory.ac.uk); the data shown below are from September 2025:
+
+![Footfall data for the Queen Victoria Road in September 2025. The vertical axis represents the frequency of pedestrians.](figures/walking_data.png){#fig-footfall-data width=70%}
+
+Classification is widely used in various fields, from spam detection in emails to diagnosing diseases in the medical field. 
+
+Classifiers are trained on a dataset where the categories, or labels, are already known;  training helps the system learn the patterns and characteristics that differentiate one class from another (cf. @sec-training).
+
+:::
+
+::: {#exm-prob-forecast}
+### Probabilistic Forecasting
+Probabilistic forecasting refers to predicting future events or outcomes along with an associated probability distribution. 
+
+Unlike regression, which provides a single outcome prediction, probabilistic forecasting provides a range of potential outcomes and the likelihood of each occurring, offering a more comprehensive view of future uncertainties.
+
+One of the key advantages of probabilistic forecasting is its ability to provide decision-makers with a range of possible scenarios, along with their associated probabilities. This allows organisations to plan for various contingencies and make informed decisions based on the level of risk they are willing to accept.
+
+Suppose, at time $t$, we want to predict footfall on the Queen Victoria Road at a future time $t + 1$.
+Our input $X$ represents all data available to us at time $t$, and our task is to select a probability distribution that represents a probabilistic prediction of the actual footfall $Y$.
+In the setting of @def-supervised-learning-task, we have $\mathcal{Y} = \mathbb{N}_0$ and $\mathcal{Z} = \mathcal{P}(\mathbb{N}_0)$.
+
+:::
+
+::: {#exm-text-to-vid}
+### Text-to-Video
+Text-to-video technology represents a groundbreaking development in the field of artificial intelligence and multimedia content generation.
+
+By employing advanced algorithms, this technology can transform textual descriptions $X$ into dynamic video content $f(X)$, offering a novel way to create visual media without the traditional constraints of video production.
+
+In the setting of @def-supervised-learning-task, $\mathcal{X}$ is the set of text strings and $\mathcal{Z}$ is the set of all possible video content.
+
+For coherence we can define $Y$ equal to $X$, so that the loss function $L(Y,f(X))$ can be interpreted as a critical assessment of whether the video content $f(X)$ is an accurate instantiation of the text string $X$.
+:::
+
+### Models {#sec-models}
+
+Now that we have seen several examples of supervised learning tasks, a natural question is **how to solve them**? That is, in the notation of @def-supervised-learning-task, how do we find a suitable function $f : \mathcal{X} \rightarrow \mathcal{Z}$?
+
+The answer to this question will be broken down into two parts:
+
+1. First we will talk about how to identify a set $\mathcal{F}$ whose elements are candidates for the function $f$ in a given learning task; this set $\mathcal{F}$ is called the **machine learning model**.
+2. Then we will see how to identify a suitable element $f \in \mathcal{F}$; this second step is called **training** the machine learning model, and we will defer this discussion to @sec-training.
+
+::: {.definition #def-ml-model}
+### Machine Learning Model
+A **machine learning model** (or simply **model**) for a supervised learning task as in @def-supervised-learning-task is a collection $\mathcal{F}$ of maps 
+$$
+f : \mathcal{X} \rightarrow \mathcal{Y}.
+$$
+:::
+
+In practice the elements of $\mathcal{F}$ are usually parametrised, denoted $f_\theta : \mathcal{X} \rightarrow \mathcal{Y}$ for some **parameters** $\theta$ from a suitable index set $\Theta$. It is then equivalent to specify either the set $\mathcal{F}$ or the form of the parametric function $f_\theta$ together with the set of allowed parameters $\Theta$.
+
+::: {#exm-linear-regression}
+### Linear Regression
+
+Linear models are one of the simplest examples of a machine learning model for a regression task (cf. @exm-regression).
+
+Recall that linear regression refers to using a linear function 
+$$
+f_{\bm{\theta}}(\mathbf{x}) = \theta_1 x_1 + \dots + \theta_d x_d
+$$ {#eq-lin-reg}
+
+to predict the value of the dependent variable $Y \in \mathbb{R}$ based on the values of the independent variables $\mathbf{X} \in \mathbb{R}^d$.
+
+Despite their simplicity, linear models are widely used in applications where scientific interpretation of the parameters $\bm{\theta}$ is required.
+
+Indeed, $\theta_i$ carries the interpretation of how the prediction for the dependent variable $Y$ changes per unit change in the associated independent variable $X_i$ in @eq-lin-reg.
+
+In fact, linear regression models can be quite sophisticated, e.g.
+$$
+f_{\bm{\theta}}(\mathbf{x}) = \theta_1 \phi_1(\mathbf{x}) + \dots + \theta_p \phi_p(\mathbf{x})
+$$ {#eq-lin-model-basis}
+
+for a fixed collection of $\bm{\theta}$-independent functions $\phi_i$, $i = 1 , \dots , p$, called **features** (cf. @sec-featurisation) which could include an intercept ($\phi_i(\mathbf{x}) = 1$), nonlinearities (e.g. $\phi_i(\mathbf{x}) = x_1^2$), and interactions (e.g. $\phi_i(\mathbf{x}) = x_1 x_2$).
+
+In this module a **linear regression model** refers to a machine learning model $f_{\bm{\theta}}$ that is **linear in the parameters** $\bm{\theta}$; the map $f_{\bm{\theta}}(\mathbf{x})$ need not be linear in $\mathbf{x}$, as @eq-lin-model-basis demonstrated.
+
+Note also that no concepts from probability appear in our definition of a linear regression model (though sometimes concepts from probability are used to **train** such a model; see @sec-training). 
+
+:::
+
+::: {#exm-logistic-classifier}
+### Logistic Classifier
+
+A **logistic classifier** is a machine learning model used for binary classification tasks, i.e. where the classes can be represented using the binary labels $\mathcal{Y} = \{0,1\}$. 
+The model has the form
+\begin{align*}
+    f_{\bm{\theta}}(\mathbf{x}) = \left\{ \begin{array}{ll} 1 & \text{if} \quad \sigma( g_{\bm{\theta}}(\textbf{x}) ) > \tau \\ 0 & \text{if} \quad \sigma( g_{\bm{\theta}}(\mathbf{x}) ) \leq \tau \end{array} \right.
+\end{align*}
+where $g_{\bm{\theta}} : \mathcal{X} \rightarrow \mathbb{R}$ is a linear regression model of the form @eq-lin-reg parametrised by $\bm{\theta}$, $\sigma(\cdot)$ is the **logistic function**
+$$
+\sigma(z) = \frac{1}{1 + e^{-z}} , 
+$$ {#eq-logistic}
+
+also known as the **sigmoid** function, which converts the output $g_{\bm{\theta}}(\mathbf{x})$ from the linear regression model into a score that ranges from $0$ to $1$, and $\tau \in (0,1)$ is a fixed threshold, which is commonly $\tau = \frac{1}{2}$.
+
+As with the linear regression model, no concepts from probability are required to define a logistic classifier (though sometimes concepts from probability are used to **train** such a model; see @sec-training).
+
+Logistic classifiers are widely used in various fields, including finance for credit scoring, healthcare for disease prediction, and marketing for customer segmentation. 
+
+:::
+
+
+
+## Training {#sec-training}
+
+[^absolutely-continuous]:
+    Students who have taken MAS3716 will understand that we require $P$ to be **absolutely continuous with respect to the Lebesgue measure on $\mathbb{R}^d$** in order for a density to exist.  An example of a probability distribution which fails this requirement is the distribution that places all mass at a single point.  Such issues will not be the focus of this module; cf. @rem-mas3716.

@@ -1,0 +1,80 @@
+@font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    src: url("fonts/AtkinsonHyperlegibleNext-Regular.woff2") format("woff2"),
+         url("fonts/AtkinsonHyperlegibleNext-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    src: url("fonts/AtkinsonHyperlegibleNext-RegularItalic.woff2") format("woff2"),
+         url("fonts/AtkinsonHyperlegibleNext-RegularItalic.ttf") format("truetype");
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    src: url("fonts/AtkinsonHyperlegibleNext-Bold.woff2") format("woff2"),
+         url("fonts/AtkinsonHyperlegibleNext-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    src: url("fonts/AtkinsonHyperlegibleNext-BoldItalic.woff2") format("woff2"),
+         url("fonts/AtkinsonHyperlegibleNext-BoldItalic.ttf") format("truetype");
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* Mono variant */
+
+@font-face {
+    font-family: "Atkinson Hyperlegible Mono";
+    src: url("fonts/AtkinsonHyperlegibleMono-Regular.woff2") format("woff2"),
+         url("fonts/AtkinsonHyperlegibleMono-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Atkinson Hyperlegible Mono";
+    src: url("fonts/AtkinsonHyperlegibleMono-RegularItalic.woff2") format("woff2"),
+         url("fonts/AtkinsonHyperlegibleMono-RegularItalic.ttf") format("truetype");
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Atkinson Hyperlegible Mono";
+    src: url("fonts/AtkinsonHyperlegibleMono-Bold.woff2") format("woff2"),
+         url("fonts/AtkinsonHyperlegibleMono-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Atkinson Hyperlegible Mono";
+    src: url("fonts/AtkinsonHyperlegibleMono-BoldItalic.woff2") format("woff2"),
+         url("fonts/AtkinsonHyperlegibleMono-BoldItalic.ttf") format("truetype");
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* Font usage */
+
+code, pre {
+    font-family: "Atkinson Hyperlegible Mono", monospace;
+}
+
+body {
+    font-family: "Atkinson Hyperlegible Next", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Atkinson Hyperlegible Next", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 700;
+}

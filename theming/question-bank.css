@@ -1,0 +1,71 @@
+.question.callout { margin: 0.85rem 0; }
+.tagbar { margin-top: .5rem; }
+
+.tag {
+  display: inline-block;
+  padding: .2rem .55rem;
+  border-radius: 999px;
+  font-size: .8rem;
+  margin: 0 .35rem .35rem 0;
+
+  background: var(--brand-mint, #183126);
+  border: 1px solid #d7efe0;
+  color: var(--brand-fg, #333333);   /* <- force correct font color */
+}
+
+.filterbox { margin-bottom: 1rem; }
+
+.difficulty { font-size: .9rem; margin-bottom: .35rem; opacity: .9; }
+
+
+.question .callout-header { align-items: center; }
+
+
+
+.difficulty-peppers {
+  margin-left: auto;
+  white-space: nowrap;
+  font-size: .95rem;
+  opacity: .95;
+}
+
+/* colours for 1–3 */
+.difficulty-peppers.level-1 { color: green; }
+.difficulty-peppers.level-2 { color: orange; }
+.difficulty-peppers.level-3 { color: red; }
+
+/* optional: muted for 0 (easy) */
+.difficulty-peppers.level-0 { color: gray; }
+
+.token-label { display:block; margin-bottom:.35rem; }
+.token-autocomplete { position: relative; }
+.token-input {
+  width: 100%;
+  color: var(--brand-fg, #333333);     /* text colour */
+  border: 1px solid var(--border, #ddd);
+  border-radius: .35rem;
+  padding: .35rem .5rem;
+}
+
+.token-suggestions {
+  position: absolute; left: 0; right: 0; z-index: 20;
+  margin-top: .25rem;
+  border: 1px solid var(--bs-border-color, #ddd);
+  background: var(--bs-body-bg, white);
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+  border-radius: .5rem;
+  max-height: 14rem; overflow: auto;
+}
+.token-suggestion {
+  padding: .45rem .6rem; cursor: pointer;
+}
+.token-suggestion:hover, .token-suggestion.active {
+  background: var(--brand-teal-hover, #f7f9fb);
+}
+
+/* ensure text isn’t inheriting a weird color */
+.token-suggestions { color: inherit; }
+/* if any ancestor has overflow hidden, the list can be clipped; avoid that on the wrapper */
+.token-autocomplete { position: relative; overflow: visible; }
+/* make sure hidden actually hides (Bootstrap sometimes meddles) */
+.token-suggestions[hidden] { display: none !important; }

@@ -1,0 +1,188 @@
+project:
+  type: book
+  output-dir: docs
+  resources:
+    - service-worker.js
+    - pwa/manifest.webmanifest
+    - pwa/offline.html
+    - pwa/icons/*
+
+execute:
+  engine: jupyter
+  # debug: true
+  # error: true
+  jupyter: mas2901
+
+book:
+  title: "MAS3919: Foundations of Machine Learning"
+  author: "Chris Oates and Matthew Fisher"
+  date: ""
+  chapters:
+    - index.qmd
+    - part: "Lecture Notes"
+      chapters:
+        - content/main/1-overview-of-machine-learning.qmd
+        - content/main/2-machine-learning-models.qmd
+        - content/main/3-stochastic-optimisation.qmd
+        - content/main/4-generalisation-error.qmd
+        - content/main/5-online-supervised-learning.qmd
+        - content/main/6-beyond-supervised-learning.qmd
+        - content/main/7-ethics-of-ml.qmd
+    - part: "Practicals"
+      chapters:
+        - content/practicals/1-intro-to-pytorch.qmd
+        - content/practicals/2-ml-models-in-pytorch.qmd
+    - part: "Additional Material"
+      chapters:
+        - content/appendix/formula-sheet.qmd
+        - content/appendix/revision-sheet.qmd
+        - content/appendix/distribution-explorer.qmd
+        - content/appendix/question-bank.qmd
+        - content/ide/python-ide.qmd
+  sidebar:
+    style: floating
+    search: true
+  navbar: 
+    title: ""
+    logo: images/ncl_logo_light.png
+    search: false
+  search:
+    location: sidebar
+    type: textbox
+    keyboard-shortcut: "F"
+
+# bibliography: references.bib
+
+brand: theming/_brand.yml
+format:
+  html:
+    echo: false
+    html-math-method: katex
+    theme:
+      light: light_theme.scss
+      dark: dark_theme.scss
+
+    filters:
+      - callouty-theorem
+    css: 
+      - theming/math-scroll.css
+      - theming/callout-style.css
+      - theming/floating-code.css
+      - theming/font.css
+      - theming/no-xref-suffix.css
+      - theming/scrollbar.css
+      - theming/nav-tabs.css
+      - theming/header.css
+      - theming/question-bank.css
+      - theming/sidebar.css
+      - theming/lecture-zoom.css
+      - theming/visualisation-controls.css
+      - theming/tables.css
+      - theming/custom-block.css
+    include-after-body:
+      - theming/no-xref-suffix.html
+      - theming/close-codefold.html
+      - theming/header.html
+      - theming/callout-prefix-removal.html
+      - theming/zoom-button.html
+      - theming/print-button.html
+      - js/inkpad.html
+      - theming/ink-button.html
+    include-in-header: 
+      # - theming/favicons.html
+      - pwa/pwa-head.html
+
+  # pdf:
+  #   documentclass: scrreprt
+  #   include-in-header:
+  #     text: |
+  #       \usepackage{newunicodechar}
+  #       \usepackage{emoji}
+  #       \newunicodechar{✨}{\emoji{sparkles}}
+  #       \usepackage{amsthm}
+  #       \usepackage{mathtools}
+  #       \usepackage{hyperref}
+  #       \usepackage{cleveref}
+  #       \DeclareMathOperator*{\argmax}{arg\,max}
+  #       \DeclareMathOperator*{\argmin}{arg\,min}
+  #       \makeatletter
+  #       \newenvironment{refproof}[1][]%
+  #         {\if\relax\detokenize{#1}\relax
+  #           \begin{proof}
+  #         \else
+  #           \begin{proof}[Proof of \ref{#1}]
+  #         \fi}%
+  #         {\end{proof}}
+  #       \makeatother
+  #   execute:
+  #     engine: jupyter
+  #     jupyter: mas2901
+  #     echo: false      # hide all code cells
+  #     warning: false   # hide warnings (knitr)
+  #     message: false   # hide messages (knitr)
+  #     output: false
+  #     error: false    # hide errors (knitr)
+
+callouty-theorem:
+  thm:
+    override-title: false # do not override the title of the callout (title won't show when `appearance` set to `simple` or `minimal`)
+    callout: # parameters of the wrapping callout. see Quarto documentation of callouts for more details
+      type: note
+      appearance: minimal
+  prp:
+    override-title: false
+    callout:
+      type: note
+      appearance: minimal
+  exr:
+    override-title: false
+    callout:
+      type: tip
+      appearance: minimal
+  proof: # also support wrapping proof-like environments
+    override-title: true # override the title of the callout by the name of the theorem
+    callout:
+      type: note
+      appearance: default
+      collapse: true
+      icon: true
+  solution:
+    override-title: true
+    callout:
+      type: tip
+      appearance: default
+      collapse: true
+      icon: true
+  remark:
+    override-title: true
+    callout:
+      type: tip
+      appearance: default
+      collapse: true
+      icon: true
+  recap:
+    override-title: true
+    callout:
+      type: tip
+      appearance: default
+      collapse: true
+      icon: true
+  exm:
+    override-title: false
+    callout:
+      type: caution
+      appearance: minimal
+      collapse: false
+
+  # theorems types not specified in the metadata will be rendered as is
+  cor: default # calloutify corollaries with default style
+  def:
+    override-title: false
+    callout:  # also support default style here
+      appearance: minimal
+      type: note
+      collapse: false
+
+editor:
+  render-on-save: true
+

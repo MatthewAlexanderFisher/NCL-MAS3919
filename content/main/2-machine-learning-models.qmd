@@ -1,0 +1,78 @@
+---
+execute:
+  echo: false
+jupyter: mas2901
+---
+
+# Machine Learning Models
+
+This section takes a deep dive into the two main classes of machine learning model, the <span class="xref-no-num">[linear model @sec-linear-model]</span> and <span class="xref-no-num">[neural networks @sec-nn]</span>
+
+Along the way we will learn about the key (related) concepts of <span class="xref-no-num">[regularisation @sec-regularisation]</span>, <span class="xref-no-num">[featurisation @sec-featurisation]</span>, and <span class="xref-no-num">[dimensionality reduction @sec-dim-reduction]</span>.
+
+## Linear Model {#sec-linear-model}
+
+Although we already encountered examples of linear models in the regression context (cf. @exm-linear-regression), here we precisely define it:
+
+::: {.definition #def-linear-model}
+### Linear Model
+Let $\mathcal{X} = \mathbb{R}^d$ and $\mathcal{Z} = \mathbb{R}$. A **linear model** is a model of the form
+$$
+f_{\bm{\theta}}(\mathbf{x}) = \theta_1 \phi_1(\mathbf{x}) + \dots + \theta_p \phi_p(\mathbf{x})
+$$
+for some $\bm{\theta} = (\theta_1 , \cdots , \theta_p)^\top \in \mathbb{R}^p$ and some **feature** functions $\phi_i : \mathcal{X} \rightarrow \mathbb{R}$, $i \in \{1,\dots,p\}$.
+:::
+It is worth re-emphasising that this definition does not require the relationship between $\mathbf{x}$ and $f_{\bm{\theta}}(\mathbf{x})$ to be linear as in @eq-lin-reg. The "linearity" refers to linearity of $f_{\bm{\theta}}(\mathbf{x})$ with respect to the parameters $\bm{\theta} \in \mathbb{R}^p$.
+
+For the moment we will suppose we are provided with appropriate feature functions $\phi_i : \mathcal{X} \rightarrow \mathbb{R}$; the issue of selecting an appropriate featurisation is discussed in detail in @sec-featurisation. The vector-valued function $\phi : \mathcal{X} \rightarrow \mathbb{R}^p$ whose coordiate functions are the $\phi_i$ is called the **feature map** associated to the linear regression model.
+
+To get started, let us see how to recover standard least squares from the empirical risk minimisation framework:
+
+::: {#exm-least-squares}
+### Least squares as empirical risk minimisation
+Consider training a linear regression model using empirical risk minimisation with squared error loss $L(y,z) = (y - z)^2$.
+Let $\bm{\Phi}$ be the $n \times p$ \emph{design matrix} whose $(i,j)$th entry is $\phi_j(\mathbf{x}_i)$, and assume that $\bm{\Phi}$ has full column rank.
+Then,
+\begin{align*}
+\mathcal{R}_n(f_{\bm{\theta}}) & = \frac{1}{n} \sum_{i=1}^n L(y_i , f_{\bm{\theta}}(\mathbf{x}_i)) \\
+& = \frac{1}{n} \sum_{i=1}^n (y_i - \phi(\mathbf{x}_i)^\top \bm{\theta} )^2 \\
+& = \frac{1}{n} \| \mathbf{y} - \bm{\Phi} \bm{\theta} \|^2 
+\end{align*}
+so that 
+\begin{align*}
+\nabla_{\bm{\theta}} \mathcal{R}_n(f_{\bm{\theta}}) & = \frac{2}{n} [ - 2 \bm{\Phi}^\top \mathbf{y} + 2 \bm{\Phi}^\top \bm{\Phi} \bm{\theta} ] .
+\end{align*}
+Since $\bm{\Phi}$ has full column rank it follows that $\bm{\Phi}^\top \bm{\Phi}$ is a positive definite (and thus invertible) matrix.
+Thus the stationarity equation $\nabla_{\bm{\theta}} \mathcal{R}_n(f_{\bm{\theta}}) = \mathbf{0}$ has a unique solution 
+$$
+\hat{\bm{\theta}} = (\bm{\Phi}^\top \bm{\Phi})^{-1} \bm{\Phi}^\top \mathbf{y} 
+$$ {#eq-least-squares-est}
+
+which we recognise as the usual least-squares formula for regression coefficients that you learned in school.
+
+Note that the Hessian matrix $\nabla_{\bm{\theta}}^2 \mathcal{R}_n(f_{\bm{\theta}}) = \frac{4}{n} \bm{\Phi}^\top \bm{\Phi}$ is positive definite, so although $\hat{\bm{\theta}}$ was obtained as a solution of the stationary point equation it is indeed a global minimiser of the empirical risk.
+:::
+
+It is reassuring that least squares falls under the umbrella of empirical risk minimisation, but the value of having a general framework for supervised learning is that we can consider alternative loss functions as well.
+
+One motivation for this is to consider the **robustneess** of a linear regression model against an <span class="xref-no-num">[adversarial attack @def-adversarial-attack]</span> targetting one entry in the dataset.
+
+
+
+### Regularisation {#sec-regularisation}
+
+#### Ridge Regression
+
+#### Other Convex Regularisers
+
+### Featurisation {#sec-featurisation}
+
+#### Variable Selection
+
+#### Dimensionality Reduction {#sec-dim-reduction}
+
+#### Kernel Methods ($\star$)
+
+## Neural Networks {#sec-nn}
+
+### Activation Functions

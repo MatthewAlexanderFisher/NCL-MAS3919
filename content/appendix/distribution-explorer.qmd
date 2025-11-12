@@ -1,0 +1,547 @@
+---
+execute:
+  echo: false
+jupyter: mas2901
+tbl-cap-location: bottom
+
+---
+
+::: {.content-visible unless-format="pdf"}
+
+# Distribution Explorer {.unnumbered}
+
+
+```{ojs}
+// Global helpers (no theme logic needed)
+ACCENT  = "var(--brand-teal)"
+ACCENT2 = "var(--brand-red)"
+GRID    = "var(--border)"
+
+// Numerical helpers
+linspace = (a, b, n=401) => Array.from({length:n}, (_,i)=> a + (b-a)*(i/(n-1)))
+
+// Log-Gamma (Lanczos) and friends (for stable PMFs/PDFs)
+function logGamma(z){
+  const g = 7;
+  const p = [
+    0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+    771.32342877765313, -176.61502916214059, 12.507343278686905,
+    -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+  ];
+  if(z < 0.5){
+    return Math.log(Math.PI) - Math.log(Math.sin(Math.PI*z)) - logGamma(1 - z);
+  }
+  z -= 1;
+  let x = p[0];
+  for(let i=1; i<p.length; i++) x += p[i] / (z + i);
+  const t = z + g + 0.5;
+  return 0.5*Math.log(2*Math.PI) + (z+0.5)*Math.log(t) - t + Math.log(x);
+}
+
+logChoose = (n,k) => logGamma(n+1) - logGamma(k+1) - logGamma(n-k+1)
+
+// Discrete PMFs (stable in log-domain)
+binomPMF = (n,p,k) => Math.exp(logChoose(n,k) + k*Math.log(p) + (n-k)*Math.log(1-p))
+poisPMF  = (lambda,k) => Math.exp(k*Math.log(lambda) - lambda - logGamma(k+1))
+geomPMF1 = (p,k) => p * Math.pow(1-p, k-1) // support {1,2,...}
+negbinPMF = (r,p,x) => {
+  if(x < r) return 0;
+  return Math.exp(logChoose(x-1, r-1) + r*Math.log(p) + (x-r)*Math.log(1-p));
+}
+
+// Continuous PDFs
+normPDF = (x,mu,sig) => Math.exp(-0.5*((x-mu)/sig)**2)/(sig*Math.sqrt(2*Math.PI))
+lognormPDF = (x,mu,sig) => x<=0 ? 0 : Math.exp(-((Math.log(x)-mu)**2)/(2*sig*sig)) / (x*sig*Math.sqrt(2*Math.PI))
+unifPDF = (x,a,b) => (x>a && x<b) ? 1/(b-a) : 0
+expPDF = (x,lambda) => x>0 ? lambda*Math.exp(-lambda*x) : 0
+gammaPDF = (x,a,b) => { // shape a, rate b
+  if(x<=0) return 0;
+  return Math.exp(a*Math.log(b) - logGamma(a) + (a-1)*Math.log(x) - b*x)
+}
+betaPDF = (x,a,b) => {
+  if(x<=0 || x>=1) return 0;
+  const logB = logGamma(a)+logGamma(b)-logGamma(a+b);
+  return Math.exp((a-1)*Math.log(x) + (b-1)*Math.log(1-x) - logB)
+}
+chisqPDF = (x,nu) => gammaPDF(x, nu/2, 1/2)
+tPDF = (x,nu) => {
+  const logC = logGamma((nu+1)/2) - (0.5*Math.log(nu*Math.PI) + logGamma(nu/2));
+  return Math.exp(logC - ((nu+1)/2)*Math.log(1 + (x*x)/nu));
+}
+fPDF = (x,d1,d2) => {
+  if(x<=0) return 0;
+  const logC = logGamma((d1+d2)/2) - (logGamma(d1/2)+logGamma(d2/2)) + (d1/2)*Math.log(d1/d2);
+  return Math.exp(logC + (d1/2 - 1)*Math.log(x) - ((d1+d2)/2)*Math.log(1 + (d1/d2)*x))
+}
+
+// Convenient domain heuristics
+domainNormal = (mu,sig) => [mu - 4*sig, mu + 4*sig]
+domainGamma  = (a,b) => [0, Math.max(5, a/b + 6*Math.sqrt(a)/b)]
+domainExp    = (lambda) => [0, Math.max(5, 6/lambda)]
+domainBeta   = [0,1]
+domainPos    = [0, 10]
+```
+
+
+::: {.panel-tabset}
+
+## Bernoulli
+
+```{ojs}
+
+{
+  const p = bern_p;
+  const data = [0, 1].map(x => ({ x, y: x ? p : 1 - p }));
+
+  const stats = md`**Mean** ${tex`= p`} = ${p.toFixed(2)}; 
+  **Var** ${tex`= p(1-p)`} = ${(p * (1 - p)).toFixed(3)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+
+    y: { label: "PMF", domain: [0, 1] },
+    x: { label: "x", type: "band", domain: [0, 1] },  // <-- band scale
+    marks: [
+      Plot.barY(data, { x: "x", y: "y", fill: ACCENT }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+
+```
+
+```{ojs}
+viewof bern_p = Inputs.range([0.01, 0.99], {
+  value: 0.6, step: 0.01, label: md`${tex`p`}`
+})
+
+```
+
+## Binomial
+
+```{ojs}
+
+{
+  const n = binom_n, p = binom_p;
+  const data = Array.from({ length: n + 1 }, (_, k) => ({ x: k, y: binomPMF(n, p, k) }));
+  const xDomain = Array.from({ length: n + 1 }, (_, k) => k);  // <-- 0..n categories
+
+  const stats = md`**Mean** ${tex`= np`} = ${(n * p).toFixed(2)}; 
+  **Var** ${tex`= np(1-p)`} = ${(n * p * (1 - p)).toFixed(2)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+    y: { label: "PMF" },
+    x: { label: "x", type: "band", domain: xDomain, padding: 0.05 },  // <-- band scale
+    marks: [
+      Plot.barY(data, { x: "x", y: "y", fill: ACCENT }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+
+```
+
+```{ojs}
+viewof binom_n = Inputs.range([1, 200], { value: 20, step: 1,  label: md`${tex`n`}` })
+viewof binom_p = Inputs.range([0.01, 0.99], { value: 0.3, step: 0.01, label: md`${tex`p`}` })
+
+```
+
+## Poisson
+
+```{ojs}
+
+{
+  // compute locally (no exported names)
+  const L     = pois_lambda;
+  const kmax  = Math.max(15, Math.ceil(L + 6*Math.sqrt(L)));
+  const pois_data = Array.from({length: kmax + 1}, (_, k) => ({ x: k, y: poisPMF(L, k) }));
+
+  // build the UI bits
+  const stats = md`**Mean** ${tex`= \lambda`} = ${L.toFixed(2)}; 
+  **Var** ${tex`= \lambda`} = ${L.toFixed(2)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+
+    y: { label: "PMF" },
+    x: { label: "x" },
+    marks: [
+      Plot.barY(pois_data, { x: "x", y: "y", fill: "var(--brand-teal)" }),
+      Plot.ruleY([0], { stroke: "var(--border)", strokeOpacity: 0.6 })
+    ]
+  });
+
+  // return both in a single wrapper
+  return html`<div class="dist-panel">
+    <div class="stats">${stats}</div>
+    ${plot}
+  </div>`;
+}
+```
+
+```{ojs}
+viewof pois_lambda = Inputs.range([0.2, 30], {
+  value: 6, step: 0.2, label: md`${tex`\lambda`}`
+})
+```
+
+## Geometric
+
+```{ojs}
+
+{
+  // compute locally
+  const p = geom_p;
+  const raw   = Math.log(1e-4) / Math.log(1 - p);            // tail cutoff
+  const kmax  = Math.max(5, Math.min(200, Math.ceil(raw)));  // clamp for stability
+  const geom_data = Array.from({ length: kmax }, (_, i) => {
+    const k = i + 1; 
+    return { x: k, y: geomPMF1(p, k) }; // PMF = p(1-p)^{k-1}
+  });
+
+  // stats readout
+  const stats = md`**Mean** ${tex`= 1/p`} = ${(1/p).toFixed(2)}; 
+  **Var** ${tex`= (1-p)/p^2`} = ${(((1-p)/(p*p))).toFixed(2)}.`;
+
+  // plot
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+ y: { label: "PMF" },
+    x: { label: "x" },
+    marks: [
+      Plot.barY(geom_data, { x: "x", y: "y", fill: ACCENT }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  // return one wrapper node
+  return html`<div class="dist-panel">
+    <div class="stats">${stats}</div>
+    ${plot}
+  </div>`;
+}
+```
+
+```{ojs}
+viewof geom_p = Inputs.range([0.02, 0.98], {
+  value: 0.3, step: 0.02, label: md`${tex`p`}`
+})
+```
+
+## Negative Binomial
+
+```{ojs}
+
+{
+  const r = Math.round(negbin_r), p = negbin_p;
+  const mean = r / p, sd = Math.sqrt(r * (1 - p)) / p;
+  const xmax = Math.min(400, Math.ceil(mean + 6 * sd));
+
+  const data = Array.from({ length: Math.max(0, xmax - r + 1) }, (_, i) => {
+    const x = r + i;
+    return { x, y: negbinPMF(r, p, x) };
+  });
+
+  const stats = md`**Mean** ${tex`= r/p`} = ${(r/p).toFixed(2)}; 
+  **Var** ${tex`= r(1-p)/p^2`} = ${((r*(1-p))/(p**2)).toFixed(2)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+ y: { label: "PMF" }, x: { label: "x" },
+    marks: [
+      Plot.barY(data, { x: "x", y: "y", fill: ACCENT }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+```
+
+```{ojs}
+viewof negbin_r = Inputs.range([1, 30], {value: 5, step: 1, label: md`${tex`r`}`})
+viewof negbin_p = Inputs.range([0.02, 0.98], {value: 0.4, step: 0.02, label: md`${tex`p`}`})
+```
+
+## Uniform
+
+```{ojs}
+
+{
+  const a = unif_a, b = unif_b;
+  const data = linspace(a - 1, b + 1, 401).map(x => ({ x, y: unifPDF(x, a, b) }));
+
+  const stats = md`**Mean** ${tex`= (a+b)/2`} = ${(((a+b)/2)).toFixed(2)}; 
+  **Var** ${tex`= (b-a)^2/12`} = ${(((b-a)**2)/12).toFixed(3)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+ y: { label: "PDF" }, x: { label: "x" },
+    marks: [
+      Plot.lineY(data, { x: "x", y: "y", stroke: ACCENT, strokeWidth: 2 }),
+      Plot.areaY(data, { x: "x", y: "y", fill: ACCENT, fillOpacity: 0.18 }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+```
+
+```{ojs}
+viewof unif_a = Inputs.range([-5, 5], {value: -2, step: 0.1, label: md`${tex`a`}`})
+viewof unif_b = Inputs.range([unif_a + 0.2, unif_a + 10], {value: 3, step: 0.1, label: md`${tex`b`}`})
+```
+
+## Exponential
+
+```{ojs}
+
+{
+  const λ = exp_lambda;
+  const [lo, hi] = domainExp(λ);
+  const data = linspace(lo, hi).map(x => ({ x, y: expPDF(x, λ) }));
+
+  const stats = md`**Mean** ${tex`= 1/\lambda`} = ${(1/λ).toFixed(2)}; 
+  **Var** ${tex`= 1/\lambda^2`} = ${((1/(λ**2))).toFixed(2)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+ y: { label: "PDF" }, x: { label: "x" },
+    marks: [
+      Plot.lineY(data, { x: "x", y: "y", stroke: ACCENT, strokeWidth: 2 }),
+      Plot.areaY(data, { x: "x", y: "y", fill: ACCENT, fillOpacity: 0.18 }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+```
+
+```{ojs}
+viewof exp_lambda = Inputs.range([0.2, 5], {value: 1, step: 0.1, label: md`${tex`\lambda`}`})
+```
+
+## Gamma
+
+
+```{ojs}
+
+{
+  const a = gamma_a, b = gamma_b;
+  const [lo, hi] = domainGamma(a, b);
+  const data = linspace(lo, hi).map(x => ({ x, y: gammaPDF(x, a, b) }));
+
+  const stats = md`**Mean** ${tex`= a/b`} = ${(a/b).toFixed(2)}; 
+  **Var** ${tex`= a/b^2`} = ${(a/(b**2)).toFixed(2)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+ y: { label: "PDF" }, x: { label: "x" },
+    marks: [
+      Plot.lineY(data, { x: "x", y: "y", stroke: ACCENT, strokeWidth: 2 }),
+      Plot.areaY(data, { x: "x", y: "y", fill: ACCENT, fillOpacity: 0.18 }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+```
+
+```{ojs}
+viewof gamma_a = Inputs.range([0.5, 10], {value: 3, step: 0.1, label: md`${tex`a\ \text{(shape)}`}`})
+viewof gamma_b = Inputs.range([0.2, 5],  {value: 1, step: 0.1, label: md`${tex`b\ \text{(rate)}`}`})
+
+```
+
+## Normal
+
+
+```{ojs}
+{
+  const μ = norm_mu, σ = norm_sig;
+  const [lo, hi] = domainNormal(μ, σ);
+  const data = linspace(lo, hi).map(x => ({ x, y: normPDF(x, μ, σ) }));
+
+  const stats = md`**Mean** ${tex`= \mu`} = ${μ.toFixed(2)}; 
+  **Var** ${tex`= \sigma^2`} = ${(σ**2).toFixed(2)}.`;
+
+  const plot = Plot.plot({
+    width, height: 260,
+    style: { background: "var(--plot-panel-bg)", color: "var(--brand-fg)" },
+    x: { label: "x" }, y: { label: "PDF" },
+    marks: [
+      // shaded area under the PDF:
+      Plot.areaY(data, { x: "x", y: "y", fill: ACCENT, fillOpacity: 0.18 }),
+
+      // PDF outline:
+      Plot.lineY(data, { x: "x", y: "y", stroke: ACCENT, strokeWidth: 2 }),
+
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+
+```
+
+```{ojs}
+viewof norm_mu  = Inputs.range([-3, 3], {value: 0, step: 0.05, label: md`${tex`\mu`}`})
+viewof norm_sig = Inputs.range([0.05, 3], {value: 1, step: 0.05, label: md`${tex`\sigma`}`})
+```
+
+## Lognormal
+
+
+```{ojs}
+{
+  const μ = lnorm_mu, σ = lnorm_sig;
+  const hi = Math.exp(μ + 5 * σ);
+  const data = linspace(0, hi).map(x => ({ x, y: lognormPDF(x, μ, σ) }));
+
+  const stats = md`**Mean** ${tex`= e^{\mu+\sigma^2/2}`} = ${(Math.exp(μ + (σ**2)/2)).toFixed(2)}; 
+  **Var** ${tex`= (e^{\sigma^2}-1)e^{2\mu+\sigma^2}`} = ${(((Math.exp(σ**2)-1)*Math.exp(2*μ + σ**2))).toFixed(2)}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+ y: { label: "PDF" }, x: { label: "x" },
+    marks: [
+      Plot.lineY(data, { x: "x", y: "y", stroke: ACCENT, strokeWidth: 2 }),
+      Plot.areaY(data, { x: "x", y: "y", fill: ACCENT, fillOpacity: 0.18 }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+  
+}
+```
+
+```{ojs}
+viewof lnorm_mu  = Inputs.range([-1.5, 2],  {value: 0,   step: 0.1, label: md`${tex`\mu (\log X)`}`})
+viewof lnorm_sig = Inputs.range([0.01, 1.5], {value: 0.6, step: 0.01, label: md`${tex`\sigma (\log X)`}`})
+
+```
+
+## Chi-squared
+
+
+```{ojs}
+
+{
+  const ν = Math.round(chi_nu);
+  const hi = Math.max(5, ν + 6 * Math.sqrt(2 * ν));
+  const data = linspace(0, hi).map(x => ({ x, y: chisqPDF(x, ν) }));
+
+  const stats = md`**Mean** ${tex`= \nu`} = ${ν}; 
+  **Var** ${tex`= 2\nu`} = ${2*ν}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+ y: { label: "PDF" }, x: { label: "x" },
+    marks: [
+      Plot.lineY(data, { x: "x", y: "y", stroke: ACCENT, strokeWidth: 2 }),
+      Plot.areaY(data, { x: "x", y: "y", fill: ACCENT, fillOpacity: 0.18 }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+```
+
+```{ojs}
+viewof chi_nu = Inputs.range([1, 40], {value: 8, step: 1, label: md`${tex`\nu`}`})
+```
+
+## Student t
+
+
+```{ojs}
+
+{
+  const ν = Math.round(t_nu);
+  const data = linspace(-6, 6).map(x => ({ x, y: tPDF(x, ν) }));
+
+  const stats = md`${tex`\mathrm{E}[X]=0 (\nu>1)`}, 
+  ${tex`\operatorname{Var}(X)=\nu/(\nu-2)\ (\nu>2)`}.  
+  Current: ${ν}.`;
+
+  const plot = Plot.plot({
+        width, height: 260,
+    style: {
+    background: "var(--plot-panel-bg)",
+    color: "var(--brand-fg)"           // drives 'currentColor'
+    },
+ y: { label: "PDF" }, x: { label: "x" },
+    marks: [
+      Plot.lineY(data, { x: "x", y: "y", stroke: ACCENT, strokeWidth: 2 }),
+      Plot.areaY(data, { x: "x", y: "y", fill: ACCENT, fillOpacity: 0.18 }),
+      Plot.ruleY([0], { stroke: GRID, strokeOpacity: 0.6 })
+    ]
+  });
+
+  return html`<div class="dist-panel"><div class="stats">${stats}</div>${plot}</div>`;
+}
+```
+
+```{ojs}
+viewof t_nu = Inputs.range([1, 40], {value: 5, step: 1, label: md`${tex`\nu`}`})
+```
+
+:::
+
+::: {.callout-note collapse="true"}
+Use the tabs to switch distributions. Adjust the sliders to see how the PMF/PDF changes.  
+:::
+
+:::

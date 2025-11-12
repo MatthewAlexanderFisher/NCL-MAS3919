@@ -1,0 +1,111 @@
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<script>
+  (function () {
+    // Compute book root for both environments
+    function computeRoots() {
+      const onPages = /github\.io$/i.test(location.hostname);
+      // >>>> CHANGE THIS to your repo name <<
+      const repoBase = '/NCL-MAS2901/';
+
+      if (onPages) {
+        // GitHub Pages: use fixed base path
+        return { 
+          rootPath: repoBase,
+          abs: location.origin + repoBase
+        };
+      } else {
+        // Local preview: find the book root by looking for index.html
+        // This works by going up the directory tree until we find the root
+        let pathSegments = location.pathname.split('/').filter(s => s);
+        
+        // Remove the current file if it exists
+        if (pathSegments.length > 0 && pathSegments[pathSegments.length - 1].includes('.')) {
+          pathSegments.pop();
+        }
+        
+        // For local development, we need to find the actual root
+        // Quarto typically serves from the root, so we can use '/'
+        // If your local setup is different, adjust accordingly
+        const rootPath = '/';
+        const abs = location.origin + rootPath;
+        
+        return { rootPath, abs };
+      }
+    }
+
+    function appendOrReplace(selector, makeEl) {
+      const existing = document.querySelector(selector);
+      if (existing) existing.remove();
+      document.head.appendChild(makeEl());
+    }
+
+    const roots = computeRoots();
+
+    // Helper function to build absolute URLs
+    function buildUrl(path) {
+      // Ensure path doesn't start with /
+      const cleanPath = path.replace(/^\//, '');
+      // Ensure roots.abs ends with /
+      const base = roots.abs.endsWith('/') ? roots.abs : roots.abs + '/';
+      return base + cleanPath;
+    }
+
+    // Inject links ASAP (don't wait for load)
+    appendOrReplace('link[rel="manifest"]', () => {
+      const l = document.createElement('link');
+      l.rel = 'manifest';
+      l.href = buildUrl('pwa/manifest.webmanifest');
+      return l;
+    });
+
+    // Favicons (tab icons)
+    appendOrReplace('link[rel="icon"][sizes="16x16"]', () => {
+      const l = document.createElement('link');
+      l.rel = 'icon'; 
+      l.type = 'image/png'; 
+      l.sizes = '16x16';
+      l.href = buildUrl('pwa/icons/icon-16.png');
+      return l;
+    });
+    
+    appendOrReplace('link[rel="icon"][sizes="32x32"]', () => {
+      const l = document.createElement('link');
+      l.rel = 'icon'; 
+      l.type = 'image/png'; 
+      l.sizes = '32x32';
+      l.href = buildUrl('pwa/icons/icon-32.png');
+      return l;
+    });
+    
+    // Legacy ICO (optional)
+    appendOrReplace('link[rel="icon"][type="image/x-icon"]', () => {
+      const l = document.createElement('link');
+      l.rel = 'icon'; 
+      l.type = 'image/x-icon';
+      l.href = buildUrl('pwa/icons/favicon.ico');
+      return l;
+    });
+
+    // Apple touch icon
+    appendOrReplace('link[rel="apple-touch-icon"]', () => {
+      const l = document.createElement('link');
+      l.rel = 'apple-touch-icon';
+      l.href = buildUrl('pwa/icons/icon-180.png');
+      return l;
+    });
+
+    // Register SW (use absolute URL)
+    if ('serviceWorker' in navigator) {
+      const swUrl = buildUrl('service-worker.js');
+      const scope = roots.rootPath.endsWith('/') ? roots.rootPath : roots.rootPath + '/';
+      
+      navigator.serviceWorker.register(swUrl, { scope: scope })
+        .then(reg => console.log('SW registered for scope:', scope))
+        .catch(err => console.error('SW registration failed:', err));
+    }
+  })();
+</script>

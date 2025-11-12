@@ -1,0 +1,7 @@
+format:
+  html:
+    css: 
+      - ide.css
+    include-after-body:
+      - pyiodide.html
+    page-layout: full

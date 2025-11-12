@@ -1,0 +1,25 @@
+<script>
+(function () {
+  if (window.__closeCodeFoldBound) return;
+  window.__closeCodeFoldBound = true;
+
+  const onDocClick = (e) => {
+    // Close any open code-fold if the click is outside it
+    document.querySelectorAll('details.code-fold[open]').forEach((d) => {
+      if (!d.contains(e.target)) d.removeAttribute('open');
+    });
+  };
+
+  const onKey = (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('details.code-fold[open]').forEach((d) => {
+        d.removeAttribute('open');
+      });
+    }
+  };
+
+  // Capture-phase click so we run reliably even with other handlers
+  document.addEventListener('click', onDocClick, true);
+  document.addEventListener('keydown', onKey);
+})();
+</script>

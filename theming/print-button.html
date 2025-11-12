@@ -1,0 +1,1122 @@
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
+  if (!tools) return;
+
+  // Create the print/save button
+  const printBtn = document.createElement('button');
+  printBtn.id = 'print-pdf-header-toggle';
+  printBtn.className = 'btn-print-pdf';
+  printBtn.type = 'button';
+  printBtn.setAttribute('aria-label', 'Print or save as PDF');
+  printBtn.setAttribute('title', 'Print/Save PDF (Ctrl+P)');
+
+  // SVG icon (printer icon without control dot)
+  printBtn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Paper/document -->
+      <path d="M6 9V2h12v7"/>
+      <!-- Printer body -->
+      <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+      <!-- Output paper -->
+      <rect x="6" y="14" width="12" height="8" rx="1"/>
+    </svg>
+  `;
+
+  // Place it after the zoom button (if present) or color toggle
+  const zoomToggle = tools.querySelector('#lecture-zoom-header-toggle');
+  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
+  
+  if (zoomToggle && zoomToggle.parentNode) {
+    zoomToggle.parentNode.insertBefore(printBtn, zoomToggle.nextSibling);
+  } else if (colorToggle && colorToggle.parentNode) {
+    colorToggle.parentNode.insertBefore(printBtn, colorToggle.nextSibling);
+  } else {
+    tools.appendChild(printBtn);
+  }
+
+  // Helper function to expand all collapsible content
+  const expandAllContent = () => {
+    const expandedElements = [];
+
+    // Quarto callout blocks with collapse
+    document.querySelectorAll('.callout.collapse').forEach(callout => {
+      if (!callout.classList.contains('show')) {
+        callout.classList.add('show', 'printing-expanded');
+        expandedElements.push(callout);
+      }
+    });
+
+    // Details/summary elements
+    document.querySelectorAll('details:not([open])').forEach(details => {
+      details.setAttribute('open', '');
+      details.classList.add('printing-expanded');
+      expandedElements.push(details);
+    });
+
+    // Bootstrap collapse elements
+    document.querySelectorAll('.collapse:not(.show)').forEach(collapse => {
+      collapse.classList.add('show', 'printing-expanded');
+      expandedElements.push(collapse);
+    });
+
+    // Quarto tabsets - show all tab content
+    document.querySelectorAll('.tab-pane:not(.active)').forEach(tab => {
+      tab.classList.add('active', 'show', 'printing-expanded');
+      expandedElements.push(tab);
+    });
+
+    return expandedElements;
+  };
+
+  // Helper function to restore collapsed state
+  const restoreCollapsedContent = (elements) => {
+    elements.forEach(el => {
+      if (el.classList.contains('printing-expanded')) {
+        if (el.tagName === 'DETAILS') {
+          el.removeAttribute('open');
+        } else if (el.classList.contains('callout')) {
+          el.classList.remove('show');
+        } else if (el.classList.contains('collapse')) {
+          el.classList.remove('show');
+        } else if (el.classList.contains('tab-pane')) {
+          el.classList.remove('active', 'show');
+        }
+        el.classList.remove('printing-expanded');
+      }
+    });
+  };
+
+  // Show print options dialog
+  const showPrintDialog = () => {
+    // Remove any existing dialog
+    const existingDialog = document.getElementById('print-options-dialog');
+    if (existingDialog) existingDialog.remove();
+
+    // Get chapter list from sidebar
+    const chapters = getChapterList();
+    const currentChapter = getCurrentChapterInfo();
+
+    const dialog = document.createElement('div');
+    dialog.id = 'print-options-dialog';
+    dialog.className = 'print-dialog-overlay';
+    dialog.innerHTML = `
+      <div class="print-dialog">
+        <h3>Print Options</h3>
+        
+        <div class="print-option">
+          <label>
+            Print scope:
+            <select id="print-scope">
+              <option value="current">Current page only</option>
+              <option value="chapter">Current chapter (${currentChapter.name})</option>
+              <option value="part">Current part (${currentChapter.partName})</option>
+              <option value="selected">Selected chapters...</option>
+              <option value="all">Entire book</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="print-option" id="chapter-selection" style="display: none;">
+          <label>Select chapters to print:</label>
+          <div class="chapter-list">
+            ${chapters.map(ch => `
+              <label class="chapter-item">
+                <input type="checkbox" value="${ch.href}" data-title="${ch.title}">
+                ${ch.part ? `<strong>${ch.part}</strong>` : ''} ${ch.title}
+              </label>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="print-option">
+          <label>
+            <input type="checkbox" id="print-expand-all" checked>
+            Expand all collapsed content
+          </label>
+        </div>
+        
+        <div class="print-option">
+          <label>
+            <input type="checkbox" id="print-page-numbers" checked>
+            Add page numbers
+          </label>
+        </div>
+        
+        <div class="print-option">
+          <label>
+            <input type="checkbox" id="print-chapter-info" checked>
+            Include chapter/section headers
+          </label>
+        </div>
+
+        <div class="print-option">
+          <label>
+            Layout:
+            <select id="print-layout">
+              <option value="default">Default</option>
+              <option value="compact">Compact (smaller margins)</option>
+              <option value="wide">Wide (full width)</option>
+            </select>
+          </label>
+        </div>
+        
+        <div class="print-progress" id="print-progress" style="display: none;">
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <div class="progress-text">Preparing pages...</div>
+        </div>
+        
+        <div class="print-actions">
+          <button class="btn-print-cancel">Cancel</button>
+          <button class="btn-print-confirm">Print</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(dialog);
+
+    // Handle scope change
+    const scopeSelect = dialog.querySelector('#print-scope');
+    const chapterSelection = dialog.querySelector('#chapter-selection');
+    
+    scopeSelect.addEventListener('change', () => {
+      chapterSelection.style.display = scopeSelect.value === 'selected' ? 'block' : 'none';
+    });
+
+    // Handle dialog actions
+    const confirmBtn = dialog.querySelector('.btn-print-confirm');
+    const cancelBtn = dialog.querySelector('.btn-print-cancel');
+
+    confirmBtn.addEventListener('click', () => {
+      const scope = dialog.querySelector('#print-scope').value;
+      const options = {
+        expandAll: dialog.querySelector('#print-expand-all').checked,
+        pageNumbers: dialog.querySelector('#print-page-numbers').checked,
+        chapterInfo: dialog.querySelector('#print-chapter-info').checked,
+        layout: dialog.querySelector('#print-layout').value,
+        scope: scope
+      };
+      
+      // Get selected chapters if scope is 'selected'
+      if (scope === 'selected') {
+        options.chapters = Array.from(dialog.querySelectorAll('.chapter-item input:checked'))
+          .map(cb => ({ href: cb.value, title: cb.dataset.title }));
+      }
+      
+      dialog.remove();
+      
+      // Handle different scopes
+      if (scope === 'current') {
+        triggerPrint(options);
+      } else {
+        triggerMultiPagePrint(options);
+      }
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      dialog.remove();
+    });
+
+    // Close on backdrop click
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.remove();
+    });
+
+    // Close on Escape
+    const escHandler = (e) => {
+      if (e.key === 'Escape') {
+        dialog.remove();
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    document.addEventListener('keydown', escHandler);
+  };
+
+  // Get chapter list from sidebar
+  const getChapterList = () => {
+    const chapters = [];
+    const sidebar = document.querySelector('.sidebar-navigation');
+    if (!sidebar) return chapters;
+    
+    let currentPart = '';
+    sidebar.querySelectorAll('.sidebar-item').forEach(item => {
+      if (item.querySelector('.sidebar-item-text')?.classList.contains('sidebar-part')) {
+        currentPart = item.textContent.trim();
+      } else if (item.querySelector('a')) {
+        const link = item.querySelector('a');
+        chapters.push({
+          href: link.getAttribute('href'),
+          title: link.textContent.trim(),
+          part: currentPart,
+          element: item
+        });
+      }
+    });
+    
+    return chapters;
+  };
+
+  // Get current chapter info - FIXED version
+  const getCurrentChapterInfo = () => {
+    // Try to find the active sidebar item
+    let active = document.querySelector('.sidebar-item.active a');
+    if (!active) {
+      // Fallback: check if we're on a chapter page
+      const chapterTitle = document.querySelector('h1.chapter-title, .title')?.textContent?.trim();
+      return { name: chapterTitle || 'Current Page', partName: 'No part' };
+    }
+    
+    const title = active.textContent.trim();
+    
+    // Find part name by traversing up from the active item
+    let partName = '';
+    let currentEl = active.closest('.sidebar-item');
+    
+    // Go up through previous siblings until we find a part
+    while (currentEl) {
+      currentEl = currentEl.previousElementSibling;
+      if (currentEl && currentEl.querySelector('.sidebar-part, .chapter-part')) {
+        partName = currentEl.textContent.trim();
+        break;
+      }
+    }
+    
+    // If not found, check parent sections
+    if (!partName) {
+      const parentSection = active.closest('.chapter-section');
+      if (parentSection) {
+        const partEl = parentSection.querySelector('.sidebar-part, .chapter-part');
+        if (partEl) partName = partEl.textContent.trim();
+      }
+    }
+    
+    return { name: title, partName: partName || 'Main Content' };
+  };
+
+  // Get chapters for current part
+  const getChaptersInPart = (partName) => {
+    const chapters = getChapterList();
+    const inPart = [];
+    let foundPart = false;
+    
+    for (const ch of chapters) {
+      if (ch.part === partName) {
+        foundPart = true;
+        inPart.push(ch);
+      } else if (foundPart && ch.part !== partName) {
+        break; // Moved to next part
+      }
+    }
+    
+    return inPart;
+  };
+
+  // Multi-page print handler
+  const triggerMultiPagePrint = async (options) => {
+    const progressEl = document.getElementById('print-progress');
+    const progressBar = progressEl?.querySelector('.progress-fill');
+    const progressText = progressEl?.querySelector('.progress-text');
+    
+    if (progressEl) progressEl.style.display = 'block';
+    
+    // Determine which chapters to print
+    let chaptersToPrint = [];
+    
+    switch (options.scope) {
+      case 'all':
+        chaptersToPrint = getChapterList();
+        break;
+      case 'part':
+        const currentInfo = getCurrentChapterInfo();
+        chaptersToPrint = getChaptersInPart(currentInfo.partName);
+        break;
+      case 'chapter':
+        // For current chapter, just use single page print
+        triggerPrint(options);
+        return;
+      case 'selected':
+        chaptersToPrint = options.chapters || [];
+        break;
+    }
+    
+    if (chaptersToPrint.length === 0) {
+      alert('No chapters selected for printing');
+      return;
+    }
+    
+    // Create iframe for loading pages
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'absolute';
+    iframe.style.left = '-9999px';
+    iframe.style.width = '1000px';
+    iframe.style.height = '1000px';
+    document.body.appendChild(iframe);
+    
+    // Collect all pages
+    const printPages = [];
+    
+    for (let i = 0; i < chaptersToPrint.length; i++) {
+      const chapter = chaptersToPrint[i];
+      const progress = ((i + 1) / chaptersToPrint.length) * 100;
+      
+      if (progressBar) progressBar.style.width = progress + '%';
+      if (progressText) progressText.textContent = `Loading ${chapter.title}...`;
+      
+      try {
+        // Load page in iframe
+        const pageContent = await loadPageInIframe(iframe, chapter.href);
+        
+        // Process the page
+        if (options.expandAll) {
+          expandAllContentInDocument(iframe.contentDocument);
+        }
+        
+        // Extract and store the content
+        const content = iframe.contentDocument.querySelector('.content, main, article')?.innerHTML || '';
+        printPages.push({
+          title: chapter.title,
+          content: content
+        });
+        
+      } catch (err) {
+        console.error(`Failed to load ${chapter.title}:`, err);
+      }
+    }
+    
+    // Clean up
+    iframe.remove();
+    if (progressEl) progressEl.style.display = 'none';
+    
+    // Create combined print document
+    createCombinedPrintDocument(printPages, options);
+  };
+
+  // Load page in iframe
+  const loadPageInIframe = (iframe, href) => {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Page load timeout'));
+      }, 10000);
+      
+      iframe.onload = () => {
+        clearTimeout(timeout);
+        // Wait a bit for JS to run
+        setTimeout(() => resolve(iframe.contentDocument), 500);
+      };
+      
+      iframe.src = href;
+    });
+  };
+
+  // Expand content in a document
+  const expandAllContentInDocument = (doc) => {
+    // Quarto callout blocks
+    doc.querySelectorAll('.callout.collapse').forEach(callout => {
+      callout.classList.add('show');
+    });
+
+    // Details elements
+    doc.querySelectorAll('details').forEach(details => {
+      details.setAttribute('open', '');
+    });
+
+    // Bootstrap collapse
+    doc.querySelectorAll('.collapse').forEach(collapse => {
+      collapse.classList.add('show');
+    });
+  };
+
+  // Create combined document for printing - FIXED version
+  const createCombinedPrintDocument = (pages, options) => {
+    // Create new window for printing
+    const printWindow = window.open('', '_blank');
+    
+    // Collect all stylesheets except those that might interfere
+    const stylesheets = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+      .filter(link => !link.href.includes('quarto-html'))
+      .map(link => link.outerHTML).join('\n');
+    
+    // Build HTML
+    const html = `
+      <!DOCTYPE html>
+      <html class="${document.documentElement.className}">
+      <head>
+        <meta charset="UTF-8">
+        <title>MAS2901 Statistical Inference - Print</title>
+        ${stylesheets}
+        <style>
+          /* Reset background for light mode printing */
+          @media print {
+            body:not(.quarto-dark) {
+              background-color: white !important;
+              color: black !important;
+            }
+            
+            body:not(.quarto-dark) .content,
+            body:not(.quarto-dark) .quarto-container-default,
+            body:not(.quarto-dark) main,
+            body:not(.quarto-dark) article {
+              background-color: white !important;
+              color: black !important;
+            }
+            
+            /* Fix math rendering in dark mode */
+            .quarto-dark .katex,
+            .quarto-dark .MathJax,
+            .quarto-dark .MathJax *,
+            .quarto-dark .katex * {
+              color: #e9ecef !important;
+              background-color: transparent !important;
+              fill: #e9ecef !important;
+            }
+            
+            /* Ensure OJS figures fit within page */
+            .ojs-cell,
+            .cell-output-display,
+            figure,
+            .figure {
+              max-width: 100% !important;
+              overflow: hidden !important;
+              page-break-inside: avoid;
+            }
+            
+            .ojs-cell svg,
+            figure svg,
+            .cell-output-display svg {
+              max-width: 100% !important;
+              height: auto !important;
+            }
+            
+            /* Scale down large images/plots */
+            img, svg {
+              max-width: 100% !important;
+              height: auto !important;
+            }
+            
+            /* Hide overflow indicators */
+            * {
+              overflow: visible !important;
+            }
+            
+            pre {
+              overflow-wrap: break-word !important;
+              white-space: pre-wrap !important;
+            }
+            
+            /* Page breaks */
+            .chapter-break { 
+              page-break-before: always;
+              margin-top: 0 !important;
+            }
+            
+            /* Remove section headers that duplicate */
+            .sidebar-title,
+            .navbar-title,
+            .quarto-title-meta {
+              display: none !important;
+            }
+            
+            /* Compact layout adjustments */
+            body.print-layout-compact {
+              font-size: 10pt;
+              line-height: 1.4;
+            }
+            
+            body.print-layout-compact h1 { font-size: 1.4em; }
+            body.print-layout-compact h2 { font-size: 1.2em; }
+            body.print-layout-compact h3 { font-size: 1.1em; }
+            
+            /* Wide layout */
+            body.print-layout-wide .content {
+              max-width: 100% !important;
+              margin: 0.5in !important;
+            }
+            
+            /* Hide navigation elements */
+            .quarto-title-breadcrumbs,
+            .page-navigation,
+            .nav-footer {
+              display: none !important;
+            }
+          }
+          
+          /* Dark mode specific fixes */
+          ${document.body.classList.contains('quarto-dark') ? `
+          html, body {
+            background-color: #1a1a1a !important;
+            color: #e9ecef !important;
+          }
+          ` : ''}
+        </style>
+      </head>
+      <body class="${document.body.className} printing print-layout-${options.layout} ${options.pageNumbers ? 'print-page-numbers' : ''} ${options.chapterInfo ? 'print-chapter-info' : ''}">
+        ${pages.map((page, i) => `
+          <div class="${i > 0 ? 'chapter-break' : ''}">
+            <h1 class="chapter-title">${page.title}</h1>
+            ${page.content}
+          </div>
+        `).join('\n')}
+      </body>
+      </html>
+    `;
+    
+    printWindow.document.write(html);
+    printWindow.document.close();
+    
+    // Wait for content to render
+    printWindow.onload = () => {
+      setTimeout(() => {
+        // Final cleanup before printing
+        const doc = printWindow.document;
+        
+        // Remove duplicate headers
+        doc.querySelectorAll('.quarto-title, .title-block-banner').forEach((el, idx) => {
+          if (idx > 0) el.remove();
+        });
+        
+        // Scale OJS content
+        doc.querySelectorAll('.ojs-cell').forEach(cell => {
+          cell.style.maxWidth = '100%';
+          cell.style.overflow = 'hidden';
+        });
+        
+        printWindow.print();
+        
+        // Close after print dialog
+        printWindow.onafterprint = () => {
+          printWindow.close();
+        };
+      }, 1000); // Give more time for math to render
+    };
+  };
+
+  // Print handler with options
+  const triggerPrint = (options) => {
+    let expandedElements = [];
+    
+    // Apply print classes based on options
+    document.body.classList.add('printing');
+    if (options.pageNumbers) document.body.classList.add('print-page-numbers');
+    if (options.chapterInfo) document.body.classList.add('print-chapter-info');
+    document.body.classList.add(`print-layout-${options.layout}`);
+    
+    // Store chapter/section info
+    const chapterTitle = document.querySelector('h1.title')?.textContent || '';
+    const courseTitle = 'MAS2901 Statistical Inference';
+    document.body.setAttribute('data-chapter-title', chapterTitle);
+    document.body.setAttribute('data-course-title', courseTitle);
+    
+    // Force dark mode styles to be applied to documentElement too
+    if (document.body.classList.contains('quarto-dark')) {
+      document.documentElement.classList.add('printing-dark');
+    }
+    
+    // Expand content if requested
+    if (options.expandAll) {
+      expandedElements = expandAllContent();
+    }
+    
+    // Small delay to ensure DOM updates
+    setTimeout(() => {
+      window.print();
+      
+      // Clean up after print dialog closes
+      window.addEventListener('afterprint', function cleanup() {
+        document.body.classList.remove('printing', 'print-page-numbers', 
+          'print-chapter-info', `print-layout-${options.layout}`);
+        document.documentElement.classList.remove('printing-dark');
+        
+        // Restore collapsed state
+        if (expandedElements.length > 0) {
+          restoreCollapsedContent(expandedElements);
+        }
+        
+        window.removeEventListener('afterprint', cleanup);
+      });
+    }, 100);
+  };
+
+  // Click handler - show options dialog
+  printBtn.addEventListener('click', () => {
+    showPrintDialog();
+  });
+  
+  // Direct print shortcut (Ctrl+Shift+P) - use default options
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p' && 
+        !/input|textarea|select/i.test(e.target.tagName)) {
+      e.preventDefault();
+      showPrintDialog();
+    }
+  });
+});
+</script>
+
+<style>
+/* Button styling to match other header buttons */
+.btn-print-pdf {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.375rem;
+  margin: 0 0.25rem;
+  border-radius: 0.25rem;
+  color: var(--bs-navbar-color, #333);
+  transition: opacity 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-print-pdf:hover {
+  opacity: 0.7;
+}
+
+.btn-print-pdf svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* Print options dialog */
+.print-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.print-dialog {
+  background: var(--bs-body-bg, white);
+  color: var(--bs-body-color, black);
+  padding: 2rem;
+  border-radius: 0.5rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.print-dialog h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+}
+
+.print-option {
+  margin-bottom: 1rem;
+}
+
+.print-option label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.print-option input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.print-option select {
+  margin-left: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--bs-border-color, #ddd);
+  border-radius: 0.25rem;
+  background: var(--bs-body-bg, white);
+  color: var(--bs-body-color, black);
+}
+
+/* Chapter selection list */
+.chapter-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--bs-border-color, #ddd);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.chapter-item {
+  display: block;
+  padding: 0.25rem 0;
+  margin: 0;
+}
+
+.chapter-item input {
+  margin-right: 0.5rem;
+}
+
+/* Progress bar */
+.print-progress {
+  margin-top: 1rem;
+}
+
+.progress-bar {
+  height: 20px;
+  background: var(--bs-gray-200, #e9ecef);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--bs-primary, #007bff);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--bs-secondary, #6c757d);
+}
+
+.print-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.print-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-print-confirm {
+  background: var(--bs-primary, #007bff);
+  color: white;
+}
+
+.btn-print-cancel {
+  background: var(--bs-secondary, #6c757d);
+  color: white;
+}
+
+.print-actions button:hover {
+  opacity: 0.9;
+}
+
+/* Dark mode support */
+.quarto-dark .btn-print-pdf {
+  color: var(--bs-navbar-dark-color, #fff);
+}
+
+  /* Print-specific styles */
+@media print {
+  /* Hide UI elements */
+  #quarto-header,
+  #quarto-sidebar,
+  .quarto-navbar,
+  .btn-print-pdf,
+  .btn-zoom-toggle,
+  .quarto-color-scheme-toggle,
+  .print-dialog-overlay,
+  .ink-tool-container,
+  #ink-canvas-container,
+  #inkpad-canvas,
+  .inkpad-toolbar {
+    display: none !important;
+  }
+  
+  /* Force background colors and proper color adjustments */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  /* Light mode: force pure white background */
+  body:not(.quarto-dark),
+  body:not(.quarto-dark) .content,
+  body:not(.quarto-dark) .quarto-container-default,
+  body:not(.quarto-dark) main,
+  body:not(.quarto-dark) article,
+  body:not(.quarto-dark) pre,
+  body:not(.quarto-dark) code {
+    background-color: white !important;
+    background: white !important;
+  }
+  
+  /* Apply dark mode to both html and body for first page fix */
+  html.printing-dark,
+  html.printing-dark body,
+  .quarto-dark,
+  .quarto-dark body {
+    background-color: #1a1a1a !important;
+    color: #e9ecef !important;
+  }
+  
+  /* Ensure the root and all containers have dark background */
+  html.printing-dark *,
+  .quarto-dark * {
+    background-color: inherit;
+    color: inherit;
+  }
+  
+  /* Specific dark mode overrides */
+  html.printing-dark .content,
+  html.printing-dark .quarto-container-default,
+  html.printing-dark main,
+  html.printing-dark article,
+  .quarto-dark .content,
+  .quarto-dark .quarto-container-default,
+  .quarto-dark main,
+  .quarto-dark article {
+    background-color: #1a1a1a !important;
+    color: #e9ecef !important;
+  }
+  
+  /* Dark mode code blocks */
+  html.printing-dark pre,
+  html.printing-dark code,
+  .quarto-dark pre,
+  .quarto-dark code {
+    background-color: #2d2d2d !important;
+    color: #e9ecef !important;
+    border-color: #444 !important;
+  }
+  
+  /* Fix math rendering - remove backgrounds */
+  .katex,
+  .MathJax,
+  .katex *,
+  .MathJax *,
+  .MathJax_Display,
+  .MathJax_Preview,
+  mjx-container,
+  mjx-container *,
+  .katex-display,
+  .katex-html {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
+  
+  /* Dark mode math text color */
+  .quarto-dark .katex,
+  .quarto-dark .MathJax,
+  .quarto-dark mjx-container,
+  html.printing-dark .katex,
+  html.printing-dark .MathJax,
+  html.printing-dark mjx-container {
+    color: #e9ecef !important;
+  }
+  
+  /* OJS and figure scaling */
+  .ojs-cell,
+  .cell-output-display,
+  .cell-output,
+  .figure,
+  figure {
+    max-width: 100% !important;
+    width: auto !important;
+    overflow: visible !important;
+    page-break-inside: avoid;
+  }
+  
+  .ojs-cell > *,
+  .cell-output-display > * {
+    max-width: 100% !important;
+  }
+  
+  /* Scale SVGs and images */
+  svg, img {
+    max-width: 100% !important;
+    height: auto !important;
+    width: auto !important;
+    display: block;
+  }
+  
+  /* Handle wide tables */
+  table {
+    font-size: 0.9em;
+    max-width: 100% !important;
+  }
+  
+  .table-responsive {
+    overflow: visible !important;
+  }
+  
+  /* Code blocks shouldn't overflow */
+  pre {
+    max-width: 100% !important;
+    overflow-wrap: break-word !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+  }
+  
+  /* Dark mode callouts */
+  html.printing-dark .callout,
+  .quarto-dark .callout {
+    background-color: #2d2d2d !important;
+    border: 1px solid #444 !important;
+    color: #e9ecef !important;
+  }
+  
+  html.printing-dark .callout-title,
+  .quarto-dark .callout-title {
+    color: #e9ecef !important;
+  }
+  
+  /* Dark mode tables */
+  html.printing-dark table,
+  .quarto-dark table {
+    background-color: transparent !important;
+    color: #e9ecef !important;
+  }
+  
+  html.printing-dark th,
+  .quarto-dark th {
+    background-color: #2d2d2d !important;
+    border-color: #444 !important;
+  }
+  
+  html.printing-dark td,
+  .quarto-dark td {
+    background-color: transparent !important;
+    border-color: #444 !important;
+  }
+  
+  /* Dark mode links */
+  html.printing-dark a,
+  .quarto-dark a {
+    color: #66b3ff !important;
+  }
+  
+  /* Page setup with dark background */
+  @page {
+    margin: 0.75in;
+    size: letter;
+    
+    @bottom-right {
+      content: counter(page);
+    }
+  }
+  
+  /* First page specific fix */
+  @page :first {
+    margin-top: 0.5in;
+  }
+  
+  /* Default layout */
+  .quarto-container-default {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  /* Compact layout */
+  body.print-layout-compact {
+    font-size: 10pt;
+  }
+  
+  body.print-layout-compact .content {
+    margin: 0.5in !important;
+  }
+  
+  /* Wide layout */
+  body.print-layout-wide .content {
+    margin: 0.25in !important;
+  }
+  
+  /* Force expanded content to show as expanded */
+  .printing-expanded.callout.collapse,
+  .printing-expanded.collapse {
+    display: block !important;
+  }
+  
+  /* Tab content - show with headers */
+  body.printing .tab-pane.printing-expanded {
+    display: block !important;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+  
+  html.printing-dark .tab-pane.printing-expanded,
+  .quarto-dark.printing .tab-pane.printing-expanded {
+    border-top-color: #444 !important;
+  }
+  
+  body.printing .tab-pane.printing-expanded::before {
+    content: attr(aria-labelledby);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Page numbers */
+  body.print-page-numbers {
+    counter-reset: page;
+  }
+  
+  /* Chapter info header */
+  body.print-chapter-info::before {
+    content: attr(data-course-title) " - " attr(data-chapter-title);
+    position: fixed;
+    top: 0;
+    right: 0;
+    font-size: 10pt;
+    color: #666;
+    padding: 0.5rem;
+    z-index: 10000;
+    background-color: transparent !important;
+  }
+  
+  html.printing-dark .print-chapter-info::before,
+  .quarto-dark.print-chapter-info::before {
+    color: #aaa !important;
+  }
+  
+  /* Page breaks */
+  .chapter, h1, h2 {
+    page-break-before: auto;
+    page-break-after: avoid;
+  }
+  
+  /* Avoid breaks inside elements */
+  pre, blockquote, figure, .callout, table {
+    page-break-inside: avoid;
+  }
+  
+  /* Ensure callout styling prints well */
+  .callout {
+    border: 1px solid #ddd !important;
+    padding: 0.5rem !important;
+  }
+  
+  /* Mathematics in dark mode */
+  html.printing-dark .katex,
+  html.printing-dark .MathJax,
+  .quarto-dark .katex,
+  .quarto-dark .MathJax {
+    color: #e9ecef !important;
+  }
+  
+  /* Images and figures */
+  html.printing-dark img,
+  .quarto-dark img {
+    opacity: 0.9;
+  }
+  
+  /* Blockquotes */
+  html.printing-dark blockquote,
+  .quarto-dark blockquote {
+    border-left-color: #444 !important;
+    color: #adb5bd !important;
+    background-color: transparent !important;
+  }
+}
+</style>

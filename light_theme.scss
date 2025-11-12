@@ -1,0 +1,123 @@
+/*-- scss:defaults --*/
+
+/* ===== Base palette (pastels) ===== */
+$charcoal: #333333;   // main text
+$teal:     #55C3CB;   // definitions / primary accent
+$orange:   #F39C65;   // examples
+$purple:   #A180DA;   // important results
+$mint:     #DDFFEB;   // emphasis boxes / soft backgrounds
+
+/* ===== Runtime palette as SCSS vars ===== */
+$brand-fg:        #333333;
+$brand-bg:        #f8f8f8;
+$plot-panel-bg:   #f0f1f2;
+
+$brand-teal:      #55a6cb;
+$brand-orange:    #F39C65;
+$brand-purple:    #A180DA;
+$brand-mint:      #DDFFEB;
+$brand-warn:      #E86D5A;
+$brand-red:       #e65660;
+
+$brand-teal-hover:rgb(65, 137, 142);      /* slightly darker for hover */
+$brand-red-hover: rgb(173,39,24);
+
+$surface:         rgb(224, 238, 241);   /* card/summary background */
+$surface-weak:    #fafafa;   /* grid background */
+$surface-weaker:  rgb(224, 238, 241);
+$border:          #dee2e6;   /* thin borders */
+$fg-muted:        #475569;   /* headings/labels */
+$fg-strong:       #334155;   /* summary text/chevron */
+
+$thumb-scrollbar-bg: rgb(170, 181, 184);
+
+/* ===== Emit CSS custom properties (from SCSS vars) ===== */
+:root {
+  --brand-fg:        #{$brand-fg};
+  --brand-bg:        #{$brand-bg};
+  --plot-panel-bg:   #{$plot-panel-bg};
+
+  --brand-teal:      #{$brand-teal};
+  --brand-orange:    #{$brand-orange};
+  --brand-purple:    #{$brand-purple};
+  --brand-mint:      #{$brand-mint};
+  --brand-warn:      #{$brand-warn};
+  --brand-red:       #{$brand-red};
+
+  --brand-teal-hover:#{$brand-teal-hover};
+  --brand-red-hover: #{$brand-red-hover};
+
+  --surface:         #{$surface};
+  --surface-weak:    #{$surface-weak};
+  --surface-weaker:  #{$surface-weaker};
+  --border:          #{$border};
+  --fg-muted:        #{$fg-muted};
+  --fg-strong:       #{$fg-strong};
+
+  --panel-bg: #{$brand-bg};
+  --header-bg: #{$surface-weak};
+  --code-bg:  #{$brand-bg};
+  --code-fg:  #{$charcoal};
+  --btn-hover: #{$brand-teal-hover};
+  --btn-active: #{$brand-bg};
+
+  --thumb-scrollbar-bg: #{$thumb-scrollbar-bg};
+}
+
+/* ===== Subtle neutrals & derived tones ===== */
+$bg-white:  $brand-bg;
+$bg-soft:   #e5ebf0;                     // very light surface for code / blocks
+$teal-600:  darken($teal, 12%);          // for hovers / borders
+$teal-050:  mix($teal, $bg-white, 12%);  // faint highlight
+$mint-100:  mix($mint, $bg-white, 10%);  // softer mint panel
+$orange-600: darken($orange, 10%);
+$purple-600: darken($purple, 10%);
+
+/* ===== Page & common UI ===== */
+$body-bg:    $bg-white;
+$body-color: $charcoal;
+$link-color: $teal;
+$input-bg:   $bg-white;
+$popover-bg: $bg-white;
+
+/* ===== Code annotations & copy button ===== */
+$code-annotation-highlight-color: $teal-600;
+$code-annotation-highlight-bg:    $teal-050;
+
+$btn-code-copy-color:         $teal;
+$btn-code-copy-color-active:  $teal-600;
+
+$code-bg:    $bg-soft !important;
+$code-color: $charcoal !important;
+
+/* ===== Callouts ===== */
+$callout-color-note:      $teal;
+$callout-color-tip:       #6CCFA7;   // gentle green (pairs with mint)
+$callout-color-caution:   $orange;
+$callout-color-warning:   $brand-warn;
+$callout-color-important: $purple;
+
+/* ===== Navigation / layout ===== */
+$navbar-bg:  $bg-white;
+$navbar-fg:  $charcoal;
+$navbar-hl:  $teal;
+
+$sidebar-bg: $bg-white;
+$sidebar-fg: $charcoal;
+$sidebar-hl: $teal;
+
+$footer-bg:  #F6F6F6;
+$footer-fg:  $charcoal;
+
+:root {
+  --navbar-bg:  #{$navbar-bg};
+  --navbar-fg:  #{$navbar-fg};
+  --navbar-hl:  #{$navbar-hl};
+}
+
+.navbar {
+  background-color: $navbar-bg;
+  color: var(--navbar-fg);
+  /* Add bottom border */
+  border-bottom: 2px solid var(--border); 
+}

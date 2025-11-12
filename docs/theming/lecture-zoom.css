@@ -1,0 +1,103 @@
+/* Hide sidebars & page nav in zoom */
+body.lecture-zoom #quarto-sidebar,
+body.lecture-zoom .quarto-sidebar,
+body.lecture-zoom .sidebar,
+body.lecture-zoom .quarto-margin-sidebar,
+body.lecture-zoom .sidebar-navigation {
+  display: none !important;
+}
+
+/* Expand main content */
+body.lecture-zoom main#quarto-document-content,
+body.lecture-zoom main.content {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding-left: max(4rem, env(safe-area-inset-left)) !important;
+  padding-right: max(4rem, env(safe-area-inset-right)) !important;
+}
+
+/* Relax page grid */
+body.lecture-zoom .page-columns {
+  grid-template-columns: 1fr !important;
+}
+body.lecture-zoom .page-columns > * {
+  grid-column: 1 / -1 !important;
+}
+
+html.lecture-zoom { font-size: 20px !important; }
+
+/* Fullscreen overlay that will *host* the existing Quarto autocomplete UI */
+#lecture-search-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 5000;                 /* above content/header */
+  background: rgba(0,0,0,0.25);  /* dim backdrop */
+  backdrop-filter: blur(2px);
+  padding: 10vh 1rem 2rem;       /* space from top + side padding */
+}
+#lecture-search-overlay.open { display: block; }
+
+/* Center the search container */
+#lecture-search-overlay .lecture-search-modal {
+  max-width: 840px;
+  margin: 0 auto;
+  position: relative;  /* Important: establish positioning context for dropdown */
+}
+
+/* Ensure the autocomplete root stretches nicely */
+#lecture-search-overlay .aa-Autocomplete {
+  width: 100%;
+  position: relative;  /* Ensure dropdown positions relative to this */
+}
+
+/* Fix the dropdown panel positioning and width */
+#lecture-search-overlay .aa-Panel {
+  position: absolute !important;  /* Use absolute positioning within modal */
+  top: 100% !important;           /* Position directly below input */
+  left: 0 !important;             /* Align to left edge */
+  right: 0 !important;            /* Stretch to right edge */
+  width: auto !important;         /* Let left/right determine width */
+  max-width: none !important;     /* Remove any max-width constraints */
+  margin-top: 0.5rem !important;  /* Small gap below input */
+  z-index: 5001 !important;       /* Above the overlay backdrop */
+  
+  /* Ensure panel is visible and not blurred */
+  background: var(--bs-body-bg, white);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Ensure dropdown content isn't affected by backdrop filter */
+#lecture-search-overlay .aa-PanelLayout {
+  background: var(--bs-body-bg, white);
+  max-height: 60vh;  /* Limit height for scrolling */
+  overflow-y: auto;
+}
+
+/* Optional: Improve search input styling in modal */
+#lecture-search-overlay .aa-Input {
+  font-size: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 2px solid var(--bs-border-color);
+  background: var(--bs-body-bg, white);
+}
+
+#lecture-search-overlay .aa-Input:focus {
+  outline: none;
+  border-color: var(--bs-primary, #0066cc);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+/* Ensure form/wrapper doesn't clip the dropdown */
+#lecture-search-overlay .aa-Form {
+  position: relative;
+}
+
+/* Reset any inherited filters on the modal content */
+#lecture-search-overlay .lecture-search-modal * {
+  backdrop-filter: none !important;
+}

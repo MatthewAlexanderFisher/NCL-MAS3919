@@ -1,0 +1,257 @@
+---
+execute:
+  echo: false
+jupyter: mas2901
+tbl-cap-location: bottom
+
+---
+
+# Formula Sheet {.unnumbered #sec-formula-sheet}
+
+###### {#sec-formula-sheet}
+
+## Discrete distributions 
+
+### Bernoulli {#sec-bern}
+**Model.** $X \sim \operatorname{Bernoulli}(p)$ with $0<p<1$.  
+**Support.** $x \in \{0,1\}$.  
+**PMF.**
+$$
+\operatorname{Pr}(X=x) = p^{\,x}(1-p)^{1-x}, \quad x\in\{0,1\}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=p,\quad \operatorname{Var}(X)=p(1-p).$
+
+---
+
+### Binomial {#sec-binom}
+**Model.** $X \sim \operatorname{Binom}(n,p)$, $n\in \mathbb{N}$, $0<p<1$.  
+**Support.** $x=0,1,\ldots,n$.  
+**PMF.**
+$$
+\operatorname{Pr}(X=x) = \binom{n}{x} p^x (1-p)^{n-x}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=np,\quad \operatorname{Var}(X)=np(1-p).$
+
+---
+
+### Multinomial {#sec-multinomial}
+**Model.** $\mathbf{X}=(X_1,\ldots,X_k) \sim \operatorname{Multinomial}(n,\mathbf{p})$, with $n\in\mathbb{N}$, $k\ge 2$, $\mathbf{p}=(p_1,\ldots,p_k)$, $p_i>0$, and $\sum_{i=1}^k p_i=1$.  
+**Support.** $\mathbf{x}=(x_1,\ldots,x_k)$ where $x_i\in\{0,1,\ldots,n\}$ and $\sum_{i=1}^k x_i=n$.  
+**PMF.**
+$$
+\Pr(\mathbf{X}=\mathbf{x})
+=\frac{n!}{x_1!\cdots x_k!}\prod_{i=1}^k p_i^{\,x_i}.
+$$
+**Mean/Cov.**
+$$
+\mathbb{E}[X_i]=n p_i,\qquad 
+\operatorname{Var}(X_i)=n p_i(1-p_i),\qquad 
+\operatorname{Cov}(X_i,X_j)=-\,n p_i p_j\quad (i\ne j).
+$$
+**Vector form.**
+$$
+\mathbb{E}[\mathbf{X}]=n\,\mathbf{p},\qquad 
+\operatorname{Cov}(\mathbf{X})=n\left(\operatorname{diag}(\mathbf{p})-\mathbf{p}\mathbf{p}^\top\right).
+$$
+
+*Note.* For $k=2$, the first component $X_1 \sim \operatorname{Bin}(n,p_1)$ (Binomial).
+
+---
+
+### Poisson {#sec-pois}
+**Model.** $X \sim \operatorname{Pois}(\lambda)$, $\lambda>0$.  
+**Support.** $x=0,1,2,\ldots$.  
+**PMF.**
+$$
+\operatorname{Pr}(X=x)=\frac{\lambda^x e^{-\lambda}}{x!}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=\lambda,\quad \operatorname{Var}(X)=\lambda.$
+
+---
+
+### Geometric {#sec-geom}
+
+**Model.** $X \sim \operatorname{Geom}(p)$ (trials **until first success**, counting the success), $0<p<1$.  
+**Support.** $x=1,2,\ldots$.  
+**PMF.**
+$$
+\operatorname{Pr}(X=x)=p(1-p)^{x-1}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=\frac{1}{p},\quad \operatorname{Var}(X)=\frac{1-p}{p^2}.$
+
+::: {.callout-warning}
+### Parameterisation alert
+Some texts start at $x=0$ (failures before the first success).
+:::
+
+---
+
+### Negative Binomial {#sec-negbin}
+**Model.** $X \sim \operatorname{NegBin}(r,p)$: number of trials to achieve the $r$-th success (counts the successes), $r>0$ (often integer), $0<p<1$.  
+**Support.** $x=r,r+1,\ldots$.  
+**PMF.**
+$$
+\operatorname{Pr}(X=x) = \binom{x-1}{r-1} p^{\,r} (1-p)^{x-r}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=\frac{r}{p},\quad \operatorname{Var}(X)=\frac{r(1-p)}{p^2}.$
+
+::: {.callout-warning}
+### Parameterisation alert
+Another common version counts **failures** before the $r$-th success ($x=0,1,\dots$) with different mean/variance. Always check which one is used.
+:::
+
+---
+
+## Continuous distributions
+
+### Uniform (continuous) {#sec-unif}
+**Model.** $X \sim \mathcal{U}(a,b)$, $a<b$.  
+**Support.** $a<x<b$.  
+**PDF.**
+$$
+f_X(x;a,b)=\frac{1}{b-a}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=\frac{a+b}{2},\quad \operatorname{Var}(X)=\frac{(b-a)^2}{12}.$
+
+---
+
+### Exponential {#sec-exp}
+**Model.** $X \sim \operatorname{Exponential}(\lambda)$ with **rate** $\lambda>0$.  
+**Support.** $x>0$.  
+**PDF.**
+$$
+f_X(x;\lambda)=\lambda e^{-\lambda x}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=\frac{1}{\lambda},\quad \operatorname{Var}(X)=\frac{1}{\lambda^2}.$
+
+---
+
+### Gamma {#sec-gamma}
+**Model.** $X \sim \operatorname{Gamma}(a,b)$ with **shape** $a>0$ and **rate** $b>0$.  
+**Support.** $x>0$.  
+**PDF.**
+$$
+f_X(x;a,b)=\frac{b^a}{\Gamma(a)} x^{a-1} e^{-bx}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=\frac{a}{b},\quad \operatorname{Var}(X)=\frac{a}{b^2}.$
+
+::: {.callout-warning}
+### Parameterisation alert
+Many sources use **scale** $\beta=1/b$: then $f(x)=\frac{1}{\Gamma(a)\beta^a}x^{a-1}e^{-x/\beta}$ and $\mathbb{E}[X]=a\beta$.
+:::
+
+---
+
+### Inverse Gamma {#sec-inv-gamma}
+**Model.** $X \sim \operatorname{InvGamma}(a,b)$, with $a>0$, $b>0$.  
+**Support.** $x>0$.  
+**PDF.**
+$$
+f_X(x;a,b)=\frac{b^a}{\Gamma(a)} x^{-(a-1)} e^{-bx^{-1}}.
+$$
+**Statistics.** $\mathbb{E}[X]=\frac{b}{a-1},\quad \operatorname{Var}(X)=\frac{b^2}{(a-1)^2(a-2)}$ and $\text{Mode}(X) = \frac{b}{a+1}$ if $a > 2$.
+
+---
+
+### Normal {#sec-normal}
+**Model.** $X \sim \mathcal{N}(\mu,\sigma^2)$ with $\sigma>0$.  
+**Support.** $x\in\mathbb{R}$.  
+**PDF.**
+$$
+f_X(x;\mu,\sigma^2)=\frac{1}{\sqrt{2\pi \sigma^2}}
+\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
+$$
+**Mean/Var.** $\mathbb{E}[X]=\mu,\quad \operatorname{Var}(X)=\sigma^2.$
+
+#### Properties {#sec-normal-properties}
+Suppose $X_1,\ldots, X_n$ are independent normal random variables, then:
+
+---
+
+### Lognormal {#sec-lognormal}
+**Model.** $X \sim \operatorname{LogNormal}(\mu,\sigma^2)$ meaning $\ln X \sim \mathcal{N}(\mu,\sigma^2)$.  
+**Support.** $x>0$.  
+**PDF.**
+$$
+f_X(x;\mu,\sigma^2)=\frac{1}{x\sqrt{2\pi\sigma^2}}
+\exp\!\left(-\frac{(\ln x-\mu)^2}{2\sigma^2}\right).
+$$
+**Mean/Var.** $\mathbb{E}[X]=e^{\mu+\sigma^2/2},\quad \operatorname{Var}(X)=\big(e^{\sigma^2}-1\big)e^{2\mu+\sigma^2}.$
+
+---
+
+### Chi-squared {#sec-chisq}
+**Model.** $X \sim \chi^2_\nu$ with $\nu>0$ degrees of freedom.  
+**Support.** $x>0$.  
+**PDF.**
+$$
+f_X(x;\nu)=\frac{1}{2^{\nu/2}\Gamma(\nu/2)}x^{\nu/2-1}e^{-x/2}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=\nu,\quad \operatorname{Var}(X)=2\nu.$
+
+::: {.callout-note}
+$\chi^2_\nu$ is a special case of Gamma with $a=\nu/2$, $b=1/2$.
+:::
+
+---
+
+### Student-$t$ {#sec-t}
+**Model.** $X \sim t_\nu$ with $\nu>0$ degrees of freedom.  
+**Support.** $x\in\mathbb{R}$.  
+**PDF.**
+$$
+f_X(x;\nu)=\frac{\Gamma\!\left(\frac{\nu+1}{2}\right)}{\sqrt{\nu\pi}\,\Gamma\!\left(\frac{\nu}{2}\right)}
+\left(1+\frac{x^2}{\nu}\right)^{-(\nu+1)/2}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=0$ for $\nu>1$; undefined for $\nu\le 1$.  
+$\operatorname{Var}(X)=\frac{\nu}{\nu-2}$ for $\nu>2$; infinite for $1<\nu\le 2$; undefined for $\nu\le 1$.
+
+---
+
+### $F$ distribution {#sec-f}
+**Model.** $X \sim F_{d_1,d_2}$ with $d_1,d_2>0$ degrees of freedom.  
+**Support.** $x>0$.  
+**PDF.**
+$$
+f_X(x;d_1,d_2)=\frac{\Gamma\!\left(\frac{d_1+d_2}{2}\right)}{\Gamma\!\left(\frac{d_1}{2}\right)\Gamma\!\left(\frac{d_2}{2}\right)}
+\left(\frac{d_1}{d_2}\right)^{d_1/2}\frac{x^{d_1/2-1}}{\left(1+\frac{d_1}{d_2}x\right)^{(d_1+d_2)/2}}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=\frac{d_2}{d_2-2}$ for $d_2>2$.  
+$\operatorname{Var}(X)=\frac{2d_2^2(d_1+d_2-2)}{d_1(d_2-2)^2(d_2-4)}$ for $d_2>4$.
+
+---
+
+### Beta {#sec-beta}
+**Model.** $X \sim \operatorname{Beta}(a,b)$, $a>0, b>0$.  
+**Support.** $0<x<1$.  
+**PDF.**
+$$
+f_X(x;a,b)=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\,x^{a-1}(1-x)^{b-1}.
+$$
+**Mean/Var.** $\mathbb{E}[X]=\frac{a}{a+b},\quad \operatorname{Var}(X)=\frac{ab}{(a+b)^2(a+b+1)}.$
+
+---
+
+### Weibull {#sec-weibull}
+**Model.** $X \sim \operatorname{Weibull}(\beta,\theta)$, $\beta>0, \theta>0$.  
+**Support.** $x > 0$.  
+**PDF.**
+$$
+f_X(x) = \frac{\beta}{\theta}x^{\beta - 1} \exp\left(-\frac{x^\beta}{\theta}\right)
+$$
+
+---
+
+## Multivariate Distributions
+
+### Multivariate Normal {#sec-mvnorm}
+**Model.** $\mathbf{X} \sim \mathcal{N}_p(\boldsymbol{\mu},\Sigma)$ with $\Sigma$ positive definite.  
+**Support.** $\mathbf{x}\in\mathbb{R}^p$.  
+**PDF.**
+$$
+f_{\mathbf{X}}(\mathbf{x};\boldsymbol{\mu},\Sigma)=\frac{1}{(2\pi)^{p/2}(\det\Sigma)^{1/2}}
+\exp\!\left(-\tfrac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^\top \Sigma^{-1}(\mathbf{x}-\boldsymbol{\mu})\right).
+$$
+**Mean/Cov.** $\mathbb{E}[\mathbf{X}]=\boldsymbol{\mu},\quad \operatorname{Var}(\mathbf{X})=\Sigma.$
+
+---

@@ -1,0 +1,322 @@
+---
+execute:
+  echo: false
+jupyter: mas2901
+tbl-cap-location: bottom
+
+---
+
+
+# Question Bank {.unnumbered}
+
+```{python}
+#| echo: false
+
+import matplotlib.pyplot as plt
+
+def set_plot_theme(mode="light"):
+    """Switch matplotlib colours between light and dark themes."""
+    
+    if mode == "light":
+        plot_bg, plot_fg = "#f8f8f8", "#333333"
+    elif mode == "dark":
+        plot_bg, plot_fg = "#151515", "#EAEAEA"
+    else:
+        raise ValueError("mode must be 'light' or 'dark'")
+
+    # Backgrounds
+    plt.rcParams["figure.facecolor"] = plot_bg
+    plt.rcParams["axes.facecolor"]   = plot_bg
+    plt.rcParams["savefig.facecolor"] = plot_bg
+
+    # Foregrounds
+    plt.rcParams["text.color"]       = plot_fg
+    plt.rcParams["axes.labelcolor"]  = plot_fg
+    plt.rcParams["axes.edgecolor"]   = plot_fg
+    plt.rcParams["xtick.color"]      = plot_fg
+    plt.rcParams["ytick.color"]      = plot_fg
+    plt.rcParams["legend.edgecolor"] = plot_fg
+    plt.rcParams["legend.labelcolor"] = plot_fg
+    plt.rcParams["grid.color"]       = plot_fg
+
+```
+
+
+::: {.content-visible unless-format="pdf"}
+
+```{ojs}
+bodyFont = getComputedStyle(document.body).fontFamily
+```
+
+```{ojs}
+// reactive vars (visible to later cells)
+allQuestions = Array.from(document.querySelectorAll('.question'))
+
+allTags = Array.from(new Set(
+  allQuestions.flatMap(el => (el.dataset.tags || "")
+    .split(/\s+/).map(t => t.trim()).filter(Boolean))
+)).sort()
+```
+
+```{ojs}
+{
+  for (const el of allQuestions) {
+    // --- Tagbar (unchanged) ---
+    if (!el.querySelector('.tagbar')) {
+      const tags = (el.dataset.tags || "").split(/\s+/).filter(Boolean);
+      const bar = document.createElement('div');
+      bar.className = 'tagbar';
+      bar.append(...tags.map(t => Object.assign(document.createElement('span'), {
+        className: 'tag', textContent: t
+      })));
+      el.appendChild(bar);
+    }
+
+    // --- Difficulty peppers in header (RHS) ---
+    const header = el.querySelector('.callout-header');
+    if (header && !header.querySelector('.difficulty-peppers')) {
+      const level = Number(el.dataset.difficulty ?? 0);
+
+      // Always show, but only add peppers if >0
+      const span = document.createElement('span');
+      span.className = `difficulty-peppers level-${level}`;
+      span.setAttribute('aria-label', `Difficulty ${level}`);
+      span.textContent = level > 0 ? `(${ "🌶".repeat(level) })` : "( )";
+      header.appendChild(span);
+    }
+  }
+  return html``  // silence
+}
+```
+
+```{ojs}
+viewof typed = {
+  // --- DOM
+  const wrapper = html`<div class="token-autocomplete"></div>`;
+  const labelEl = html`<label class="token-label">Filter by tags (type, space-separated):</label>`;
+  const input   = html`<input class="token-input" type="text" placeholder="e.g. bayes probability">`;
+  wrapper.append(labelEl, input);
+
+  // --- PORTAL: suggestions list lives at document.body so it can overlay everything
+  const list = html`<div class="token-suggestions" role="listbox" hidden></div>`;
+  document.body.appendChild(list);
+
+  // Make sure it floats above all content
+  list.style.position = "fixed";
+  list.style.zIndex = "9999"; // high z-index to overlay everything
+
+  // --- value plumbing
+  Object.defineProperty(wrapper, "value", {
+    get() { return input.value; },
+    set(v) { input.value = v ?? ""; }
+  });
+
+  // --- helpers
+  const TAGS = () => (typeof allTags !== "undefined" ? allTags : []);
+  const tokens = () => input.value.split(/\s+/).filter(Boolean);
+  const lastToken = () => (input.value.match(/(?:^|\s)(\S*)$/)?.[1]) ?? "";
+  const pretty = t => t.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+  // Position portal directly below the input, matching its width
+  const alignList = () => {
+    const r = input.getBoundingClientRect();
+    list.style.left = `${r.left}px`;
+    list.style.top  = `${r.bottom + 4}px`;
+    list.style.width = `${r.width}px`;
+  };
+
+  // --- render suggestions
+  let selectedIndex = -1;
+  const applyActiveStyles = () => {
+    const items = Array.from(list.children);
+    items.forEach((el, i) => el.classList.toggle("active", i === selectedIndex));
+  };
+
+  function renderSuggestions() {
+    const q = lastToken().toLowerCase();
+    const already = new Set(tokens().map(s => s.toLowerCase()));
+    const tags = TAGS();
+
+    const candidates = q
+      ? tags.filter(t => t.toLowerCase().startsWith(q) && !already.has(t.toLowerCase()))
+      : [];
+
+    list.innerHTML = "";
+    if (candidates.length === 0) { list.hidden = true; return; }
+
+    for (const t of candidates.slice(0, 8)) {
+      const item = html`<div class="token-suggestion" role="option" data-token="${t}">${pretty(t)}</div>`;
+      item.addEventListener("mousedown", (e) => { e.preventDefault(); acceptSuggestion(t); });
+      list.appendChild(item);
+    }
+    selectedIndex = -1;
+    applyActiveStyles();
+    list.hidden = false;
+    alignList(); // ensure correct position when shown
+  }
+
+  function commit() {
+    const parts = tokens();
+    input.value = parts.join(" ") + (parts.length ? " " : "");
+    wrapper.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  function acceptSuggestion(tag) {
+    const parts = input.value.split(/\s+/);
+    if (/\S/.test(input.value)) parts.pop(); // replace last token
+    const set = new Set(parts.filter(Boolean).map(s => s.toLowerCase()));
+    if (!set.has(tag.toLowerCase())) parts.push(tag);
+    input.value = parts.filter(Boolean).join(" ") + " ";
+    list.hidden = true;
+    commit();
+    input.focus();
+  }
+
+  function moveSelection(delta) {
+    const items = Array.from(list.children);
+    if (items.length === 0) return;
+    selectedIndex = (selectedIndex + delta + items.length) % items.length;
+    applyActiveStyles();
+    if (selectedIndex >= 0) items[selectedIndex].scrollIntoView({ block: "nearest" });
+  }
+
+  // --- events
+  input.addEventListener("input", renderSuggestions);
+  input.addEventListener("focus", () => { alignList(); }); // realign on focus
+
+  input.addEventListener("keydown", (e) => {
+    if (!list.hidden && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+      e.preventDefault(); moveSelection(e.key === "ArrowDown" ? +1 : -1); return;
+    }
+    if (e.key === "Enter") {
+      if (!list.hidden && selectedIndex >= 0) {
+        e.preventDefault();
+        const choice = list.children[selectedIndex]?.dataset.token;
+        if (choice) acceptSuggestion(choice);
+      } else {
+        commit();
+      }
+    } else if (e.key === "Escape") {
+      list.hidden = true;
+    }
+  });
+
+  // Delay blur to allow mousedown on suggestion to fire first
+  input.addEventListener("blur", () => {
+    setTimeout(() => { list.hidden = true; commit(); }, 200);
+  });
+
+  // Close when clicking outside (remember list is outside wrapper now)
+  const onDocClick = (e) => {
+    if (e.target !== input && !list.contains(e.target)) list.hidden = true;
+  };
+  document.addEventListener("click", onDocClick, true);
+
+  // Reposition on any scroll/resize (capture scrolls from nested containers)
+  const onViewportChange = () => { if (!list.hidden) alignList(); };
+  window.addEventListener("resize", onViewportChange, { passive: true });
+  window.addEventListener("scroll", onViewportChange, true);
+
+  // Initial alignment
+  queueMicrotask(alignList);
+
+  // Cleanup when the cell re-runs
+  wrapper.dispose = () => {
+    document.removeEventListener("click", onDocClick, true);
+    window.removeEventListener("resize", onViewportChange, { passive: true });
+    window.removeEventListener("scroll", onViewportChange, true);
+    list.remove();
+  };
+
+  // Initial render
+  renderSuggestions();
+
+  return wrapper;
+}
+
+```
+
+
+```{ojs}
+viewof chosen = Inputs.checkbox(allTags, {
+  label: md`Or pick tags:`,
+  value: []
+})
+
+viewof levels = Inputs.checkbox(
+  [0, 1, 2, 3],
+  {
+    label: md`Difficulty:`,
+    value: [0, 1, 2, 3],                 // default: show all
+    format: d => ["Easy", "Medium", "Hard", "Too hard"][d]
+  }
+)
+
+
+```
+
+```{ojs}
+{
+  // Sync checkboxes to the committed text tokens
+  const lcMap = new Map(allTags.map(t => [t.toLowerCase(), t])); // lower → original
+  const typedNow = (typed || "").split(/\s+/).filter(Boolean).map(s => s.toLowerCase());
+  const selected = typedNow.map(s => lcMap.get(s)).filter(Boolean);
+
+  const el = viewof chosen;
+  if (el && Array.isArray(el.value)) {
+    // compare sets to avoid churn
+    const cur = new Set(el.value);
+    let equal = selected.length === cur.size && selected.every(v => cur.has(v));
+    if (!equal) {
+      el.value = selected;
+      el.dispatchEvent(new Event("input", {bubbles:true}));
+    }
+  }
+  return html``;
+}
+```
+
+```{ojs}
+{
+  const typedSet  = new Set((typed || "").split(/\s+/).filter(Boolean));
+  const chosenSet = new Set(chosen || []);
+  const required  = new Set([...typedSet, ...chosenSet]);   // AND over tags
+  const chosenLv  = new Set(levels || []);                  // allowed levels
+
+  let shown = 0;
+  for (const el of allQuestions) {
+    // tags check
+    const elTags = new Set((el.dataset.tags || "").split(/\s+/).filter(Boolean));
+    const passTags = required.size === 0 || [...required].every(t => elTags.has(t));
+
+    // difficulty check (0 default)
+    const level = Number(el.dataset.difficulty ?? 0);
+    const passDiff = chosenLv.has(level);
+
+    const show = passTags && passDiff;
+    el.style.display = show ? "" : "none";
+    if (show) shown += 1;
+  }
+
+  return html`<div><strong>Showing ${shown}</strong> of ${allQuestions.length} questions.</div>`
+}
+
+```
+
+:::
+
+::: {.callout-important .question appearance="minimal" data-tags="probability" data-difficulty="0"}
+## Probability of heads
+A fair coin is tossed $10$ times. What is the probability of exactly $6$ heads?
+
+<details class="solution">
+  <summary>Solution</summary>
+
+Work it via the Binomial:
+$$
+\mathrm{Pr}(X=6)=\binom{10}{6} (1/2)^{10}.
+$$
+
+</details>
+
+:::

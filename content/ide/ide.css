@@ -1,0 +1,247 @@
+/* Hide Quarto title if needed */
+.quarto-title > h1.title {
+  opacity: 0 !important;
+}
+
+/* Main grid - now just 2 columns */
+.py3grid {
+  display: grid;
+  gap: 8px;
+  height: calc(100vh - 100px);
+  grid-template-columns: 1fr 1fr;
+  padding: 8px;
+}
+
+/* Panel structure */
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel-bg);
+}
+
+:root { --header-h: 44px; }  /* tweak to taste */
+
+.panel > header {
+  height: var(--header-h);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 0.75rem;        /* move vertical space into the fixed height */
+  display: flex;
+  font-size: 0.875rem;
+  font-weight: 500;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;       /* stop wrapping that would force extra height */
+  overflow: hidden;          /* clip if it ever overflows */
+}
+
+
+.panel > .body {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--btn-active);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--btn-hover);
+}
+
+.btn:active:not(:disabled) {
+  background: var(--btn-active);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#status {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-left: 0.5rem;
+}
+
+
+
+/* Terminal output */
+#terminal {
+  padding: 1rem;
+  font-family: "Atkinson Hyperlegible Mono", "Fira Code", "Cascadia Code", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Matplotlib figure styling */
+#terminal .matplotlib-figure {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: inline-block;
+}
+
+#terminal .ui-dialog {
+  position: relative !important;
+  display: inline-block !important;
+  margin: 1rem 0 !important;
+  padding: 0 !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  background: white !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+}
+
+#terminal .ui-dialog-titlebar {
+  display: none !important;
+}
+
+#terminal .ui-dialog-content {
+  padding: 0.5rem !important;
+  position: relative !important;
+}
+/* Compact toolbar + match your button colours */
+#terminal .mpl-toolbar {
+  --mpl-btn: 24px;            /* square size */
+  --mpl-icon: 12px;           /* icon size */
+  --mpl-font: 10px;           /* input/readout text */
+  --tooltip-bg: rgba(17, 24, 39, 0.95); /* dark tooltip */
+  padding: 4px 6px !important;
+  gap: 4px !important;
+  font-size: var(--mpl-font) !important;
+  line-height: 1.1 !important;
+  background: var(--header-bg) !important;
+  border-top: 1px solid var(--border) !important;
+}
+
+#terminal .mpl-toolbar .mpl-button-group { gap: 4px !important; align-items: center !important; }
+
+#terminal .mpl-toolbar button.mpl-widget {
+  position: relative; /* needed for tooltip */
+  width: var(--mpl-btn) !important;
+  height: var(--mpl-btn) !important;
+  padding: 0 !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  background: white !important;
+  cursor: pointer !important;
+  line-height: 0 !important;
+  transition: background .15s, border-color .15s !important;
+}
+#terminal .mpl-toolbar button.mpl-widget:hover { background: var(--btn-hover) !important; }
+#terminal .mpl-toolbar button.mpl-widget:active { background: var(--btn-active) !important; }
+#terminal .mpl-toolbar button.mpl-widget:disabled { opacity: .5; cursor: not-allowed; }
+#terminal .mpl-toolbar button.mpl-widget:focus-visible {
+  outline: 2px solid var(--focus, #2563eb) !important;
+  outline-offset: 1px !important;
+}
+
+#terminal .mpl-toolbar button.mpl-widget img,
+#terminal .mpl-toolbar button.mpl-widget svg {
+  width: var(--mpl-icon) !important;
+  height: var(--mpl-icon) !important;
+  display: block !important;
+  margin: auto !important;
+}
+
+/* Hide any stray text nodes beside icons (we’ll use tooltips instead) */
+#terminal .mpl-toolbar button.mpl-widget { font-size: 0 !important; }
+
+/* Inputs/selects/readout still legible */
+#terminal .mpl-toolbar input.mpl-widget,
+#terminal .mpl-toolbar select.mpl-widget,
+#terminal .mpl-toolbar label.mpl-widget,
+#terminal .mpl-toolbar .mpl-message {
+  font-size: var(--mpl-font) !important;
+}
+
+/* CSS-only tooltip using data-tooltip (set via JS below) */
+#terminal .mpl-toolbar button.mpl-widget[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: var(--tooltip-bg);
+  color: #fff;
+  font-size: 11px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.15);
+  z-index: 10;
+}
+#terminal .mpl-toolbar button.mpl-widget[data-tooltip]:hover::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--tooltip-bg);
+}
+
+#terminal .mpl-toolbar .mpl-message {
+    display: none;
+}
+
+
+/* Responsive - stack on narrow screens */
+@media (max-width: 768px) {
+  .py3grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: auto;
+  }
+  
+  .panel {
+    min-height: 400px;
+  }
+}
+
+
+/* CodeMirror theme overrides */
+.CodeMirror {
+  background: transparent !important;
+  color: var(--code-fg) !important;
+  font-family: "Atkinson Hyperlegible Mono", monospace !important;
+  font-size: 12px !important;
+  height: 100% !important;
+}
+
+.CodeMirror-gutters {
+  background: var(--brand-bg) !important;
+  border-right: 1px solid #333 !important;
+}
+
+.CodeMirror-linenumber {
+  color: var(--border) !important;
+  font-size: 12px !important;
+}
+
+
+.CodeMirror-line  {
+  background: transparent !important;
+}

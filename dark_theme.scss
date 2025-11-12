@@ -1,0 +1,126 @@
+/*-- scss:defaults --*/
+
+/* ===== Base palette (pastels, dark-tuned) ===== */
+$charcoal: #EAEAEA;   // main text (light grey, softer than pure white)
+$teal:     #58adca;   // definitions / primary accent
+$orange:   #F7B77F;   // examples
+$purple:   #B59AF0;   // important results
+$mint:     #3A4F46;   // emphasis boxes / soft backgrounds
+
+/* ===== Runtime palette as SCSS vars ===== */
+$brand-fg:        #EAEAEA;
+$brand-bg:        #151515;
+$plot-panel-bg:   #2A2D2E;
+
+$brand-teal:      #58adca;
+$brand-orange:    #c58044;
+$brand-purple:    #B59AF0;
+$brand-mint:      #173628;
+$brand-warn:      #F48A75;
+$brand-red:       #eb6b80;
+
+$brand-teal-hover:#277075;  /* slightly darker for hover */
+$brand-red-hover: #b62941;  /* slightly darker for hover */
+
+$surface:         #232628;
+$surface-weak:    #202325;
+$border:          #696f73;
+$fg-muted:        #c5c9ce;
+$fg-strong:       #e2e6ea;
+
+$surface-weaker:    #202325;
+
+
+$thumb-scrollbar-bg: #232628;
+
+/* ===== Emit CSS custom properties (from SCSS vars) ===== */
+:root {
+  --brand-fg:        #{$brand-fg} !important;
+  --brand-bg:        #{$brand-bg} !important;
+  --plot-panel-bg:   #{$plot-panel-bg} !important;
+
+  --brand-teal:      #{$brand-teal} !important;
+  --brand-orange:    #{$brand-orange} !important;
+  --brand-purple:    #{$brand-purple} !important;
+  --brand-mint:      #{$brand-mint} !important;
+  --brand-warn:      #{$brand-warn} !important;
+  --brand-red:       #{$brand-red} !important;
+
+  --brand-teal-hover:#{$brand-teal-hover} !important;
+  --brand-red-hover: #{$brand-red-hover} !important;
+
+  --surface:         #{$surface} !important;
+  --surface-weak:    #{$surface-weak} !important;
+  --surface-weaker:  #{$surface-weaker} !important;
+
+  --border:          #{$border} !important;
+  --fg-muted:        #{$fg-muted} !important;
+  --fg-strong:       #{$fg-strong} !important;
+
+  --panel-bg: #{$brand-bg} !important;
+  --header-bg: #{$surface-weak} !important;
+  --code-bg:  #{$brand-bg} !important;
+  --code-fg:  #{$charcoal} !important;
+  --btn-hover: #{$brand-teal-hover} !important;
+  --btn-active: #{$brand-bg} !important;
+
+  --thumb-scrollbar-bg: #{$thumb-scrollbar-bg} !important;
+}
+
+/* ===== Subtle neutrals & derived tones ===== */
+$bg-dark:    $brand-bg;                 // page background
+$bg-soft:    $plot-panel-bg;            // soft surface (e.g. code blocks)
+$teal-400:   lighten($teal, 12%);       // hover / borders
+$teal-050:   mix($teal, $bg-dark, 20%); // faint highlight
+$mint-100:   mix($mint, $bg-dark, 30%); // softer mint panel
+$orange-400: lighten($orange, 12%);
+$purple-400: lighten($purple, 12%);
+
+/* ===== Page & common UI ===== */
+$body-bg:    $bg-dark;     // The page background color.
+$body-color: $charcoal;    // The page text color.
+$link-color: $teal;        // The link color.
+$input-bg:   $bg-soft;     // The background color for HTML inputs.
+$popover-bg: $bg-soft;     // The background color for popovers (e.g. citation preview).
+
+/* ===== Code annotations & copy button ===== */
+$code-annotation-highlight-color: $teal-400; // Border on highlighted lines.
+$code-annotation-highlight-bg:    $teal-050; // Background of highlighted lines.
+
+$btn-code-copy-color:         $teal;        // Copy button colour.
+$btn-code-copy-color-active:  $teal-400;    // Hover/active for copy button.
+
+$code-bg:    $bg-soft !important;       // Inline/code block background.
+$code-color: $charcoal !important;      // Inline/code text colour.
+
+/* ===== Callouts ===== */
+$callout-color-note:      $teal;
+$callout-color-tip:       #7FE3B5;      // softer mint-green
+$callout-color-caution:   $orange;
+$callout-color-warning:   #F48A75;      // slightly warmer warning
+$callout-color-important: $purple;
+
+/* ===== Navigation / layout ===== */
+$navbar-bg:  #202020;  
+$navbar-fg:  $charcoal;
+$navbar-hl:  $teal;
+
+$sidebar-bg: $brand-bg;      
+$sidebar-fg: $charcoal;
+$sidebar-hl: $teal;
+
+$footer-bg:  #1A1A1A;
+$footer-fg:  $charcoal;
+
+:root {
+  --navbar-bg:  #{$navbar-bg} !important;
+  --navbar-fg:  #{$navbar-fg} !important;
+  --navbar-hl:  #{$navbar-hl} !important;
+}
+
+.navbar {
+  background-color: $navbar-bg;
+  color: var(--navbar-fg);
+  /* Add bottom border */
+  border-bottom: 2px solid var(--border); 
+}

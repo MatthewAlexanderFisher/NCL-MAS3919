@@ -1,0 +1,226 @@
+/* ============================
+   Header layout + sizing
+   ============================ */
+
+#quarto-header { z-index: 3000; }
+
+
+/* Thicker top navbar */
+#quarto-header nav.navbar {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+/* Make the container a positioning context */
+#quarto-header .navbar-container {
+  position: relative;
+}
+
+/* Brand container spans full width; kill centring from mx-auto */
+#quarto-header .navbar-brand-container {
+  /* position: relative; */
+  width: auto;
+  margin: 0 auto;          /* preserve centring if you still want it */
+  min-height: 42px; /* matches logo height */
+}
+
+/* === Logo: FAR LEFT === */
+#quarto-header .navbar-logo {
+  position: absolute;
+  left: 0.75rem;          /* push to the left edge */
+  top: 50%;
+  transform: translateY(-50%);
+  width: auto;
+  display: block;
+}
+
+.navbar-logo {
+  height: 40px;   /* adjust to taste */
+  width: auto;
+  max-height: 40px;
+}
+
+/* Optional: keep the <a> wrapper from affecting flow */
+#quarto-header .navbar-brand-logo {
+  display: contents;
+}
+
+/* === Title: TRUE CENTRE === */
+#quarto-header .navbar-title {
+  position: absolute;
+  left: 56%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  margin: 0;
+  text-align: center;
+
+  /* Tone down weight/size */
+  font-weight: 500;
+  font-size: 1.02rem;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+/* === MOBILE TITLE SHORTENING === */
+/* Hide the full title on mobile, show shortened version */
+#quarto-header .navbar-title .title-full { display: inline; }
+#quarto-header .navbar-title .title-short { display: none; }
+
+/* === Tools (toggle/search): FAR RIGHT === */
+#quarto-header .quarto-navbar-tools {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* ============================
+   Dark/Light toggle icon
+   ============================
+
+   Quarto adds the class ".alternate" to the toggle <a> when
+   the alternate colour scheme is active (dark in the HTML).
+   Use that to swap the icon. No dependence on BI classes.
+*/
+
+/* Make the toggle bigger and hide the inner <i> */
+#quarto-header .quarto-color-scheme-toggle {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+}
+#quarto-header .quarto-color-scheme-toggle i {
+  display: none !important;
+}
+
+/* Default icon (light mode): show MOON to indicate "switch to dark" */
+#quarto-header .quarto-color-scheme-toggle::after {
+  content: "☾";
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+/* When dark mode is active, Quarto sets .alternate on the toggle:
+   show SUN to indicate "switch to light" */
+#quarto-header .quarto-color-scheme-toggle.alternate::after {
+  content: "☀";
+}
+
+/* Optional hover affordance */
+#quarto-header .quarto-color-scheme-toggle:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+/* Secondary nav slight thickness */
+#quarto-header .quarto-secondary-nav .container-fluid {
+  min-height: 44px;
+}
+
+/* ============================
+   Colour tweaks for logo
+   ============================ */
+/* Default (light mode): dark ink
+#quarto-header .navbar-logo { color: #173e6f; }
+
+/* Dark mode: white ink */
+/* #quarto-header nav[data-bs-theme="dark"] .navbar-logo { color: var(--brand-fg); } */ 
+
+
+/* ============================
+   MOBILE RESPONSIVE ADJUSTMENTS
+   ============================ */
+@media (max-width: 720px) {
+  /* Hide only the image; the anchor is already display: contents */
+  #quarto-header .navbar-logo {
+    display: none !important;
+  }
+
+  /* Left-align title and use CSS to show shortened version */
+  #quarto-header .navbar-title {
+    position: absolute;
+    left: 0.75rem;  /* Same position as logo was */
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    text-align: left;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    
+    /* Hide original text */
+    font-size: 0;
+    white-space: nowrap;
+  }
+  
+  /* Show shortened title using CSS pseudo-element */
+  #quarto-header .navbar-title::after {
+    content: "MAS2901";
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  /* Keep tools at the far right */
+  #quarto-header .quarto-navbar-tools {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+/* For very narrow screens with 4 buttons, make title even smaller if needed */
+@media (max-width: 480px) {
+  #quarto-header .navbar-title::after {
+    font-size: 0.85rem;
+  }
+}
+
+/* Optional: slightly thicker navbar padding (keeps your preference) */
+#quarto-header nav.navbar {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+
+/* Button next to dark/light toggle */
+#quarto-header .btn-zoom-toggle {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: 1px solid var(--navbar-bg, #ddd);
+  background: var(--navbar-bg, white);
+  color: var(--brand-fg, currentColor);
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Icon: ⤢ to enter zoom, ⤡ to exit (auto-swaps when body.lecture-zoom is on) */
+/* #quarto-header .btn-zoom-toggle::after {
+  content: "⛶";
+  font-size: 1.15rem;
+  line-height: 1;
+} */
+/* body.lecture-zoom #quarto-header .btn-zoom-toggle::after { content: "✕"; }  exit zoom */
+
+
+#quarto-header .btn-zoom-toggle svg {
+  width: 1.15rem; height: 1.15rem; display: inline-block;
+}
+#quarto-header .btn-zoom-toggle .icon-exit { display: none; }
+body.lecture-zoom #quarto-header .btn-zoom-toggle .icon-enter { display: none; }
+body.lecture-zoom #quarto-header .btn-zoom-toggle .icon-exit  { display: inline-block; }
+
+
+/* Hover affordance (match your scheme toggle) */
+#quarto-header .btn-zoom-toggle:hover {
+  color: var(--brand-teal);
+  background: rgba(255,255,255,0.08);
+}

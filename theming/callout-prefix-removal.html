@@ -1,0 +1,19 @@
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Only target IMPORTANT callouts; add more types if needed.
+  const sel = '.callout.callout-important .callout-title-container';
+
+  document.querySelectorAll(sel).forEach(el => {
+    // Prefer operating on the first text node
+    const first = el.firstChild;
+    const re = /^\s*(?:Important)\s*(?:&nbsp;|\u00A0|\s)?\d+(?:\.\d+)*\s*:\s*/i;
+
+    if (first && first.nodeType === Node.TEXT_NODE) {
+      first.textContent = first.textContent.replace(re, '');
+    } else {
+      // Fallback: operate on HTML if the first child isn't a text node
+      el.innerHTML = el.innerHTML.replace(re, '');
+    }
+  });
+});
+</script>

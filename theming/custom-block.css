@@ -1,0 +1,125 @@
+/* 1) Set up two-level counter system */
+body { 
+  counter-reset: recap-chapter; 
+}
+
+/* 2) Each H1 (chapter) increments chapter counter and resets recap counter */
+h1 { 
+  counter-increment: recap-chapter;
+  counter-reset: recap; 
+}
+
+/* 3) Every .recap box increments the recap counter within the chapter */
+.recap { 
+  counter-increment: recap; 
+}
+
+/* 4) Style the recap box to match Quarto's callout style */
+.recap {
+  position: relative;
+  margin: 1rem 0;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  background-color: var(--brand-bg);
+  border: 1px solid var(--border);
+  border-left: none;
+  border-radius: 0.25rem;
+  margin-left: 0.25rem;
+}
+
+/* 5) Add callout-style left border */
+.recap::before {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.25rem;
+  background-color: var(--brand-teal);
+  border-radius: 0.25rem 0 0 0.25rem;
+}
+
+/* 6) Hide the original section number */
+.recap .header-section-number { 
+  display: none; 
+}
+
+/* 7) Style the heading to match Definition format - INLINE display */
+.recap section > :is(h2,h3,h4,h5,h6) {
+  /* display: inline; */
+  font-weight: 700;
+  font-size: 15.3px; /* Match Definition font size exactly */
+  margin: 0;
+  color: inherit;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+
+/* 9) Use zero-width space trick to eliminate the gap */
+.recap section > :is(h2,h3,h4,h5,h6) {
+  /* display: inline; */
+  font-size: 15.3px;
+  margin-left: 0em; /* Pull entire heading left */
+}
+
+
+.recap section > :is(h2,h3,h4,h5,h6)::before {
+  content: "Recap " counter(recap-chapter) "." counter(recap) " (";
+  margin-right: -0.3em; /* Pull text closer to parenthesis */
+}
+
+/* 10) Add closing parenthesis after the heading */
+.recap section > :is(h2,h3,h4,h5,h6)::after {
+  content: ") ";
+  font-weight: 700;
+  font-size: 15.3px;
+  margin-right: 0.25em;
+}
+
+/* 11) Hide the anchor link to prevent spacing issues */
+.recap section > :is(h2,h3,h4,h5,h6) .anchorjs-link {
+  display: none;
+}
+
+/* 12) Make the first paragraph inline with the heading */
+.recap section > :is(h2,h3,h4,h5,h6) + p {
+  display: inline;
+  margin-top: 0;
+  font-size: 15.3px; /* Match Definition font size */
+}
+
+/* 13) Ensure subsequent paragraphs are block level */
+.recap section > p:not(:first-of-type) {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 15.3px; /* Match Definition font size */
+}
+
+/* 14) Set font size for all content in recap */
+.recap section {
+  font-size: 15.3px; /* Ensure all text in recap matches Definition size */
+  line-height: 1.5;
+}
+
+/* 15) If you want to keep the anchor functional but invisible */
+.recap section > :is(h2,h3,h4,h5,h6) .anchorjs-link {
+  position: absolute;
+  left: -1em;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+/* 16) Show anchor on hover */
+.recap section > :is(h2,h3,h4,h5,h6):hover .anchorjs-link {
+  opacity: 1;
+}
+
+/* 17) Bold style for the title like Definition */
+.recap section > :is(h2,h3,h4,h5,h6),
+.recap section > :is(h2,h3,h4,h5,h6)::before,
+.recap section > :is(h2,h3,h4,h5,h6)::after {
+  font-family: inherit;
+  font-weight: 600;
+}
+

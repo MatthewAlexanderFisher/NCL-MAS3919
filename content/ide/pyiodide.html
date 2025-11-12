@@ -1,0 +1,206 @@
+<script src="https://cdn.jsdelivr.net/pyodide/v0.28.2/full/pyodide.js"></script>
+
+<script>
+  // Elements
+  const status   = document.getElementById("status");
+  const terminal = document.getElementById("terminal");
+  const runBtn   = document.getElementById("runBtn");
+  const clearBtn = document.getElementById("clearBtn");
+  const codeEl   = document.getElementById("code");
+
+  // Disable browser squiggles in the editor
+  codeEl.setAttribute("spellcheck", "false");
+  codeEl.setAttribute("autocorrect", "off");
+  codeEl.setAttribute("autocapitalize", "off");
+  codeEl.setAttribute("autocomplete", "off");
+  codeEl.setAttribute("inputmode", "none");
+
+  // Terminal output helpers
+  function output(text, className = '') {
+    const span = document.createElement('span');
+    span.textContent = text;
+    if (className) span.className = className;
+    terminal.appendChild(span);
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+  function clearOutput() { terminal.innerHTML = ''; }
+
+  // Route WebAgg figures to the terminal
+  document.pyodideMplTarget = terminal;
+
+  // --- Prism.js syntax highlighting overlay for the textarea ---
+  function loadCSS(href) {
+    return new Promise((resolve, reject) => {
+      const l = document.createElement('link');
+      l.rel = 'stylesheet';
+      l.href = href;
+      l.onload = resolve; l.onerror = reject;
+      document.head.appendChild(l);
+    });
+  }
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src; s.defer = true;
+      s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+// Make Matplotlib toolbar buttons show hover tooltips & hide inline text
+  function enhanceMplToolbar(root = document) {
+    root.querySelectorAll('#terminal .mpl-toolbar button.mpl-widget').forEach(btn => {
+      let label = (btn.getAttribute('aria-label') || btn.getAttribute('title') || '').trim();
+      if (!label) {
+        const img = btn.querySelector('img');
+        if (img?.getAttribute('alt')) label = img.getAttribute('alt').trim();
+        else {
+          const svgTitle = btn.querySelector('svg > title');
+          if (svgTitle?.textContent) label = svgTitle.textContent.trim();
+        }
+      }
+      if (label) {
+        btn.setAttribute('title', label);
+        btn.setAttribute('aria-label', label);
+      }
+      btn.childNodes.forEach(n => { if (n.nodeType === Node.TEXT_NODE) n.textContent = ''; });
+    });
+  }
+
+  // Watch for new figures/toolbars and enhance automatically
+  const obs = new MutationObserver(muts => {
+    for (const m of muts) {
+      m.addedNodes.forEach(n => {
+        if (n instanceof HTMLElement && (n.matches?.('#terminal .mpl-toolbar') || n.querySelector?.('.mpl-toolbar'))) {
+          enhanceMplToolbar(n);
+        }
+      });
+    }
+  });
+  obs.observe(terminal, { childList: true, subtree: true });
+
+  let pyodide = null;
+
+  // Initialize Pyodide (set compact defaults ONCE) + setup syntax highlighting
+  (async function init() {
+    try {
+      // Start syntax highlighting in parallel
+      setupCodeMirror().catch(() => { 
+        console.warn('CodeMirror failed to load, using plain textarea');
+      });
+
+      status.textContent = "Loading Pyodide...";
+      pyodide = await loadPyodide({
+        indexURL: "https://cdn.jsdelivr.net/pyodide/v0.28.2/full/",
+        stdout: (text) => output(text + '\n'),
+        stderr: (text) => output(text + '\n', 'error')
+      });
+
+      status.textContent = "Loading packages...";
+      await pyodide.loadPackage(["numpy", "matplotlib", "scipy"]);
+
+      // Configure Matplotlib defaults once (users can override later)
+      await pyodide.runPythonAsync(`
+import matplotlib
+import matplotlib.pyplot as plt
+import sys
+matplotlib.use('webagg')
+grey = "#666666"
+plt.rcParams.update({
+    "figure.figsize": (3.8, 2.3),
+    "figure.dpi": 120,
+    "figure.autolayout": True,
+    "font.size": 6,
+    "axes.titlesize": 8,
+    "axes.labelsize": 6,
+    "xtick.labelsize": 6,
+    "ytick.labelsize": 6,
+    "legend.fontsize": 6,
+    "text.color": grey,
+    "axes.labelcolor": grey,
+    "axes.edgecolor": grey,
+    "axes.titlecolor": grey,
+    "xtick.color": grey,
+    "ytick.color": grey,
+})
+matplotlib.rcParams["figure.facecolor"] = "none"
+matplotlib.rcParams["axes.facecolor"] = "none"
+print(f"Python {sys.version.split()[0]}")
+print(f"Matplotlib {matplotlib.__version__}")
+      `);
+
+      status.textContent = "Ready";
+      runBtn.disabled = false;
+    } catch (err) {
+      status.textContent = "Failed to load";
+      output("Error: " + err.toString(), 'error');
+    }
+  })();
+
+  // Replace the entire setupSyntaxHighlighting function with this:
+  async function setupCodeMirror() {
+    // Load CodeMirror CSS and JS
+    const cmBase = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5';
+    
+    // Load CSS
+    await loadCSS(`${cmBase}/codemirror.min.css`);
+    await loadCSS(`${cmBase}/theme/dracula.min.css`); // Dark theme that matches your style
+    
+    // Load JS
+    await loadScript(`${cmBase}/codemirror.min.js`);
+    await loadScript(`${cmBase}/mode/python/python.min.js`);
+    
+    // Convert textarea to CodeMirror
+    const editor = CodeMirror.fromTextArea(codeEl, {
+      mode: 'python',
+      theme: 'dracula',
+      lineNumbers: true,
+      lineWrapping: true,
+      tabSize: 2,
+      indentUnit: 2,
+      autoCloseBrackets: true,
+      matchBrackets: true,
+      extraKeys: {
+        'Shift-Enter': () => runCode()
+      }
+    });
+    
+    // Store editor reference globally so runCode can access it
+    window.cmEditor = editor;
+    
+    // Fix sizing
+    editor.setSize('100%', '100%');
+    
+    // Update the global codeEl reference to use getValue/setValue
+    window.getCode = () => editor.getValue();
+    window.setCode = (val) => editor.setValue(val);
+  }
+
+
+  // Update runCode to get code from CodeMirror:
+  async function runCode() {
+    runBtn.disabled = true;
+    status.textContent = "Running...";
+    output('\n--- Running ---\n', 'separator');
+
+    // Get code from CodeMirror if it exists, otherwise from textarea
+    const code = window.cmEditor ? window.cmEditor.getValue() : codeEl.value;
+
+    try {
+      await pyodide.runPythonAsync(`import matplotlib.pyplot as plt; plt.close('all')`);
+      await pyodide.runPythonAsync(code);
+      enhanceMplToolbar();
+    } catch (err) {
+      output('\n' + err.toString() + '\n', 'error');
+    }
+
+    status.textContent = "Ready";
+    runBtn.disabled = false;
+  }
+
+  // Event listeners - these were missing!
+  runBtn.addEventListener("click", runCode);
+  clearBtn.addEventListener("click", clearOutput);
+
+
+</script>

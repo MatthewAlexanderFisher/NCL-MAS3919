@@ -1,0 +1,217 @@
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
+  if (!tools) return;
+
+  // Create the button
+  const btn = document.createElement('button');
+  btn.id = 'lecture-zoom-header-toggle';
+  btn.className = 'btn-zoom-toggle';
+  btn.type = 'button';
+  btn.setAttribute('aria-pressed', 'false');
+  btn.setAttribute('aria-label', 'Lecture zoom');
+  btn.setAttribute('title', 'Lecture zoom (X)');
+
+  // svg icon
+  btn.innerHTML = `
+    <!-- ENTER: four corners -->
+    <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9V3h6"/>
+        <path d="M21 9V3h-6"/>
+        <path d="M3 15v6h6"/>
+        <path d="M21 15v6h-6"/>
+    </svg>
+
+    <!-- EXIT: corners-in (contract) -->
+    <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M9 3v6H3"/>
+        <path d="M15 3v6h6"/>
+        <path d="M3 15h6v6"/>
+        <path d="M21 15h-6v6"/>
+    </svg>
+  `;
+
+  // Place it next to the colour-scheme toggle (after it, if present)
+  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
+  if (colorToggle && colorToggle.parentNode) {
+    colorToggle.parentNode.insertBefore(btn, colorToggle.nextSibling);
+  } else {
+    tools.appendChild(btn);
+  }
+
+  // Toggle logic
+  const KEY = 'lecture-zoom-enabled';
+  
+  // Helper: are we in lecture zoom?
+  const isLectureZoom = () =>
+    document.body.classList.contains('lecture-zoom') ||
+    document.documentElement.classList.contains('lecture-zoom');
+
+  // Define closeLectureSearch early (forward declaration)
+  let closeLectureSearch;
+
+  const apply = (on) => {
+    document.body.classList.toggle('lecture-zoom', on);
+    document.documentElement.classList.toggle('lecture-zoom', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    
+    // Close search overlay when exiting lecture zoom
+    if (!on && closeLectureSearch) {
+      closeLectureSearch();
+    }
+    
+    // Nudge charts/layouts to recompute
+    window.dispatchEvent(new Event('resize'));
+    sessionStorage.setItem(KEY, on ? '1' : '0');
+  };
+
+  // Restore per-tab state
+  apply(sessionStorage.getItem(KEY) === '1');
+
+  // Click handler
+  btn.addEventListener('click', () => apply(!isLectureZoom()));
+  
+  // Keyboard shortcut (Z)
+  document.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 'x' && !/input|textarea|select/i.test(e.target.tagName)) {
+      apply(!isLectureZoom());
+    }
+  });
+
+  let acAnchor = null;          // where the autocomplete root came from
+  let panelObserver = null;     // to catch newly created panels
+
+  function ensureLectureOverlay() {
+    let overlay = document.getElementById('lecture-search-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'lecture-search-overlay';
+      overlay.innerHTML = '<div class="lecture-search-modal"></div>';
+      document.body.appendChild(overlay);
+
+      // Close on backdrop click
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay && closeLectureSearch) closeLectureSearch();
+      });
+
+      // Close on Esc
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && closeLectureSearch) closeLectureSearch();
+      });
+    }
+    return overlay;
+  }
+
+  function findAutocomplete() {
+    const root =
+      document.querySelector('.aa-Autocomplete') ||
+      document.querySelector('.quarto-search .aa-Autocomplete') ||
+      document.querySelector('.quarto-search-panel .aa-Autocomplete');
+
+    const input = root?.querySelector('input.aa-Input');
+    return { root, input };
+  }
+
+  // Move the results panel (if any) into the modal and normalize its positioning
+  function reparentPanel(modal) {
+    const panel = document.querySelector('.aa-Panel');
+    if (!panel || modal.contains(panel)) return;
+    modal.appendChild(panel);
+    // Let CSS control layout/width; clear inline positioning from Algolia
+    panel.style.left = '';
+    panel.style.top = '';
+    panel.style.width = '';
+  }
+
+  function startPanelObserver(modal) {
+    if (panelObserver) return;
+    panelObserver = new MutationObserver(() => reparentPanel(modal));
+    // Listen on body, since Algolia often inserts the panel there
+    panelObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function stopPanelObserver() {
+    panelObserver?.disconnect();
+    panelObserver = null;
+  }
+
+  function openLectureSearch() {
+    if (!isLectureZoom()) return false;
+
+    const { root, input } = findAutocomplete();
+    if (!root || !input) return false;
+
+    const overlay = ensureLectureOverlay();
+    const modal = overlay.querySelector('.lecture-search-modal');
+
+    // Anchor the current position of the autocomplete root (only once)
+    if (!acAnchor) {
+      acAnchor = document.createComment('autocomplete-anchor');
+      root.parentNode.insertBefore(acAnchor, root);
+    }
+
+    // Move the autocomplete *root* into the modal
+    modal.appendChild(root);
+
+    // Ensure any results panel gets moved into the modal too
+    reparentPanel(modal);
+    startPanelObserver(modal);
+
+    overlay.classList.add('open');
+    document.documentElement.classList.add('search-open');
+
+    // Focus the input after layout
+    requestAnimationFrame(() => {
+      input.focus();
+      input.select?.();
+      // In case Algolia computes sizes on resize, give it a nudge
+      window.dispatchEvent(new Event('resize'));
+    });
+
+    return true;
+  }
+
+  // Now properly define closeLectureSearch
+  closeLectureSearch = function() {
+    const overlay = document.getElementById('lecture-search-overlay');
+    if (!overlay || !overlay.classList.contains('open')) return;
+
+    stopPanelObserver();
+
+    const { root } = findAutocomplete();
+
+    // Move panel (if currently inside modal) back to body to let Algolia clean up normally
+    const modal = overlay.querySelector('.lecture-search-modal');
+    const panel = modal?.querySelector('.aa-Panel');
+    if (panel) document.body.appendChild(panel);
+
+    // Put the autocomplete root back where it came from
+    if (root && acAnchor && acAnchor.parentNode) {
+      acAnchor.parentNode.insertBefore(root, acAnchor.nextSibling);
+    }
+
+    overlay.classList.remove('open');
+    document.documentElement.classList.remove('search-open');
+  };
+
+  // Existing hotkeys:
+  document.addEventListener('keydown', (e) => {
+    const tag = e.target.tagName.toLowerCase();
+    const typing = tag === 'input' || tag === 'textarea' || tag === 'select' || e.isComposing;
+    if (typing) return;
+
+    if (e.key === 'F' && e.shiftKey) {
+      if (openLectureSearch()) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }
+    if (e.key === 'Escape') {
+      closeLectureSearch();
+    }
+  });
+
+});
+</script>

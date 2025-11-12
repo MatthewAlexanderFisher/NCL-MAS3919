@@ -1,0 +1,43 @@
+/* --------------------------------------------------
+   Scrollbars: consistent for page + sidebar
+   -------------------------------------------------- */
+
+/* Design tokens */
+:root {
+  --scroll-size: 9px;
+  --scroll-track: var(--brand-bg);
+  --scroll-thumb: var(--thumb-scrollbar-bg);
+}
+
+
+/* Firefox (and any browser that supports it) */
+html, body, #quarto-sidebar, .quarto-margin-sidebar, .page-columns {
+  scrollbar-width: thin; /* thin | auto */
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+}
+
+/* WebKit/Blink (Chrome/Edge/Safari) — apply to all scrollable elements */
+*::-webkit-scrollbar {
+  width: var(--scroll-size);
+  height: var(--scroll-size);
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb);              /* visible thumb color */
+  border-radius: 9px;
+  border: 1px solid var(--scroll-track);              /* gap around thumb */
+}
+
+
+#quarto-sidebar::-webkit-scrollbar { width: 9px; }
+#quarto-sidebar { scrollbar-width: thin; }
+
+/* Firefox */
+html, body, #quarto-sidebar, .quarto-margin-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track); /* no hover support in FF */
+}

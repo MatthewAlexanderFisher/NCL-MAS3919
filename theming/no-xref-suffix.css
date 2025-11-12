@@ -1,0 +1,12 @@
+.xref-no-num a.quarto-xref > span,
+.xref-no-num a.quarto-xref::before {
+  display: none !important;
+  content: "" !important;
+}
+
+.xref-no-num a.quarto-xref {
+  white-space: normal; /* allow normal collapse of spaces */
+}
+.xref-no-num a.quarto-xref > span {
+  display: none !important;
+}

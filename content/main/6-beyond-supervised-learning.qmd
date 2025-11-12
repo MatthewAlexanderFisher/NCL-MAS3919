@@ -1,0 +1,20 @@
+---
+execute:
+  echo: false
+jupyter: mas2901
+---
+
+# Beyond Supervised Learning
+
+## Unsupervised Learning
+
+## Semi-supervised Learning
+
+## Generative Modelling ($\star$)
+
+### Generative Models ($\star$)
+
+### Training Generative Models ($\star$)
+
+
+

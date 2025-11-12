@@ -1,0 +1,41 @@
+/* Make display equations scroll horizontally if too wide (book/site pages) */
+.math.display {
+  display: block;                 /* ensure it's a block container */
+  overflow-x: auto;               /* scrollbar if too wide */
+  overflow-y: hidden;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: .25rem;
+}
+
+/* Don't force the math to stretch to 100% width */
+.math.display > mjx-container[display="true"] {
+  display: inline-block;
+}
+
+/* Allow the inner content to exceed the container width */
+.math.display mjx-container[display="true"] .mjx-math,   /* CHTML */
+.math.display mjx-container[display="true"] > svg {       /* SVG */
+  width: auto !important;
+  max-width: none !important;
+}
+
+
+.math.display {
+  text-align: center !important;
+  margin: 1em 0;
+}
+
+/* Let the text column shrink */
+.callout .callout-body-container { 
+  flex: 1 1 auto;
+  min-width: 0;     /* <- the crucial fix for flex overflow */
+}
+
+/* For minimal + no-icon, drop the icon column & flex row */
+.callout.callout-style-minimal .callout-body.d-flex .callout-icon.no-icon { display: none; }
+.callout.callout-style-minimal .callout-body.d-flex { display: block; }
+
+/* Safety nets for maths/code */
+.callout .mjx-container { max-width: 100%; overflow-x: auto; }
+.callout pre { white-space: pre-wrap; overflow-x: auto; }

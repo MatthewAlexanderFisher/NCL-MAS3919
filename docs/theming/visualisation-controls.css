@@ -1,0 +1,323 @@
+/* =================================================================
+   SIMULATION CONTROLS PANEL - Quarto/OJS Compatible
+   ================================================================= */
+
+/* ---- CSS Custom Properties ---- */
+:root {
+  --ctrl-font-size: 12px;
+  --ctrl-border-radius: 10px;
+  --ctrl-border-radius-sm: 6px;
+  --ctrl-spacing: 8px;
+  --ctrl-spacing-lg: 10px;
+  --ctrl-spacing-xl: 12px;
+  
+  /* Colors - using your SCSS theme variables */
+  --ctrl-surface: var(--surface);
+  --ctrl-surface-weak: var(--surface-weak);
+  --ctrl-border: var(--border);
+  --ctrl-fg-strong: var(--fg-strong);
+  --ctrl-fg-muted: var(--fg-muted);
+  --ctrl-brand: var(--brand-teal);
+  --ctrl-brand-hover: var(--brand-teal-hover);
+}
+
+/* ---- Main Controls Container ---- */
+.controls-wrap {
+  max-width: 720px;
+  margin: var(--ctrl-spacing) auto 0;
+}
+
+details.controls-root {
+  font-size: var(--ctrl-font-size);
+}
+
+/* ---- Dropdown Header ---- */
+details.controls-root > summary {
+  /* Reset browser defaults */
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  
+  /* Layout & styling */
+  display: flex;
+  align-items: center;
+  gap: var(--ctrl-spacing);
+  padding: var(--ctrl-spacing) var(--ctrl-spacing-lg);
+  
+  /* Appearance */
+  background: var(--ctrl-surface);
+  border: 1px solid var(--ctrl-border);
+  border-radius: var(--ctrl-border-radius);
+  
+  /* Typography */
+  font-weight: 600;
+  font-size: calc(var(--ctrl-font-size) + 1px);
+  color: var(--ctrl-fg-strong);
+}
+
+/* Hide default browser marker */
+details.controls-root > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Adjust border radius when open */
+details.controls-root[open] > summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Chevron arrow */
+details.controls-root > summary::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 3px 0 3px 6px;
+  border-color: transparent transparent transparent var(--ctrl-fg-strong);
+  transform: rotate(0deg);
+  transform-origin: 3px 50%;
+  transition: transform 50ms ease;
+}
+
+details.controls-root[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+/* ---- Controls Grid Layout ---- */
+details.controls-root .controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--ctrl-spacing-xl);
+  
+  /* Container styling */
+  border: 1px solid var(--ctrl-border);
+  border-top: none;
+  border-bottom-left-radius: var(--ctrl-border-radius);
+  border-bottom-right-radius: var(--ctrl-border-radius);
+  padding: var(--ctrl-spacing-lg);
+  background: var(--ctrl-surface-weak);
+  overflow-x: auto;
+}
+
+/* ---- Column Structure ---- */
+details.controls-root .controls-col {
+  min-width: 260px;
+}
+
+details.controls-root .controls-col h4 {
+  margin: 0 0 6px 0;
+  font-size: var(--ctrl-font-size);
+  font-weight: 700;
+  color: var(--ctrl-fg-muted);
+}
+
+/* ---- Form Controls Layout ---- */
+details.controls-root .controls-col form {
+  display: grid !important;
+  grid-template-columns: minmax(150px, auto) 1fr;
+  align-items: center;
+  column-gap: var(--ctrl-spacing-lg);
+  
+  font-size: var(--ctrl-font-size) !important;
+  line-height: 1.25;
+  margin: 6px 0;
+}
+
+/* ---- Labels ---- */
+details.controls-root .controls-col form > label {
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: var(--ctrl-spacing);
+  
+  font-size: var(--ctrl-font-size) !important;
+  font-weight: 600;
+  color: var(--ctrl-fg-muted);
+}
+
+details.controls-root .controls-col form > label p {
+  margin: 0 !important;
+}
+
+/* ---- Input Container ---- */
+details.controls-root .controls-col form > [class$="-input"],
+details.controls-root .controls-col form > [class*="-input"] {
+  display: flex;
+  align-items: center;
+  gap: var(--ctrl-spacing);
+  min-height: 22px;
+}
+
+/* ---- Number Inputs ---- */
+details.controls-root .controls-col input[type="number"] {
+  height: 24px;
+  padding: 2px 6px;
+  font-size: var(--ctrl-font-size);
+  
+  border: 1px solid var(--ctrl-border);
+  border-radius: var(--ctrl-border-radius-sm);
+  background: var(--ctrl-surface);
+  color: var(--ctrl-fg-strong);
+}
+
+/* ---- Checkboxes ---- */
+details.controls-root .controls-col input[type="checkbox"] {
+  /* Reset browser defaults */
+  -webkit-appearance: none;
+  appearance: none;
+  
+  /* Size and positioning - ensure square */
+  width: 18px;
+  height: 18px;
+  min-width: 18px; /* prevent flex shrinking */
+  margin: 0;
+  
+  /* Styling to match other inputs */
+  border: 1px solid var(--ctrl-border);
+  border-radius: var(--ctrl-border-radius-sm);
+  background: var(--ctrl-surface);
+  
+  /* Alignment */
+  vertical-align: middle;
+  position: relative;
+  flex-shrink: 0; /* maintain size in flex containers */
+  
+  /* Interaction - remove delay */
+  cursor: pointer;
+  transition: border-color 80ms ease, background-color 80ms ease;
+}
+
+details.controls-root .controls-col input[type="checkbox"]:hover {
+  border-color: var(--ctrl-brand);
+}
+
+details.controls-root .controls-col input[type="checkbox"]:checked {
+  background: var(--ctrl-brand);
+  border-color: var(--ctrl-brand);
+}
+
+/* Checkmark - properly centered */
+details.controls-root .controls-col input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  
+  /* Center the checkmark */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%) rotate(45deg); /* -60% accounts for checkmark shape */
+  
+  /* Checkmark dimensions */
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+}
+
+/* Focus state for accessibility */
+details.controls-root .controls-col input[type="checkbox"]:focus {
+  outline: 2px solid var(--ctrl-brand);
+  outline-offset: 2px;
+}
+
+/* ---- Range Sliders ---- */
+details.controls-root .controls-col input[type="range"] {
+  /* Reset browser defaults */
+  -webkit-appearance: none;
+  appearance: none;
+  
+  /* Layout */
+  width: 100%;
+  height: 18px;
+  background: transparent;
+  vertical-align: middle;
+  
+  /* Brand theming */
+  accent-color: var(--ctrl-brand);
+}
+
+/* Slider track - WebKit */
+details.controls-root .controls-col input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ctrl-brand) 35%, transparent);
+}
+
+/* Slider thumb - WebKit */
+details.controls-root .controls-col input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--ctrl-brand);
+  
+  /* Center thumb over 4px track: (4 - 12) / 2 = -4px */
+  margin-top: -4px;
+}
+
+/* Slider track - Firefox */
+details.controls-root .controls-col input[type="range"]::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ctrl-brand) 35%, transparent);
+}
+
+/* Slider thumb - Firefox (auto-centered) */
+details.controls-root .controls-col input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--ctrl-brand);
+}
+
+/* Optional: Firefox progress styling */
+details.controls-root .controls-col input[type="range"]::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ctrl-brand) 35%, transparent);
+}
+
+/* ---- Buttons ---- */
+details.controls-root .btn-resim button {
+  /* Layout */
+  padding: 6px var(--ctrl-spacing-xl);
+  border: none;
+  border-radius: var(--ctrl-border-radius-sm);
+  
+  /* Typography */
+  font-weight: 600;
+  font-size: var(--ctrl-font-size);
+  
+  /* Appearance */
+  background: var(--ctrl-brand);
+  color: #fff;
+  cursor: pointer;
+  
+  /* Interactions */
+  transition: filter 120ms ease, background-color 120ms ease;
+}
+
+details.controls-root .btn-resim button:hover {
+  background: var(--ctrl-brand-hover);
+}
+
+/* ---- Responsive Design ---- */
+@media (max-width: 600px) {
+  details.controls-root .controls-grid {
+    grid-template-columns: 1fr;
+    gap: var(--ctrl-spacing);
+  }
+  
+  details.controls-root .controls-col form {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  details.controls-root .controls-col form > label {
+    justify-self: start;
+  }
+}

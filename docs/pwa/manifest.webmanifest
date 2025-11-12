@@ -1,0 +1,16 @@
+{
+  "name": "MAS2901: Statistical Inference Notes",
+  "short_name": "MAS2901 Notes",
+  "id": "/NCL-MAS2901/",
+  "start_url": "/NCL-MAS2901/",
+  "scope": "/NCL-MAS2901/",
+  "display": "standalone",
+  "background_color": "#f8f8f8",
+  "theme_color": "#E86D5A",
+  "orientation": "any",
+  "icons": [
+    { "src": "/NCL-MAS2901/pwa/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/NCL-MAS2901/pwa/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/NCL-MAS2901/pwa/icons/icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

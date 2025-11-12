@@ -1,0 +1,10 @@
+color:
+  palette:
+    charcoal: "#333333"
+    teal:     "#55C3CB"
+    orange:   "#F39C65"
+    purple:   "#A180DA"
+    mint:     "#DDFFEB"
+  foreground: charcoal
+  background: "#FFFFFF"
+  primary: teal
