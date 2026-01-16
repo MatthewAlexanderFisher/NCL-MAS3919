@@ -4,10 +4,21 @@ Welcome to the online notes for **MAS3919 — Foundations of Machine Learning**.
 
 This course is co-taught for MAS3919 and MAS8607.
 
-Students taking MAS8607 can expect to be examined on at least one of the Advanced Topics, indicated with a $(\star)$ in the table of contents, while these are non-examinable for MAS3919.
-There will be four Exercise Sheets in total, with solutions presented one week later at Problem Classes.
+## Outline of the Module {.unnumbered}
 
-There will be one formative assignment [details] and one summative assignment[details] worth 20% of your overall mark. A written exam forms the remaining 80%.
+**Prequisities.** The formal prerequisites for this module are *either* MAS2901, MAS2909, and MAS2910, *or* MAS8600 and MAS8601.
+(This module could still be accessible to a strong undergraduate student who did not take MAS2909 and was prepared to fill in the gaps where required.)
+
+Sometimes we are asked if any other undergraduate modules might be complementary, and we would suggest MAS2806, MAS3702, MAS3928, MAS3929 and MSP3809.
+Indeed, on one or two occasions we will refer to the technique of Lagrange multipliers from MSP3809, but this is for presentational completeness and will not be examined.
+
+**Assessment.** This module is co-taught as both MAS3919 and MAS8607. Students taking MAS8607 can expect to be examined on at least one of the Advanced Topics, indicated with a [{{< fa star >}}]{.advanced title="MAS8607 content"}, while these are non-examinable for MAS3919. Non-examinable material for both cohorts is indicated with [{{< fa star >}}{{< fa star >}}]{.advanced title="Non-Examinable content"}. There will be five Exercise Sheets in total, with solutions presented at Problem Classes; these are worth 0% of your overall mark. There will be one summative assignment worth 20% of your overall mark, which will focus on coding in PyTorch. There will also be one mock written exam worth 0% during revision week. A written exam forms the remaining 80%.
+
+**Learning Outcomes.** Distinct from most other modules, we will tend to emphasise understanding of *concepts* as opposed to detailed calculations, and your examination will test your ability both to recall these concepts and to give a coherent written explanation of their relevance in a given context.
+After taking this module you should feel equipped with a broad knowledge of machine learning, enabling you to coherently communicate at a technical level in (e.g.) a job interview for a machine learning engineer post.
+In addition, we will provide practical demonstrations of machine learning in PyTorch; you are expected to reproduce these as homework, as your summative assignment will focus on coding in PyTorch.
+
+**Feedback.** These lecture notes are new for 2026 and are therefore bound to contain small errors; we would appreciate these being brought to our attention by emailing chris.oates@ncl.ac.uk or matthew.fisher@ncl.ac.uk. We also welcome general feedback.
 
 ---
 
@@ -145,13 +156,3 @@ There will be one formative assignment [details] and one summative assignment[de
 ```
 
 ---
-
-## Course Overview
-
-The <span class="xref-no-num">[first section @sec-overview-of-ml ]</span> of these notes aims to provide an overview of the module, and to recap important prerequisites from Stage 2. In many cases we will indicate precisely where concepts can be found (up to minor presentational variation) in the lecture notes from Stage 2. **These notes represent the definitive version of MAS3919 and MAS8607**; in-person lectures are an opportunity to review a subset of the material in real-time,  but are not a substitute for studying these lecture notes in detail. Students are recommended to read through the lecture notes in advance of the lecture, in a *flipped classroom* format.
-
-Distinct from most other modules, we will tend to emphasise understanding of *concepts* as opposed to detailed calculations, and your examination will test your ability both to recall these concepts and to give a coherent written explanation of their relevance in a given context.
-After taking this module you should feel equipped with a broad knowledge of machine learning, enabling you to coherently communicate at a technical level in (e.g.) a job interview for a machine learning engineer post.
-In addition, we will provide practical demonstrations of machine learning in Python; you are strongly encouraged to try these out as homework, as experience of implementing machine learning in Python is a valuable addition to any CV.
-
-These lecture notes are new for 2026 and are therefore bound to contain small errors; we would appreciate these being brought to our attention by emailing <chris.oates@ncl.ac.uk> or <matthew.fisher@ncl.ac.uk>.

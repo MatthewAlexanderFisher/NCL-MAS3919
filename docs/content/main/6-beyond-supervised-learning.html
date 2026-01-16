@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -44,9 +64,13 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-eee127bcbcf69f6d1c4f39497eef8043.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-ca592282aabca1dce090d3def4fc59bb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-eee127bcbcf69f6d1c4f39497eef8043.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-f5ee150fb4bd363b356d51bef3bf57f5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-d5e987d2a49f81d99d3c6d2c04d8a2aa.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-f5ee150fb4bd363b356d51bef3bf57f5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
+<link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -182,6 +206,22 @@ ul.task-list li input[type="checkbox"] {
     }
   })();
 </script>
+    <style type="text/css">
+    .ps-root .ps-algorithm {
+      border-top: 2px solid;
+      border-bottom: 2px solid;
+    }
+    .pseudocode-container {
+      text-align: left;
+    }
+    </style>
+  
+      <style type="text/css">
+      .ps-algorithm > .ps-line {
+        text-align: left;
+      }
+      </style>
+    
 
   <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
   <script>document.addEventListener("DOMContentLoaded", function () {
@@ -228,6 +268,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../theming/math-scroll.css">
+<link rel="stylesheet" href="../../theming/practice-details.css">
 <link rel="stylesheet" href="../../theming/callout-style.css">
 <link rel="stylesheet" href="../../theming/floating-code.css">
 <link rel="stylesheet" href="../../theming/font.css">
@@ -240,7 +281,11 @@ window.Quarto = {
 <link rel="stylesheet" href="../../theming/lecture-zoom.css">
 <link rel="stylesheet" href="../../theming/visualisation-controls.css">
 <link rel="stylesheet" href="../../theming/tables.css">
+<link rel="stylesheet" href="../../theming/small-table.css">
+<link rel="stylesheet" href="../../theming/reading-mode.css">
 <link rel="stylesheet" href="../../theming/custom-block.css">
+<link rel="stylesheet" href="../../theming/advanced.css">
+<link rel="stylesheet" href="../../theming/callout-preview.css">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -534,6 +579,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Machine Learning Models in PyTorch</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practicals/3-training-ml-models-in-pytorch.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training Machine Learning Models in Pytorch</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -587,12 +638,12 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#unsupervised-learning" id="toc-unsupervised-learning" class="nav-link active" data-scroll-target="#unsupervised-learning"><span class="header-section-number">6.1</span> Unsupervised Learning</a></li>
-  <li><a href="#semi-supervised-learning" id="toc-semi-supervised-learning" class="nav-link" data-scroll-target="#semi-supervised-learning"><span class="header-section-number">6.2</span> Semi-supervised Learning</a></li>
-  <li><a href="#generative-modelling-star" id="toc-generative-modelling-star" class="nav-link" data-scroll-target="#generative-modelling-star"><span class="header-section-number">6.3</span> Generative Modelling (<span class="math inline">\star</span>)</a>
+  <li><a href="#sec-unsupervised-learning" id="toc-sec-unsupervised-learning" class="nav-link active" data-scroll-target="#sec-unsupervised-learning"><span class="header-section-number">6.1</span> Unsupervised Learning</a></li>
+  <li><a href="#sec-semi-supervised-learning" id="toc-sec-semi-supervised-learning" class="nav-link" data-scroll-target="#sec-semi-supervised-learning"><span class="header-section-number">6.2</span> Semi-supervised Learning</a></li>
+  <li><a href="#sec-generative-modelling" id="toc-sec-generative-modelling" class="nav-link" data-scroll-target="#sec-generative-modelling"><span class="header-section-number">6.3</span> Generative Modelling</a>
   <ul class="collapse">
-  <li><a href="#generative-models-star" id="toc-generative-models-star" class="nav-link" data-scroll-target="#generative-models-star"><span class="header-section-number">6.3.1</span> Generative Models (<span class="math inline">\star</span>)</a></li>
-  <li><a href="#training-generative-models-star" id="toc-training-generative-models-star" class="nav-link" data-scroll-target="#training-generative-models-star"><span class="header-section-number">6.3.2</span> Training Generative Models (<span class="math inline">\star</span>)</a></li>
+  <li><a href="#sec-generative-models" id="toc-sec-generative-models" class="nav-link" data-scroll-target="#sec-generative-models"><span class="header-section-number">6.3.1</span> Generative Models</a></li>
+  <li><a href="#sec-training-generative-models" id="toc-sec-training-generative-models" class="nav-link" data-scroll-target="#sec-training-generative-models"><span class="header-section-number">6.3.2</span> Training Generative Models</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -620,22 +671,275 @@ window.Quarto = {
 </header>
 
 
-<section id="unsupervised-learning" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="unsupervised-learning"><span class="header-section-number">6.1</span> Unsupervised Learning</h2>
+<p>This module primarily focuses on <em>supervised</em> learning, meaning that to each input <span class="math inline">\mathbf{X}</span> there is an associated <em>label</em> <span class="math inline">\mathbf{Y}</span> that provides information on the quality of the output from a machine learning model <span class="math inline">f(\mathbf{X})</span> via the loss function <span class="math inline">L(\mathbf{Y},f(\mathbf{X}))</span>. Supervised learning is mathematically well-defined and amenable to an advanced theoretical treatment; for strong postgraduate students we recommend the recent textbook of <span class="citation" data-cites="bach2024learning">Bach (<a href="#ref-bach2024learning" role="doc-biblioref">2024</a>)</span>.</p>
+<p>However, there are other important tasks which cannot be cast as supervised learning, typically because one has no access to labels <span class="math inline">\mathbf{Y}</span> (<em>unsupervised</em> learning; <a href="#sec-unsupervised-learning" class="quarto-xref"><span>Section 6.1</span></a>) or partial access to labels (<em>semi-supervised</em> learning; <a href="#sec-semi-supervised-learning" class="quarto-xref"><span>Section 6.2</span></a>). One of the most important and interesting unsupervised learning tasks is <em>generative modelling</em>, and we dedicate <a href="#sec-generative-modelling" class="quarto-xref"><span>Section 6.3</span></a> to an in-depth look at this task.</p>
+<section id="sec-unsupervised-learning" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="sec-unsupervised-learning"><span class="header-section-number">6.1</span> Unsupervised Learning</h2>
+<p>Unsupervised learning refers to analysis of unlabelled data to identify patterns, structures, or relationships without any guidance or explicit instructions on the correct output. Instead of relying on predefined categories, the aim is to autonomously discover groupings or hidden structures within the data, often through techniques such as <em>clustering</em> (which we discuss here) or <em>dimensionality reduction</em> (which we discuss in <a href="2-machine-learning-models.html#sec-dim-reduction" class="quarto-xref"><span>Section 2.1.2.2</span></a>).</p>
+<p>Clustering involves grouping a set of data points into <em>clusters</em>, such that data within the same cluster are more similar to each other than to data in different clusters. This technique is widely applied in areas such as genomics (to identify different genetic populations within a patient cohort), image analysis (to select an appropriate colour palette; cf. <a href="#exm-flower" class="quarto-xref">Example&nbsp;<span>6.1</span></a>), and in commerce (to target advertising to consumers with similar profiles), where understanding the natural groupings of data can support decision-making and insight.</p>
+<p>Suppose we have data <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d</span> that we wish to divide into <span class="math inline">k</span> different sub-groups, or <em>clusters</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>That is, to each datum <span class="math inline">\mathbf{x}_i</span> we seek to associated a label <span class="math inline">y_i \in \{1,\dots,k\}</span>, such that data with the same label are more similar to each other compared to data with a different label. As an example, we can consider the optimisation task <span id="eq-kmeans"><span class="math display">
+\argmin_{y_1,\dots,y_n} \; \sum_{i=1}^n \sum_{j=1}^n 1_{y_i = y_j} \|\mathbf{x}_i - \mathbf{x}_j\|^2 ,    
+\tag{6.1}</span></span> where the aim is to select labels <span class="math inline">\{y_i\}_{i=1}^n</span> for which the sum of squared distances between data in the same cluster is minimised<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<p>Unfortunately, this is a computationally hard optimisation when <span class="math inline">n</span> or <span class="math inline">k</span> are large, because the number of potential label assignments is <span class="math inline">k^n</span>, meaning that an exhaustive search can be impractical.</p>
+<p>A simple and popular heuristic algorithm for approximately solving <a href="#eq-kmeans" class="quarto-xref">Equation&nbsp;<span>6.1</span></a> is called <em><span class="math inline">k</span>-means</em>. The basic idea is that each cluster is represented by a <em>centroid</em> <span class="math inline">\mathbf{c}_i \in \mathbb{R}^d</span>, which is the mean location of the data within that cluster, and the location of the centroids are optimised, together with the cluster assignments, so that a surrogate loss function <span class="math display">
+L \equiv L(\{\mathbf{c}_i\}_{i=1}^k , \{y_j\}_{j=1}^n) = \sum_{j=1}^n \| \mathbf{x}_j - \mathbf{c}_{y_j} \|^2
+</span> is approximately minimised.</p>
+<p>Let’s randomly initialise the centroids at some values <span class="math inline">\{\mathbf{c}_i\}_{i=1}^k \subset \mathbb{R}^d</span>. Then we perform <strong>coordinate descent</strong> on <span class="math inline">L</span>; i.e., the following optimisation steps are iteratively performed:</p>
+<ol type="1">
+<li><p><strong>Minimise <span class="math inline">L</span> with respect to <span class="math inline">\{y_j\}_{j=1}^n</span> while holding <span class="math inline">\{\mathbf{c}_i\}_{i=1}^k</span> fixed:</strong> It is straightforward to see that this is achieved when each data point <span class="math inline">\mathbf{x}_j</span> is assigned to the nearest centroid:</p>
+<p><span class="math display">y_j \in \argmin_{i} \|\mathbf{x}_j - \mathbf{c}_i \|^2</span></p>
+<p>Here, <span class="math inline">y_j</span> is the index of the centroid to which data point <span class="math inline">\mathbf{x}_j</span> is assigned (if there is more than one nearest centroid, just pick one at random for the assignment).</p></li>
+<li><p><strong>Minimise <span class="math inline">L</span> with respect to <span class="math inline">\{\mathbf{c}_i\}_{i=1}^k</span> while holding <span class="math inline">\{y_j\}_{j=1}^n</span> fixed:</strong> Since <span class="math inline">L</span> is a quadratic function of each <span class="math inline">\mathbf{c}_i</span>, we can differentiate <span class="math inline">L</span> and solve for the unique stationary point:</p>
+<p><span class="math display">
+\begin{aligned}
+    \frac{\partial L}{\partial \mathbf{c}_i} &amp; = \frac{\partial}{\partial \mathbf{c}_i}  \sum_{j=1}^n \| \mathbf{x}_j - \mathbf{c}_{y_j} \|^2 \\
+    &amp; = \frac{\partial}{\partial \mathbf{c}_i}  \sum_{j=1}^n \mathbb{1}_{\{y_j = i\}} \| \mathbf{x}_j - \mathbf{c}_i \|^2 \\
+    &amp; =  \sum_{j=1}^n \mathbb{1}_{\{y_j = i\}} \frac{\partial}{\partial \mathbf{c}_i}  \| \mathbf{x}_j - \mathbf{c}_i \|^2 \\
+    &amp; =  \sum_{j=1}^n \mathbb{1}_{\{y_j = i\}}  [ - 2 (\mathbf{x}_j - \mathbf{c}_i) ] \\
+    &amp; = - 2 \sum_{j=1}^n \mathbb{1}_{\{y_j = i\}}  \mathbf{x}_j + 2 \sum_{j=1}^n \mathbb{1}_{\{y_j = i\}} \mathbf{c}_i
+\end{aligned}
+</span></p>
+<p>and so</p>
+<p><span class="math display">\frac{\partial L}{\partial \mathbf{c}_i} = \mathbf{0} \implies \mathbf{c}_i = \frac{\sum_{j=1}^n \mathbb{1}_{\{y_j = i\}} \mathbf{x}_j}{\sum_{j=1}^n \mathbb{1}_{\{y_j = i\}}}</span></p>
+<p>i.e., <span class="math inline">\mathbf{c}_i</span> is taken to be the mean location of the data currently assigned to the <span class="math inline">i</span>th cluster.</p></li>
+</ol>
+<p>These two steps are repeated until the centroids no longer change significantly, or a predefined number of iterations is reached. Once the algorithm has terminated, the final cluster assignments are reported.</p>
+<div class="callout callout-style-simple callout-caution no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="exm-flower" class="theorem example">
+<p><span class="theorem-title"><strong>Example 6.1 (Colour quantisation)</strong></span> In computer graphics, <span class="math inline">k</span>-means clustering is frequently used for colour quantisation in image compression. By reducing the number of colours used to represent an image, file sizes can be significantly reduced without a noticeable loss of visual quality.</p>
+<p>For example, consider the image of a flower with millions of colours in the left panel of <a href="#fig-flower" class="quarto-xref">Figure&nbsp;<span>6.1</span></a>. By applying <span class="math inline">k</span>-means clustering with <span class="math inline">k = 16</span> the image can be represented using a limited palette of only 16 colours, resulting in a compressed version that requires less storage space.</p>
+<div id="fig-flower" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-flower-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="figures/flower.png" class="img-fluid figure-img"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="figures/quantisation.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flower-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1: An application of <span class="math inline">k</span>-means clustering to identify <span class="math inline">k = 16</span> representative colours than can be used to compress the image of a flower in the left panel. (For illustrative purposes the blue colour channel has been removed.) The blue lines indicate the cluster boundaries; i.e.&nbsp;the locations that lie exactly half way between the two nearest centroids (blue circles). The regions circumscribed by the blue lines are called <em>Voronoi cells</em>. [<a href="https://en.wikipedia.org/wiki/K-means_clustering">source</a>]
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
-<section id="semi-supervised-learning" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="semi-supervised-learning"><span class="header-section-number">6.2</span> Semi-supervised Learning</h2>
+<section id="sec-semi-supervised-learning" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="sec-semi-supervised-learning"><span class="header-section-number">6.2</span> Semi-supervised Learning</h2>
+<p>Suppose that we wish to undertake a supervised learning task (cf. <a href="1-overview-of-machine-learning.html#def-supervised-learning-task" class="quarto-xref">Definition&nbsp;<span>1.1</span></a>) but unfortunately only a small number of the labels <span class="math inline">\mathbf{y}_i</span> have been recorded in the training dataset.</p>
+<p>This is called a <strong>semi-supervised</strong> learning task. In an extreme case, suppose we with to perform binary classification (i.e.&nbsp;into two classes) of data based on their covariates <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d</span>, but only <em>two</em> data have their true labels recorded.</p>
+<p>Can anything at all be achieved?</p>
+<p>Surprisingly, the answer is sometimes `yes’, and the key idea here is called the <strong>manifold hypothesis</strong>:</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="def-manifold-hyp" class="definition theorem">
+<p><span class="theorem-title"><strong>Definition 6.1 (Manifold hypothesis)</strong></span> The <strong>manifold hypothesis</strong> suggests that possibly high-dimensional data <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d</span> can be effectively represented in a lower-dimensional space, most often a embedded in <span class="math inline">\mathbb{R}^d</span>.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
-<section id="generative-modelling-star" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="generative-modelling-star"><span class="header-section-number">6.3</span> Generative Modelling (<span class="math inline">\star</span>)</h2>
-<section id="generative-models-star" class="level3" data-number="6.3.1">
-<h3 data-number="6.3.1" class="anchored" data-anchor-id="generative-models-star"><span class="header-section-number">6.3.1</span> Generative Models (<span class="math inline">\star</span>)</h3>
+<section id="sec-generative-modelling" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="sec-generative-modelling"><span class="header-section-number">6.3</span> Generative Modelling</h2>
+<section id="sec-generative-models" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="sec-generative-models"><span class="header-section-number">6.3.1</span> Generative Models</h3>
 </section>
-<section id="training-generative-models-star" class="level3" data-number="6.3.2">
-<h3 data-number="6.3.2" class="anchored" data-anchor-id="training-generative-models-star"><span class="header-section-number">6.3.2</span> Training Generative Models (<span class="math inline">\star</span>)</h3>
+<section id="sec-training-generative-models" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="sec-training-generative-models"><span class="header-section-number">6.3.2</span> Training Generative Models</h3>
+<section id="adversarial-training" class="level4" data-number="6.3.2.1">
+<h4 data-number="6.3.2.1" class="anchored" data-anchor-id="adversarial-training"><span class="header-section-number">6.3.2.1</span> Adversarial Training</h4>
+</section>
+<section id="sec-score-matching" class="level4" data-number="6.3.2.2">
+<h4 data-number="6.3.2.2" class="anchored" data-anchor-id="sec-score-matching"><span class="header-section-number">6.3.2.2</span> Score Matching<span class="advanced" title="MAS8607 Content"><i class="fa-solid fa-star" aria-label="star"></i></span></h4>
+<p>The challenge of working with energy-based models <span class="math inline">p_{\bm{\theta}}(\mathbf{x}) \propto \exp( - f_{\bm{\theta}}(\mathbf{x}) )</span> is that the normalisation constant <span class="math display">
+\begin{align*}
+    Z_{\bm{\theta}} = \int \exp( - f_{\bm{\theta}}(\mathbf{x}) ) \mathrm{d} \mathbf{x}
+\end{align*}
+</span> is in general an analytically intractable integral. This is a real problem; if we wanted to find the parameters <span class="math inline">\bm{\theta}</span> that maximise the likelihood we cannot simply find the <span class="math inline">\bm{\theta}</span> that maximises <span class="math display">
+\bm{\theta} \mapsto \prod_{i=1}^n \exp( - f_{\bm{\theta}}(\mathbf{x}_i))
+</span> because there is also a <span class="math inline">\bm{\theta}</span> dependence in the neglected normalisation constant. However, there is a clever way to circumvent working directly with this normalising constant, which is to notice that its <em>Stein score</em> can be computed without the normalising constant:</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="def-stein-score" class="definition theorem">
+<p><span class="theorem-title"><strong>Definition 6.2 (Stein score)</strong></span> Let <span class="math inline">P</span> be a probability distribution with density <span class="math inline">p</span> on <span class="math inline">\mathbb{R}^d</span>. The <strong>Stein score</strong> of <span class="math inline">P</span> is <span class="math display">
+s_P(\mathbf{x}) = (\nabla \log p)(\mathbf{x})
+</span> where here <span class="math inline">\nabla</span> denotes the gradient with respect to the <span class="math inline">\mathbf{x}</span> argument.</p>
+</div>
+</div>
+</div>
+</div>
+<p>The Stein score is names after Charles Stein (1920-2016), who popularised the use of the Stein score as a theoretical tool (initially for proving central limit theorems) in the 1970s; computational and machine learning applications of the Stein score are a more recent development. For an energy-based model <span class="math inline">P_{\bm{\theta}}</span> the Stein score is <span id="eq-energy-stein-score"><span class="math display">
+s_{P_{\bm{\theta}}}(\mathbf{x}) =  (\nabla \log p)(\mathbf{x}) = \nabla_{\mathbf{x}} \{ - f_{\bm{\theta}}(\mathbf{x}) - \log Z_{\bm{\theta}} \} = - \nabla_{\mathbf{x}} f_{\bm{\theta}}(\mathbf{x})   
+\tag{6.2}</span></span> which can be computed without access to the intractable normalising constant <span class="math inline">Z_{\bm{\theta}}</span>. Critically, a Stein score <span class="math inline">s_P</span> fully characterises the associated distribution <span class="math inline">P</span>:</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="prp-stein-score" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 6.1</strong></span> Let <span class="math inline">P</span> and <span class="math inline">Q</span> have Stein scores <span class="math inline">s_P</span> and <span class="math inline">s_Q</span>. Then <span class="math inline">s_P</span> and <span class="math inline">s_Q</span> are everywhere equal if and only if <span class="math inline">P</span> and <span class="math inline">Q</span> are equal.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Proof (Not Examinable)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="prf-pc" class="proof">
+<p><span class="proof-title"><em>Proof 6.1</em> (Not Examinable). </span>The equality of Stein scores is equivalent to the constancy of the ratio of the densities <span class="math inline">p</span> and <span class="math inline">q</span> for <span class="math inline">P</span> and <span class="math inline">Q</span>, since <span class="math display">
+s_P(\mathbf{x}) - s_Q(\mathbf{x}) = \nabla_{\mathbf{x}} \log \left( \frac{p(\mathbf{x})}{q(\mathbf{x})} \right) .
+</span> Further, the ratio <span class="math inline">p/q</span> is constant if and only if <span class="math inline">p</span> and <span class="math inline">q</span> are equal, since <span class="math inline">p/q = C</span> if and only if <span class="math inline">p(\mathbf{x}) = C q(\mathbf{x})</span> for all <span class="math inline">\mathbf{x}</span>, and since both <span class="math inline">p</span> and <span class="math inline">q</span> integrate to <span class="math inline">1</span> this situation can only occur when <span class="math inline">C = 1</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<p><a href="#prp-stein-score" class="quarto-xref">Proposition&nbsp;<span>6.1</span></a> suggests a convenient approach to training an energy-based model <span class="math inline">P_{\bm{\theta}}</span>; we can try to “match” the Stein score of <span class="math inline">P_{\bm{\theta}}</span> to the Stein score of the true data-generating distribution. However, we do not have access to the Stein score of the data-generating distribution, we only have a training dataset <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n</span> consisting of samples from it.</p>
+<blockquote class="blockquote">
+<p>How then can we proceed?</p>
+</blockquote>
+<p>The solution is essentially a clever application of integration-by-parts<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, due to <span class="citation" data-cites="hyvarinen2005estimation">Hyvärinen (<a href="#ref-hyvarinen2005estimation" role="doc-biblioref">2005</a>)</span>.</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="prp-manip-stein-score" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 6.2 (Manipulating the Stein score<span class="advanced" title="Non-Examinable content"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>)</strong></span> Let <span class="math inline">P</span> and <span class="math inline">Q</span> be distributions on <span class="math inline">\mathbb{R}^d</span> with densities <span class="math inline">p</span> and <span class="math inline">q</span>, respectively. Assuming <span class="math inline">q(\mathbf{x}) (\nabla \log p)(\mathbf{x})</span> vanishes (uniformly) as <span class="math inline">\|\mathbf{x}\| \rightarrow \infty</span>, <span id="eq-hyvarinen"><span class="math display">
+\int \| s_P(\mathbf{x}) - s_Q(\mathbf{x}) \|^2 \mathrm{d}Q(\mathbf{x}) = \int \|(\nabla \log p)(\mathbf{x})\|^2 + 2 (\Delta \log p)(\mathbf{x}) \; \mathrm{d}Q(\mathbf{x}) + C_Q   
+\tag{6.3}</span></span> where <span class="math inline">C_Q</span> depends on <span class="math inline">Q</span> but not on <span class="math inline">P</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Proof (Not Examinable)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="prf-manip-stein-score" class="proof">
+<p><span class="proof-title"><em>Proof 6.2</em> (Not Examinable). </span>From the <em>divergence theorem</em> (i.e.&nbsp;multivariate integration-by-parts; see e.g.&nbsp;MSP2801), <span class="math display">
+\begin{align*}
+    \int \langle \nabla \log p , \nabla \log q \rangle \; \mathrm{d}Q &amp; = \int \left\langle (\nabla \log p)(\mathbf{x}) , \frac{(\nabla q)(\mathbf{x})}{q(\mathbf{x})} \right\rangle \; q(\mathbf{x}) \; \mathrm{d}\mathbf{x} \\
+    &amp; = \int \langle (\nabla \log p)(\mathbf{x}) , (\nabla q)(\mathbf{x}) \rangle \; \mathrm{d}\mathbf{x} \\
+    &amp; = \int q(\mathbf{x}) (\Delta \log p)(\mathbf{x}) \; \mathrm{d}\mathbf{x} \\
+    &amp; = \int (\Delta \log p)(\mathbf{x}) \; \mathrm{d}Q(\mathbf{x})
+\end{align*}
+</span> where the boundary term that appears in integration-by-parts vanishes since we assumed <span class="math inline">q(\mathbf{x}) (\nabla \log p)(\mathbf{x}) \rightarrow \mathbf{0}</span> uniformly as <span class="math inline">\|\mathbf{x}\| \rightarrow \infty</span>. Thus <span class="math display">
+\begin{align*}
+    \int \| s_P(\mathbf{x}) - s_Q(\mathbf{x}) \|^2 \mathrm{d}Q(\mathbf{x}) &amp; = \int \underbrace{ \langle \nabla \log p , \nabla \log p \rangle }_{\|(\nabla \log p)(\mathbf{x})\|^2} - 2 \langle \nabla \log p , \nabla \log q \rangle + \underbrace{ \langle \nabla \log q , \nabla \log q \rangle }_{\text{independent of $P$}} \; \mathrm{d}Q \\
+    &amp; = \int \|(\nabla \log p)(\mathbf{x})\|^2 + 2 (\Delta \log p)(\mathbf{x}) \; \mathrm{d}Q(\mathbf{x}) + C_Q
+\end{align*}
+</span> as required.</p>
+</div>
+</div>
+</div>
+</div>
+<p>That is, we <em>can</em> indeed train our energy-based model by matching Stein scores, and we do this by minimising the right hand side of <a href="#eq-hyvarinen" class="quarto-xref">Equation&nbsp;<span>6.3</span></a> from <a href="#prp-manip-stein-score" class="quarto-xref">Proposition&nbsp;<span>6.2</span></a> where <span class="math inline">P</span> is <span class="math inline">P_{\bm{\theta}}</span> and where <span class="math inline">Q</span> is replaced by the empirical distribution of the dataset:</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="def-score-matching" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 6.3 (Score matching)</strong></span> Given a dataset <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n</span> and a generative model <span class="math inline">P_{\bm{\theta}}</span>, the <em>score matching</em> estimator is <span id="eq-score-matching-obj"><span class="math display">
+\argmin_{\bm{\theta} \in \Theta} \quad \frac{1}{n} \sum_{i=1}^n \|(\nabla \log p_{\bm{\theta}})(\mathbf{x}_i)\|^2 + 2 (\Delta \log p_{\bm{\theta}})(\mathbf{x}_i)   
+\tag{6.4}</span></span></p>
+</div>
+</div>
+</div>
+</div>
+<p>The quantities appearing in <a href="#def-score-matching" class="quarto-xref">Definition&nbsp;<span>6.3</span></a> can indeed be calculated for energy-based models, due to <a href="#eq-energy-stein-score" class="quarto-xref">Equation&nbsp;<span>6.2</span></a>. Score matching and maximum likelihood estimation happen to yield the same result when training a normal generative model (), but in general these objectives can be different.</p>
+<p>Score matching has been around since at least <span class="citation" data-cites="hyvarinen2005estimation">Hyvärinen (<a href="#ref-hyvarinen2005estimation" role="doc-biblioref">2005</a>)</span>, and has been widely used in statistics to circumvent intractable normalisation constants <span class="math inline">Z_{\bm{\theta}}</span>.</p>
+<p>However, the optimisation landscape for score matching in <a href="#eq-score-matching-obj" class="quarto-xref">Equation&nbsp;<span>6.4</span></a> can be difficult to navigate, and this limited its potential.</p>
+<p>A breakthrough occurred around 2020, when <span class="citation" data-cites="ho2020denoising">Ho, Jain, and Abbeel (<a href="#ref-ho2020denoising" role="doc-biblioref">2020</a>)</span> and <span class="citation" data-cites="songdenoising">Song, Meng, and Ermon (<a href="#ref-songdenoising" role="doc-biblioref">n.d.</a>)</span> had the idea of constructing a sequence of relaxed optimisation problems, where one first solves an easier problem and leverages the solution to inform the next problem in the sequence, eventually enabling the original problem to be solved:</p>
+<div class="callout callout-style-simple callout-caution no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="exm-denoising-diffusions" class="theorem example">
+<p><span class="theorem-title"><strong>Example 6.2 (Denoising diffusions<span class="advanced" title="Non-Examinable content"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>)</strong></span> Let <span class="math inline">P_0</span> be the distribution from which the dataset <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n</span> are considered to have been sampled. Construct a sequence <span class="math inline">(P_t)_{t &gt; 0}</span> of probability distributions, such that if <span class="math inline">\mathbf{X}_t \sim P_t</span> and <span class="math inline">\mathbf{Z} \sim \mathcal{N}(\mathbf{0},\mathbf{I})</span>, then <span class="math inline">\mathbf{X}_t + (s-t) \mathbf{Z} \sim P_s</span> for all <span class="math inline">s \geq t</span> (one can interpret such a construction as a <em>diffusion process</em>, but we do not need this detail). Each <span class="math inline">P_t</span> can be regarded as a <em>noisy</em> version of the data-generating distribution, where we have taken the original data points <span class="math inline">\mathbf{x}_i</span> and added independent Gaussian noise; see <a href="#fig-denosing-diffusion" class="quarto-xref">Figure&nbsp;<span>6.2</span></a>.</p>
+<p>For large <span class="math inline">t</span>, say <span class="math inline">t = T</span>, the distribution <span class="math inline">P_T</span> will be approximately equal to <span class="math inline">\mathcal{N}(\mathbf{0},T\mathbf{I})</span> and the associated Stein score will be approximately <span class="math inline">- \mathbf{x} / T</span>, which can be easily matched using e.g.&nbsp;a linear model. The crucial observation is that the Stein score function of <span class="math inline">P_s</span> is easier to match compared to the Stein score function of <span class="math inline">P_t</span> whenever <span class="math inline">s \geq t</span>. Thus we can start by matching the Stein score for <span class="math inline">P_T</span> and gradually work backward until we have an accurate approximation to the Stein score of <span class="math inline">P_0</span>. This idea has become known as <em>denoising</em>, referring to working backward from the noisy <span class="math inline">P_T</span> to the noiseless <span class="math inline">P_0</span>. Using this approach, score matching can achieve state-of-the-art performance in complex generative modelling tasks. A prominent example of denoising diffusions is <em>Stable Diffusion</em>, which attracted much attention when it was publicly released by Stability AI in 2022.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="fig-denosing-diffusion" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-denosing-diffusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/kernel_trick.png" class="img-fluid figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-denosing-diffusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.2: Illustrating the denoising diffusion generative model. [<a href="https://cvpr2023-tutorial-diffusion-models.github.io%7D">source</a>]
+</figcaption>
+</figure>
+</div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-bach2024learning" class="csl-entry" role="listitem">
+Bach, Francis. 2024. <em>Learning Theory from First Principles</em>. MIT Press.
+</div>
+<div id="ref-ho2020denoising" class="csl-entry" role="listitem">
+Ho, Jonathan, Ajay Jain, and Pieter Abbeel. 2020. <span>“Denoising Diffusion Probabilistic Models.”</span> <em>Advances in Neural Information Processing Systems</em> 33: 6840–51.
+</div>
+<div id="ref-hyvarinen2005estimation" class="csl-entry" role="listitem">
+Hyvärinen, A. 2005. <span>“Estimation of Non-Normalized Statistical Models by Score Matching.”</span> <em>Journal of Machine Learning Research</em> 6: 695.
+</div>
+<div id="ref-songdenoising" class="csl-entry" role="listitem">
+Song, Jiaming, Chenlin Meng, and Stefano Ermon. n.d. <span>“Denoising Diffusion Implicit Models.”</span> In <em>International Conference on Learning Representations</em>.
+</div>
+</div>
 </section>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>If data are not real vector-valued, we can proceed by first <em>embedding</em> the data into <span class="math inline">\mathbb{R}^d</span> using an appropriate transformation <span class="math inline">\phi(\mathbf{x}_i) \in \mathbb{R}^d</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>To avoid a trivial solution in <a href="#eq-kmeans" class="quarto-xref">Equation&nbsp;<span>6.1</span></a> we would need to insist on having at least one data point in each cluster.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Recall that <span class="math inline">\Delta = \nabla \cdot \nabla</span> denotes the Laplacian <a href="2-machine-learning-models.html#rem-calculus-notation" class="quarto-xref">Remark&nbsp;<span>2.1</span></a>. Recall also that <span class="math inline">\int \cdots \mathrm{d}Q</span> denotes expectation with respect to <span class="math inline">Q</span>; <a href="1-overview-of-machine-learning.html#recap-notation-expectation" class="callout-ref" data-callout-label="Recap" data-callout-number="1.11" data-callout-title="Notation for Expectations" data-callout-preview="Let P be a probability distribution on a set \mathcal{X} and let f : \mathcal{X} \rightarrow \mathbb{R} be a function whose average value, or expectation, is of interest.">Recap&nbsp;1.11</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
@@ -683,9 +987,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', onKey);
 })();
 </script>
-
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   // 1) Find the brand container and the existing logo <img>
@@ -736,8 +1037,860 @@ document.addEventListener('DOMContentLoaded', function () {
   // 3) Swap: remove the old <a><img/></a>, insert the new <a><svg/></a>
   const oldAnchor = img.closest('a.navbar-brand-logo') || img;
   brandContainer.replaceChild(a, oldAnchor);
+
+  // ============================
+  // 4) Add Settings Dropdown
+  // ============================
+  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
+  if (!tools) return;
+// Create settings container
+  const settingsContainer = document.createElement('div');
+  settingsContainer.className = 'settings-dropdown';
+  settingsContainer.innerHTML = `
+    <button class="btn-settings" type="button" aria-label="Display settings" title="Display settings">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
+    <div class="settings-menu">
+      <p class="settings-section-label">Display Mode</p>
+      <button class="settings-item" id="lecture-zoom-toggle" type="button">
+        <span class="settings-icon">
+          <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+          <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 14 10 14 10 20"></polyline>
+            <polyline points="20 10 14 10 14 4"></polyline>
+            <line x1="14" y1="10" x2="21" y2="3"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+        </span>
+        <span class="settings-label">Lecture Zoom</span>
+        <span class="settings-status"></span>
+      </button>
+      <button class="settings-item" id="reading-mode-toggle" type="button">
+        <span class="settings-icon">
+          <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </span>
+        <span class="settings-label">Reading Mode</span>
+        <span class="settings-status"></span>
+      </button>
+      
+      <div class="settings-divider"></div>
+      <p class="settings-section-label">Custom Colors</p>
+      
+      <div class="settings-color-row">
+        <label for="settings-bg-color">Background</label>
+        <input type="color" id="settings-bg-color" class="settings-color-input">
+      </div>
+
+      <div class="settings-color-row">
+        <label for="settings-text-color">Text</label>
+        <input type="color" id="settings-text-color" class="settings-color-input">
+      </div>
+
+      <div class="settings-color-row">
+        <label for="settings-accent-color">Accent</label>
+        <input type="color" id="settings-accent-color" class="settings-color-input">
+      </div>    
+        
+      <button class="settings-reset-btn" id="reset-colors" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+        Reset Colors
+      </button>
+    </div>
+  `;
+
+  // Insert after color toggle
+  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
+  if (colorToggle && colorToggle.parentNode) {
+    colorToggle.parentNode.insertBefore(settingsContainer, colorToggle.nextSibling);
+  } else {
+    tools.appendChild(settingsContainer);
+  }
+
+  // Elements
+  const settingsBtn = settingsContainer.querySelector('.btn-settings');
+  const lectureZoomToggle = settingsContainer.querySelector('#lecture-zoom-toggle');
+  const readingModeToggle = settingsContainer.querySelector('#reading-mode-toggle');
+  const bgColorInput = settingsContainer.querySelector('#settings-bg-color');
+  const textColorInput = settingsContainer.querySelector('#settings-text-color');
+  const accentColorInput = settingsContainer.querySelector('#settings-accent-color');
+  const resetColorsBtn = settingsContainer.querySelector('#reset-colors');
+
+  // Default color values
+  const defaultBgColor = '#fafaf8';
+  const defaultTextColor = '#1a1a1a';
+  const defaultAccentColor = '#0d6efd';
+
+  // ============================
+  // Helper Functions (define first)
+  // ============================
+  
+  // Helper function to darken a hex color
+  const darkenColor = (hex, amount) => {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    r = Math.max(0, Math.floor(r * (1 - amount)));
+    g = Math.max(0, Math.floor(g * (1 - amount)));
+    b = Math.max(0, Math.floor(b * (1 - amount)));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  // Helper function to lighten a hex color
+  const lightenColor = (hex, amount) => {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    r = Math.min(255, Math.floor(r + (255 - r) * amount));
+    g = Math.min(255, Math.floor(g + (255 - g) * amount));
+    b = Math.min(255, Math.floor(b + (255 - b) * amount));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  // Reading progress indicator
+  const updateReadingProgress = () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  };
+
+  // Update visual states for display modes
+  const updateActiveStates = () => {
+    const isLectureZoom = document.body.classList.contains('lecture-zoom');
+    const isReadingMode = document.body.classList.contains('reading-mode');
+    lectureZoomToggle.classList.toggle('active', isLectureZoom);
+    readingModeToggle.classList.toggle('active', isReadingMode);
+  };
+
+  // Apply custom colors
+  const applyCustomColors = () => {
+    document.body.classList.add('custom-colors');
+    
+    const bgColor = bgColorInput.value;
+    const textColor = textColorInput.value;
+    const accentColor = accentColorInput.value;
+    
+    document.documentElement.style.setProperty('--custom-bg-color', bgColor);
+    document.documentElement.style.setProperty('--custom-text-color', textColor);
+    document.documentElement.style.setProperty('--custom-accent-color', accentColor);
+    
+    // Compute darker scrollbar thumb color (30% darker)
+    const darkerThumb = darkenColor(bgColor, 0.3);
+    document.documentElement.style.setProperty('--scroll-track', bgColor);
+    document.documentElement.style.setProperty('--scroll-thumb', darkerThumb);
+    
+    // Compute lighter variants for callouts and tabs
+    const lighterBg = lightenColor(bgColor, 0.3);
+    const lighterBgSubtle = lightenColor(bgColor, 0.15);
+    document.documentElement.style.setProperty('--custom-bg-lighter', lighterBg);
+    document.documentElement.style.setProperty('--custom-bg-lighter-subtle', lighterBgSubtle);
+    
+    // Save to localStorage
+    localStorage.setItem('mas2901-custom-bg', bgColor);
+    localStorage.setItem('mas2901-custom-text', textColor);
+    localStorage.setItem('mas2901-custom-accent', accentColor);
+  };
+
+  // Reset colors to defaults
+  const resetColors = () => {
+    document.body.classList.remove('custom-colors');
+    document.documentElement.style.removeProperty('--custom-bg-color');
+    document.documentElement.style.removeProperty('--custom-text-color');
+    document.documentElement.style.removeProperty('--custom-accent-color');
+    document.documentElement.style.removeProperty('--scroll-track');
+    document.documentElement.style.removeProperty('--scroll-thumb');
+    document.documentElement.style.removeProperty('--custom-bg-lighter');
+    document.documentElement.style.removeProperty('--custom-bg-lighter-subtle');
+    
+    // Reset inputs to defaults
+    bgColorInput.value = defaultBgColor;
+    textColorInput.value = defaultTextColor;
+    accentColorInput.value = defaultAccentColor;
+    
+    // Clear localStorage
+    localStorage.removeItem('mas2901-custom-bg');
+    localStorage.removeItem('mas2901-custom-text');
+    localStorage.removeItem('mas2901-custom-accent');
+  };
+
+  // ============================
+  // Event Listeners
+  // ============================
+
+  // Toggle dropdown
+  settingsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    settingsContainer.classList.toggle('open');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!settingsContainer.contains(e.target)) {
+      settingsContainer.classList.remove('open');
+    }
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      settingsContainer.classList.remove('open');
+    }
+  });
+
+  // Lecture Zoom toggle
+  lectureZoomToggle.addEventListener('click', () => {
+    // Turn off reading mode if active
+    if (document.body.classList.contains('reading-mode')) {
+      document.body.classList.remove('reading-mode');
+      document.documentElement.classList.remove('reading-mode');
+      window.removeEventListener('scroll', updateReadingProgress);
+      document.body.style.removeProperty('--scroll-progress');
+    }
+
+    document.body.classList.toggle('lecture-zoom');
+    document.documentElement.classList.toggle('lecture-zoom');
+    updateActiveStates();
+  });
+
+  // Reading Mode toggle
+  readingModeToggle.addEventListener('click', () => {
+    // Turn off lecture zoom if active
+    if (document.body.classList.contains('lecture-zoom')) {
+      document.body.classList.remove('lecture-zoom');
+      document.documentElement.classList.remove('lecture-zoom');
+    }
+
+    document.body.classList.toggle('reading-mode');
+    document.documentElement.classList.toggle('reading-mode');
+
+    // Update progress indicator on scroll
+    if (document.body.classList.contains('reading-mode')) {
+      updateReadingProgress();
+      window.addEventListener('scroll', updateReadingProgress);
+    } else {
+      window.removeEventListener('scroll', updateReadingProgress);
+      document.body.style.removeProperty('--scroll-progress');
+    }
+    
+    updateActiveStates();
+  });
+
+  // Color input listeners
+  bgColorInput.addEventListener('input', applyCustomColors);
+  textColorInput.addEventListener('input', applyCustomColors);
+  accentColorInput.addEventListener('input', applyCustomColors);
+
+  // Reset colors button
+  resetColorsBtn.addEventListener('click', resetColors);
+
+  // ============================
+  // Initialize
+  // ============================
+
+  // Load saved colors or use defaults
+  const savedBg = localStorage.getItem('mas2901-custom-bg');
+  const savedText = localStorage.getItem('mas2901-custom-text');
+  const savedAccent = localStorage.getItem('mas2901-custom-accent');
+
+  // Set input values (saved or default)
+  bgColorInput.value = savedBg || defaultBgColor;
+  textColorInput.value = savedText || defaultTextColor;
+  accentColorInput.value = savedAccent || defaultAccentColor;
+
+  // Apply custom colors if any were saved
+  if (savedBg || savedText || savedAccent) {
+    applyCustomColors();
+  }
+
+  // Initial display mode state
+  updateActiveStates();
 });
 </script>
+
+<style>
+/* ============================
+   Settings Dropdown
+   ============================ */
+.settings-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.btn-settings {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.375rem;
+  margin: 0 0.25rem;
+  border-radius: 0.25rem;
+  color: var(--bs-navbar-color, #333);
+  transition: opacity 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-settings:hover {
+  opacity: 0.7;
+}
+
+.btn-settings svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+/* Rotate cog when open */
+.settings-dropdown.open .btn-settings svg {
+  transform: rotate(45deg);
+}
+
+/* Dropdown menu */
+.settings-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: var(--surface-weak, white);
+  border: 1px solid var(--border, #ddd);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  padding: 0.5rem 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  z-index: 4000;
+}
+
+.settings-dropdown.open .settings-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Section divider */
+.settings-divider {
+  height: 1px;
+  background: var(--border, #ddd);
+  margin: 0.5rem 0;
+}
+
+.settings-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-fg, #666);
+  opacity: 0.6;
+  padding: 0.5rem 1rem 0.25rem;
+  margin: 0;
+}
+
+/* Menu items */
+.settings-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: var(--brand-fg, #333);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  gap: 0.75rem;
+}
+
+.settings-item:hover {
+  background: var(--brand-teal-hover, #f8f9fa);
+  color: var(--brand-bg, #0d6efd);
+}
+
+.settings-item.active {
+  background: var(--brand-teal, #e7f1ff);
+  color: var(--brand-fg, #0d6efd);
+}
+
+.settings-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.settings-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* Icon state switching */
+.settings-icon .icon-exit { display: none; }
+.settings-item.active .settings-icon .icon-enter { display: none; }
+.settings-item.active .settings-icon .icon-exit { display: block; }
+
+.settings-label {
+  flex-grow: 1;
+}
+
+.settings-status {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.settings-item.active .settings-status::after {
+  content: '✓';
+  font-size: 0.9rem;
+  opacity: 1;
+}
+
+/* ============================
+   Color Picker Row
+   ============================ */
+.settings-color-row {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  gap: 0.75rem;
+}
+
+.settings-color-row label {
+  font-size: 0.85rem;
+  color: var(--brand-fg, #333);
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+/* Circular color swatch input */
+.settings-color-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  padding: 0;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.settings-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.settings-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.settings-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.settings-color-input:hover {
+  border-color: var(--brand-teal, #0d6efd);
+}
+
+.settings-color-input:focus {
+  outline: none;
+  border-color: var(--brand-teal, #0d6efd);
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+/* Reset button */
+.settings-reset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 2rem);
+  margin: 0.25rem 1rem 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--brand-fg, #666);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  gap: 0.5rem;
+}
+
+.settings-reset-btn:hover {
+  background: var(--brand-teal-hover, #f8f9fa);
+  border-color: var(--brand-teal, #0d6efd);
+  color: var(--brand-teal, #0d6efd);
+}
+
+.settings-reset-btn svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* Dark mode support */
+.quarto-dark .btn-settings {
+  color: var(--bs-navbar-dark-color, #fff);
+}
+
+.quarto-dark .settings-menu {
+  background: var(--bs-body-bg, #212529);
+  border-color: var(--bs-border-color, #495057);
+}
+
+.quarto-dark .settings-item:hover {
+  background: var(--bs-tertiary-bg, #2b3035);
+}
+
+.quarto-dark .settings-item.active {
+  background: rgba(13, 110, 253, 0.2);
+}
+
+.quarto-dark .settings-color-input {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.quarto-dark .settings-color-row label {
+  color: var(--bs-body-color, #e9ecef);
+}
+
+.quarto-dark .settings-reset-btn {
+  border-color: var(--bs-border-color, #495057);
+  color: var(--bs-body-color, #adb5bd);
+}
+
+.quarto-dark .settings-reset-btn:hover {
+  background: var(--bs-tertiary-bg, #2b3035);
+}
+
+/* ============================
+   Custom Colors Applied
+   ============================ */
+
+/* ============================
+   Custom Colors - Accent Color Elements
+   ============================ */
+body.custom-colors blockquote,
+body.custom-colors .blockquote {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .panel-caption,
+body.custom-colors .figure-caption,
+body.custom-colors .subfigure-caption,
+body.custom-colors .table-caption,
+body.custom-colors figcaption,
+body.custom-colors caption {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .header-section-number {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors details > summary {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors details > summary:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+  
+  /* Scrollbar - thumb is 20% darker than background */
+  scrollbar-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+body.custom-colors *::-webkit-scrollbar-track {
+  background: var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--custom-bg-color) 80%, black);
+  border-radius: 6px;
+  border: 2px solid var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--custom-bg-color) 65%, black);
+}
+
+body.custom-colors main,
+body.custom-colors .content,
+body.custom-colors article,
+body.custom-colors div.sidebar.sidebar-navigation.rollup.quarto-sidebar-toggle-contents,
+body.custom-colors nav.sidebar.sidebar-navigation:not(.rollup) {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Navbar */
+body.custom-colors #quarto-header,
+body.custom-colors #quarto-header nav.navbar,
+body.custom-colors .navbar {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+  border-bottom-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors #quarto-header .navbar-title,
+body.custom-colors #quarto-header .navbar-brand {
+  color: var(--custom-text-color) !important;
+}
+
+/* Navbar icons */
+body.custom-colors #quarto-header .quarto-navbar-tools button,
+body.custom-colors #quarto-header .quarto-navbar-tools a,
+body.custom-colors #quarto-header .quarto-color-scheme-toggle,
+body.custom-colors #quarto-header .btn-settings,
+body.custom-colors #quarto-header .navbar-toggler {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors #quarto-header .quarto-navbar-tools button:hover,
+body.custom-colors #quarto-header .quarto-navbar-tools a:hover,
+body.custom-colors #quarto-header .quarto-color-scheme-toggle:hover,
+body.custom-colors #quarto-header .btn-settings:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors #quarto-header .navbar-logo {
+  color: var(--custom-text-color) !important;
+}
+
+/* Secondary navbar */
+body.custom-colors .quarto-secondary-nav {
+  background-color: var(--custom-bg-color) !important;
+  border-bottom-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors .quarto-secondary-nav .quarto-secondary-nav-title {
+  color: var(--custom-text-color) !important;
+}
+
+/* Autocomplete / Search */
+body.custom-colors .aa-Autocomplete .aa-Form,
+body.custom-colors .aa-DetachedFormContainer .aa-Form {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .aa-Autocomplete .aa-Input,
+body.custom-colors .aa-DetachedFormContainer .aa-Input {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .aa-Autocomplete .aa-Input::placeholder,
+body.custom-colors .aa-DetachedFormContainer .aa-Input::placeholder {
+  color: color-mix(in srgb, var(--custom-text-color) 50%, transparent) !important;
+}
+
+body.custom-colors .aa-Panel,
+body.custom-colors .aa-PanelLayout {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .aa-Item {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .aa-Item[aria-selected="true"],
+body.custom-colors .aa-Item:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+}
+
+body.custom-colors .aa-Item mark {
+  color: var(--custom-accent-color) !important;
+  background: transparent !important;
+}
+
+/* Headings */
+body.custom-colors h1,
+body.custom-colors h2,
+body.custom-colors h3,
+body.custom-colors h4,
+body.custom-colors h5,
+body.custom-colors h6 {
+  color: var(--custom-text-color) !important;
+}
+
+/* Links */
+body.custom-colors a {
+  color: var(--custom-accent-color) !important;
+}
+
+/* Callouts */
+body.custom-colors .callout {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+  border-left-color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .callout-title {
+  color: var(--custom-text-color) !important;
+}
+
+/* Code blocks */
+body.custom-colors pre,
+body.custom-colors code {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 92%, black) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Tables */
+body.custom-colors table {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors th {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors td {
+  border-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors tr:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+}
+
+/* Selection */
+body.custom-colors ::selection {
+  background-color: var(--custom-accent-color);
+  color: white;
+}
+
+/* Sidebar link colors */
+body.custom-colors .sidebar-navigation .sidebar-item a,
+body.custom-colors .sidebar-navigation .sidebar-section a {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .sidebar-navigation .sidebar-item a:hover,
+body.custom-colors .sidebar-navigation .sidebar-section a:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .sidebar-navigation .sidebar-item.active a {
+  color: var(--custom-accent-color) !important;
+}
+
+/* ============================
+   Custom Colors - Callout Headers
+   ============================ */
+body.custom-colors div.callout-note.callout-style-default > .callout-header,
+body.custom-colors div.callout-tip.callout-style-default > .callout-header,
+body.custom-colors div.callout-warning.callout-style-default > .callout-header,
+body.custom-colors div.callout-caution.callout-style-default > .callout-header,
+body.custom-colors div.callout-important.callout-style-default > .callout-header {
+  background-color: var(--custom-bg-lighter) !important;
+}
+
+/* ============================
+   Custom Colors - Nav Tabs
+   ============================ */
+body.custom-colors .nav-tabs .nav-link.active,
+body.custom-colors .nav-tabs .nav-item.show .nav-link {
+  background-color: var(--custom-bg-lighter) !important;
+  color: var(--custom-text-color) !important;
+  border-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .nav-tabs .nav-link {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .nav-tabs .nav-link:hover:not(.active) {
+  background-color: var(--custom-bg-lighter-subtle) !important;
+  border-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .nav-tabs {
+  border-bottom-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .tab-content {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Settings dropdown when custom colors active */
+body.custom-colors .settings-menu {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-item {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-item:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+}
+
+body.custom-colors .settings-item.active {
+  background-color: color-mix(in srgb, var(--custom-accent-color) 20%, var(--custom-bg-color)) !important;
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .settings-section-label {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-color-row label {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-divider {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-reset-btn {
+  color: var(--custom-text-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-reset-btn:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+  color: var(--custom-accent-color) !important;
+  border-color: var(--custom-accent-color) !important;
+}
+
+</style>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Only target IMPORTANT callouts; add more types if needed.
@@ -755,223 +1908,6 @@ document.addEventListener('DOMContentLoaded', () => {
       el.innerHTML = el.innerHTML.replace(re, '');
     }
   });
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
-  if (!tools) return;
-
-  // Create the button
-  const btn = document.createElement('button');
-  btn.id = 'lecture-zoom-header-toggle';
-  btn.className = 'btn-zoom-toggle';
-  btn.type = 'button';
-  btn.setAttribute('aria-pressed', 'false');
-  btn.setAttribute('aria-label', 'Lecture zoom');
-  btn.setAttribute('title', 'Lecture zoom (X)');
-
-  // svg icon
-  btn.innerHTML = `
-    <!-- ENTER: four corners -->
-    <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M3 9V3h6"/>
-        <path d="M21 9V3h-6"/>
-        <path d="M3 15v6h6"/>
-        <path d="M21 15v6h-6"/>
-    </svg>
-
-    <!-- EXIT: corners-in (contract) -->
-    <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M9 3v6H3"/>
-        <path d="M15 3v6h6"/>
-        <path d="M3 15h6v6"/>
-        <path d="M21 15h-6v6"/>
-    </svg>
-  `;
-
-  // Place it next to the colour-scheme toggle (after it, if present)
-  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
-  if (colorToggle && colorToggle.parentNode) {
-    colorToggle.parentNode.insertBefore(btn, colorToggle.nextSibling);
-  } else {
-    tools.appendChild(btn);
-  }
-
-  // Toggle logic
-  const KEY = 'lecture-zoom-enabled';
-  
-  // Helper: are we in lecture zoom?
-  const isLectureZoom = () =>
-    document.body.classList.contains('lecture-zoom') ||
-    document.documentElement.classList.contains('lecture-zoom');
-
-  // Define closeLectureSearch early (forward declaration)
-  let closeLectureSearch;
-
-  const apply = (on) => {
-    document.body.classList.toggle('lecture-zoom', on);
-    document.documentElement.classList.toggle('lecture-zoom', on);
-    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    
-    // Close search overlay when exiting lecture zoom
-    if (!on && closeLectureSearch) {
-      closeLectureSearch();
-    }
-    
-    // Nudge charts/layouts to recompute
-    window.dispatchEvent(new Event('resize'));
-    sessionStorage.setItem(KEY, on ? '1' : '0');
-  };
-
-  // Restore per-tab state
-  apply(sessionStorage.getItem(KEY) === '1');
-
-  // Click handler
-  btn.addEventListener('click', () => apply(!isLectureZoom()));
-  
-  // Keyboard shortcut (Z)
-  document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'x' && !/input|textarea|select/i.test(e.target.tagName)) {
-      apply(!isLectureZoom());
-    }
-  });
-
-  let acAnchor = null;          // where the autocomplete root came from
-  let panelObserver = null;     // to catch newly created panels
-
-  function ensureLectureOverlay() {
-    let overlay = document.getElementById('lecture-search-overlay');
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = 'lecture-search-overlay';
-      overlay.innerHTML = '<div class="lecture-search-modal"></div>';
-      document.body.appendChild(overlay);
-
-      // Close on backdrop click
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay && closeLectureSearch) closeLectureSearch();
-      });
-
-      // Close on Esc
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && closeLectureSearch) closeLectureSearch();
-      });
-    }
-    return overlay;
-  }
-
-  function findAutocomplete() {
-    const root =
-      document.querySelector('.aa-Autocomplete') ||
-      document.querySelector('.quarto-search .aa-Autocomplete') ||
-      document.querySelector('.quarto-search-panel .aa-Autocomplete');
-
-    const input = root?.querySelector('input.aa-Input');
-    return { root, input };
-  }
-
-  // Move the results panel (if any) into the modal and normalize its positioning
-  function reparentPanel(modal) {
-    const panel = document.querySelector('.aa-Panel');
-    if (!panel || modal.contains(panel)) return;
-    modal.appendChild(panel);
-    // Let CSS control layout/width; clear inline positioning from Algolia
-    panel.style.left = '';
-    panel.style.top = '';
-    panel.style.width = '';
-  }
-
-  function startPanelObserver(modal) {
-    if (panelObserver) return;
-    panelObserver = new MutationObserver(() => reparentPanel(modal));
-    // Listen on body, since Algolia often inserts the panel there
-    panelObserver.observe(document.body, { childList: true, subtree: true });
-  }
-
-  function stopPanelObserver() {
-    panelObserver?.disconnect();
-    panelObserver = null;
-  }
-
-  function openLectureSearch() {
-    if (!isLectureZoom()) return false;
-
-    const { root, input } = findAutocomplete();
-    if (!root || !input) return false;
-
-    const overlay = ensureLectureOverlay();
-    const modal = overlay.querySelector('.lecture-search-modal');
-
-    // Anchor the current position of the autocomplete root (only once)
-    if (!acAnchor) {
-      acAnchor = document.createComment('autocomplete-anchor');
-      root.parentNode.insertBefore(acAnchor, root);
-    }
-
-    // Move the autocomplete *root* into the modal
-    modal.appendChild(root);
-
-    // Ensure any results panel gets moved into the modal too
-    reparentPanel(modal);
-    startPanelObserver(modal);
-
-    overlay.classList.add('open');
-    document.documentElement.classList.add('search-open');
-
-    // Focus the input after layout
-    requestAnimationFrame(() => {
-      input.focus();
-      input.select?.();
-      // In case Algolia computes sizes on resize, give it a nudge
-      window.dispatchEvent(new Event('resize'));
-    });
-
-    return true;
-  }
-
-  // Now properly define closeLectureSearch
-  closeLectureSearch = function() {
-    const overlay = document.getElementById('lecture-search-overlay');
-    if (!overlay || !overlay.classList.contains('open')) return;
-
-    stopPanelObserver();
-
-    const { root } = findAutocomplete();
-
-    // Move panel (if currently inside modal) back to body to let Algolia clean up normally
-    const modal = overlay.querySelector('.lecture-search-modal');
-    const panel = modal?.querySelector('.aa-Panel');
-    if (panel) document.body.appendChild(panel);
-
-    // Put the autocomplete root back where it came from
-    if (root && acAnchor && acAnchor.parentNode) {
-      acAnchor.parentNode.insertBefore(root, acAnchor.nextSibling);
-    }
-
-    overlay.classList.remove('open');
-    document.documentElement.classList.remove('search-open');
-  };
-
-  // Existing hotkeys:
-  document.addEventListener('keydown', (e) => {
-    const tag = e.target.tagName.toLowerCase();
-    const typing = tag === 'input' || tag === 'textarea' || tag === 'select' || e.isComposing;
-    if (typing) return;
-
-    if (e.key === 'F' && e.shiftKey) {
-      if (openLectureSearch()) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }
-    if (e.key === 'Escape') {
-      closeLectureSearch();
-    }
-  });
-
 });
 </script>
 <script>
@@ -3080,6 +4016,189 @@ onButton('inkpad-save', () => {
 })();
 </script>
 <script>
+  
+document.addEventListener('DOMContentLoaded', function() {
+  const loadTippy = new Promise((resolve) => {
+    if (typeof tippy !== 'undefined') {
+      resolve();
+      return;
+    }
+    
+    const popper = document.createElement('script');
+    popper.src = 'https://unpkg.com/@popperjs/core@2';
+    popper.onload = () => {
+      const tippyScript = document.createElement('script');
+      tippyScript.src = 'https://unpkg.com/tippy.js@6';
+      tippyScript.onload = resolve;
+      document.head.appendChild(tippyScript);
+    };
+    document.head.appendChild(popper);
+  });
+  
+  loadTippy.then(initCalloutPreviews);
+});
+
+const contentCache = new Map();
+const mathRendered = new WeakSet(); // Track elements where math has been rendered
+
+// Render math in an element using KaTeX (only once)
+function renderMath(element) {
+  if (!element || mathRendered.has(element)) {
+    return; // Already rendered, skip
+  }
+  
+  if (typeof renderMathInElement !== 'undefined') {
+    renderMathInElement(element, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError: false
+    });
+  } else if (typeof katex !== 'undefined') {
+    element.querySelectorAll('.math').forEach(mathEl => {
+      if (mathRendered.has(mathEl)) return;
+      
+      const isDisplay = mathEl.classList.contains('display');
+      const tex = mathEl.textContent || mathEl.innerText;
+      try {
+        katex.render(tex, mathEl, {
+          displayMode: isDisplay,
+          throwOnError: false
+        });
+        mathRendered.add(mathEl);
+      } catch (e) {
+        console.warn('KaTeX render error:', e);
+      }
+    });
+  }
+  
+  // Hide MathML (screen reader version) to avoid duplication
+  element.querySelectorAll('.katex-mathml').forEach(el => {
+    el.style.display = 'none';
+  });
+  
+  // Mark this element as processed
+  mathRendered.add(element);
+}
+
+async function fetchCalloutContent(href) {
+  if (contentCache.has(href)) {
+    return contentCache.get(href);
+  }
+  
+  try {
+    const [file, anchor] = href.split('#');
+    const url = file || window.location.pathname;
+    
+    if (!file || file === '' || url === window.location.pathname) {
+      const element = document.getElementById(anchor);
+      if (element) {
+        const callout = element.closest('.callout');
+        const clone = callout ? callout.cloneNode(true) : element.parentElement.cloneNode(true);
+        clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+        
+        const content = clone.innerHTML;
+        contentCache.set(href, { html: content, needsMathRender: false });
+        return contentCache.get(href);
+      }
+    }
+    
+    const response = await fetch(url);
+    const html = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    const element = doc.getElementById(anchor);
+    if (element) {
+      const callout = element.closest('.callout');
+      const content = callout?.innerHTML || element.parentElement?.innerHTML || '';
+      contentCache.set(href, { html: content, needsMathRender: true });
+      return contentCache.get(href);
+    }
+  } catch (e) {
+    console.warn('Failed to fetch callout content:', e);
+  }
+  
+  return null;
+}
+
+function initCalloutPreviews() {
+  const calloutRefs = document.querySelectorAll('.callout-ref');
+  
+  calloutRefs.forEach(ref => {
+    const label = ref.dataset.calloutLabel;
+    const number = ref.dataset.calloutNumber;
+    const title = ref.dataset.calloutTitle;
+    const preview = ref.dataset.calloutPreview;
+    const targetHref = ref.getAttribute('href');
+    
+    const isRecap = label === 'Recap';
+    const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+    const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+    
+    const initialContent = `
+      <div class="callout-preview-content">
+        <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+          <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+        </div>
+        <div class="callout-preview-body">
+          ${preview ? preview + '...' : '<em>Loading...</em>'}
+        </div>
+      </div>
+    `;
+    
+    let contentLoaded = false;
+    
+    const instance = tippy(ref, {
+      content: initialContent,
+      allowHTML: true,
+      interactive: true,
+      placement: 'top',
+      theme: 'callout',
+      maxWidth: 450,
+      delay: [400, 100],
+      appendTo: document.body,
+      async onShow(instance) {
+        // Only fetch content once
+        if (contentLoaded) return;
+        
+        const result = await fetchCalloutContent(targetHref);
+        if (result && instance.state.isVisible) {
+          const isRecap = label === 'Recap';
+          const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+          const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+          
+          instance.setContent(`
+            <div class="callout-preview-content">
+              <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+                <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+              </div>
+              <div class="callout-preview-body callout-preview-fetched">
+                ${result.html}
+              </div>
+            </div>
+          `);
+          
+          contentLoaded = true;
+        }
+      },
+      onShown(instance) {
+        // Render math only once after content is shown
+        const contentEl = instance.popper.querySelector('.callout-preview-body');
+        if (contentEl) {
+          renderMath(contentEl);
+        }
+      }
+    });
+  });
+}
+
+
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
   const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
   if (!tools) return;
@@ -3166,6 +4285,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 </style>
+<script>
+
+if (document.body.classList.contains('reading-mode')) {
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  });
+}
+
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -3592,6 +4723,40 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </nav>
 </div> <!-- /content -->
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+    <script type="text/javascript">
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let pseudocodeOptions = {
+          indentSize: el.dataset.indentSize,
+          commentDelimiter: el.dataset.commentDelimiter,
+          lineNumber: el.dataset.lineNumber.toLowerCase() === "true",
+          lineNumberPunc: el.dataset.lineNumberPunc,
+          noEnd: el.dataset.noEnd.toLowerCase() === "true",
+          titlePrefix: el.dataset.captionPrefix
+        };
+        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
+      });
+    })(document);
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
+      });
+    })(document);
+    </script>
+  
 
 
 

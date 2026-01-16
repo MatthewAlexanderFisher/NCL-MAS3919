@@ -1,0 +1,29 @@
+.small-table table {
+  font-size: 0.7em;
+  white-space: nowrap;
+
+}
+
+/* If you also need to scale the MathJax/KaTeX */
+.small-table .MathJax {
+  font-size: 0.7em !important;
+}
+
+.small-table {
+  overflow-x: auto;
+}
+
+.smaller-table table {
+  font-size: 0.9em;
+  white-space: nowrap;
+
+}
+
+/* If you also need to scale the MathJax/KaTeX */
+.smaller-table .MathJax {
+  font-size: 0.9em !important;
+}
+
+.smaller-table {
+  overflow-x: auto;
+}

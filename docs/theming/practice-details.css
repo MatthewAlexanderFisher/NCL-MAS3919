@@ -1,0 +1,163 @@
+/* Base details styling - always reserve border space */
+details.essential-points {
+  border: 1px solid transparent;
+  border-radius: 2px;
+  margin-top: 0.6rem;
+}
+
+/* Show border when open */
+details.essential-points[open] {
+  border-color: var(--brand-red);
+}
+
+/* Summary styling */
+details.essential-points summary {
+  cursor: pointer;
+  background: var(--brand-red);
+  color: #f8f8f8;
+  padding: 0.3rem 0.4rem;
+  font-weight: 600;
+  margin: -1px -1px 0 -1px; /* pull to edges, covering border */
+  border-radius: 2px;
+}
+
+details.essential-points[open] summary {
+  border-radius: 2px 2px 0 0;
+}
+
+details.essential-points summary:hover {
+  background: color-mix(in srgb, var(--brand-red) 85%, black);
+}
+
+/* Pad ALL content after summary */
+details.essential-points[open] > :not(summary) {
+  margin-left: 0.6rem;
+  margin-right: 0.6rem;
+}
+
+details.essential-points[open] > :last-child {
+  margin-bottom: 0.6rem;
+}
+
+details.essential-points[open] > :not(summary):first-of-type {
+  margin-top: 0.6rem;
+}
+
+
+
+/* Base details styling - always reserve border space */
+details.practice-details {
+  border: 1px solid transparent;
+  border-radius: 2px;
+  margin-top: 0.6rem;
+}
+
+/* Show border when open */
+details.practice-details[open] {
+  border-color: var(--brand-purples);
+}
+
+/* Summary styling */
+details.practice-details summary {
+  cursor: pointer;
+  background: var(--brand-purples);
+  color: #f8f8f8;
+  padding: 0.3rem 0.4rem;
+  font-weight: 600;
+  margin: -1px -1px 0 -1px; /* pull to edges, covering border */
+  border-radius: 2px;
+}
+
+details.practice-details[open] summary {
+  border-radius: 2px 2px 0 0;
+}
+
+details.practice-details summary:hover {
+  background: color-mix(in srgb, var(--brand-purples) 85%, black);
+}
+
+/* Pad ALL content after summary */
+details.practice-details[open] > :not(summary) {
+  margin-left: 0.6rem;
+  margin-right: 0.6rem;
+}
+
+details.practice-details[open] > :last-child {
+  margin-bottom: 0.6rem;
+}
+
+details.practice-details[open] > :not(summary):first-of-type {
+  margin-top: 0.6rem;
+}
+
+.revision-header p,
+.revision-header h1,
+.revision-header h2,
+.revision-header h3,
+.revision-header h4,
+.revision-header h5,
+.revision-header h6 {
+  margin: 0;
+}
+
+.revision-entry {
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+  margin-bottom: 0.5em;
+}
+
+.revision-entry:has(.revision-header[aria-expanded="true"]) {
+  background-color: color-mix(in srgb, var(--brand-fg), transparent 96%);
+  outline: 1.5px solid color-mix(in srgb, var(--brand-fg), transparent 85%);
+  outline-offset: 0;
+}
+
+.revision-entry:has(.revision-header[aria-expanded="true"]) .revision-content {
+  border-top: 1px solid color-mix(in srgb, var(--brand-fg), transparent 75%);
+  margin-top: 0.25em;
+  padding-top: 0.75em;
+}
+
+.revision-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.6em 0.75em;   /* slightly less vertical padding */
+  cursor: pointer;
+  border-radius: 4px;
+  line-height: 1.25;        /* or 1.25; lower than body default */
+}
+
+.revision-header:not([aria-expanded="true"]):hover {
+  background-color: color-mix(in srgb, var(--brand-fg), transparent 95%);
+}
+
+.revision-header:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.revision-topic {
+  flex: 1;
+}
+
+.toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 1.4em;
+  user-select: none;
+}
+
+.toggle-icon::before {
+  content: "▶";
+  font-size: 0.6em;
+}
+
+.revision-header[aria-expanded="true"] .toggle-icon::before {
+  content: "▼";
+}
+
+.revision-content {
+  padding: 0 0.75em 0.75em 0.75em;
+}

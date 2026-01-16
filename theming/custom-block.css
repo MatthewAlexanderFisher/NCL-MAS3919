@@ -1,125 +1,62 @@
-/* 1) Set up two-level counter system */
-body { 
-  counter-reset: recap-chapter; 
-}
-
-/* 2) Each H1 (chapter) increments chapter counter and resets recap counter */
-h1 { 
-  counter-increment: recap-chapter;
-  counter-reset: recap; 
-}
-
-/* 3) Every .recap box increments the recap counter within the chapter */
-.recap { 
-  counter-increment: recap; 
-}
-
-/* 4) Style the recap box to match Quarto's callout style */
-.recap {
+/* 1. Base Container Styling */
+/* Your filter applies .callout-recap or .callout-iss classes */
+.callout-recap, .callout-iss {
   position: relative;
-  margin: 1rem 0;
-  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem 0.75rem 1.25rem; /* Extra left padding for the bar */
   background-color: var(--brand-bg);
   border: 1px solid var(--border);
   border-left: none;
-  border-radius: 0.25rem;
-  margin-left: 0.25rem;
+  border-radius: 4px;
+  font-size: 15.3px;
+  line-height: 1.6;
 }
 
-/* 5) Add callout-style left border */
-.recap::before {
+/* 2. Custom Accent Borders */
+.callout-recap::before, .callout-iss::before {
   content: '';
   display: block;
   height: 100%;
   position: absolute;
   left: 0;
   top: 0;
-  width: 0.25rem;
+  width: 4px;
+  border-radius: 4px 0 0 4px;
+}
+
+.callout-recap::before {
   background-color: var(--brand-teal);
-  border-radius: 0.25rem 0 0 0.25rem;
 }
 
-/* 6) Hide the original section number */
-.recap .header-section-number { 
-  display: none; 
+.callout-iss::before {
+  background-color: #f39c12; /* Brand orange for Issues */
 }
 
-/* 7) Style the heading to match Definition format - INLINE display */
-.recap section > :is(h2,h3,h4,h5,h6) {
-  /* display: inline; */
-  font-weight: 700;
-  font-size: 15.3px; /* Match Definition font size exactly */
-  margin: 0;
-  color: inherit;
-  font-style: normal;
-  line-height: 1.5;
-}
-
-
-/* 9) Use zero-width space trick to eliminate the gap */
-.recap section > :is(h2,h3,h4,h5,h6) {
-  /* display: inline; */
-  font-size: 15.3px;
-  margin-left: 0em; /* Pull entire heading left */
-}
-
-
-.recap section > :is(h2,h3,h4,h5,h6)::before {
-  content: "Recap " counter(recap-chapter) "." counter(recap) " (";
-  margin-right: -0.3em; /* Pull text closer to parenthesis */
-}
-
-/* 10) Add closing parenthesis after the heading */
-.recap section > :is(h2,h3,h4,h5,h6)::after {
-  content: ") ";
-  font-weight: 700;
-  font-size: 15.3px;
-  margin-right: 0.25em;
-}
-
-/* 11) Hide the anchor link to prevent spacing issues */
-.recap section > :is(h2,h3,h4,h5,h6) .anchorjs-link {
-  display: none;
-}
-
-/* 12) Make the first paragraph inline with the heading */
-.recap section > :is(h2,h3,h4,h5,h6) + p {
+/* 3. Inline Logic */
+/* Your Lua filter already places the label and first paragraph in the same block.
+   We just ensure the Quarto default callout styles don't break the line. */
+.callout-recap p, .callout-iss p {
   display: inline;
-  margin-top: 0;
-  font-size: 15.3px; /* Match Definition font size */
 }
 
-/* 13) Ensure subsequent paragraphs are block level */
-.recap section > p:not(:first-of-type) {
+/* Ensure subsequent paragraphs break to a new line */
+.callout-recap p + p, .callout-iss p + p {
   display: block;
-  margin-top: 0.5rem;
-  font-size: 15.3px; /* Match Definition font size */
+  margin-top: 0.8rem;
 }
 
-/* 14) Set font size for all content in recap */
-.recap section {
-  font-size: 15.3px; /* Ensure all text in recap matches Definition size */
-  line-height: 1.5;
+/* 4. Formatting the Lua-injected Label */
+/* The Lua filter wraps the label in a Strong tag */
+.callout-recap strong:first-child, 
+.callout-iss strong:first-child {
+  font-weight: 700;
+  color: inherit;
 }
 
-/* 15) If you want to keep the anchor functional but invisible */
-.recap section > :is(h2,h3,h4,h5,h6) .anchorjs-link {
-  position: absolute;
-  left: -1em;
-  opacity: 0;
-  transition: opacity 0.2s;
+/* 5. Hide any default Quarto callout icons/titles if they appear */
+.callout-recap .callout-icon-container,
+.callout-iss .callout-icon-container,
+.callout-recap .callout-header,
+.callout-iss .callout-header {
+  display: none !important;
 }
-
-/* 16) Show anchor on hover */
-.recap section > :is(h2,h3,h4,h5,h6):hover .anchorjs-link {
-  opacity: 1;
-}
-
-/* 17) Bold style for the title like Definition */
-.recap section > :is(h2,h3,h4,h5,h6),
-.recap section > :is(h2,h3,h4,h5,h6)::before,
-.recap section > :is(h2,h3,h4,h5,h6)::after {
-  font-family: inherit;
-  font-weight: 600;
-}
-

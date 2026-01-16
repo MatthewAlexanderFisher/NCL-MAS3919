@@ -1,0 +1,120 @@
+/* Reading Mode - optimized for extended reading */
+
+/* Hide sidebars & page nav */
+body.reading-mode #quarto-sidebar,
+body.reading-mode .quarto-sidebar,
+body.reading-mode .sidebar,
+body.reading-mode .quarto-margin-sidebar,
+body.reading-mode .sidebar-navigation {
+  display: none !important;
+}
+
+/* Expand main content with comfortable reading width */
+body.reading-mode main#quarto-document-content,
+body.reading-mode main.content {
+  max-width: 60rem !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+}
+
+/* Relax page grid */
+body.reading-mode .page-columns {
+  grid-template-columns: 1fr !important;
+}
+body.reading-mode .page-columns > * {
+  grid-column: 1 / -1 !important;
+}
+
+/* Reading-optimized typography */
+html.reading-mode {
+  font-size: 17px !important;
+}
+
+body.reading-mode {
+  line-height: 1.6 !important;
+}
+
+/* Tighter spacing for headings */
+body.reading-mode h1,
+body.reading-mode h2,
+body.reading-mode h3,
+body.reading-mode h4 {
+  margin-top: 1.0em !important;
+  margin-bottom: 0.5em !important;
+}
+
+/* Reduce paragraph spacing */
+body.reading-mode p {
+  margin-bottom: 0.5em !important;
+}
+
+/* Tighter list spacing */
+body.reading-mode ul,
+body.reading-mode ol {
+  margin-bottom: 0.75em !important;
+}
+
+body.reading-mode li {
+  margin-bottom: 0.25em !important;
+}
+
+/* Compact callout blocks */
+body.reading-mode .callout {
+  margin-top: 1em !important;
+  margin-bottom: 1em !important;
+  padding: 0.75em 1em !important;
+}
+
+/* Reduce spacing around code blocks */
+body.reading-mode pre {
+  margin-top: 0.75em !important;
+  margin-bottom: 0.75em !important;
+  padding: 0.75em !important;
+}
+
+/* Compact figures */
+body.reading-mode figure {
+  margin-top: 1em !important;
+  margin-bottom: 1em !important;
+}
+
+/* Reduce header/title area */
+body.reading-mode #title-block-header {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Compact MathJax/KaTeX display blocks */
+body.reading-mode mjx-container[display="true"],
+body.reading-mode .MathJax_Display,
+body.reading-mode .katex-display {
+  margin-top: 0.25em !important;
+  margin-bottom: 0.25em !important;
+}
+
+body.reading-mode p:has(mjx-container[display="true"]),
+body.reading-mode p:has(.MathJax_Display) {
+  margin-bottom: 0.25em !important;
+}
+
+body.reading-mode div.math,
+body.reading-mode div.display-math {
+  margin-top: 0.25em !important;
+  margin-bottom: 0.25em !important;
+}
+
+/* Reading progress indicator */
+body.reading-mode::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, 
+    var(--brand-teal) var(--scroll-progress, 0%), 
+    transparent var(--scroll-progress, 0%));
+  z-index: 9999;
+}
+

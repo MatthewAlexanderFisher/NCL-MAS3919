@@ -13,13 +13,13 @@ tbl-cap-location: bottom
 ## Discrete distributions 
 
 ### Bernoulli {#sec-bern}
-**Model.** $X \sim \operatorname{Bernoulli}(p)$ with $0<p<1$.  
+**Model.** $X \sim \operatorname{Bern}(\rho)$ with $0<\rho<1$.  
 **Support.** $x \in \{0,1\}$.  
 **PMF.**
 $$
-\operatorname{Pr}(X=x) = p^{\,x}(1-p)^{1-x}, \quad x\in\{0,1\}.
+p(x) = \rho^{\,x}(1-\rho)^{1-x}, \quad x\in\{0,1\}.
 $$
-**Mean/Var.** $\mathbb{E}[X]=p,\quad \operatorname{Var}(X)=p(1-p).$
+**Mean/Var.** $\mathbb{E}[X]=\rho,\quad \operatorname{Var}(X)=\rho(1-\rho).$
 
 ---
 

@@ -4,8 +4,9 @@
 $charcoal: #EAEAEA;   // main text (light grey, softer than pure white)
 $teal:     #58adca;   // definitions / primary accent
 $orange:   #F7B77F;   // examples
-$purple:   #B59AF0;   // important results
+$purple:   #5e37b3;   // important results
 $mint:     #3A4F46;   // emphasis boxes / soft backgrounds
+$teal-link: #00b5dd;
 
 /* ===== Runtime palette as SCSS vars ===== */
 $brand-fg:        #EAEAEA;
@@ -14,10 +15,11 @@ $plot-panel-bg:   #2A2D2E;
 
 $brand-teal:      #58adca;
 $brand-orange:    #c58044;
-$brand-purple:    #B59AF0;
+$brand-purple:    #5e37b3;
+$brand-purples:   #5e37b3;
 $brand-mint:      #173628;
 $brand-warn:      #F48A75;
-$brand-red:       #eb6b80;
+$brand-red:       #c01f3a;
 
 $brand-teal-hover:#277075;  /* slightly darker for hover */
 $brand-red-hover: #b62941;  /* slightly darker for hover */
@@ -42,6 +44,8 @@ $thumb-scrollbar-bg: #232628;
   --brand-teal:      #{$brand-teal} !important;
   --brand-orange:    #{$brand-orange} !important;
   --brand-purple:    #{$brand-purple} !important;
+  --brand-purples:   #{$brand-purples};
+
   --brand-mint:      #{$brand-mint} !important;
   --brand-warn:      #{$brand-warn} !important;
   --brand-red:       #{$brand-red} !important;
@@ -79,7 +83,7 @@ $purple-400: lighten($purple, 12%);
 /* ===== Page & common UI ===== */
 $body-bg:    $bg-dark;     // The page background color.
 $body-color: $charcoal;    // The page text color.
-$link-color: $teal;        // The link color.
+$link-color: $teal-link;        // The link color.
 $input-bg:   $bg-soft;     // The background color for HTML inputs.
 $popover-bg: $bg-soft;     // The background color for popovers (e.g. citation preview).
 

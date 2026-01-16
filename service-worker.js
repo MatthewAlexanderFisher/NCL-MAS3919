@@ -1,5 +1,5 @@
 // Bump this to invalidate old caches after content updates
-const CACHE_VERSION = 'v1.0.7'; // Bumped version
+const CACHE_VERSION = 'v1.0.0'; // Bumped version
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `runtime-${CACHE_VERSION}`;
 
@@ -197,7 +197,7 @@ async function networkFirst(req) {
   }
 }
 
-// Stale-while-revalidate strategy (improved)
+// Stale-while-revalidate strategy 
 async function staleWhileRevalidate(req) {
   const cache = await caches.open(RUNTIME_CACHE);
   const cached = await cache.match(req);

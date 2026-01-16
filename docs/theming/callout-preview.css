@@ -1,0 +1,120 @@
+/* Callout reference link styling */
+.callout-ref {
+  text-decoration: none;
+  border-bottom: 1px dashed currentColor;
+  cursor: pointer;
+  transition: border-bottom-style 0.2s;
+}
+
+.callout-ref:hover {
+  border-bottom-style: solid;
+}
+
+/* Tippy theme for callouts */
+.tippy-box[data-theme~='callout'] {
+  background-color: var(--bs-body-bg, #fff);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  color: var(--bs-body-color, #212529);
+}
+
+.tippy-box[data-theme~='callout'] .tippy-content {
+  padding: 0;
+}
+
+.tippy-box[data-theme~='callout'] .tippy-arrow {
+  color: var(--bs-body-bg, #fff);
+}
+
+.tippy-box[data-theme~='callout'] .tippy-arrow::before {
+  border-top-color: var(--bs-border-color, #dee2e6);
+}
+
+/* Dark mode */
+[data-bs-theme="dark"] .tippy-box[data-theme~='callout'] {
+  background-color: var(--bs-body-bg, #212529);
+  border-color: var(--bs-border-color, #495057);
+}
+
+/* Popover content styling */
+.callout-preview-content {
+  padding: 12px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  text-align: left;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.callout-preview-header {
+  font-size: 0.9rem;
+  border-radius: 0.4rem 0.4rem 0 0;
+}
+
+.callout-preview-header strong {
+  color: var(--bs-body-color);
+}
+
+.callout-preview-body {
+  color: var(--bs-body-color, #212529);
+}
+
+.callout-preview-body p {
+  margin-bottom: 0.5rem;
+}
+
+.callout-preview-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Math styling in preview */
+.callout-preview-body .katex {
+  font-size: 1em;
+}
+
+.callout-preview-body .katex-display {
+  margin: 0.5em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Truncate fetched content */
+.callout-preview-fetched {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+/* Hide nested elements in preview that don't render well */
+.callout-preview-fetched pre,
+.callout-preview-fetched .sourceCode,
+.callout-preview-fetched img,
+.callout-preview-fetched .callout {
+  display: none;
+}
+
+/* But show math! */
+.callout-preview-fetched .math,
+.callout-preview-fetched .katex,
+.callout-preview-fetched .katex-display {
+  display: block;
+}
+
+.callout-preview-fetched .math.inline,
+.callout-preview-fetched .katex:not(.katex-display) {
+  display: inline;
+}
+
+/* Scrollbar styling */
+.callout-preview-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.callout-preview-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.callout-preview-content::-webkit-scrollbar-thumb {
+  background: var(--bs-secondary-bg, #e9ecef);
+  border-radius: 3px;
+}

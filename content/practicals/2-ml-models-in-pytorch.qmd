@@ -1,8 +1,0 @@
----
-execute:
-  echo: false
-jupyter: mas2901
----
-
-# Machine Learning Models in PyTorch
-

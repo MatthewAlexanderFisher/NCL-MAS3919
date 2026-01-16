@@ -79,9 +79,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-eee127bcbcf69f6d1c4f39497eef8043.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-ca592282aabca1dce090d3def4fc59bb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-eee127bcbcf69f6d1c4f39497eef8043.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-f5ee150fb4bd363b356d51bef3bf57f5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-d5e987d2a49f81d99d3c6d2c04d8a2aa.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-f5ee150fb4bd363b356d51bef3bf57f5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
+<link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -219,9 +221,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 <script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+    <style type="text/css">
+    .ps-root .ps-algorithm {
+      border-top: 2px solid;
+      border-bottom: 2px solid;
+    }
+    .pseudocode-container {
+      text-align: left;
+    }
+    </style>
+  
+      <style type="text/css">
+      .ps-algorithm > .ps-line {
+        text-align: left;
+      }
+      </style>
+    
 
 
 <link rel="stylesheet" href="../../theming/math-scroll.css">
+<link rel="stylesheet" href="../../theming/practice-details.css">
 <link rel="stylesheet" href="../../theming/callout-style.css">
 <link rel="stylesheet" href="../../theming/floating-code.css">
 <link rel="stylesheet" href="../../theming/font.css">
@@ -234,7 +253,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="../../theming/lecture-zoom.css">
 <link rel="stylesheet" href="../../theming/visualisation-controls.css">
 <link rel="stylesheet" href="../../theming/tables.css">
+<link rel="stylesheet" href="../../theming/small-table.css">
+<link rel="stylesheet" href="../../theming/reading-mode.css">
 <link rel="stylesheet" href="../../theming/custom-block.css">
+<link rel="stylesheet" href="../../theming/advanced.css">
+<link rel="stylesheet" href="../../theming/callout-preview.css">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -526,6 +549,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../../content/practicals/2-ml-models-in-pytorch.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Machine Learning Models in PyTorch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practicals/3-training-ml-models-in-pytorch.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training Machine Learning Models in Pytorch</span></span></a>
   </div>
 </li>
       </ul>
@@ -1489,9 +1518,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', onKey);
 })();
 </script>
-
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   // 1) Find the brand container and the existing logo <img>
@@ -1542,8 +1568,860 @@ document.addEventListener('DOMContentLoaded', function () {
   // 3) Swap: remove the old <a><img/></a>, insert the new <a><svg/></a>
   const oldAnchor = img.closest('a.navbar-brand-logo') || img;
   brandContainer.replaceChild(a, oldAnchor);
+
+  // ============================
+  // 4) Add Settings Dropdown
+  // ============================
+  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
+  if (!tools) return;
+// Create settings container
+  const settingsContainer = document.createElement('div');
+  settingsContainer.className = 'settings-dropdown';
+  settingsContainer.innerHTML = `
+    <button class="btn-settings" type="button" aria-label="Display settings" title="Display settings">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
+    <div class="settings-menu">
+      <p class="settings-section-label">Display Mode</p>
+      <button class="settings-item" id="lecture-zoom-toggle" type="button">
+        <span class="settings-icon">
+          <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+          <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 14 10 14 10 20"></polyline>
+            <polyline points="20 10 14 10 14 4"></polyline>
+            <line x1="14" y1="10" x2="21" y2="3"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+        </span>
+        <span class="settings-label">Lecture Zoom</span>
+        <span class="settings-status"></span>
+      </button>
+      <button class="settings-item" id="reading-mode-toggle" type="button">
+        <span class="settings-icon">
+          <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </span>
+        <span class="settings-label">Reading Mode</span>
+        <span class="settings-status"></span>
+      </button>
+      
+      <div class="settings-divider"></div>
+      <p class="settings-section-label">Custom Colors</p>
+      
+      <div class="settings-color-row">
+        <label for="settings-bg-color">Background</label>
+        <input type="color" id="settings-bg-color" class="settings-color-input">
+      </div>
+
+      <div class="settings-color-row">
+        <label for="settings-text-color">Text</label>
+        <input type="color" id="settings-text-color" class="settings-color-input">
+      </div>
+
+      <div class="settings-color-row">
+        <label for="settings-accent-color">Accent</label>
+        <input type="color" id="settings-accent-color" class="settings-color-input">
+      </div>    
+        
+      <button class="settings-reset-btn" id="reset-colors" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+        Reset Colors
+      </button>
+    </div>
+  `;
+
+  // Insert after color toggle
+  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
+  if (colorToggle && colorToggle.parentNode) {
+    colorToggle.parentNode.insertBefore(settingsContainer, colorToggle.nextSibling);
+  } else {
+    tools.appendChild(settingsContainer);
+  }
+
+  // Elements
+  const settingsBtn = settingsContainer.querySelector('.btn-settings');
+  const lectureZoomToggle = settingsContainer.querySelector('#lecture-zoom-toggle');
+  const readingModeToggle = settingsContainer.querySelector('#reading-mode-toggle');
+  const bgColorInput = settingsContainer.querySelector('#settings-bg-color');
+  const textColorInput = settingsContainer.querySelector('#settings-text-color');
+  const accentColorInput = settingsContainer.querySelector('#settings-accent-color');
+  const resetColorsBtn = settingsContainer.querySelector('#reset-colors');
+
+  // Default color values
+  const defaultBgColor = '#fafaf8';
+  const defaultTextColor = '#1a1a1a';
+  const defaultAccentColor = '#0d6efd';
+
+  // ============================
+  // Helper Functions (define first)
+  // ============================
+  
+  // Helper function to darken a hex color
+  const darkenColor = (hex, amount) => {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    r = Math.max(0, Math.floor(r * (1 - amount)));
+    g = Math.max(0, Math.floor(g * (1 - amount)));
+    b = Math.max(0, Math.floor(b * (1 - amount)));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  // Helper function to lighten a hex color
+  const lightenColor = (hex, amount) => {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    r = Math.min(255, Math.floor(r + (255 - r) * amount));
+    g = Math.min(255, Math.floor(g + (255 - g) * amount));
+    b = Math.min(255, Math.floor(b + (255 - b) * amount));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  // Reading progress indicator
+  const updateReadingProgress = () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  };
+
+  // Update visual states for display modes
+  const updateActiveStates = () => {
+    const isLectureZoom = document.body.classList.contains('lecture-zoom');
+    const isReadingMode = document.body.classList.contains('reading-mode');
+    lectureZoomToggle.classList.toggle('active', isLectureZoom);
+    readingModeToggle.classList.toggle('active', isReadingMode);
+  };
+
+  // Apply custom colors
+  const applyCustomColors = () => {
+    document.body.classList.add('custom-colors');
+    
+    const bgColor = bgColorInput.value;
+    const textColor = textColorInput.value;
+    const accentColor = accentColorInput.value;
+    
+    document.documentElement.style.setProperty('--custom-bg-color', bgColor);
+    document.documentElement.style.setProperty('--custom-text-color', textColor);
+    document.documentElement.style.setProperty('--custom-accent-color', accentColor);
+    
+    // Compute darker scrollbar thumb color (30% darker)
+    const darkerThumb = darkenColor(bgColor, 0.3);
+    document.documentElement.style.setProperty('--scroll-track', bgColor);
+    document.documentElement.style.setProperty('--scroll-thumb', darkerThumb);
+    
+    // Compute lighter variants for callouts and tabs
+    const lighterBg = lightenColor(bgColor, 0.3);
+    const lighterBgSubtle = lightenColor(bgColor, 0.15);
+    document.documentElement.style.setProperty('--custom-bg-lighter', lighterBg);
+    document.documentElement.style.setProperty('--custom-bg-lighter-subtle', lighterBgSubtle);
+    
+    // Save to localStorage
+    localStorage.setItem('mas2901-custom-bg', bgColor);
+    localStorage.setItem('mas2901-custom-text', textColor);
+    localStorage.setItem('mas2901-custom-accent', accentColor);
+  };
+
+  // Reset colors to defaults
+  const resetColors = () => {
+    document.body.classList.remove('custom-colors');
+    document.documentElement.style.removeProperty('--custom-bg-color');
+    document.documentElement.style.removeProperty('--custom-text-color');
+    document.documentElement.style.removeProperty('--custom-accent-color');
+    document.documentElement.style.removeProperty('--scroll-track');
+    document.documentElement.style.removeProperty('--scroll-thumb');
+    document.documentElement.style.removeProperty('--custom-bg-lighter');
+    document.documentElement.style.removeProperty('--custom-bg-lighter-subtle');
+    
+    // Reset inputs to defaults
+    bgColorInput.value = defaultBgColor;
+    textColorInput.value = defaultTextColor;
+    accentColorInput.value = defaultAccentColor;
+    
+    // Clear localStorage
+    localStorage.removeItem('mas2901-custom-bg');
+    localStorage.removeItem('mas2901-custom-text');
+    localStorage.removeItem('mas2901-custom-accent');
+  };
+
+  // ============================
+  // Event Listeners
+  // ============================
+
+  // Toggle dropdown
+  settingsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    settingsContainer.classList.toggle('open');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!settingsContainer.contains(e.target)) {
+      settingsContainer.classList.remove('open');
+    }
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      settingsContainer.classList.remove('open');
+    }
+  });
+
+  // Lecture Zoom toggle
+  lectureZoomToggle.addEventListener('click', () => {
+    // Turn off reading mode if active
+    if (document.body.classList.contains('reading-mode')) {
+      document.body.classList.remove('reading-mode');
+      document.documentElement.classList.remove('reading-mode');
+      window.removeEventListener('scroll', updateReadingProgress);
+      document.body.style.removeProperty('--scroll-progress');
+    }
+
+    document.body.classList.toggle('lecture-zoom');
+    document.documentElement.classList.toggle('lecture-zoom');
+    updateActiveStates();
+  });
+
+  // Reading Mode toggle
+  readingModeToggle.addEventListener('click', () => {
+    // Turn off lecture zoom if active
+    if (document.body.classList.contains('lecture-zoom')) {
+      document.body.classList.remove('lecture-zoom');
+      document.documentElement.classList.remove('lecture-zoom');
+    }
+
+    document.body.classList.toggle('reading-mode');
+    document.documentElement.classList.toggle('reading-mode');
+
+    // Update progress indicator on scroll
+    if (document.body.classList.contains('reading-mode')) {
+      updateReadingProgress();
+      window.addEventListener('scroll', updateReadingProgress);
+    } else {
+      window.removeEventListener('scroll', updateReadingProgress);
+      document.body.style.removeProperty('--scroll-progress');
+    }
+    
+    updateActiveStates();
+  });
+
+  // Color input listeners
+  bgColorInput.addEventListener('input', applyCustomColors);
+  textColorInput.addEventListener('input', applyCustomColors);
+  accentColorInput.addEventListener('input', applyCustomColors);
+
+  // Reset colors button
+  resetColorsBtn.addEventListener('click', resetColors);
+
+  // ============================
+  // Initialize
+  // ============================
+
+  // Load saved colors or use defaults
+  const savedBg = localStorage.getItem('mas2901-custom-bg');
+  const savedText = localStorage.getItem('mas2901-custom-text');
+  const savedAccent = localStorage.getItem('mas2901-custom-accent');
+
+  // Set input values (saved or default)
+  bgColorInput.value = savedBg || defaultBgColor;
+  textColorInput.value = savedText || defaultTextColor;
+  accentColorInput.value = savedAccent || defaultAccentColor;
+
+  // Apply custom colors if any were saved
+  if (savedBg || savedText || savedAccent) {
+    applyCustomColors();
+  }
+
+  // Initial display mode state
+  updateActiveStates();
 });
 </script>
+
+<style>
+/* ============================
+   Settings Dropdown
+   ============================ */
+.settings-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.btn-settings {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.375rem;
+  margin: 0 0.25rem;
+  border-radius: 0.25rem;
+  color: var(--bs-navbar-color, #333);
+  transition: opacity 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-settings:hover {
+  opacity: 0.7;
+}
+
+.btn-settings svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+/* Rotate cog when open */
+.settings-dropdown.open .btn-settings svg {
+  transform: rotate(45deg);
+}
+
+/* Dropdown menu */
+.settings-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: var(--surface-weak, white);
+  border: 1px solid var(--border, #ddd);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  padding: 0.5rem 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  z-index: 4000;
+}
+
+.settings-dropdown.open .settings-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Section divider */
+.settings-divider {
+  height: 1px;
+  background: var(--border, #ddd);
+  margin: 0.5rem 0;
+}
+
+.settings-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-fg, #666);
+  opacity: 0.6;
+  padding: 0.5rem 1rem 0.25rem;
+  margin: 0;
+}
+
+/* Menu items */
+.settings-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: var(--brand-fg, #333);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  gap: 0.75rem;
+}
+
+.settings-item:hover {
+  background: var(--brand-teal-hover, #f8f9fa);
+  color: var(--brand-bg, #0d6efd);
+}
+
+.settings-item.active {
+  background: var(--brand-teal, #e7f1ff);
+  color: var(--brand-fg, #0d6efd);
+}
+
+.settings-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.settings-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* Icon state switching */
+.settings-icon .icon-exit { display: none; }
+.settings-item.active .settings-icon .icon-enter { display: none; }
+.settings-item.active .settings-icon .icon-exit { display: block; }
+
+.settings-label {
+  flex-grow: 1;
+}
+
+.settings-status {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.settings-item.active .settings-status::after {
+  content: '✓';
+  font-size: 0.9rem;
+  opacity: 1;
+}
+
+/* ============================
+   Color Picker Row
+   ============================ */
+.settings-color-row {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  gap: 0.75rem;
+}
+
+.settings-color-row label {
+  font-size: 0.85rem;
+  color: var(--brand-fg, #333);
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+/* Circular color swatch input */
+.settings-color-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  padding: 0;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.settings-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.settings-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.settings-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.settings-color-input:hover {
+  border-color: var(--brand-teal, #0d6efd);
+}
+
+.settings-color-input:focus {
+  outline: none;
+  border-color: var(--brand-teal, #0d6efd);
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+/* Reset button */
+.settings-reset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 2rem);
+  margin: 0.25rem 1rem 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--brand-fg, #666);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  gap: 0.5rem;
+}
+
+.settings-reset-btn:hover {
+  background: var(--brand-teal-hover, #f8f9fa);
+  border-color: var(--brand-teal, #0d6efd);
+  color: var(--brand-teal, #0d6efd);
+}
+
+.settings-reset-btn svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* Dark mode support */
+.quarto-dark .btn-settings {
+  color: var(--bs-navbar-dark-color, #fff);
+}
+
+.quarto-dark .settings-menu {
+  background: var(--bs-body-bg, #212529);
+  border-color: var(--bs-border-color, #495057);
+}
+
+.quarto-dark .settings-item:hover {
+  background: var(--bs-tertiary-bg, #2b3035);
+}
+
+.quarto-dark .settings-item.active {
+  background: rgba(13, 110, 253, 0.2);
+}
+
+.quarto-dark .settings-color-input {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.quarto-dark .settings-color-row label {
+  color: var(--bs-body-color, #e9ecef);
+}
+
+.quarto-dark .settings-reset-btn {
+  border-color: var(--bs-border-color, #495057);
+  color: var(--bs-body-color, #adb5bd);
+}
+
+.quarto-dark .settings-reset-btn:hover {
+  background: var(--bs-tertiary-bg, #2b3035);
+}
+
+/* ============================
+   Custom Colors Applied
+   ============================ */
+
+/* ============================
+   Custom Colors - Accent Color Elements
+   ============================ */
+body.custom-colors blockquote,
+body.custom-colors .blockquote {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .panel-caption,
+body.custom-colors .figure-caption,
+body.custom-colors .subfigure-caption,
+body.custom-colors .table-caption,
+body.custom-colors figcaption,
+body.custom-colors caption {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .header-section-number {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors details > summary {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors details > summary:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+  
+  /* Scrollbar - thumb is 20% darker than background */
+  scrollbar-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+body.custom-colors *::-webkit-scrollbar-track {
+  background: var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--custom-bg-color) 80%, black);
+  border-radius: 6px;
+  border: 2px solid var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--custom-bg-color) 65%, black);
+}
+
+body.custom-colors main,
+body.custom-colors .content,
+body.custom-colors article,
+body.custom-colors div.sidebar.sidebar-navigation.rollup.quarto-sidebar-toggle-contents,
+body.custom-colors nav.sidebar.sidebar-navigation:not(.rollup) {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Navbar */
+body.custom-colors #quarto-header,
+body.custom-colors #quarto-header nav.navbar,
+body.custom-colors .navbar {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+  border-bottom-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors #quarto-header .navbar-title,
+body.custom-colors #quarto-header .navbar-brand {
+  color: var(--custom-text-color) !important;
+}
+
+/* Navbar icons */
+body.custom-colors #quarto-header .quarto-navbar-tools button,
+body.custom-colors #quarto-header .quarto-navbar-tools a,
+body.custom-colors #quarto-header .quarto-color-scheme-toggle,
+body.custom-colors #quarto-header .btn-settings,
+body.custom-colors #quarto-header .navbar-toggler {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors #quarto-header .quarto-navbar-tools button:hover,
+body.custom-colors #quarto-header .quarto-navbar-tools a:hover,
+body.custom-colors #quarto-header .quarto-color-scheme-toggle:hover,
+body.custom-colors #quarto-header .btn-settings:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors #quarto-header .navbar-logo {
+  color: var(--custom-text-color) !important;
+}
+
+/* Secondary navbar */
+body.custom-colors .quarto-secondary-nav {
+  background-color: var(--custom-bg-color) !important;
+  border-bottom-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors .quarto-secondary-nav .quarto-secondary-nav-title {
+  color: var(--custom-text-color) !important;
+}
+
+/* Autocomplete / Search */
+body.custom-colors .aa-Autocomplete .aa-Form,
+body.custom-colors .aa-DetachedFormContainer .aa-Form {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .aa-Autocomplete .aa-Input,
+body.custom-colors .aa-DetachedFormContainer .aa-Input {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .aa-Autocomplete .aa-Input::placeholder,
+body.custom-colors .aa-DetachedFormContainer .aa-Input::placeholder {
+  color: color-mix(in srgb, var(--custom-text-color) 50%, transparent) !important;
+}
+
+body.custom-colors .aa-Panel,
+body.custom-colors .aa-PanelLayout {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .aa-Item {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .aa-Item[aria-selected="true"],
+body.custom-colors .aa-Item:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+}
+
+body.custom-colors .aa-Item mark {
+  color: var(--custom-accent-color) !important;
+  background: transparent !important;
+}
+
+/* Headings */
+body.custom-colors h1,
+body.custom-colors h2,
+body.custom-colors h3,
+body.custom-colors h4,
+body.custom-colors h5,
+body.custom-colors h6 {
+  color: var(--custom-text-color) !important;
+}
+
+/* Links */
+body.custom-colors a {
+  color: var(--custom-accent-color) !important;
+}
+
+/* Callouts */
+body.custom-colors .callout {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+  border-left-color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .callout-title {
+  color: var(--custom-text-color) !important;
+}
+
+/* Code blocks */
+body.custom-colors pre,
+body.custom-colors code {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 92%, black) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Tables */
+body.custom-colors table {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors th {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors td {
+  border-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors tr:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+}
+
+/* Selection */
+body.custom-colors ::selection {
+  background-color: var(--custom-accent-color);
+  color: white;
+}
+
+/* Sidebar link colors */
+body.custom-colors .sidebar-navigation .sidebar-item a,
+body.custom-colors .sidebar-navigation .sidebar-section a {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .sidebar-navigation .sidebar-item a:hover,
+body.custom-colors .sidebar-navigation .sidebar-section a:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .sidebar-navigation .sidebar-item.active a {
+  color: var(--custom-accent-color) !important;
+}
+
+/* ============================
+   Custom Colors - Callout Headers
+   ============================ */
+body.custom-colors div.callout-note.callout-style-default > .callout-header,
+body.custom-colors div.callout-tip.callout-style-default > .callout-header,
+body.custom-colors div.callout-warning.callout-style-default > .callout-header,
+body.custom-colors div.callout-caution.callout-style-default > .callout-header,
+body.custom-colors div.callout-important.callout-style-default > .callout-header {
+  background-color: var(--custom-bg-lighter) !important;
+}
+
+/* ============================
+   Custom Colors - Nav Tabs
+   ============================ */
+body.custom-colors .nav-tabs .nav-link.active,
+body.custom-colors .nav-tabs .nav-item.show .nav-link {
+  background-color: var(--custom-bg-lighter) !important;
+  color: var(--custom-text-color) !important;
+  border-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .nav-tabs .nav-link {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .nav-tabs .nav-link:hover:not(.active) {
+  background-color: var(--custom-bg-lighter-subtle) !important;
+  border-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .nav-tabs {
+  border-bottom-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .tab-content {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Settings dropdown when custom colors active */
+body.custom-colors .settings-menu {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-item {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-item:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+}
+
+body.custom-colors .settings-item.active {
+  background-color: color-mix(in srgb, var(--custom-accent-color) 20%, var(--custom-bg-color)) !important;
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .settings-section-label {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-color-row label {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-divider {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-reset-btn {
+  color: var(--custom-text-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-reset-btn:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+  color: var(--custom-accent-color) !important;
+  border-color: var(--custom-accent-color) !important;
+}
+
+</style>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Only target IMPORTANT callouts; add more types if needed.
@@ -1561,223 +2439,6 @@ document.addEventListener('DOMContentLoaded', () => {
       el.innerHTML = el.innerHTML.replace(re, '');
     }
   });
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
-  if (!tools) return;
-
-  // Create the button
-  const btn = document.createElement('button');
-  btn.id = 'lecture-zoom-header-toggle';
-  btn.className = 'btn-zoom-toggle';
-  btn.type = 'button';
-  btn.setAttribute('aria-pressed', 'false');
-  btn.setAttribute('aria-label', 'Lecture zoom');
-  btn.setAttribute('title', 'Lecture zoom (X)');
-
-  // svg icon
-  btn.innerHTML = `
-    <!-- ENTER: four corners -->
-    <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M3 9V3h6"/>
-        <path d="M21 9V3h-6"/>
-        <path d="M3 15v6h6"/>
-        <path d="M21 15v6h-6"/>
-    </svg>
-
-    <!-- EXIT: corners-in (contract) -->
-    <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M9 3v6H3"/>
-        <path d="M15 3v6h6"/>
-        <path d="M3 15h6v6"/>
-        <path d="M21 15h-6v6"/>
-    </svg>
-  `;
-
-  // Place it next to the colour-scheme toggle (after it, if present)
-  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
-  if (colorToggle && colorToggle.parentNode) {
-    colorToggle.parentNode.insertBefore(btn, colorToggle.nextSibling);
-  } else {
-    tools.appendChild(btn);
-  }
-
-  // Toggle logic
-  const KEY = 'lecture-zoom-enabled';
-  
-  // Helper: are we in lecture zoom?
-  const isLectureZoom = () =>
-    document.body.classList.contains('lecture-zoom') ||
-    document.documentElement.classList.contains('lecture-zoom');
-
-  // Define closeLectureSearch early (forward declaration)
-  let closeLectureSearch;
-
-  const apply = (on) => {
-    document.body.classList.toggle('lecture-zoom', on);
-    document.documentElement.classList.toggle('lecture-zoom', on);
-    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    
-    // Close search overlay when exiting lecture zoom
-    if (!on && closeLectureSearch) {
-      closeLectureSearch();
-    }
-    
-    // Nudge charts/layouts to recompute
-    window.dispatchEvent(new Event('resize'));
-    sessionStorage.setItem(KEY, on ? '1' : '0');
-  };
-
-  // Restore per-tab state
-  apply(sessionStorage.getItem(KEY) === '1');
-
-  // Click handler
-  btn.addEventListener('click', () => apply(!isLectureZoom()));
-  
-  // Keyboard shortcut (Z)
-  document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'x' && !/input|textarea|select/i.test(e.target.tagName)) {
-      apply(!isLectureZoom());
-    }
-  });
-
-  let acAnchor = null;          // where the autocomplete root came from
-  let panelObserver = null;     // to catch newly created panels
-
-  function ensureLectureOverlay() {
-    let overlay = document.getElementById('lecture-search-overlay');
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = 'lecture-search-overlay';
-      overlay.innerHTML = '<div class="lecture-search-modal"></div>';
-      document.body.appendChild(overlay);
-
-      // Close on backdrop click
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay && closeLectureSearch) closeLectureSearch();
-      });
-
-      // Close on Esc
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && closeLectureSearch) closeLectureSearch();
-      });
-    }
-    return overlay;
-  }
-
-  function findAutocomplete() {
-    const root =
-      document.querySelector('.aa-Autocomplete') ||
-      document.querySelector('.quarto-search .aa-Autocomplete') ||
-      document.querySelector('.quarto-search-panel .aa-Autocomplete');
-
-    const input = root?.querySelector('input.aa-Input');
-    return { root, input };
-  }
-
-  // Move the results panel (if any) into the modal and normalize its positioning
-  function reparentPanel(modal) {
-    const panel = document.querySelector('.aa-Panel');
-    if (!panel || modal.contains(panel)) return;
-    modal.appendChild(panel);
-    // Let CSS control layout/width; clear inline positioning from Algolia
-    panel.style.left = '';
-    panel.style.top = '';
-    panel.style.width = '';
-  }
-
-  function startPanelObserver(modal) {
-    if (panelObserver) return;
-    panelObserver = new MutationObserver(() => reparentPanel(modal));
-    // Listen on body, since Algolia often inserts the panel there
-    panelObserver.observe(document.body, { childList: true, subtree: true });
-  }
-
-  function stopPanelObserver() {
-    panelObserver?.disconnect();
-    panelObserver = null;
-  }
-
-  function openLectureSearch() {
-    if (!isLectureZoom()) return false;
-
-    const { root, input } = findAutocomplete();
-    if (!root || !input) return false;
-
-    const overlay = ensureLectureOverlay();
-    const modal = overlay.querySelector('.lecture-search-modal');
-
-    // Anchor the current position of the autocomplete root (only once)
-    if (!acAnchor) {
-      acAnchor = document.createComment('autocomplete-anchor');
-      root.parentNode.insertBefore(acAnchor, root);
-    }
-
-    // Move the autocomplete *root* into the modal
-    modal.appendChild(root);
-
-    // Ensure any results panel gets moved into the modal too
-    reparentPanel(modal);
-    startPanelObserver(modal);
-
-    overlay.classList.add('open');
-    document.documentElement.classList.add('search-open');
-
-    // Focus the input after layout
-    requestAnimationFrame(() => {
-      input.focus();
-      input.select?.();
-      // In case Algolia computes sizes on resize, give it a nudge
-      window.dispatchEvent(new Event('resize'));
-    });
-
-    return true;
-  }
-
-  // Now properly define closeLectureSearch
-  closeLectureSearch = function() {
-    const overlay = document.getElementById('lecture-search-overlay');
-    if (!overlay || !overlay.classList.contains('open')) return;
-
-    stopPanelObserver();
-
-    const { root } = findAutocomplete();
-
-    // Move panel (if currently inside modal) back to body to let Algolia clean up normally
-    const modal = overlay.querySelector('.lecture-search-modal');
-    const panel = modal?.querySelector('.aa-Panel');
-    if (panel) document.body.appendChild(panel);
-
-    // Put the autocomplete root back where it came from
-    if (root && acAnchor && acAnchor.parentNode) {
-      acAnchor.parentNode.insertBefore(root, acAnchor.nextSibling);
-    }
-
-    overlay.classList.remove('open');
-    document.documentElement.classList.remove('search-open');
-  };
-
-  // Existing hotkeys:
-  document.addEventListener('keydown', (e) => {
-    const tag = e.target.tagName.toLowerCase();
-    const typing = tag === 'input' || tag === 'textarea' || tag === 'select' || e.isComposing;
-    if (typing) return;
-
-    if (e.key === 'F' && e.shiftKey) {
-      if (openLectureSearch()) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }
-    if (e.key === 'Escape') {
-      closeLectureSearch();
-    }
-  });
-
 });
 </script>
 <script>
@@ -3886,6 +4547,189 @@ onButton('inkpad-save', () => {
 })();
 </script>
 <script>
+  
+document.addEventListener('DOMContentLoaded', function() {
+  const loadTippy = new Promise((resolve) => {
+    if (typeof tippy !== 'undefined') {
+      resolve();
+      return;
+    }
+    
+    const popper = document.createElement('script');
+    popper.src = 'https://unpkg.com/@popperjs/core@2';
+    popper.onload = () => {
+      const tippyScript = document.createElement('script');
+      tippyScript.src = 'https://unpkg.com/tippy.js@6';
+      tippyScript.onload = resolve;
+      document.head.appendChild(tippyScript);
+    };
+    document.head.appendChild(popper);
+  });
+  
+  loadTippy.then(initCalloutPreviews);
+});
+
+const contentCache = new Map();
+const mathRendered = new WeakSet(); // Track elements where math has been rendered
+
+// Render math in an element using KaTeX (only once)
+function renderMath(element) {
+  if (!element || mathRendered.has(element)) {
+    return; // Already rendered, skip
+  }
+  
+  if (typeof renderMathInElement !== 'undefined') {
+    renderMathInElement(element, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError: false
+    });
+  } else if (typeof katex !== 'undefined') {
+    element.querySelectorAll('.math').forEach(mathEl => {
+      if (mathRendered.has(mathEl)) return;
+      
+      const isDisplay = mathEl.classList.contains('display');
+      const tex = mathEl.textContent || mathEl.innerText;
+      try {
+        katex.render(tex, mathEl, {
+          displayMode: isDisplay,
+          throwOnError: false
+        });
+        mathRendered.add(mathEl);
+      } catch (e) {
+        console.warn('KaTeX render error:', e);
+      }
+    });
+  }
+  
+  // Hide MathML (screen reader version) to avoid duplication
+  element.querySelectorAll('.katex-mathml').forEach(el => {
+    el.style.display = 'none';
+  });
+  
+  // Mark this element as processed
+  mathRendered.add(element);
+}
+
+async function fetchCalloutContent(href) {
+  if (contentCache.has(href)) {
+    return contentCache.get(href);
+  }
+  
+  try {
+    const [file, anchor] = href.split('#');
+    const url = file || window.location.pathname;
+    
+    if (!file || file === '' || url === window.location.pathname) {
+      const element = document.getElementById(anchor);
+      if (element) {
+        const callout = element.closest('.callout');
+        const clone = callout ? callout.cloneNode(true) : element.parentElement.cloneNode(true);
+        clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+        
+        const content = clone.innerHTML;
+        contentCache.set(href, { html: content, needsMathRender: false });
+        return contentCache.get(href);
+      }
+    }
+    
+    const response = await fetch(url);
+    const html = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    const element = doc.getElementById(anchor);
+    if (element) {
+      const callout = element.closest('.callout');
+      const content = callout?.innerHTML || element.parentElement?.innerHTML || '';
+      contentCache.set(href, { html: content, needsMathRender: true });
+      return contentCache.get(href);
+    }
+  } catch (e) {
+    console.warn('Failed to fetch callout content:', e);
+  }
+  
+  return null;
+}
+
+function initCalloutPreviews() {
+  const calloutRefs = document.querySelectorAll('.callout-ref');
+  
+  calloutRefs.forEach(ref => {
+    const label = ref.dataset.calloutLabel;
+    const number = ref.dataset.calloutNumber;
+    const title = ref.dataset.calloutTitle;
+    const preview = ref.dataset.calloutPreview;
+    const targetHref = ref.getAttribute('href');
+    
+    const isRecap = label === 'Recap';
+    const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+    const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+    
+    const initialContent = `
+      <div class="callout-preview-content">
+        <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+          <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+        </div>
+        <div class="callout-preview-body">
+          ${preview ? preview + '...' : '<em>Loading...</em>'}
+        </div>
+      </div>
+    `;
+    
+    let contentLoaded = false;
+    
+    const instance = tippy(ref, {
+      content: initialContent,
+      allowHTML: true,
+      interactive: true,
+      placement: 'top',
+      theme: 'callout',
+      maxWidth: 450,
+      delay: [400, 100],
+      appendTo: document.body,
+      async onShow(instance) {
+        // Only fetch content once
+        if (contentLoaded) return;
+        
+        const result = await fetchCalloutContent(targetHref);
+        if (result && instance.state.isVisible) {
+          const isRecap = label === 'Recap';
+          const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+          const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+          
+          instance.setContent(`
+            <div class="callout-preview-content">
+              <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+                <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+              </div>
+              <div class="callout-preview-body callout-preview-fetched">
+                ${result.html}
+              </div>
+            </div>
+          `);
+          
+          contentLoaded = true;
+        }
+      },
+      onShown(instance) {
+        // Render math only once after content is shown
+        const contentEl = instance.popper.querySelector('.callout-preview-body');
+        if (contentEl) {
+          renderMath(contentEl);
+        }
+      }
+    });
+  });
+}
+
+
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
   const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
   if (!tools) return;
@@ -3972,6 +4816,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 </style>
+<script>
+
+if (document.body.classList.contains('reading-mode')) {
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  });
+}
+
+</script>
 <script type="ojs-module-contents">
 eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Ii8vIEdsb2JhbCBoZWxwZXJzIChubyB0aGVtZSBsb2dpYyBuZWVkZWQpXG5BQ0NFTlQgID0gXCJ2YXIoLS1icmFuZC10ZWFsKVwiXG5BQ0NFTlQyID0gXCJ2YXIoLS1icmFuZC1yZWQpXCJcbkdSSUQgICAgPSBcInZhcigtLWJvcmRlcilcIlxuXG4vLyBOdW1lcmljYWwgaGVscGVyc1xubGluc3BhY2UgPSAoYSwgYiwgbj00MDEpID0+IEFycmF5LmZyb20oe2xlbmd0aDpufSwgKF8saSk9PiBhICsgKGItYSkqKGkvKG4tMSkpKVxuXG4vLyBMb2ctR2FtbWEgKExhbmN6b3MpIGFuZCBmcmllbmRzIChmb3Igc3RhYmxlIFBNRnMvUERGcylcbmZ1bmN0aW9uIGxvZ0dhbW1hKHope1xuICBjb25zdCBnID0gNztcbiAgY29uc3QgcCA9IFtcbiAgICAwLjk5OTk5OTk5OTk5OTgwOTkzLCA2NzYuNTIwMzY4MTIxODg1MSwgLTEyNTkuMTM5MjE2NzIyNDAyOCxcbiAgICA3NzEuMzIzNDI4Nzc3NjUzMTMsIC0xNzYuNjE1MDI5MTYyMTQwNTksIDEyLjUwNzM0MzI3ODY4NjkwNSxcbiAgICAtMC4xMzg1NzEwOTUyNjU3MjAxMiwgOS45ODQzNjk1NzgwMTk1NzE2ZS02LCAxLjUwNTYzMjczNTE0OTMxMTZlLTdcbiAgXTtcbiAgaWYoeiA8IDAuNSl7XG4gICAgcmV0dXJuIE1hdGgubG9nKE1hdGguUEkpIC0gTWF0aC5sb2coTWF0aC5zaW4oTWF0aC5QSSp6KSkgLSBsb2dHYW1tYSgxIC0geik7XG4gIH1cbiAgeiAtPSAxO1xuICBsZXQgeCA9IHBbMF07XG4gIGZvcihsZXQgaT0xOyBpPHAubGVuZ3RoOyBpKyspIHggKz0gcFtpXSAvICh6ICsgaSk7XG4gIGNvbnN0IHQgPSB6ICsgZyArIDAuNTtcbiAgcmV0dXJuIDAuNSpNYXRoLmxvZygyKk1hdGguUEkpICsgKHorMC41KSpNYXRoLmxvZyh0KSAtIHQgKyBNYXRoLmxvZyh4KTtcbn1cblxubG9nQ2hvb3NlID0gKG4saykgPT4gbG9nR2FtbWEobisxKSAtIGxvZ0dhbW1hKGsrMSkgLSBsb2dHYW1tYShuLWsrMSlcblxuLy8gRGlzY3JldGUgUE1GcyAoc3RhYmxlIGluIGxvZy1kb21haW4pXG5iaW5vbVBNRiA9IChuLHAsaykgPT4gTWF0aC5leHAobG9nQ2hvb3NlKG4saykgKyBrKk1hdGgubG9nKHApICsgKG4taykqTWF0aC5sb2coMS1wKSlcbnBvaXNQTUYgID0gKGxhbWJkYSxrKSA9PiBNYXRoLmV4cChrKk1hdGgubG9nKGxhbWJkYSkgLSBsYW1iZGEgLSBsb2dHYW1tYShrKzEpKVxuZ2VvbVBNRjEgPSAocCxrKSA9PiBwICogTWF0aC5wb3coMS1wLCBrLTEpIC8vIHN1cHBvcnQgezEsMiwuLi59XG5uZWdiaW5QTUYgPSAocixwLHgpID0+IHtcbiAgaWYoeCA8IHIpIHJldHVybiAwO1xuICByZXR1cm4gTWF0aC5leHAobG9nQ2hvb3NlKHgtMSwgci0xKSArIHIqTWF0aC5sb2cocCkgKyAoeC1yKSpNYXRoLmxvZygxLXApKTtcbn1cblxuLy8gQ29udGludW91cyBQREZzXG5ub3JtUERGID0gKHgsbXUsc2lnKSA9PiBNYXRoLmV4cCgtMC41KigoeC1tdSkvc2lnKSoqMikvKHNpZypNYXRoLnNxcnQoMipNYXRoLlBJKSlcbmxvZ25vcm1QREYgPSAoeCxtdSxzaWcpID0+IHg8PTAgPyAwIDogTWF0aC5leHAoLSgoTWF0aC5sb2coeCktbXUpKioyKS8oMipzaWcqc2lnKSkgLyAoeCpzaWcqTWF0aC5zcXJ0KDIqTWF0aC5QSSkpXG51bmlmUERGID0gKHgsYSxiKSA9PiAoeD5hICYmIHg8YikgPyAxLyhiLWEpIDogMFxuZXhwUERGID0gKHgsbGFtYmRhKSA9PiB4PjAgPyBsYW1iZGEqTWF0aC5leHAoLWxhbWJkYSp4KSA6IDBcbmdhbW1hUERGID0gKHgsYSxiKSA9PiB7IC8vIHNoYXBlIGEsIHJhdGUgYlxuICBpZih4PD0wKSByZXR1cm4gMDtcbiAgcmV0dXJuIE1hdGguZXhwKGEqTWF0aC5sb2coYikgLSBsb2dHYW1tYShhKSArIChhLTEpKk1hdGgubG9nKHgpIC0gYip4KVxufVxuYmV0YVBERiA9ICh4LGEsYikgPT4ge1xuICBpZih4PD0wIHx8IHg+PTEpIHJldHVybiAwO1xuICBjb25zdCBsb2dCID0gbG9nR2FtbWEoYSkrbG9nR2FtbWEoYiktbG9nR2FtbWEoYStiKTtcbiAgcmV0dXJuIE1hdGguZXhwKChhLTEpKk1hdGgubG9nKHgpICsgKGItMSkqTWF0aC5sb2coMS14KSAtIGxvZ0IpXG59XG5jaGlzcVBERiA9ICh4LG51KSA9PiBnYW1tYVBERih4LCBudS8yLCAxLzIpXG50UERGID0gKHgsbnUpID0+IHtcbiAgY29uc3QgbG9nQyA9IGxvZ0dhbW1hKChudSsxKS8yKSAtICgwLjUqTWF0aC5sb2cobnUqTWF0aC5QSSkgKyBsb2dHYW1tYShudS8yKSk7XG4gIHJldHVybiBNYXRoLmV4cChsb2dDIC0gKChudSsxKS8yKSpNYXRoLmxvZygxICsgKHgqeCkvbnUpKTtcbn1cbmZQREYgPSAoeCxkMSxkMikgPT4ge1xuICBpZih4PD0wKSByZXR1cm4gMDtcbiAgY29uc3QgbG9nQyA9IGxvZ0dhbW1hKChkMStkMikvMikgLSAobG9nR2FtbWEoZDEvMikrbG9nR2FtbWEoZDIvMikpICsgKGQxLzIpKk1hdGgubG9nKGQxL2QyKTtcbiAgcmV0dXJuIE1hdGguZXhwKGxvZ0MgKyAoZDEvMiAtIDEpKk1hdGgubG9nKHgpIC0gKChkMStkMikvMikqTWF0aC5sb2coMSArIChkMS9kMikqeCkpXG59XG5cbi8vIENvbnZlbmllbnQgZG9tYWluIGhldXJpc3RpY3NcbmRvbWFpbk5vcm1hbCA9IChtdSxzaWcpID0+IFttdSAtIDQqc2lnLCBtdSArIDQqc2lnXVxuZG9tYWluR2FtbWEgID0gKGEsYikgPT4gWzAsIE1hdGgubWF4KDUsIGEvYiArIDYqTWF0aC5zcXJ0KGEpL2IpXVxuZG9tYWluRXhwICAgID0gKGxhbWJkYSkgPT4gWzAsIE1hdGgubWF4KDUsIDYvbGFtYmRhKV1cbmRvbWFpbkJldGEgICA9IFswLDFdXG5kb21haW5Qb3MgICAgPSBbMCwgMTBdXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJcbntcbiAgY29uc3QgcCA9IGJlcm5fcDtcbiAgY29uc3QgZGF0YSA9IFswLCAxXS5tYXAoeCA9PiAoeyB4LCB5OiB4ID8gcCA6IDEgLSBwIH0pKTtcblxuICBjb25zdCBzdGF0cyA9IG1kYCoqTWVhbioqICR7dGV4YD0gcGB9ID0gJHtwLnRvRml4ZWQoMil9OyBcbiAgKipWYXIqKiAke3RleGA9IHAoMS1wKWB9ID0gJHsocCAqICgxIC0gcCkpLnRvRml4ZWQoMyl9LmA7XG5cbiAgY29uc3QgcGxvdCA9IFBsb3QucGxvdCh7XG4gICAgICAgIHdpZHRoLCBoZWlnaHQ6IDI2MCxcbiAgICBzdHlsZToge1xuICAgIGJhY2tncm91bmQ6IFwidmFyKC0tcGxvdC1wYW5lbC1iZylcIixcbiAgICBjb2xvcjogXCJ2YXIoLS1icmFuZC1mZylcIiAgICAgICAgICAgLy8gZHJpdmVzICdjdXJyZW50Q29sb3InXG4gICAgfSxcblxuICAgIHk6IHsgbGFiZWw6IFwiUE1GXCIsIGRvbWFpbjogWzAsIDFdIH0sXG4gICAgeDogeyBsYWJlbDogXCJ4XCIsIHR5cGU6IFwiYmFuZFwiLCBkb21haW46IFswLCAxXSB9LCAgLy8gPC0tIGJhbmQgc2NhbGVcbiAgICBtYXJrczogW1xuICAgICAgUGxvdC5iYXJZKGRhdGEsIHsgeDogXCJ4XCIsIHk6IFwieVwiLCBmaWxsOiBBQ0NFTlQgfSksXG4gICAgICBQbG90LnJ1bGVZKFswXSwgeyBzdHJva2U6IEdSSUQsIHN0cm9rZU9wYWNpdHk6IDAuNiB9KVxuICAgIF1cbiAgfSk7XG5cbiAgcmV0dXJuIGh0bWxgPGRpdiBjbGFzcz1cImRpc3QtcGFuZWxcIj48ZGl2IGNsYXNzPVwic3RhdHNcIj4ke3N0YXRzfTwvZGl2PiR7cGxvdH08L2Rpdj5gO1xufVxuXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2YgYmVybl9wID0gSW5wdXRzLnJhbmdlKFswLjAxLCAwLjk5XSwge1xuICB2YWx1ZTogMC42LCBzdGVwOiAwLjAxLCBsYWJlbDogbWRgJHt0ZXhgcGB9YFxufSlcblxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiXG57XG4gIGNvbnN0IG4gPSBiaW5vbV9uLCBwID0gYmlub21fcDtcbiAgY29uc3QgZGF0YSA9IEFycmF5LmZyb20oeyBsZW5ndGg6IG4gKyAxIH0sIChfLCBrKSA9PiAoeyB4OiBrLCB5OiBiaW5vbVBNRihuLCBwLCBrKSB9KSk7XG4gIGNvbnN0IHhEb21haW4gPSBBcnJheS5mcm9tKHsgbGVuZ3RoOiBuICsgMSB9LCAoXywgaykgPT4gayk7ICAvLyA8LS0gMC4ubiBjYXRlZ29yaWVzXG5cbiAgY29uc3Qgc3RhdHMgPSBtZGAqKk1lYW4qKiAke3RleGA9IG5wYH0gPSAkeyhuICogcCkudG9GaXhlZCgyKX07IFxuICAqKlZhcioqICR7dGV4YD0gbnAoMS1wKWB9ID0gJHsobiAqIHAgKiAoMSAtIHApKS50b0ZpeGVkKDIpfS5gO1xuXG4gIGNvbnN0IHBsb3QgPSBQbG90LnBsb3Qoe1xuICAgICAgICB3aWR0aCwgaGVpZ2h0OiAyNjAsXG4gICAgc3R5bGU6IHtcbiAgICBiYWNrZ3JvdW5kOiBcInZhcigtLXBsb3QtcGFuZWwtYmcpXCIsXG4gICAgY29sb3I6IFwidmFyKC0tYnJhbmQtZmcpXCIgICAgICAgICAgIC8vIGRyaXZlcyAnY3VycmVudENvbG9yJ1xuICAgIH0sXG4gICAgeTogeyBsYWJlbDogXCJQTUZcIiB9LFxuICAgIHg6IHsgbGFiZWw6IFwieFwiLCB0eXBlOiBcImJhbmRcIiwgZG9tYWluOiB4RG9tYWluLCBwYWRkaW5nOiAwLjA1IH0sICAvLyA8LS0gYmFuZCBzY2FsZVxuICAgIG1hcmtzOiBbXG4gICAgICBQbG90LmJhclkoZGF0YSwgeyB4OiBcInhcIiwgeTogXCJ5XCIsIGZpbGw6IEFDQ0VOVCB9KSxcbiAgICAgIFBsb3QucnVsZVkoWzBdLCB7IHN0cm9rZTogR1JJRCwgc3Ryb2tlT3BhY2l0eTogMC42IH0pXG4gICAgXVxuICB9KTtcblxuICByZXR1cm4gaHRtbGA8ZGl2IGNsYXNzPVwiZGlzdC1wYW5lbFwiPjxkaXYgY2xhc3M9XCJzdGF0c1wiPiR7c3RhdHN9PC9kaXY+JHtwbG90fTwvZGl2PmA7XG59XG5cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBiaW5vbV9uID0gSW5wdXRzLnJhbmdlKFsxLCAyMDBdLCB7IHZhbHVlOiAyMCwgc3RlcDogMSwgIGxhYmVsOiBtZGAke3RleGBuYH1gIH0pXG52aWV3b2YgYmlub21fcCA9IElucHV0cy5yYW5nZShbMC4wMSwgMC45OV0sIHsgdmFsdWU6IDAuMywgc3RlcDogMC4wMSwgbGFiZWw6IG1kYCR7dGV4YHBgfWAgfSlcblxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiXG57XG4gIC8vIGNvbXB1dGUgbG9jYWxseSAobm8gZXhwb3J0ZWQgbmFtZXMpXG4gIGNvbnN0IEwgICAgID0gcG9pc19sYW1iZGE7XG4gIGNvbnN0IGttYXggID0gTWF0aC5tYXgoMTUsIE1hdGguY2VpbChMICsgNipNYXRoLnNxcnQoTCkpKTtcbiAgY29uc3QgcG9pc19kYXRhID0gQXJyYXkuZnJvbSh7bGVuZ3RoOiBrbWF4ICsgMX0sIChfLCBrKSA9PiAoeyB4OiBrLCB5OiBwb2lzUE1GKEwsIGspIH0pKTtcblxuICAvLyBidWlsZCB0aGUgVUkgYml0c1xuICBjb25zdCBzdGF0cyA9IG1kYCoqTWVhbioqICR7dGV4YD0gXFxsYW1iZGFgfSA9ICR7TC50b0ZpeGVkKDIpfTsgXG4gICoqVmFyKiogJHt0ZXhgPSBcXGxhbWJkYWB9ID0gJHtMLnRvRml4ZWQoMil9LmA7XG5cbiAgY29uc3QgcGxvdCA9IFBsb3QucGxvdCh7XG4gICAgICAgIHdpZHRoLCBoZWlnaHQ6IDI2MCxcbiAgICBzdHlsZToge1xuICAgIGJhY2tncm91bmQ6IFwidmFyKC0tcGxvdC1wYW5lbC1iZylcIixcbiAgICBjb2xvcjogXCJ2YXIoLS1icmFuZC1mZylcIiAgICAgICAgICAgLy8gZHJpdmVzICdjdXJyZW50Q29sb3InXG4gICAgfSxcblxuICAgIHk6IHsgbGFiZWw6IFwiUE1GXCIgfSxcbiAgICB4OiB7IGxhYmVsOiBcInhcIiB9LFxuICAgIG1hcmtzOiBbXG4gICAgICBQbG90LmJhclkocG9pc19kYXRhLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgZmlsbDogXCJ2YXIoLS1icmFuZC10ZWFsKVwiIH0pLFxuICAgICAgUGxvdC5ydWxlWShbMF0sIHsgc3Ryb2tlOiBcInZhcigtLWJvcmRlcilcIiwgc3Ryb2tlT3BhY2l0eTogMC42IH0pXG4gICAgXVxuICB9KTtcblxuICAvLyByZXR1cm4gYm90aCBpbiBhIHNpbmdsZSB3cmFwcGVyXG4gIHJldHVybiBodG1sYDxkaXYgY2xhc3M9XCJkaXN0LXBhbmVsXCI+XG4gICAgPGRpdiBjbGFzcz1cInN0YXRzXCI+JHtzdGF0c308L2Rpdj5cbiAgICAke3Bsb3R9XG4gIDwvZGl2PmA7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTciLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2YgcG9pc19sYW1iZGEgPSBJbnB1dHMucmFuZ2UoWzAuMiwgMzBdLCB7XG4gIHZhbHVlOiA2LCBzdGVwOiAwLjIsIGxhYmVsOiBtZGAke3RleGBcXGxhbWJkYWB9YFxufSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Ilxue1xuICAvLyBjb21wdXRlIGxvY2FsbHlcbiAgY29uc3QgcCA9IGdlb21fcDtcbiAgY29uc3QgcmF3ICAgPSBNYXRoLmxvZygxZS00KSAvIE1hdGgubG9nKDEgLSBwKTsgICAgICAgICAgICAvLyB0YWlsIGN1dG9mZlxuICBjb25zdCBrbWF4ICA9IE1hdGgubWF4KDUsIE1hdGgubWluKDIwMCwgTWF0aC5jZWlsKHJhdykpKTsgIC8vIGNsYW1wIGZvciBzdGFiaWxpdHlcbiAgY29uc3QgZ2VvbV9kYXRhID0gQXJyYXkuZnJvbSh7IGxlbmd0aDoga21heCB9LCAoXywgaSkgPT4ge1xuICAgIGNvbnN0IGsgPSBpICsgMTsgXG4gICAgcmV0dXJuIHsgeDogaywgeTogZ2VvbVBNRjEocCwgaykgfTsgLy8gUE1GID0gcCgxLXApXntrLTF9XG4gIH0pO1xuXG4gIC8vIHN0YXRzIHJlYWRvdXRcbiAgY29uc3Qgc3RhdHMgPSBtZGAqKk1lYW4qKiAke3RleGA9IDEvcGB9ID0gJHsoMS9wKS50b0ZpeGVkKDIpfTsgXG4gICoqVmFyKiogJHt0ZXhgPSAoMS1wKS9wXjJgfSA9ICR7KCgoMS1wKS8ocCpwKSkpLnRvRml4ZWQoMil9LmA7XG5cbiAgLy8gcGxvdFxuICBjb25zdCBwbG90ID0gUGxvdC5wbG90KHtcbiAgICAgICAgd2lkdGgsIGhlaWdodDogMjYwLFxuICAgIHN0eWxlOiB7XG4gICAgYmFja2dyb3VuZDogXCJ2YXIoLS1wbG90LXBhbmVsLWJnKVwiLFxuICAgIGNvbG9yOiBcInZhcigtLWJyYW5kLWZnKVwiICAgICAgICAgICAvLyBkcml2ZXMgJ2N1cnJlbnRDb2xvcidcbiAgICB9LFxuIHk6IHsgbGFiZWw6IFwiUE1GXCIgfSxcbiAgICB4OiB7IGxhYmVsOiBcInhcIiB9LFxuICAgIG1hcmtzOiBbXG4gICAgICBQbG90LmJhclkoZ2VvbV9kYXRhLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgZmlsbDogQUNDRU5UIH0pLFxuICAgICAgUGxvdC5ydWxlWShbMF0sIHsgc3Ryb2tlOiBHUklELCBzdHJva2VPcGFjaXR5OiAwLjYgfSlcbiAgICBdXG4gIH0pO1xuXG4gIC8vIHJldHVybiBvbmUgd3JhcHBlciBub2RlXG4gIHJldHVybiBodG1sYDxkaXYgY2xhc3M9XCJkaXN0LXBhbmVsXCI+XG4gICAgPGRpdiBjbGFzcz1cInN0YXRzXCI+JHtzdGF0c308L2Rpdj5cbiAgICAke3Bsb3R9XG4gIDwvZGl2PmA7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTkiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2YgZ2VvbV9wID0gSW5wdXRzLnJhbmdlKFswLjAyLCAwLjk4XSwge1xuICB2YWx1ZTogMC4zLCBzdGVwOiAwLjAyLCBsYWJlbDogbWRgJHt0ZXhgcGB9YFxufSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTAiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJcbntcbiAgY29uc3QgciA9IE1hdGgucm91bmQobmVnYmluX3IpLCBwID0gbmVnYmluX3A7XG4gIGNvbnN0IG1lYW4gPSByIC8gcCwgc2QgPSBNYXRoLnNxcnQociAqICgxIC0gcCkpIC8gcDtcbiAgY29uc3QgeG1heCA9IE1hdGgubWluKDQwMCwgTWF0aC5jZWlsKG1lYW4gKyA2ICogc2QpKTtcblxuICBjb25zdCBkYXRhID0gQXJyYXkuZnJvbSh7IGxlbmd0aDogTWF0aC5tYXgoMCwgeG1heCAtIHIgKyAxKSB9LCAoXywgaSkgPT4ge1xuICAgIGNvbnN0IHggPSByICsgaTtcbiAgICByZXR1cm4geyB4LCB5OiBuZWdiaW5QTUYociwgcCwgeCkgfTtcbiAgfSk7XG5cbiAgY29uc3Qgc3RhdHMgPSBtZGAqKk1lYW4qKiAke3RleGA9IHIvcGB9ID0gJHsoci9wKS50b0ZpeGVkKDIpfTsgXG4gICoqVmFyKiogJHt0ZXhgPSByKDEtcCkvcF4yYH0gPSAkeygociooMS1wKSkvKHAqKjIpKS50b0ZpeGVkKDIpfS5gO1xuXG4gIGNvbnN0IHBsb3QgPSBQbG90LnBsb3Qoe1xuICAgICAgICB3aWR0aCwgaGVpZ2h0OiAyNjAsXG4gICAgc3R5bGU6IHtcbiAgICBiYWNrZ3JvdW5kOiBcInZhcigtLXBsb3QtcGFuZWwtYmcpXCIsXG4gICAgY29sb3I6IFwidmFyKC0tYnJhbmQtZmcpXCIgICAgICAgICAgIC8vIGRyaXZlcyAnY3VycmVudENvbG9yJ1xuICAgIH0sXG4geTogeyBsYWJlbDogXCJQTUZcIiB9LCB4OiB7IGxhYmVsOiBcInhcIiB9LFxuICAgIG1hcmtzOiBbXG4gICAgICBQbG90LmJhclkoZGF0YSwgeyB4OiBcInhcIiwgeTogXCJ5XCIsIGZpbGw6IEFDQ0VOVCB9KSxcbiAgICAgIFBsb3QucnVsZVkoWzBdLCB7IHN0cm9rZTogR1JJRCwgc3Ryb2tlT3BhY2l0eTogMC42IH0pXG4gICAgXVxuICB9KTtcblxuICByZXR1cm4gaHRtbGA8ZGl2IGNsYXNzPVwiZGlzdC1wYW5lbFwiPjxkaXYgY2xhc3M9XCJzdGF0c1wiPiR7c3RhdHN9PC9kaXY+JHtwbG90fTwvZGl2PmA7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTExIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoidmlld29mIG5lZ2Jpbl9yID0gSW5wdXRzLnJhbmdlKFsxLCAzMF0sIHt2YWx1ZTogNSwgc3RlcDogMSwgbGFiZWw6IG1kYCR7dGV4YHJgfWB9KVxudmlld29mIG5lZ2Jpbl9wID0gSW5wdXRzLnJhbmdlKFswLjAyLCAwLjk4XSwge3ZhbHVlOiAwLjQsIHN0ZXA6IDAuMDIsIGxhYmVsOiBtZGAke3RleGBwYH1gfSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJcbntcbiAgY29uc3QgYSA9IHVuaWZfYSwgYiA9IHVuaWZfYjtcbiAgY29uc3QgZGF0YSA9IGxpbnNwYWNlKGEgLSAxLCBiICsgMSwgNDAxKS5tYXAoeCA9PiAoeyB4LCB5OiB1bmlmUERGKHgsIGEsIGIpIH0pKTtcblxuICBjb25zdCBzdGF0cyA9IG1kYCoqTWVhbioqICR7dGV4YD0gKGErYikvMmB9ID0gJHsoKChhK2IpLzIpKS50b0ZpeGVkKDIpfTsgXG4gICoqVmFyKiogJHt0ZXhgPSAoYi1hKV4yLzEyYH0gPSAkeygoKGItYSkqKjIpLzEyKS50b0ZpeGVkKDMpfS5gO1xuXG4gIGNvbnN0IHBsb3QgPSBQbG90LnBsb3Qoe1xuICAgICAgICB3aWR0aCwgaGVpZ2h0OiAyNjAsXG4gICAgc3R5bGU6IHtcbiAgICBiYWNrZ3JvdW5kOiBcInZhcigtLXBsb3QtcGFuZWwtYmcpXCIsXG4gICAgY29sb3I6IFwidmFyKC0tYnJhbmQtZmcpXCIgICAgICAgICAgIC8vIGRyaXZlcyAnY3VycmVudENvbG9yJ1xuICAgIH0sXG4geTogeyBsYWJlbDogXCJQREZcIiB9LCB4OiB7IGxhYmVsOiBcInhcIiB9LFxuICAgIG1hcmtzOiBbXG4gICAgICBQbG90LmxpbmVZKGRhdGEsIHsgeDogXCJ4XCIsIHk6IFwieVwiLCBzdHJva2U6IEFDQ0VOVCwgc3Ryb2tlV2lkdGg6IDIgfSksXG4gICAgICBQbG90LmFyZWFZKGRhdGEsIHsgeDogXCJ4XCIsIHk6IFwieVwiLCBmaWxsOiBBQ0NFTlQsIGZpbGxPcGFjaXR5OiAwLjE4IH0pLFxuICAgICAgUGxvdC5ydWxlWShbMF0sIHsgc3Ryb2tlOiBHUklELCBzdHJva2VPcGFjaXR5OiAwLjYgfSlcbiAgICBdXG4gIH0pO1xuXG4gIHJldHVybiBodG1sYDxkaXYgY2xhc3M9XCJkaXN0LXBhbmVsXCI+PGRpdiBjbGFzcz1cInN0YXRzXCI+JHtzdGF0c308L2Rpdj4ke3Bsb3R9PC9kaXY+YDtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2YgdW5pZl9hID0gSW5wdXRzLnJhbmdlKFstNSwgNV0sIHt2YWx1ZTogLTIsIHN0ZXA6IDAuMSwgbGFiZWw6IG1kYCR7dGV4YGFgfWB9KVxudmlld29mIHVuaWZfYiA9IElucHV0cy5yYW5nZShbdW5pZl9hICsgMC4yLCB1bmlmX2EgKyAxMF0sIHt2YWx1ZTogMywgc3RlcDogMC4xLCBsYWJlbDogbWRgJHt0ZXhgYmB9YH0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTE0IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiXG57XG4gIGNvbnN0IM67ID0gZXhwX2xhbWJkYTtcbiAgY29uc3QgW2xvLCBoaV0gPSBkb21haW5FeHAozrspO1xuICBjb25zdCBkYXRhID0gbGluc3BhY2UobG8sIGhpKS5tYXAoeCA9PiAoeyB4LCB5OiBleHBQREYoeCwgzrspIH0pKTtcblxuICBjb25zdCBzdGF0cyA9IG1kYCoqTWVhbioqICR7dGV4YD0gMS9cXGxhbWJkYWB9ID0gJHsoMS/OuykudG9GaXhlZCgyKX07IFxuICAqKlZhcioqICR7dGV4YD0gMS9cXGxhbWJkYV4yYH0gPSAkeygoMS8ozrsqKjIpKSkudG9GaXhlZCgyKX0uYDtcblxuICBjb25zdCBwbG90ID0gUGxvdC5wbG90KHtcbiAgICAgICAgd2lkdGgsIGhlaWdodDogMjYwLFxuICAgIHN0eWxlOiB7XG4gICAgYmFja2dyb3VuZDogXCJ2YXIoLS1wbG90LXBhbmVsLWJnKVwiLFxuICAgIGNvbG9yOiBcInZhcigtLWJyYW5kLWZnKVwiICAgICAgICAgICAvLyBkcml2ZXMgJ2N1cnJlbnRDb2xvcidcbiAgICB9LFxuIHk6IHsgbGFiZWw6IFwiUERGXCIgfSwgeDogeyBsYWJlbDogXCJ4XCIgfSxcbiAgICBtYXJrczogW1xuICAgICAgUGxvdC5saW5lWShkYXRhLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgc3Ryb2tlOiBBQ0NFTlQsIHN0cm9rZVdpZHRoOiAyIH0pLFxuICAgICAgUGxvdC5hcmVhWShkYXRhLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgZmlsbDogQUNDRU5ULCBmaWxsT3BhY2l0eTogMC4xOCB9KSxcbiAgICAgIFBsb3QucnVsZVkoWzBdLCB7IHN0cm9rZTogR1JJRCwgc3Ryb2tlT3BhY2l0eTogMC42IH0pXG4gICAgXVxuICB9KTtcblxuICByZXR1cm4gaHRtbGA8ZGl2IGNsYXNzPVwiZGlzdC1wYW5lbFwiPjxkaXYgY2xhc3M9XCJzdGF0c1wiPiR7c3RhdHN9PC9kaXY+JHtwbG90fTwvZGl2PmA7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTE1IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoidmlld29mIGV4cF9sYW1iZGEgPSBJbnB1dHMucmFuZ2UoWzAuMiwgNV0sIHt2YWx1ZTogMSwgc3RlcDogMC4xLCBsYWJlbDogbWRgJHt0ZXhgXFxsYW1iZGFgfWB9KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xNiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Ilxue1xuICBjb25zdCBhID0gZ2FtbWFfYSwgYiA9IGdhbW1hX2I7XG4gIGNvbnN0IFtsbywgaGldID0gZG9tYWluR2FtbWEoYSwgYik7XG4gIGNvbnN0IGRhdGEgPSBsaW5zcGFjZShsbywgaGkpLm1hcCh4ID0+ICh7IHgsIHk6IGdhbW1hUERGKHgsIGEsIGIpIH0pKTtcblxuICBjb25zdCBzdGF0cyA9IG1kYCoqTWVhbioqICR7dGV4YD0gYS9iYH0gPSAkeyhhL2IpLnRvRml4ZWQoMil9OyBcbiAgKipWYXIqKiAke3RleGA9IGEvYl4yYH0gPSAkeyhhLyhiKioyKSkudG9GaXhlZCgyKX0uYDtcblxuICBjb25zdCBwbG90ID0gUGxvdC5wbG90KHtcbiAgICAgICAgd2lkdGgsIGhlaWdodDogMjYwLFxuICAgIHN0eWxlOiB7XG4gICAgYmFja2dyb3VuZDogXCJ2YXIoLS1wbG90LXBhbmVsLWJnKVwiLFxuICAgIGNvbG9yOiBcInZhcigtLWJyYW5kLWZnKVwiICAgICAgICAgICAvLyBkcml2ZXMgJ2N1cnJlbnRDb2xvcidcbiAgICB9LFxuIHk6IHsgbGFiZWw6IFwiUERGXCIgfSwgeDogeyBsYWJlbDogXCJ4XCIgfSxcbiAgICBtYXJrczogW1xuICAgICAgUGxvdC5saW5lWShkYXRhLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgc3Ryb2tlOiBBQ0NFTlQsIHN0cm9rZVdpZHRoOiAyIH0pLFxuICAgICAgUGxvdC5hcmVhWShkYXRhLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgZmlsbDogQUNDRU5ULCBmaWxsT3BhY2l0eTogMC4xOCB9KSxcbiAgICAgIFBsb3QucnVsZVkoWzBdLCB7IHN0cm9rZTogR1JJRCwgc3Ryb2tlT3BhY2l0eTogMC42IH0pXG4gICAgXVxuICB9KTtcblxuICByZXR1cm4gaHRtbGA8ZGl2IGNsYXNzPVwiZGlzdC1wYW5lbFwiPjxkaXYgY2xhc3M9XCJzdGF0c1wiPiR7c3RhdHN9PC9kaXY+JHtwbG90fTwvZGl2PmA7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTE3IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoidmlld29mIGdhbW1hX2EgPSBJbnB1dHMucmFuZ2UoWzAuNSwgMTBdLCB7dmFsdWU6IDMsIHN0ZXA6IDAuMSwgbGFiZWw6IG1kYCR7dGV4YGFcXCBcXHRleHR7KHNoYXBlKX1gfWB9KVxudmlld29mIGdhbW1hX2IgPSBJbnB1dHMucmFuZ2UoWzAuMiwgNV0sICB7dmFsdWU6IDEsIHN0ZXA6IDAuMSwgbGFiZWw6IG1kYCR7dGV4YGJcXCBcXHRleHR7KHJhdGUpfWB9YH0pXG5cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTgiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IM68ID0gbm9ybV9tdSwgz4MgPSBub3JtX3NpZztcbiAgY29uc3QgW2xvLCBoaV0gPSBkb21haW5Ob3JtYWwozrwsIM+DKTtcbiAgY29uc3QgZGF0YSA9IGxpbnNwYWNlKGxvLCBoaSkubWFwKHggPT4gKHsgeCwgeTogbm9ybVBERih4LCDOvCwgz4MpIH0pKTtcblxuICBjb25zdCBzdGF0cyA9IG1kYCoqTWVhbioqICR7dGV4YD0gXFxtdWB9ID0gJHvOvC50b0ZpeGVkKDIpfTsgXG4gICoqVmFyKiogJHt0ZXhgPSBcXHNpZ21hXjJgfSA9ICR7KM+DKioyKS50b0ZpeGVkKDIpfS5gO1xuXG4gIGNvbnN0IHBsb3QgPSBQbG90LnBsb3Qoe1xuICAgIHdpZHRoLCBoZWlnaHQ6IDI2MCxcbiAgICBzdHlsZTogeyBiYWNrZ3JvdW5kOiBcInZhcigtLXBsb3QtcGFuZWwtYmcpXCIsIGNvbG9yOiBcInZhcigtLWJyYW5kLWZnKVwiIH0sXG4gICAgeDogeyBsYWJlbDogXCJ4XCIgfSwgeTogeyBsYWJlbDogXCJQREZcIiB9LFxuICAgIG1hcmtzOiBbXG4gICAgICAvLyBzaGFkZWQgYXJlYSB1bmRlciB0aGUgUERGOlxuICAgICAgUGxvdC5hcmVhWShkYXRhLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgZmlsbDogQUNDRU5ULCBmaWxsT3BhY2l0eTogMC4xOCB9KSxcblxuICAgICAgLy8gUERGIG91dGxpbmU6XG4gICAgICBQbG90LmxpbmVZKGRhdGEsIHsgeDogXCJ4XCIsIHk6IFwieVwiLCBzdHJva2U6IEFDQ0VOVCwgc3Ryb2tlV2lkdGg6IDIgfSksXG5cbiAgICAgIFBsb3QucnVsZVkoWzBdLCB7IHN0cm9rZTogR1JJRCwgc3Ryb2tlT3BhY2l0eTogMC42IH0pXG4gICAgXVxuICB9KTtcblxuICByZXR1cm4gaHRtbGA8ZGl2IGNsYXNzPVwiZGlzdC1wYW5lbFwiPjxkaXYgY2xhc3M9XCJzdGF0c1wiPiR7c3RhdHN9PC9kaXY+JHtwbG90fTwvZGl2PmA7XG59XG5cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTkiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2Ygbm9ybV9tdSAgPSBJbnB1dHMucmFuZ2UoWy0zLCAzXSwge3ZhbHVlOiAwLCBzdGVwOiAwLjA1LCBsYWJlbDogbWRgJHt0ZXhgXFxtdWB9YH0pXG52aWV3b2Ygbm9ybV9zaWcgPSBJbnB1dHMucmFuZ2UoWzAuMDUsIDNdLCB7dmFsdWU6IDEsIHN0ZXA6IDAuMDUsIGxhYmVsOiBtZGAke3RleGBcXHNpZ21hYH1gfSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMjAiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IM68ID0gbG5vcm1fbXUsIM+DID0gbG5vcm1fc2lnO1xuICBjb25zdCBoaSA9IE1hdGguZXhwKM68ICsgNSAqIM+DKTtcbiAgY29uc3QgZGF0YSA9IGxpbnNwYWNlKDAsIGhpKS5tYXAoeCA9PiAoeyB4LCB5OiBsb2dub3JtUERGKHgsIM68LCDPgykgfSkpO1xuXG4gIGNvbnN0IHN0YXRzID0gbWRgKipNZWFuKiogJHt0ZXhgPSBlXntcXG11K1xcc2lnbWFeMi8yfWB9ID0gJHsoTWF0aC5leHAozrwgKyAoz4MqKjIpLzIpKS50b0ZpeGVkKDIpfTsgXG4gICoqVmFyKiogJHt0ZXhgPSAoZV57XFxzaWdtYV4yfS0xKWVeezJcXG11K1xcc2lnbWFeMn1gfSA9ICR7KCgoTWF0aC5leHAoz4MqKjIpLTEpKk1hdGguZXhwKDIqzrwgKyDPgyoqMikpKS50b0ZpeGVkKDIpfS5gO1xuXG4gIGNvbnN0IHBsb3QgPSBQbG90LnBsb3Qoe1xuICAgICAgICB3aWR0aCwgaGVpZ2h0OiAyNjAsXG4gICAgc3R5bGU6IHtcbiAgICBiYWNrZ3JvdW5kOiBcInZhcigtLXBsb3QtcGFuZWwtYmcpXCIsXG4gICAgY29sb3I6IFwidmFyKC0tYnJhbmQtZmcpXCIgICAgICAgICAgIC8vIGRyaXZlcyAnY3VycmVudENvbG9yJ1xuICAgIH0sXG4geTogeyBsYWJlbDogXCJQREZcIiB9LCB4OiB7IGxhYmVsOiBcInhcIiB9LFxuICAgIG1hcmtzOiBbXG4gICAgICBQbG90LmxpbmVZKGRhdGEsIHsgeDogXCJ4XCIsIHk6IFwieVwiLCBzdHJva2U6IEFDQ0VOVCwgc3Ryb2tlV2lkdGg6IDIgfSksXG4gICAgICBQbG90LmFyZWFZKGRhdGEsIHsgeDogXCJ4XCIsIHk6IFwieVwiLCBmaWxsOiBBQ0NFTlQsIGZpbGxPcGFjaXR5OiAwLjE4IH0pLFxuICAgICAgUGxvdC5ydWxlWShbMF0sIHsgc3Ryb2tlOiBHUklELCBzdHJva2VPcGFjaXR5OiAwLjYgfSlcbiAgICBdXG4gIH0pO1xuXG4gIHJldHVybiBodG1sYDxkaXYgY2xhc3M9XCJkaXN0LXBhbmVsXCI+PGRpdiBjbGFzcz1cInN0YXRzXCI+JHtzdGF0c308L2Rpdj4ke3Bsb3R9PC9kaXY+YDtcbiAgXG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIxIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoidmlld29mIGxub3JtX211ICA9IElucHV0cy5yYW5nZShbLTEuNSwgMl0sICB7dmFsdWU6IDAsICAgc3RlcDogMC4xLCBsYWJlbDogbWRgJHt0ZXhgXFxtdSAoXFxsb2cgWClgfWB9KVxudmlld29mIGxub3JtX3NpZyA9IElucHV0cy5yYW5nZShbMC4wMSwgMS41XSwge3ZhbHVlOiAwLjYsIHN0ZXA6IDAuMDEsIGxhYmVsOiBtZGAke3RleGBcXHNpZ21hIChcXGxvZyBYKWB9YH0pXG5cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMjIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJcbntcbiAgY29uc3Qgzr0gPSBNYXRoLnJvdW5kKGNoaV9udSk7XG4gIGNvbnN0IGhpID0gTWF0aC5tYXgoNSwgzr0gKyA2ICogTWF0aC5zcXJ0KDIgKiDOvSkpO1xuICBjb25zdCBkYXRhID0gbGluc3BhY2UoMCwgaGkpLm1hcCh4ID0+ICh7IHgsIHk6IGNoaXNxUERGKHgsIM69KSB9KSk7XG5cbiAgY29uc3Qgc3RhdHMgPSBtZGAqKk1lYW4qKiAke3RleGA9IFxcbnVgfSA9ICR7zr19OyBcbiAgKipWYXIqKiAke3RleGA9IDJcXG51YH0gPSAkezIqzr19LmA7XG5cbiAgY29uc3QgcGxvdCA9IFBsb3QucGxvdCh7XG4gICAgICAgIHdpZHRoLCBoZWlnaHQ6IDI2MCxcbiAgICBzdHlsZToge1xuICAgIGJhY2tncm91bmQ6IFwidmFyKC0tcGxvdC1wYW5lbC1iZylcIixcbiAgICBjb2xvcjogXCJ2YXIoLS1icmFuZC1mZylcIiAgICAgICAgICAgLy8gZHJpdmVzICdjdXJyZW50Q29sb3InXG4gICAgfSxcbiB5OiB7IGxhYmVsOiBcIlBERlwiIH0sIHg6IHsgbGFiZWw6IFwieFwiIH0sXG4gICAgbWFya3M6IFtcbiAgICAgIFBsb3QubGluZVkoZGF0YSwgeyB4OiBcInhcIiwgeTogXCJ5XCIsIHN0cm9rZTogQUNDRU5ULCBzdHJva2VXaWR0aDogMiB9KSxcbiAgICAgIFBsb3QuYXJlYVkoZGF0YSwgeyB4OiBcInhcIiwgeTogXCJ5XCIsIGZpbGw6IEFDQ0VOVCwgZmlsbE9wYWNpdHk6IDAuMTggfSksXG4gICAgICBQbG90LnJ1bGVZKFswXSwgeyBzdHJva2U6IEdSSUQsIHN0cm9rZU9wYWNpdHk6IDAuNiB9KVxuICAgIF1cbiAgfSk7XG5cbiAgcmV0dXJuIGh0bWxgPGRpdiBjbGFzcz1cImRpc3QtcGFuZWxcIj48ZGl2IGNsYXNzPVwic3RhdHNcIj4ke3N0YXRzfTwvZGl2PiR7cGxvdH08L2Rpdj5gO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0yMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBjaGlfbnUgPSBJbnB1dHMucmFuZ2UoWzEsIDQwXSwge3ZhbHVlOiA4LCBzdGVwOiAxLCBsYWJlbDogbWRgJHt0ZXhgXFxudWB9YH0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTI0IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiXG57XG4gIGNvbnN0IM69ID0gTWF0aC5yb3VuZCh0X251KTtcbiAgY29uc3QgZGF0YSA9IGxpbnNwYWNlKC02LCA2KS5tYXAoeCA9PiAoeyB4LCB5OiB0UERGKHgsIM69KSB9KSk7XG5cbiAgY29uc3Qgc3RhdHMgPSBtZGAke3RleGBcXG1hdGhybXtFfVtYXT0wIChcXG51PjEpYH0sIFxuICAke3RleGBcXG9wZXJhdG9ybmFtZXtWYXJ9KFgpPVxcbnUvKFxcbnUtMilcXCAoXFxudT4yKWB9LiAgXG4gIEN1cnJlbnQ6ICR7zr19LmA7XG5cbiAgY29uc3QgcGxvdCA9IFBsb3QucGxvdCh7XG4gICAgICAgIHdpZHRoLCBoZWlnaHQ6IDI2MCxcbiAgICBzdHlsZToge1xuICAgIGJhY2tncm91bmQ6IFwidmFyKC0tcGxvdC1wYW5lbC1iZylcIixcbiAgICBjb2xvcjogXCJ2YXIoLS1icmFuZC1mZylcIiAgICAgICAgICAgLy8gZHJpdmVzICdjdXJyZW50Q29sb3InXG4gICAgfSxcbiB5OiB7IGxhYmVsOiBcIlBERlwiIH0sIHg6IHsgbGFiZWw6IFwieFwiIH0sXG4gICAgbWFya3M6IFtcbiAgICAgIFBsb3QubGluZVkoZGF0YSwgeyB4OiBcInhcIiwgeTogXCJ5XCIsIHN0cm9rZTogQUNDRU5ULCBzdHJva2VXaWR0aDogMiB9KSxcbiAgICAgIFBsb3QuYXJlYVkoZGF0YSwgeyB4OiBcInhcIiwgeTogXCJ5XCIsIGZpbGw6IEFDQ0VOVCwgZmlsbE9wYWNpdHk6IDAuMTggfSksXG4gICAgICBQbG90LnJ1bGVZKFswXSwgeyBzdHJva2U6IEdSSUQsIHN0cm9rZU9wYWNpdHk6IDAuNiB9KVxuICAgIF1cbiAgfSk7XG5cbiAgcmV0dXJuIGh0bWxgPGRpdiBjbGFzcz1cImRpc3QtcGFuZWxcIj48ZGl2IGNsYXNzPVwic3RhdHNcIj4ke3N0YXRzfTwvZGl2PiR7cGxvdH08L2Rpdj5gO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0yNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiB0X251ID0gSW5wdXRzLnJhbmdlKFsxLCA0MF0sIHt2YWx1ZTogNSwgc3RlcDogMSwgbGFiZWw6IG1kYCR7dGV4YFxcbnVgfWB9KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdiZXJuX3AnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnYmlub21fbicpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdiaW5vbV9wJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3BvaXNfbGFtYmRhJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ2dlb21fcCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCduZWdiaW5fcicpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCduZWdiaW5fcCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCd1bmlmX2EnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgndW5pZl9iJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ2V4cF9sYW1iZGEnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnZ2FtbWFfYScpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdnYW1tYV9iJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ25vcm1fbXUnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnbm9ybV9zaWcnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnbG5vcm1fbXUnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnbG5vcm1fc2lnJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ2NoaV9udScpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCd0X251JykifV19
 </script>
@@ -4409,6 +5265,40 @@ window._ojs.runtime.interpretFromScriptTags();
   </div>
 </nav>
 </div> <!-- /content -->
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+    <script type="text/javascript">
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let pseudocodeOptions = {
+          indentSize: el.dataset.indentSize,
+          commentDelimiter: el.dataset.commentDelimiter,
+          lineNumber: el.dataset.lineNumber.toLowerCase() === "true",
+          lineNumberPunc: el.dataset.lineNumberPunc,
+          noEnd: el.dataset.noEnd.toLowerCase() === "true",
+          titlePrefix: el.dataset.captionPrefix
+        };
+        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
+      });
+    })(document);
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
+      });
+    })(document);
+    </script>
+  
 
 
 

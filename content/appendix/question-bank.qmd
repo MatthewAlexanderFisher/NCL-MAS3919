@@ -305,17 +305,582 @@ viewof levels = Inputs.checkbox(
 
 :::
 
-::: {.callout-important .question appearance="minimal" data-tags="probability" data-difficulty="0"}
-## Probability of heads
-A fair coin is tossed $10$ times. What is the probability of exactly $6$ heads?
+::: {.callout-important .question appearance="minimal" data-tags="kernels" data-difficulty="1"}
+## Sums of kernels are kernels [{{< fa star >}}]{.advanced title="Advanced content for 4th year students"}
+
+Let $k_1 : \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}$ and $k_2 : \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}$ be kernels.
+Show that $k(\mathbf{x},\mathbf{x}') = k_1(\mathbf{x},\mathbf{x}') + k_2(\mathbf{x},\mathbf{x}')$ is also a kernel.
+How is the feature space of $k$ related to the feature space of $k_1$ and $k_2$?
 
 <details class="solution">
   <summary>Solution</summary>
 
-Work it via the Binomial:
+Let's check the axioms of a kernel hold for $k$.
+
+For symmetry, $k(\mathbf{x},\mathbf{x}') = k_1(\mathbf{x},\mathbf{x}') + k_2(\mathbf{x},\mathbf{x}') = k_1(\mathbf{x}',\mathbf{x}) + k_2(\mathbf{x}',\mathbf{x}) = k(\mathbf{x}',\mathbf{x})$ where we have used the symmetry property of $k_1$ and $k_2$.
+
+For positive semi-definiteness,
 $$
-\mathrm{Pr}(X=6)=\binom{10}{6} (1/2)^{10}.
+\sum_{i=1}^n \sum_{j=1}^n w_i w_j k(\mathbf{x}_i,\mathbf{x}_j) = \underbrace{ \sum_{i=1}^n \sum_{j=1}^n w_i w_j k_1(\mathbf{x}_i,\mathbf{x}_j) }_{\geq 0} + \underbrace{ \sum_{i=1}^n \sum_{j=1}^n w_i w_j k_2(\mathbf{x}_i,\mathbf{x}_j) }_{\geq 0} \geq 0
 $$
+for all $w_1,\dots,w_n \in \mathbb{R}$, all $\mathbf{x}_1,\dots,\mathbf{x}_n \in \mathcal{X}$, and all $n \in \mathbb{N}$, where we have used the positive semi-definiteness of $k_1$ and $k_2$.
+
+Now, let $k_1(\mathbf{x},\mathbf{x}') = \langle \boldsymbol{\phi}_1(\mathbf{x}) , \boldsymbol{\phi}_1(\mathbf{x}') \rangle$ and $k_2(\mathbf{x},\mathbf{x}') = \langle \boldsymbol{\phi}_2(\mathbf{x}) , \boldsymbol{\phi}_2(\mathbf{x}') \rangle$ be explicit representations of $k_1$ and $k_2$ as feature space inner products.
+It follows that
+$$
+k(\mathbf{x},\mathbf{x}') = \langle \boldsymbol{\phi}_1(\mathbf{x}) , \boldsymbol{\phi}_1(\mathbf{x}') \rangle + \langle \boldsymbol{\phi}_2(\mathbf{x}) , \boldsymbol{\phi}_2(\mathbf{x}') \rangle 
+= \left\langle \begin{pmatrix} \boldsymbol{\phi}_1(\mathbf{x}) \\ \boldsymbol{\phi}_2(\mathbf{x}) \end{pmatrix} , \begin{pmatrix} \boldsymbol{\phi}_1(\mathbf{x}') \\ \boldsymbol{\phi}_2(\mathbf{x}') \end{pmatrix} \right\rangle,
+$$
+so the feature space of $k$ is the *Cartesian product* of the feature spaces of $k_1$ and $k_2$.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="neural-networks" data-difficulty="0"}
+## Universal logic gates
+
+Construct a *NOR gate*, whose truth table is
+
+| $x_1$ | $x_2$ | $\mathrm{NOR}(x_1,x_2)$ |
+|:-----:|:-----:|:-----------------------:|
+| $0$   | $0$   | $1$                     |
+| $1$   | $0$   | $0$                     |
+| $0$   | $1$   | $0$                     |
+| $1$   | $1$   | $0$                     |
+
+using the simple activation function 
+$$
+\sigma(z) = \begin{cases} 1 & \text{if } z \geq 1 \\ 0 & \text{if } z < 1 \end{cases}.
+$$
+
+(A fascinating fact about the NOR logic gate is that [all other logic gates](https://en.wikipedia.org/wiki/NOR_logic) can be constructed as combinations of NOR logic gates. As a result, the NOR gate is called *universal*.)
+
+<details class="solution">
+  <summary>Solution</summary>
+
+This is a simple problem; $\sigma(1 - x_1 - x_2)$.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="neural-networks" data-difficulty="1"}
+## Logic via deep neural networks
+
+Let $\mathbf{x} \in \{0,1\}^d$ where $d = 2^m$ for some $m \in \mathbb{N}$.
+Construct a neural network using the simple activation function 
+$$
+\sigma(z) = \begin{cases} 1 & \text{if } z \geq 1 \\ 0 & \text{if } z < 1 \end{cases}
+$$
+to perform a *parity check*, i.e. to return $1$ if the number of non-zero entries in $\mathbf{x}$ is odd, and otherwise to return $0$.
+State how many neurons and how many layers you used in your network as a function of $d$.
+
+[Hint: You may wish to make use of the XOR logic gate that we constructed in @sec-activation.]
+
+<details class="solution">
+  <summary>Solution</summary>
+
+Let's construct a neural network by induction, with base case $m=1$.
+
+For the base case, we have a pair of inputs $(x_1,x_2) \in \{0,1\}^2$, and the XOR gate from @sec-activation returns $1$ if and only if $x_1 + x_2$ is odd. That is, a single XOR gate performs a parity check when $m = 1$.
+
+Now suppose we have a neural network that can perform a parity check when $d = 2^{m-1}$, and consider the case where $d = 2^m$. The state $\mathbf{x}$ can then be decomposed into two parts, $(\mathbf{x}_1,\mathbf{x}_2)$, each with length $2^{m-1}$, and we can construct a neural network parity check $f_i(\mathbf{x}_i)$ for each part $i \in \{1,2\}$. Then $f(\mathbf{x}) = \mathrm{XOR}(f_1(\mathbf{x}_1) , f_2(\mathbf{x}_2))$ is a neural network parity check for $\mathbf{x}$.
+
+Let $n_m$ be the number of neurons used to construct $f$; then $n_m = 2 n_{m-1} + 3$ since $n_{m-1}$ neurons were used to construct each $f_i$ and we used an additional 3 neurons to construct the final XOR gate. Solving the recursion, we need $n_m = 3 \cdot 2^m - 3$ neurons to perform the parity check.
+
+Incrementing $m$ adds an additional $2$ layers to the neural network (recall @sec-activation) and thus the number of layers we need is $2m$.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="neural-networks" data-difficulty="1"}
+## Universal approximation with neural networks
+
+Let $f : [0,1] \rightarrow \mathbb{R}$ be piecewise linear with a finite number of pieces $m$ (i.e. you can draw the graph of $f$ by "joining the dots").
+Show that $f$ can be represented exactly using a neural network with the ReLU activation function $\sigma(z) = \max\{0,z\}$.
+
+(A corollary of this result is that any continuous function $f$ on a bounded interval can be arbitrarily well approximated, in the supremum norm, using a neural network with ReLU activation function; this is called a *universal approximation* result.)
+
+<details class="solution">
+  <summary>Solution</summary>
+
+First, note that all piecewise linear functions can be constructed as superpositions of *triangular bump functions*;
+$$
+f(x) = \sum_{i=0}^m t_{a_i,b_i,c_i}(x), \qquad
+t_{a,b,c}(x) = \begin{cases} 0 & x < a \\ \displaystyle \frac{x-a}{b-a} & a \leq x \leq b \\ \displaystyle \frac{c-x}{c-b} & b \leq x \leq c \\ 0 & x > c \end{cases},
+$$
+for appropriate choices of the $a_i, b_i, c_i \in \mathbb{R}$.
+
+It therefore suffices to show that we can construct triangular bump functions using neural networks with ReLU activation functions. This is indeed possible:
+$$
+t_{a,b,c}(x) = \left[ \sigma\left(\frac{x-a}{b-a}\right) - \sigma\left(\frac{x-b}{b-a}\right) \right] - \left[ \sigma\left(\frac{x-b}{c-b}\right) - \sigma\left(\frac{x-c}{c-b}\right) \right]
+$$
+
+Concatenating these individual neural networks $t_{a_i,b_i,c_i}$ into one wide neural network with at most $4(m+1)$ hidden units, we have expressed $f$ as a neural network. Interestingly, this construction needed only one hidden layer in the neural network.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="optimisation" data-difficulty="1"}
+## Gradient descent
+
+Explain why gradient descent, initialised at an arbitrary location $\theta_0$, and with fixed learning rate $\epsilon$, will not find the global minimum of $F(\theta) = |\theta|$.
+
+Instead, suggest a suitable sequence $(\epsilon_t)_{t = 1}^\infty$ and argue why, with your learning rate sequence, gradient descent on $F$ will succeed (from any initial state $\theta_0$).
+
+<details class="solution">
+  <summary>Solution</summary>
+
+Let's start with an obvious remark; the unique minimum occurs at $\theta = 0$, so we are concerned with whether or not the iterates $(\theta_t)_{t=0}^\infty$ of gradient descent converge to $0$.
+
+A fixed learning rate $\epsilon > 0$ cannot work because then $|\theta_{t+1} - \theta_t| = \epsilon |F'(\theta_t)| = \epsilon$ is bounded away from $0$ for all $t$, so the sequence $(\theta_t)_{t = 0}^\infty$ cannot be convergent (to any limit).
+
+Consider instead $\epsilon_t = t^{-p}$ for some power $p > 0$. We cannot take $p = 0$ because then the learning rate would be fixed. We also cannot take $p > 1$ because then the total distance we could hope to move is $\sum_t |\theta_{t+1} - \theta_t| = \sum_t t^{-p} < \infty$, and this may not be far enough to move from $\theta_0$ to $0$ (e.g. for $p=2$ we cannot reach $0$ if $|\theta_0| > 2$). This suggests we try taking $p \in (0,1]$.
+
+It remains only to argue why this works (we asked for an *argument* rather than a *proof* because to give a truly formal proof here would be unnecessarily technical).
+
+First, since for this choice the total distance we move is infinite, we are guaranteed that $(\theta_t)_{t=0}^\infty$ changes sign infinitely often. Second, if $\theta_T$ and $\theta_{T+1}$ have different signs, then $|\theta_{T+1}| \leq |\theta_{T+1} - \theta_T| = \epsilon_T$. Furthermore $\theta_t \in [-\epsilon_T , \epsilon_T]$ for all $t > T$, since we cannot take two consecutive steps that each move us further from the origin.
+
+Combining these two observations implies that $\theta_t \rightarrow 0$, as required. Indeed, given $\gamma > 0$ we can pick $T_0$ such that $T_0^{-p} \leq \gamma$, and we can find a $T \geq T_0$ such that $\theta_{T+1}$ and $\theta_T$ have different signs, implying that $\theta_t \in [-\epsilon_T,\epsilon_T] \subseteq [-\gamma,\gamma]$ for all $t > T$, as required.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="optimisation" data-difficulty="0" #q-stoch-grad-unbiased}
+## Stochastic gradient is unbiased 
+
+Let $\{i_j\}_{j=1}^m$ be a uniformly random subset of $\{1,\dots,n\}$, either with or without replacement.
+Prove that 
+$$
+\hat{S} = \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j})
+$$
+is an unbiased estimator of 
+$$
+S = \frac{1}{n} \sum_{i=1}^n h(\mathbf{w}_i).
+$$
+
+(This result implies that the stochastic gradient (@eq-stoch-grad) is an unbiased estimator of the true gradient (@eq-erm-gradient), taking $\mathbf{w}_i = (\mathbf{x}_i,\mathbf{y}_i)$ and $h(\mathbf{w}_i) = \nabla_{\boldsymbol{\theta}} L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i))$.)
+
+<details class="solution">
+  <summary>Solution</summary>
+
+From linearity of expectation,
+$$
+\mathbb{E}[\hat{S}] = \mathbb{E}\left[ \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j}) \right] = \frac{1}{m} \sum_{j=1}^m \mathbb{E}[ h(\mathbf{w}_{i_j}) ].
+$$
+
+Now, since the $i_j$ are uniformly distributed in $\{1,\dots,n\}$, it follows that each $\mathbf{w}_{i_j}$ is uniformly distributed in $\{\mathbf{w}_1,\dots,\mathbf{w}_n\}$. Thus
+$$
+\mathbb{E}[ h(\mathbf{w}_{i_j}) ] = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k).
+$$
+
+Using this fact, we get
+$$
+\mathbb{E}[\hat{S}] = \frac{1}{m} \sum_{j=1}^m \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = S,
+$$
+which shows that $\hat{S}$ is an unbiased estimator for $S$, as required.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="optimisation gradient-descent" data-difficulty="1" #q-opt-learning-rate}
+## Optimal learning rate for gradient descent 
+
+Obtain the optimal learning rate 
+$$
+\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
+$$
+as claimed in (@eq-optimal-learning-rate), by finding the value of $\epsilon$ that minimises the bound from @thm-gd.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+From @thm-gd we have the bound
+$$
+\frac{1}{T}\sum_{t=0}^{T-1} F(\boldsymbol{\theta}_t) - F(\boldsymbol{\theta}_\star) \leq \underbrace{ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2} }_{r(\epsilon)}
+$$
+and we wish to find the value of the learning rate $\epsilon$ that minimises the right hand side $r(\epsilon)$ of this bound.
+
+Differentiating with respect to $\epsilon$,
+$$
+\nabla r(\epsilon) = \nabla_{\epsilon} \left[ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2}  \right] = - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T}  + \frac{B^2}{2}.
+$$
+
+Setting this expression equal to $0$ and rearranging, we obtain the claimed result.
+
+To confirm this is a minimiser we can differentiate a second time, to see that
+$$
+\nabla^2 r(\epsilon) = \nabla_{\epsilon} \left[ - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T}  + \frac{B^2}{2}  \right] =  \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{\epsilon^3 T} > 0,
+$$
+as required.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="optimisation" data-difficulty="3" #q-minibatch-size}
+## Optimal minibatch size for stochastic gradient descent [{{< fa star >}}{{< fa star >}}]{.advanced title="Not examinable"} 
+
+(This question is intended only for students familiar with Lagrange multipliers.)
+
+Consider stochastic gradient descent as in @sec-sgd, where the stochastic gradients (@eq-stoch-grad) are based on minibatches of size $m$, so that the computational cost $c(m)$ of performing a fixed number of steps $T$ of stochastic gradient descent is $mT$ (measured in the number of calls to $\nabla_{\boldsymbol{\theta}}f_{\boldsymbol{\theta}}$, the gradient of the machine learning model, whose evaluation is the main computational bottleneck).
+
+Letting $B = B_0 m^{-1}$ for some fixed constant $B_0$, express the optimal learning rate 
+$$
+\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
+$$
+from (@eq-optimal-learning-rate) as a function of the minibatch size $m$.
+
+Hence, use Lagrange multipliers to show that the minibatch size $m$ which minimises the error bound in @thm-sgd subject to a fixed total computational cost $c(m) = C$ is $m \approx C / T$.
+
+Thus smaller minibatch sizes $m$ should be preferred when a larger number of steps $T$ of stochastic gradient descent are to be performed.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+Substituting the optimal learning rate into the overall error bound for stochastic gradient descent from @thm-sgd, we get
+$$
+\frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2} = \frac{B \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T}}.
+$$
+
+Letting $B = B_0 m^{-1}$, this becomes
+$$
+\frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m \sqrt{T}}.
+$$
+
+Minimising the error subject to the cost constraint can be achieved using a Lagrangian
+$$
+\mathcal{L}(m,\lambda) = \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m\sqrt{T}} + \lambda ( m T - C )
+$$
+where $\lambda$ is a Lagrange multiplier.
+
+The stationary point equations are:
+$$
+\begin{aligned}
+0 = \nabla_m \mathcal{L} & = - \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m^2\sqrt{T}} + \lambda T \\
+0 = \nabla_\lambda \mathcal{L} & = mT - C
+\end{aligned}
+$$
+
+Rearranging the first,
+$$
+m = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} }{ \lambda^{1/2} T^{3/4} }
+$$
+and substituting this into the second,
+$$
+\lambda^{1/2} = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} T^{1/4} }{C}.
+$$
+
+Putting this all together, 
+$$
+m = \frac{C}{T}.
+$$
+
+Since $m$ must be a positive integer, we conclude that $m \approx C / T$.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="empirical-risk-minimisation statistics" data-difficulty="2" #q-mean-est}
+## Mean estimation as empirical risk minimisation
+
+The aim of this exercise is to see how estimating the mean of a probability distribution can be cast within the empirical risk minimisation framework.
+
+Let $Y \sim P$. Our aim is to estimate the mean of $P$ from $n$ independent observations of $Y$, which we denote $\{y_i\}_{i=1}^n$. To do so we introduce the squared error loss $L(y,y') = (y-y')^2$ and the "trivial" machine learning model $\mathcal{F} = \mathbb{R}$.
+
+a. Show that the (population) risk $\mathcal{R}(\cdot)$ is minimised at $f_\star = \mathbb{E}_{Y \sim P}[Y]$, the mean of $P$.
+b. Compute the empirical risk minimiser $f_n \in \mathcal{F}$.
+c. What is the generalisation error of $f_n$?
+d. Show that the expected generalisation error is $\frac{1}{n} \mathbb{V}[Y]$ where $\mathbb{V}[Y]$ is the variance of $P$.
+e. How many samples $n$ are needed to guarantee an expected generalisation error smaller than $\epsilon$? (Recall this is the *sample complexity* of the empirical risk minimiser, telling us how much data we need to achieve a certain level of generalisation performance.)
+
+<details class="solution">
+  <summary>Solution</summary>
+
+The (population) risk is
+$$
+\mathcal{R}(f) = \mathbb{E}_{Y \sim P} [L(Y,f)] = \mathbb{E}_{Y \sim P} [ (Y-f)^2 ] = \mathbb{E}_{Y \sim P}[Y^2] - 2 f \mathbb{E}_{Y \sim P}[Y] + f^2,
+$$
+and this quadratic (in $f$) is minimised at $f_\star = \mathbb{E}_{Y \sim P}[Y]$.
+
+The empirical risk is
+$$
+\mathcal{R}_n(f) = \frac{1}{n} \sum_{i=1}^n L(y_i,f) = \frac{1}{n} \sum_{i=1}^n (y_i - f)^2 = \left( \frac{1}{n} \sum_{i=1}^n y_i^2 \right) - 2 f \left( \frac{1}{n} \sum_{i=1}^n y_i \right) + f^2
+$$
+and this quadratic (in $f$) is minimised at 
+$$
+f_n = \frac{1}{n} \sum_{i=1}^n y_i,
+$$
+the arithmetic mean of the dataset.
+
+The generalisation error is
+$$
+\begin{aligned}
+\mathcal{R}(f_n) - \mathcal{R}(f_\star) & = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n \mathbb{E}_{Y \sim P}[Y] + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_\star \mathbb{E}_{Y \sim P}[Y] + f_\star^2 \} \\
+& = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n f_\star + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - f_\star^2 \} \\
+& = f_\star^2 - 2 f_n f_\star + f_n^2 \\
+& = (f_\star - f_n)^2.
+\end{aligned}
+$$
+
+Let $Y_i$ be a random variable representing the $i$th element of the dataset. The expected generalisation error is thus
+$$
+\begin{aligned}
+\mathbb{E}[ \mathcal{R}(f_n) - \mathcal{R}(f_\star) ]
+& = \mathbb{E}[ (f_\star - f_n)^2 ] \\
+& = \mathbb{E}\left[ \left( \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y] \right)^2 \right] \\
+& = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y]  \right] \\
+& = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i \right] \\
+& = \frac{1}{n} \mathbb{V}[Y]
+\end{aligned}
+$$
+where the final line follows from the properties $\mathbb{V}[cY] = c^2 \mathbb{V}[Y]$ and $\mathbb{V}[Y_i + Y_j] = \mathbb{V}[Y_i] + \mathbb{V}[Y_j]$ whenever $i \neq j$, since then $Y_i$ and $Y_j$ are independent.
+
+To ensure an expected generalisation error less than $\epsilon$ we therefore need $n > \mathbb{V}[Y] / \epsilon$ number of independent samples in the dataset.
+
+</details>
+
+:::
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-2" data-difficulty="2" #q-phys-informed}
+## Physics-informed machine learning
+
+This exercise considers the problem of predicting spring displacement based on the force applied, following @exm-phys-informed.
+
+A `pure' machine learning approach would just use data to learn a predictive model, while a `pure' physics approach would use Hooke's law of elasticity and attempt to learn the associated proportionality constant.
+
+A physics-informed machine learning approach uses both the data and Hooke's law, the latter entering as an additive regulariser on the empirical risk.
+
+Indeed, for a twice differentiable $f : [0,1] \rightarrow \mathbb{R}$, consider the regulariser
+$$
+\begin{align*}
+R(f) = f(0)^2 + \int_0^1 f''(x)^2 \; \mathrm{d}x  .
+\end{align*}
+$$
+Show that $R(f) = 0$ if and only if $f$ represents an exact proportionality relationship (i.e. $f(x) \propto x$, which is the content of Hooke's law).
+
+<details class="solution">
+  <summary>Solution</summary>
+
+If $R(f) = 0$ then $f(0) = 0$ and $f''(x) = 0$ for all $x \in [0,1]$.
+Integrating the latter gives that $f'(x) = C$ for some constant $C$, and integrating again gives $f(x) = C x + D$ for some additional constant $D$.
+Since $f(0) = 0$ we deduce that $D = 0$.
+Thus we have arrived at $f(x) = C x$, which is an exact proportionality relationship as claimed.
+
+</details>
+
+:::
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4" data-difficulty="0"}
+## Stochastic gradient is unbiased
+
+Let $\{i_j\}_{j=1}^m$ be a uniformly random subset of $\{1,\dots,n\}$, either with or without replacement.
+Prove that 
+$$
+\hat{S} = \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j})
+$$
+is an unbiased estimator of 
+$$
+S = \frac{1}{n} \sum_{i=1}^n h(\mathbf{w}_i).
+$$
+
+(This result implies that the stochastic gradient (@eq-stoch-grad) is an unbiased estimator of the true gradient (@eq-erm-gradient), taking $\mathbf{w}_i = (\mathbf{x}_i,\mathbf{y}_i)$ and $h(\mathbf{w}_i) = \nabla_{\boldsymbol{\theta}} L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i))$.)
+
+<details class="solution">
+  <summary>Solution</summary>
+
+From linearity of expectation,
+$$
+\mathbb{E}[\hat{S}] = \mathbb{E}\left[ \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j}) \right] = \frac{1}{m} \sum_{j=1}^m \mathbb{E}[ h(\mathbf{w}_{i_j}) ].
+$$
+
+Now, since the $i_j$ are uniformly distributed in $\{1,\dots,n\}$, it follows that each $\mathbf{w}_{i_j}$ is uniformly distributed in $\{\mathbf{w}_1,\dots,\mathbf{w}_n\}$. Thus
+$$
+\mathbb{E}[ h(\mathbf{w}_{i_j}) ] = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k).
+$$
+
+Using this fact, we get
+$$
+\mathbb{E}[\hat{S}] = \frac{1}{m} \sum_{j=1}^m \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = S,
+$$
+which shows that $\hat{S}$ is an unbiased estimator for $S$, as required.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4" data-difficulty="0"}
+## Optimal learning rate for gradient descent
+
+Obtain the optimal learning rate 
+$$
+\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
+$$
+as claimed in (@eq-optimal-learning-rate), by finding the value of $\epsilon$ that minimises the bound from @thm-gd.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+From @thm-gd we have the bound
+$$
+\frac{1}{T}\sum_{t=0}^{T-1} F(\boldsymbol{\theta}_t) - F(\boldsymbol{\theta}_\star) \leq \underbrace{ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2} }_{r(\epsilon)}
+$$
+and we wish to find the value of the learning rate $\epsilon$ that minimises the right hand side $r(\epsilon)$ of this bound.
+
+Differentiating with respect to $\epsilon$,
+$$
+\nabla r(\epsilon) = \nabla_{\epsilon} \left[ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2} \right] = - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T} + \frac{B^2}{2}.
+$$
+
+Setting this expression equal to $0$ and rearranging, we obtain the claimed result.
+
+To confirm this is a minimiser we can differentiate a second time, to see that
+$$
+\nabla^2 r(\epsilon) = \nabla_{\epsilon} \left[ - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T} + \frac{B^2}{2} \right] = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{\epsilon^3 T} > 0,
+$$
+as required.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4" data-difficulty="2"}
+## Optimal minibatch size for stochastic gradient descent [{{< fa star >}}{{< fa star >}}]{.advanced title="Advanced content for 4th year students"}
+
+(This question is intended only for students familiar with Lagrange multipliers.)
+
+Consider stochastic gradient descent as in @algo-sgd, where the stochastic gradients (@eq-stoch-grad) are based on minibatches of size $m$, so that the computational cost $c(m)$ of performing a fixed number of steps $T$ of stochastic gradient descent is $mT$ (measured in the number of calls to $\nabla_{\boldsymbol{\theta}}f_{\boldsymbol{\theta}}$, the gradient of the machine learning model, whose evaluation is the main computational bottleneck).
+
+Letting $B = B_0 m^{-1}$ for some fixed constant $B_0$, express the optimal learning rate 
+$$
+\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
+$$
+from (@eq-optimal-learning-rate) as a function of the minibatch size $m$.
+
+Hence, use Lagrange multipliers to show that the minibatch size $m$ which minimises the error bound in @thm-sgd subject to a fixed total computational cost $c(m) = C$ is $m \approx C / T$.
+
+Thus smaller minibatch sizes $m$ should be preferred when a larger number of steps $T$ of stochastic gradient descent are to be performed.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+Substituting the optimal learning rate into the overall error bound for stochastic gradient descent from @thm-sgd, we get
+$$
+\frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2} = \frac{B \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T}}.
+$$
+
+Letting $B = B_0 m^{-1}$, this becomes
+$$
+\frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m \sqrt{T}}.
+$$
+
+Minimising the error subject to the cost constraint can be achieved using a Lagrangian
+$$
+\mathcal{L}(m,\lambda) = \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m\sqrt{T}} + \lambda ( m T - C )
+$$
+where $\lambda$ is a Lagrange multiplier.
+
+The stationary point equations are:
+$$
+\begin{aligned}
+0 = \nabla_m \mathcal{L} & = - \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m^2\sqrt{T}} + \lambda T \\
+0 = \nabla_\lambda \mathcal{L} & = mT - C
+\end{aligned}
+$$
+
+Rearranging the first,
+$$
+m = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} }{ \lambda^{1/2} T^{3/4} }
+$$
+and substituting this into the second,
+$$
+\lambda^{1/2} = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} T^{1/4} }{C}.
+$$
+
+Putting this all together, 
+$$
+m = \frac{C}{T}.
+$$
+
+Since $m$ must be a positive integer, we conclude that $m \approx C / T$.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4" data-difficulty="1"}
+## Mean estimation as empirical risk minimisation
+
+The aim of this exercise is to see how estimating the mean of a probability distribution can be cast within the empirical risk minimisation framework.
+
+Let $Y \sim P$. Our aim is to estimate the mean of $P$ from $n$ independent observations of $Y$, which we denote $\{y_i\}_{i=1}^n$. To do so we introduce the squared error loss $L(y,y') = (y-y')^2$ and the "trivial" machine learning model $\mathcal{F} = \mathbb{R}$.
+
+a. Show that the (population) risk $\mathcal{R}(\cdot)$ is minimised at $f_\star = \mathbb{E}_{Y \sim P}[Y]$, the mean of $P$.
+b. Compute the empirical risk minimiser $f_n \in \mathcal{F}$.
+c. What is the generalisation error of $f_n$?
+d. Show that the expected generalisation error is $\frac{1}{n} \mathbb{V}[Y]$ where $\mathbb{V}[Y]$ is the variance of $P$.
+e. How many samples $n$ are needed to guarantee an expected generalisation error smaller than $\epsilon$? (Recall this is the *sample complexity* of the empirical risk minimiser, telling us how much data we need to achieve a certain level of generalisation performance.)
+
+<details class="solution">
+  <summary>Solution</summary>
+
+The (population) risk is
+$$
+\mathcal{R}(f) = \mathbb{E}_{Y \sim P} [L(Y,f)] = \mathbb{E}_{Y \sim P} [ (Y-f)^2 ] = \mathbb{E}_{Y \sim P}[Y^2] - 2 f \mathbb{E}_{Y \sim P}[Y] + f^2,
+$$
+and this quadratic (in $f$) is minimised at $f_\star = \mathbb{E}_{Y \sim P}[Y]$.
+
+The empirical risk is
+$$
+\mathcal{R}_n(f) = \frac{1}{n} \sum_{i=1}^n L(y_i,f) = \frac{1}{n} \sum_{i=1}^n (y_i - f)^2 = \left( \frac{1}{n} \sum_{i=1}^n y_i^2 \right) - 2 f \left( \frac{1}{n} \sum_{i=1}^n y_i \right) + f^2
+$$
+and this quadratic (in $f$) is minimised at 
+$$
+f_n = \frac{1}{n} \sum_{i=1}^n y_i,
+$$
+the arithmetic mean of the dataset.
+
+The generalisation error is
+$$
+\begin{aligned}
+\mathcal{R}(f_n) - \mathcal{R}(f_\star) & = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n \mathbb{E}_{Y \sim P}[Y] + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_\star \mathbb{E}_{Y \sim P}[Y] + f_\star^2 \} \\
+& = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n f_\star + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - f_\star^2 \} \\
+& = f_\star^2 - 2 f_n f_\star + f_n^2 \\
+& = (f_\star - f_n)^2.
+\end{aligned}
+$$
+
+Let $Y_i$ be a random variable representing the $i$th element of the dataset. The expected generalisation error is thus
+$$
+\begin{aligned}
+\mathbb{E}[ \mathcal{R}(f_n) - \mathcal{R}(f_\star) ]
+& = \mathbb{E}[ (f_\star - f_n)^2 ] \\
+& = \mathbb{E}\left[ \left( \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y] \right)^2 \right] \\
+& = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y] \right] \\
+& = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i \right] \\
+& = \frac{1}{n} \mathbb{V}[Y]
+\end{aligned}
+$$
+where the final line follows from the properties $\mathbb{V}[cY] = c^2 \mathbb{V}[Y]$ and $\mathbb{V}[Y_i + Y_j] = \mathbb{V}[Y_i] + \mathbb{V}[Y_j]$ whenever $i \neq j$, since then $Y_i$ and $Y_j$ are independent.
+
+To ensure an expected generalisation error less than $\epsilon$ we therefore need $n > \mathbb{V}[Y] / \epsilon$ number of independent samples in the dataset.
 
 </details>
 

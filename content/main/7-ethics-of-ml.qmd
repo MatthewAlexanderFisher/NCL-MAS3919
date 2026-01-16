@@ -4,13 +4,204 @@ execute:
 jupyter: mas2901
 ---
 
-# Ethics of Machine Learning
+# Ethics of Machine Learning {#sec-ethics}
 
-::: {.definition #def-adversarial-attacks}
-### Adversarial Attacks
-Adversarial attacks in machine learning refer to techniques used to deceive models by introducing small, intentional perturbations to the input data. This area of study has gained significant attention due to the vulnerabilities it exposes in machine learning systems, particularly in computer vision, natural language processing, and other applications where AI models are deployed.
+Now that you are well-versed in the mathematical and statistical foundations of machine learning, we need to confront the elephant in the room; the serious ethical questions that can arise from deployment of powerful machine learning tools in the real world.
 
+
+::: {.remark #rem-ml-vs-ai}
+### Machine Learning or AI?
+As a preface to this discussion it is useful to disambiguate between machine learning and *artificial intelligence* (AI).
+
+Although non-experts use these terms interchangeably, there is an important conceptual distinction; AI pertains to aspects of human-computer interaction, while machine learning refers to the process of training a machine learning model to perform well at a given machine learning task.
+
+For example, machine learning is used to train a large language model (LLM; an autoregressive model that aims to predict the next part of a string of text), while AI is used to harness the trained LLM in the form of a chatbot. 
+
+Sometimes the LLM is referred to as the *foundational* model; one could take the same trained LLM and "build" many different chatbots (or *AIs*) on top of it.
+
+Please bear the distinction between machine learning and AI in mind, and consider whether the issues raised in the following discussion pertain to machine learning, AI, or possibly both.
 
 :::
 
+@iss-bias-and-fairness
+
+
+:::{#iss-bias-and-fairness .iss}
+### Bias and Fairness
+
+Suppose we train a machine learning model to predict disease progression for cancer patients with a Caucasian genetic background.
+Such a model may struggle to generalise to patients from other genetic backgrounds; is this fair, for example if such a model was to be deployed in the NHS?
+What if the only available training data pertain to a study on a Caucasian patients?
+Or, suppose a bank trains a machine learning model to predict individual probabilities of credit default based on factors such as age, current salary, and credit history. 
+Then you and your friend may be offered different interest rates on loans from the bank; is this fair?
+Or, perhaps you think this would happen anyway irrespective of whether we use a machine learning model or some other criteria to set an interest rate?
+How can we *build in* fairness into a machine learning model?
+If we can be clear about what fairness should mean, then we may be able to write down a regulariser $R(f)$ that penalises departure from fairness.
+But being clear about the definition of fairness is often difficult, and if we prioritise fairness we may decrease other aspects of performance, reducing the effectiveness of the model at its intended task.
+
+:::
+
+:::{#iss-autonomy .iss}
+### Autonomy and responsibility
+
+If a machine learning model is deployed in the real world and leads to harm (e.g. actual physical damage, financial loss, etc), who is responsible - the machine learning scientist who programmed it, the company that used it, or someone else?
+
+Does it matter if the issue was an accidental bug in code, or from incorrect information being included in the training dataset, or if the issue resulted from an adversarial attack (e.g. data poisoning, where a machine learning model is tricked into behaving in an undesirable way)?
+
+Should we have a right to challenge a decision made by an autonomous machine learning model if we do not agree with it?
+
+Should we have a right to see how a machine learning model came to make the decision that it did?
+
+What if the model itself was a corporate secret, due to the time and resources needed to build it?
+Is it okay for an AI chatbot to produce strongly politicised output, or should such AI be regulated?
+The [Newcastle University Centre for AI Safety](https://www.ncl.ac.uk/ai-safety/) aims to address some of these difficult issues. 
+:::
+
+:::{#iss-warfare .iss}
+### AI in warfare
+
+An alarming trend from the conflicts in Ukraine and Gaza has been the use of machine learning and AI to prioritise drone targets to attack.
+The apparent effectiveness of machine learning and AI on the battlefield raises extremely serious legal and ethical questions.
+
+From a legal perspective, how can we be sure that the decisions being made by the machine learning model are consistent with the Geneva convention (e.g. prohibiting attacks on civilians)?
+
+Do you think that life-and-death decision-making should have human oversight?
+
+What about the potential for such machine learning models to catastrophically fail - how could we assess this risk?
+
+Newcastle University, like most research-intensive universities, collaborates with the [Defense Science and Technology Laboratory](https://www.gov.uk/government/news/ai-and-data-science-expansion-for-dstl-in-the-north) to develop the nation's defence capabilities in respect of machine learning and AI; how do you feel about that?
+
+:::
+
+
+:::{#iss-consent .iss}
+### Consent to data use
+
+An issue that has received considerable media attention is the use of copyrighted material to train a machine learning model.
+Although the major companies in the LLM space do not disclose the provenance of their training data, there is reason to believe that almost all of them scrape the internet to generate training data, and in doing so disregard the issues of copyright.
+Indeed, OpenAI (the company behind Chat-GPT) [have said that](https://www.theguardian.com/technology/2024/jan/08/ai-tools-chatgpt-copyrighted-material-openai) training their LLM would be effectively impossible without access to copyrighted material.
+
+Is it fair that the creators of the training data do not receive royalties from the companies who have harnessed it for profit?
+
+Or, is training a machine learning model sufficiently different from the intended purpose of copyright law that it should be allowed?
+
+The legal situation around the use of copyrighted material for training machine learning models is arguably unclear, and at the time of writing these lecture notes [the UK government are consulting on it](https://www.theguardian.com/technology/2024/jan/08/ai-tools-chatgpt-copyrighted-material-openai)
+
+For those of you who have registered with the NHS, your (anonymised) health records may have already been used to train machine learning models for profit unless you [explicitly opt out](https://www.nhs.uk/using-the-nhs/about-the-nhs/opt-out-of-sharing-your-health-records/).
+
+How do you feel about that?
+
+Does it matter if the sale of your (anonymised) generates revenue for the NHS?
+
+How can we be sure that an anonymised health record could not be traced back to an individual patient?
+
+Could relaxing laws around data-sharing and copyright help to boost AI research and development in the UK, or should the UK be leading on protections for individuals in the age of large-scale corporate AI?
+
+:::
+
+
+:::{#iss-environmental-impact .iss}
+### Environmental impact
+
+The carbon footprint of training large machine learning models can be significant.
+Consider AlphaGo, which was initially trained on a database of 30 million human expert games, before going on to be adversarially trained by playing against itself (cf. \Cref{ex: alphago}).
+
+Taking the first training phase for concreteness, this was performed on 50 GPUs running in parallel and took 3 weeks in total. 
+Roughly speaking, the power consumption of 1 high-performance GPU is about 1kW, similar to that of a domestic vacuum; so the energy consumption of this training phase for AlphaGo is roughly equivalent to running 50 vacuums continuously in your house for 3 weeks[^trained-cost-note].
+
+This training cost pales into insignificance compared with Chat-GPT 4 (@sec-architectures), with estimates suggesting that training required around 60GWh of electricity; to put this into equivalent terms, this amounts to around 100,000 vacuums running continuously for 3 weeks, costing around £100M in electricity alone (not to mention aspects like water consumption, to keep the GPUs cool).
+
+Can such exorbitant energy use be justified?
+
+Or do the potential societal benefits of a powerful chatbot outweigh the environmental impact of training?
+What if many companies compete in this space - can the total environmental impact be justified, or should there be regulation to limit the number of chatbot that can be trained?
+The UK government recently announced the [building of large data centres in the North East](https://www.gov.uk/government/news/north-east-england-set-for-billions-in-investment-and-thousands-of-jobs-as-uk-and-us-ink-tech-partnership); how do you feel about that?
+
+Is it a boon for AI investment and jobs in the region, or do you think the number of employees in a data centre is relatively small, and the day-to-day taks of running a data centre is a very different proposition from AI research and development?
+
+:::
+
+:::{#iss-job-impact .iss}
+### Job displacement and transformation of the labour market
+
+It is often argued that AI has the potential to displace jobs, particularly in sectors like manufacturing, logistics, and customer service. 
+But, history shows us that the actual impacts of AI can be difficult to predict.
+
+For example, it was widely believed that machine learning models would not be able to compete with the creative industries until the emergence of powerful generative models for images demonstrated otherwise (e.g. @exm-denoising-diffusions).
+
+While new jobs may be created in AI development and maintenance, there is concern about the speed and scale of this transition.
+
+What sectors do you think are likely to be impacted by machine learning and AI, and do you think the overall impact will be positive or negative?
+
+How do you think the emergence of powerful AI had/will impact the graduate job market?
+
+:::
+
+:::{#iss-privacy .iss}
+### Privacy
+
+Machine learning models feed off training data, and this provides a strong financial incentive for companies to harvest large amounts of personal data.
+
+This raises concerns about the surveillance capabilities of machine learning and AI, and the potential misuse of personal information.
+
+Whenever we use software "apps" we typically consent to the use of our data without a second thought; is this a reasonable exchange for the use of (often free) software (e.g. Google Maps), or is it unfair that you cannot perform a basic task, e.g. buy a train ticket using an app, without having to consent to your personal data being shared?  
+
+If you use social media, fine-grained personal data, such as how long you spend looking at any individual video on TikTok, will likely be used to build up a profile of your individual interests and preferences, which can then be sold to advertisers looking to target you with their content.  
+
+Is this an acceptable amount of data to share, or not?
+
+How would your answer change if these data were being collected by a state, rather than a company?
+
+Do you think the benefits from assisting with law enforcement outweigh the risks associated with state surveillance and control? 
+
+In the UK, the [Information Commissioner's Office](https://ico.org.uk) is responsible for enforcement of data usage restrictions.
+
+:::
+
+:::{#iss-inequality .iss}
+### Inequality
+
+Do you think the development and deployment of machine learning and AI technologies will exacerbate existing inequalities in society? 
+
+For example, do you think wealthy individuals and nations may benefit more from AI advancements, potentially widening the gap between them and poorer communities, or do you think AI will have a "democratising effect", for example by making powerful chatbots available to everyone with access to the internet?
+
+:::
+
+:::{#iss-human-interaction .iss}
+### Human Interaction
+
+AI is increasingly integrated into daily life, from virtual assistants to smart home devices, altering how people interact with technology and each other.
+
+Do you worry about how this might affect the societies in which we live, or do you think the impact of AI will be relatively small compared to the impact of existing social media?
+
+There have been documented instances of humans forming intimate personal connections with chatbots; is that something you would be concerned about, or not?
+
+Does you answer depend on whether the human is a child or an adult?
+
+Should there be regulation in place about how children interact with AI, and if so what?
+
+:::
+
+
+:::{#iss-trust .iss}
+### Veracity and trust
+
+The potential applications for text-to-video technology are vast, ranging from entertainment and education to marketing and virtual reality (cf. \Cref{ex: text to video}). 
+
+In education, for instance, it can be used to create engaging visual content that makes learning more accessible. 
+
+In marketing, companies can swiftly generate promotional videos tailored to specific audiences, increasing engagement and conversion rates.
+
+However, the rise of text-to-video also presents challenges, particularly concerning veracity and trust; how can we determine whether or not a video is real or AI-generated?
+
+There is currently no general mechanism (e.g. legislation) in place to prevent fake videos from being presented as real; do we have to accept this as the new reality in the age of AI, or should something be done about it (and if so, what)?
+
+:::
+
+This is not an exhaustive exploration of ethical issues associated with machine learning and AI, but it serves to indicate the depth and breadth of this topic.
+An important learning outcome, which *is* examinable, is to be able to highlight and explain some possible ethical considerations associated with deployment of a machine learning model in a given context (cf. \Cref{ex: ethical}). 
+
+
+[^trained-cost-note]:
+    It is important to note that, once trained, the per-query cost of a machine learning model can be relatively small.
 

@@ -20,7 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -44,9 +99,13 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-eee127bcbcf69f6d1c4f39497eef8043.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-ca592282aabca1dce090d3def4fc59bb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-eee127bcbcf69f6d1c4f39497eef8043.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-f5ee150fb4bd363b356d51bef3bf57f5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-d5e987d2a49f81d99d3c6d2c04d8a2aa.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-f5ee150fb4bd363b356d51bef3bf57f5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
+<link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -182,9 +241,71 @@ ul.task-list li input[type="checkbox"] {
     }
   })();
 </script>
+<script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+    <style type="text/css">
+    .ps-root .ps-algorithm {
+      border-top: 2px solid;
+      border-bottom: 2px solid;
+    }
+    .pseudocode-container {
+      text-align: left;
+    }
+    </style>
+  
+      <style type="text/css">
+      .ps-algorithm > .ps-line {
+        text-align: left;
+      }
+      </style>
+    
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../theming/math-scroll.css">
+<link rel="stylesheet" href="../../theming/practice-details.css">
 <link rel="stylesheet" href="../../theming/callout-style.css">
 <link rel="stylesheet" href="../../theming/floating-code.css">
 <link rel="stylesheet" href="../../theming/font.css">
@@ -197,7 +318,11 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../theming/lecture-zoom.css">
 <link rel="stylesheet" href="../../theming/visualisation-controls.css">
 <link rel="stylesheet" href="../../theming/tables.css">
+<link rel="stylesheet" href="../../theming/small-table.css">
+<link rel="stylesheet" href="../../theming/reading-mode.css">
 <link rel="stylesheet" href="../../theming/custom-block.css">
+<link rel="stylesheet" href="../../theming/advanced.css">
+<link rel="stylesheet" href="../../theming/callout-preview.css">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -491,6 +616,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Machine Learning Models in PyTorch</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practicals/3-training-ml-models-in-pytorch.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training Machine Learning Models in Pytorch</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -544,8 +675,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#gradient-descent" id="toc-gradient-descent" class="nav-link active" data-scroll-target="#gradient-descent"><span class="header-section-number">3.1</span> Gradient Descent</a></li>
-  <li><a href="#stochastic-gradient-descent" id="toc-stochastic-gradient-descent" class="nav-link" data-scroll-target="#stochastic-gradient-descent"><span class="header-section-number">3.2</span> Stochastic Gradient Descent</a></li>
+  <li><a href="#sec-grad-desc" id="toc-sec-grad-desc" class="nav-link active" data-scroll-target="#sec-grad-desc"><span class="header-section-number">3.1</span> Gradient Descent</a></li>
+  <li><a href="#sec-sgd" id="toc-sec-sgd" class="nav-link" data-scroll-target="#sec-sgd"><span class="header-section-number">3.2</span> Stochastic Gradient Descent</a></li>
+  <li><a href="#sec-beyond-sgd" id="toc-sec-beyond-sgd" class="nav-link" data-scroll-target="#sec-beyond-sgd"><span class="header-section-number">3.3</span> Beyond “Vanilla” Stochastic Gradient Descent <span class="advanced" title="Non-Examinable content"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span></a></li>
+  <li><a href="#sec-autodiff" id="toc-sec-autodiff" class="nav-link" data-scroll-target="#sec-autodiff"><span class="header-section-number">3.4</span> Automatic Differentiation <span class="advanced" title="MAS8607 content"><i class="fa-solid fa-star" aria-label="star"></i></span></a></li>
   </ul>
 </nav>
     </div>
@@ -555,7 +688,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/main/1-overview-of-machine-learning.html">Lecture Notes</a></li><li class="breadcrumb-item"><a href="../../content/main/3-stochastic-optimisation.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Stochastic Optimisation</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Stochastic Optimisation</span></h1>
+<h1 class="title"><span id="sec-stoch-opt" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Stochastic Optimisation</span></span></h1>
 </div>
 
 
@@ -572,13 +705,341 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="gradient-descent" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="gradient-descent"><span class="header-section-number">3.1</span> Gradient Descent</h2>
+<p>At this point we are over half way through the module and we have not yet discussed the mechanics of how a machine learning model is actually trained. That is, while we have defined optimisation objectives that we might seek to minimise, we have not discussed how such minimisation is performed.</p>
+<p>As we have already acknowledged in <a href="2-machine-learning-models.html#sec-implicit-reg-nn" class="quarto-xref"><span>Section 2.2.3.2</span></a>, optimisation over a high-dimensional parameter space <span class="math inline">\Theta</span> is usually extremely difficult. A further complication is that the empirical risk <span class="math inline">\mathcal{R}_n</span> can be expensive to calculate; we have to sum across the full dataset of size <span class="math inline">n</span>, and for modern machine learning tasks with enormous datasets even computing this sum can be a challenging computational task.</p>
+<p>The dominant solution in machine learning is <em>stochastic optimisation</em>, and we are going to study these methods in detail. At a high level, at least, we can view stochastic optimisation as a fast but approximate numerical method for global optimisation; it may not find global optima, but it often finds the “shallow” local minima that correspond to machine learning models which generalise well.</p>
+<p>The simplest example of stochastic optimisation is called <em>stochastic gradient descent</em>, and we study this in <a href="#sec-sgd" class="quarto-xref"><span>Section 3.2</span></a>. As a warm-up, we first consider the analysis of regular gradient descent in <a href="#sec-grad-desc" class="quarto-xref"><span>Section 3.1</span></a>.</p>
+<p>Some practically important extensions of stochastic gradient descent are highlighted in <a href="#sec-beyond-sgd" class="quarto-xref"><span>Section 3.3</span></a>.</p>
+<p>Computational frameworks that implement stochastic optimisation build on <em>automatic differentiation</em>, and such is its importance in enabling modern machine learning we devote <a href="#sec-autodiff" class="quarto-xref"><span>Section 3.4</span></a> to this topic.</p>
+<section id="sec-grad-desc" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="sec-grad-desc"><span class="header-section-number">3.1</span> Gradient Descent</h2>
+<p>For the purposes of this section we are going to focus on empirical risk minimisation (cf. <a href="1-overview-of-machine-learning.html#def-empirical-risk" class="quarto-xref">Definition&nbsp;<span>1.4</span></a>), which we recall seeks parameters <span class="math inline">\hat{\bm{\theta}}</span> for which the empirical risk <span class="math display">
+\mathcal{R}_n(f_{\bm{\theta}}) = \frac{1}{n} \sum_{i=1}^n L(\mathbf{y}_i , f_{\bm{\theta}}(\mathbf{x}_i) )
+</span> is minimised; an extension to include additive regularisation (cf. <a href="2-machine-learning-models.html#def-additive-reg" class="quarto-xref">Definition&nbsp;<span>2.2</span></a>) is straightforward.</p>
+<blockquote class="blockquote">
+<p>How can we find <span class="math inline">\hat{\bm{\theta}}</span>?</p>
+</blockquote>
+<p>A simple heuristic is to initialise at some parameter values <span class="math inline">\bm{\theta}_0</span> and iteratively “follow the gradient downhill”, constructing a sequence <span class="math inline">(\bm{\theta}_t)_{t \in \mathbb{N}}</span> that moves toward a local minimum of the empirical risk: <span id="eq-gradient-step"><span class="math display">
+\bm{\theta}_{t+1} = \bm{\theta}_t - \epsilon \nabla_{\bm{\theta}} \mathcal{R}_n(f_{\bm{\theta}}) |_{\bm{\theta} = \bm{\theta}_t}.
+\tag{3.1}</span></span> Here <span class="math inline">\epsilon &gt; 0</span> is called a <em>learning rate</em> and should be selected carefully so that the sequence <span class="math inline">(\bm{\theta}_t)_{t \in \mathbb{N}}</span> “settles nicely” into a local minimum of the empirical risk (we will discuss the choice of <span class="math inline">\epsilon</span> theoretically in <a href="#thm-sgd" class="quarto-xref">Theorem&nbsp;<span>3.2</span></a> and practically in ). In practice <a href="#eq-gradient-step" class="quarto-xref">Equation&nbsp;<span>3.1</span></a> is terminiated after a finite number of steps <span class="math inline">T</span> have been performed, and the resulting <span class="math inline">\bm{\theta}_T</span> is viewed as an approximation to <span class="math inline">\hat{\bm{\theta}}</span>.</p>
+<p>The gradient of the empirical risk follows from the chain rule, as <span id="eq-erm-gradient"><span class="math display">
+\nabla_{\bm{\theta}} \mathcal{R}_n(f_{\bm{\theta}}) = \frac{1}{n} \sum_{i=1}^n \nabla_2 L( \mathbf{y}_i , f_{\bm{\theta}}(\mathbf{x}_i) ) \nabla_{\bm{\theta}} f_{\bm{\theta}}(\mathbf{x}_i)  
+\tag{3.2}</span></span> where <span class="math inline">\nabla_2 L</span> denotes the gradient of <span class="math inline">L</span> with respect to its second argument.</p>
+<p>Calculating <span class="math inline">\nabla_2 L</span> is usually straightforward; for example for the squared error loss <span class="math inline">L(\mathbf{y},\mathbf{z}) = \|\mathbf{y} - \mathbf{z}\|^2</span> we have <span class="math inline">\nabla_2 L(\mathbf{y},\mathbf{z}) = - 2 (\mathbf{y} - \mathbf{z})</span>.</p>
+<p>Calculating <span class="math inline">\nabla_{\bm{\theta}} f_{\bm{\theta}}</span> is in principle more difficult, but huge progress has been made in this direction through the emergence of automatic differentiation frameworks such as Torch and JAX (cf. <a href="#sec-autodiff" class="quarto-xref"><span>Section 3.4</span></a>), to the extent that differentiating through the machine learning model is often practically straightforward.</p>
+<p>General pseudocode for gradient descent is presented in <a href="#algo-gd" class="quarto-xref">Algorithm 1</a>. To reinforce ideas, let’s perform a simple example of gradient descent:</p>
+<div class="callout callout-style-simple callout-tip no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="exr-least-squares" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 3.1 (Gradient descent on a quadratic)</strong></span> Derive a closed-form trajectory for gradient descent on <span class="math inline">F(\bm{\theta}) = \frac{1}{2} \|\mathbf{A}\bm{\theta} - \mathbf{b}\|^2</span> initialised at <span class="math inline">\bm{\theta}_0 \in \mathbb{R}^p</span>.</p>
+<p>Deduce an upper bound on the learning rate <span class="math inline">\epsilon &gt; 0</span>, below which convergence to a global minimum is guaranteed.</p>
+<details>
+<summary><strong>Solution</strong></summary>
+<p>The gradient is <span class="math inline">\nabla F(\bm{\theta}) = \mathbf{A}^\top \mathbf{A} \bm{\theta} - \mathbf{A}^\top \mathbf{b}</span>, so gradient descent satisfies <span class="math inline">\bm{\theta}_t = \bm{\theta}_{t-1} - \epsilon (\mathbf{A}^\top \mathbf{A} \bm{\theta}_{t-1} - \mathbf{A}^\top \mathbf{b})</span>. In particular, if <span class="math inline">\bm{\theta}_\star</span> is any minimiser of <span class="math inline">F</span> then <span class="math inline">\mathbf{A}\bm{\theta}_\star = \mathbf{b}</span> and we can re-write the gradient descent update as <span class="math inline">\bm{\theta}_t - \bm{\theta}_\star = (\mathbf{I} - \epsilon \mathbf{A}^\top \mathbf{A})(\bm{\theta}_{t-1} - \bm{\theta}_\star)</span>. Unwinding the recursion, <span class="math display">
+\bm{\theta}_t - \bm{\theta}_\star = (\mathbf{I} - \epsilon \mathbf{A}^\top \mathbf{A})^t(\bm{\theta}_0 - \bm{\theta}_\star) .
+</span> To reason about the size of the right hand side we can consider the eigenvalues of <span class="math inline">\mathbf{I} - \epsilon \mathbf{A}^\top \mathbf{A}</span>. Let <span class="math inline">\lambda_{\min}(\mathbf{M})</span> and <span class="math inline">\lambda_{\max}(\mathbf{M})</span> indicate the smallest and largest eigenvalues of a matrix <span class="math inline">\mathbf{M}</span>. Assume <span class="math inline">\mathbf{A} \neq \mathbf{0}</span> else <span class="math inline">\bm{\theta}_0</span> is already a minimiser of <span class="math inline">F</span>. Then <span class="math inline">\lambda_{\max}(\mathbf{A}^\top \mathbf{A}) &gt; 0</span>. For <span class="math inline">\epsilon &lt; 1 / \lambda_{\max}(\mathbf{A}^\top \mathbf{A})</span> we have <span class="math display">
+\lambda_{\max}(\mathbf{I} - \epsilon \mathbf{A}^\top \mathbf{A}) &lt; 1 - \epsilon \lambda_{\min}(\mathbf{A}^\top \mathbf{A}) &lt; 1 - \frac{ \lambda_{\min}(\mathbf{A}^\top \mathbf{A}) }{ \lambda_{\max}(\mathbf{A}^\top \mathbf{A}) } &lt; 1
+</span> and thus <span class="math display">
+\| \bm{\theta}_t - \bm{\theta}_\star \|
+\leq \left( 1 - \frac{ \lambda_{\min}(\mathbf{A}^\top \mathbf{A}) }{ \lambda_{\max}(\mathbf{A}^\top \mathbf{A}) } \right)^t \| \bm{\theta}_0 - \bm{\theta}_\star \| \rightarrow 0
+</span> as <span class="math inline">t \rightarrow \infty</span>, showing that gradient descent is convergent<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+</details>
+</div>
+</div>
+</div>
+</div>
+<p>Gradient descent is an intuitive idea, but does it work in general?</p>
+<p>To take a first step toward analysing gradient descent, we consider the favourable case of optimising a <em>convex</em> objective function:</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="def-convex-function" class="definition theorem">
+<p><span class="theorem-title"><strong>Definition 3.1 (Convex function)</strong></span> A differentiable function <span class="math inline">F : \mathbb{R}^p \rightarrow \mathbb{R}</span> is <em>convex</em> if <span class="math display">
+F(\bm{\vartheta}) \geq F(\bm{\theta}) + \nabla F(\bm{\theta})^\top (\bm{\vartheta} - \bm{\theta})
+</span> for all <span class="math inline">\bm{\theta}, \bm{\vartheta} \in \mathbb{R}^d</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<p>An example of a convex function is shown in <a href="#fig-convex" class="quarto-xref">Figure&nbsp;<span>3.1</span></a>.</p>
+<p>The differentiable convex functions are special; they enable <em>local</em> information (i.e.&nbsp;a vanishing gradient <span class="math inline">\nabla F(\bm{\theta}_\star) = \bm{0}</span>) to be used to deduce <em>global</em> optimality (i.e.&nbsp;<span class="math inline">F(\bm{\theta}_\star) = \min_{\bm{\theta} \in \mathbb{R}^p} F(\bm{\theta})</span>).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="115" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 114;"><span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> width <span class="op">=</span> <span class="dv">500</span><span class="op">;</span></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> height <span class="op">=</span> <span class="dv">320</span><span class="op">;</span></span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> margin <span class="op">=</span> { <span class="dt">top</span><span class="op">:</span> <span class="dv">20</span><span class="op">,</span> <span class="dt">right</span><span class="op">:</span> <span class="dv">30</span><span class="op">,</span> <span class="dt">bottom</span><span class="op">:</span> <span class="dv">50</span><span class="op">,</span> <span class="dt">left</span><span class="op">:</span> <span class="dv">50</span> }<span class="op">;</span></span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> svg <span class="op">=</span> d3<span class="op">.</span><span class="fu">create</span>(<span class="st">"svg"</span>)</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"viewBox"</span><span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> width<span class="op">,</span> height])</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"width"</span><span class="op">,</span> width)</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"height"</span><span class="op">,</span> height)<span class="op">;</span></span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Scales</span></span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> xMin <span class="op">=</span> <span class="op">-</span><span class="fl">1.0</span><span class="op">,</span> xMax <span class="op">=</span> <span class="fl">4.0</span><span class="op">;</span></span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> yMin <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> yMax <span class="op">=</span> <span class="fl">3.6</span><span class="op">;</span></span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> xScale <span class="op">=</span> d3<span class="op">.</span><span class="fu">scaleLinear</span>()</span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">domain</span>([xMin<span class="op">,</span> xMax])</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">range</span>([margin<span class="op">.</span><span class="at">left</span><span class="op">,</span> width <span class="op">-</span> margin<span class="op">.</span><span class="at">right</span>])<span class="op">;</span></span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> yScale <span class="op">=</span> d3<span class="op">.</span><span class="fu">scaleLinear</span>()</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">domain</span>([yMin<span class="op">,</span> yMax])</span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">range</span>([height <span class="op">-</span> margin<span class="op">.</span><span class="at">bottom</span><span class="op">,</span> margin<span class="op">.</span><span class="at">top</span>])<span class="op">;</span></span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Function F(x) = 1 + 0.25*(x-1.2)^2 + 0.8*exp(-0.8*(x+0.2))</span></span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>  <span class="kw">function</span> <span class="fu">F</span>(x) {</span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">+</span> <span class="fl">0.25</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">pow</span>(x <span class="op">-</span> <span class="fl">1.2</span><span class="op">,</span> <span class="dv">2</span>) <span class="op">+</span> <span class="fl">0.8</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">exp</span>(<span class="op">-</span><span class="fl">0.8</span> <span class="op">*</span> (x <span class="op">+</span> <span class="fl">0.2</span>))<span class="op">;</span></span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Derivative F'(x) = 0.5*(x-1.2) - 0.64*exp(-0.8*(x+0.2))</span></span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>  <span class="kw">function</span> <span class="fu">Fprime</span>(x) {</span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> (x <span class="op">-</span> <span class="fl">1.2</span>) <span class="op">-</span> <span class="fl">0.64</span> <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">exp</span>(<span class="op">-</span><span class="fl">0.8</span> <span class="op">*</span> (x <span class="op">+</span> <span class="fl">0.2</span>))<span class="op">;</span></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Point of tangency</span></span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> theta <span class="op">=</span> <span class="fl">0.6</span><span class="op">;</span></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> Ftheta <span class="op">=</span> <span class="fu">F</span>(theta)<span class="op">;</span></span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> slope <span class="op">=</span> <span class="fu">Fprime</span>(theta)<span class="op">;</span></span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Tangent line: y = F(theta) + F'(theta)*(x - theta)</span></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>  <span class="kw">function</span> <span class="fu">tangent</span>(x) {</span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Ftheta <span class="op">+</span> slope <span class="op">*</span> (x <span class="op">-</span> theta)<span class="op">;</span></span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Draw axes</span></span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>  <span class="co">// x-axis</span></span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)</span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> <span class="fu">xScale</span>(xMin))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> <span class="fu">yScale</span>(<span class="dv">0</span>))</span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> <span class="fu">xScale</span>(xMax) <span class="op">+</span> <span class="dv">10</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> <span class="fu">yScale</span>(<span class="dv">0</span>))</span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"black"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="fl">1.5</span>)</span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"marker-end"</span><span class="op">,</span> <span class="st">"url(#arrowhead)"</span>)<span class="op">;</span></span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>  <span class="co">// y-axis</span></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)</span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> <span class="fu">xScale</span>(xMin))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> <span class="fu">yScale</span>(<span class="dv">0</span>))</span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> <span class="fu">xScale</span>(xMin))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> <span class="fu">yScale</span>(yMax) <span class="op">-</span> <span class="dv">10</span>)</span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"black"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="fl">1.5</span>)</span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"marker-end"</span><span class="op">,</span> <span class="st">"url(#arrowhead)"</span>)<span class="op">;</span></span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Arrowhead marker</span></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"defs"</span>)<span class="op">.</span><span class="fu">append</span>(<span class="st">"marker"</span>)</span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"id"</span><span class="op">,</span> <span class="st">"arrowhead"</span>)</span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"viewBox"</span><span class="op">,</span> <span class="st">"0 -5 10 10"</span>)</span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"refX"</span><span class="op">,</span> <span class="dv">8</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"refY"</span><span class="op">,</span> <span class="dv">0</span>)</span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"markerWidth"</span><span class="op">,</span> <span class="dv">6</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"markerHeight"</span><span class="op">,</span> <span class="dv">6</span>)</span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"orient"</span><span class="op">,</span> <span class="st">"auto"</span>)</span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">append</span>(<span class="st">"path"</span>)</span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"d"</span><span class="op">,</span> <span class="st">"M0,-5L10,0L0,5"</span>)</span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"black"</span>)<span class="op">;</span></span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Axis label</span></span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)</span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> <span class="fu">xScale</span>(xMax) <span class="op">+</span> <span class="dv">15</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> <span class="fu">yScale</span>(<span class="dv">0</span>) <span class="op">+</span> <span class="dv">5</span>)</span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="dv">14</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-style"</span><span class="op">,</span> <span class="st">"italic"</span>)</span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">text</span>(<span class="st">"ϑ"</span>)<span class="op">;</span></span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Plot F(x)</span></span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> line <span class="op">=</span> d3<span class="op">.</span><span class="fu">line</span>()</span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">x</span>(d <span class="kw">=&gt;</span> <span class="fu">xScale</span>(d))</span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">y</span>(d <span class="kw">=&gt;</span> <span class="fu">yScale</span>(<span class="fu">F</span>(d)))<span class="op">;</span></span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> xValues <span class="op">=</span> d3<span class="op">.</span><span class="fu">range</span>(xMin<span class="op">,</span> xMax<span class="op">,</span> <span class="fl">0.02</span>)<span class="op">;</span></span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"path"</span>)</span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">datum</span>(xValues)</span>
+<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"none"</span>)</span>
+<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"black"</span>)</span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="dv">2</span>)</span>
+<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"d"</span><span class="op">,</span> line)<span class="op">;</span></span>
+<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Label for F(ϑ)</span></span>
+<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)</span>
+<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> <span class="fu">xScale</span>(<span class="fl">2.1</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> <span class="fu">yScale</span>(<span class="fl">2.4</span>))</span>
+<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="dv">14</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-style"</span><span class="op">,</span> <span class="st">"italic"</span>)</span>
+<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">text</span>(<span class="st">"F(ϑ)"</span>)<span class="op">;</span></span>
+<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Plot tangent line</span></span>
+<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> tangentLine <span class="op">=</span> d3<span class="op">.</span><span class="fu">line</span>()</span>
+<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">x</span>(d <span class="kw">=&gt;</span> <span class="fu">xScale</span>(d))</span>
+<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">y</span>(d <span class="kw">=&gt;</span> <span class="fu">yScale</span>(<span class="fu">tangent</span>(d)))<span class="op">;</span></span>
+<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> tangentXValues <span class="op">=</span> d3<span class="op">.</span><span class="fu">range</span>(<span class="op">-</span><span class="fl">0.5</span><span class="op">,</span> <span class="fl">2.5</span><span class="op">,</span> <span class="fl">0.1</span>)<span class="op">;</span></span>
+<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"path"</span>)</span>
+<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">datum</span>(tangentXValues)</span>
+<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"none"</span>)</span>
+<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"black"</span>)</span>
+<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="fl">1.5</span>)</span>
+<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"d"</span><span class="op">,</span> tangentLine)<span class="op">;</span></span>
+<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Label for tangent</span></span>
+<span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)</span>
+<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> <span class="fu">xScale</span>(<span class="fl">2.6</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> <span class="fu">yScale</span>(<span class="fl">0.5</span>))</span>
+<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="dv">12</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-style"</span><span class="op">,</span> <span class="st">"italic"</span>)</span>
+<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">text</span>(<span class="st">"F(θ) + ∇F(θ)ᵀ(ϑ − θ)"</span>)<span class="op">;</span></span>
+<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Mark tangency point</span></span>
+<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"circle"</span>)</span>
+<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"cx"</span><span class="op">,</span> <span class="fu">xScale</span>(theta))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"cy"</span><span class="op">,</span> <span class="fu">yScale</span>(Ftheta))</span>
+<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"r"</span><span class="op">,</span> <span class="dv">4</span>)</span>
+<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"black"</span>)<span class="op">;</span></span>
+<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Dashed vertical line to axis</span></span>
+<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)</span>
+<span id="cb1-237"><a href="#cb1-237" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> <span class="fu">xScale</span>(theta))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> <span class="fu">yScale</span>(Ftheta))</span>
+<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> <span class="fu">xScale</span>(theta))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> <span class="fu">yScale</span>(<span class="dv">0</span>))</span>
+<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"black"</span>)</span>
+<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="dv">1</span>)</span>
+<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-dasharray"</span><span class="op">,</span> <span class="st">"4,3"</span>)<span class="op">;</span></span>
+<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Tick and label at theta</span></span>
+<span id="cb1-244"><a href="#cb1-244" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)</span>
+<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> <span class="fu">xScale</span>(theta))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> <span class="fu">yScale</span>(<span class="dv">0</span>) <span class="op">-</span> <span class="dv">4</span>)</span>
+<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> <span class="fu">xScale</span>(theta))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> <span class="fu">yScale</span>(<span class="dv">0</span>) <span class="op">+</span> <span class="dv">4</span>)</span>
+<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"black"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="fl">1.5</span>)<span class="op">;</span></span>
+<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)</span>
+<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> <span class="fu">xScale</span>(theta))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> <span class="fu">yScale</span>(<span class="dv">0</span>) <span class="op">+</span> <span class="dv">20</span>)</span>
+<span id="cb1-251"><a href="#cb1-251" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"text-anchor"</span><span class="op">,</span> <span class="st">"middle"</span>)</span>
+<span id="cb1-252"><a href="#cb1-252" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="dv">14</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-style"</span><span class="op">,</span> <span class="st">"italic"</span>)</span>
+<span id="cb1-253"><a href="#cb1-253" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">text</span>(<span class="st">"θ"</span>)<span class="op">;</span></span>
+<span id="cb1-254"><a href="#cb1-254" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-255"><a href="#cb1-255" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> svg<span class="op">.</span><span class="fu">node</span>()<span class="op">;</span></span>
+<span id="cb1-256"><a href="#cb1-256" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="fig-convex" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-convex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="ojs-cell-1" data-nodetype="expression">
+
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-convex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.1: Illustrating a differentiable convex function <span class="math inline">F \colon \mathbb{R} \rightarrow \mathbb{R}</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="algo-gd" class="pseudocode-container quarto-float" data-pseudocode-number="1" data-no-end="true" data-caption-prefix="Algorithm" data-comment-delimiter="//" data-indent-size="1.2em" data-line-number-punc=":" data-line-number="true">
+<div class="pseudocode">
+\begin{algorithm} \caption{Gradient Descent on $F : \mathbb{R}^p \rightarrow \mathbb{R}$} \begin{algorithmic} \Require gradients $\nabla F : \mathbb{R}^p \rightarrow \mathbb{R}^p$ \Require initial state $\bm{\theta}_0 \in \mathbb{R}^p$ \Require learning rate $\epsilon \in (0,\infty)$ \Require number of steps $T$ \Ensure final parameter estimate $\bm{\theta}_T$ \For{$t = 0, \dots, T-1$} \State $\bm{\theta}_{t+1} \gets \bm{\theta}_t - \epsilon \nabla F(\bm{\theta}_t)$ \EndFor \end{algorithmic} \end{algorithm}
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="thm-gd" class="thm theorem">
+<p><span class="theorem-title"><strong>Theorem 3.1 (Convergence of gradient descent)</strong></span> Let <span class="math inline">F : \mathbb{R}^p \rightarrow \mathbb{R}</span> be convex and differentiable with <span class="math inline">\|\nabla F(\bm{\theta})\| \leq B</span> for all <span class="math inline">\bm{\theta} \in \mathbb{R}^p</span>. Then the sequence <span class="math inline">(\bm{\theta}_t)_{t \geq 0}</span> produced by gradient descent as in <a href="#algo-gd" class="quarto-xref">Algorithm 1</a> satisfies <span id="eq-gd-conc"><span class="math display">
+\frac{1}{T}\sum_{t=0}^{T-1} F(\bm{\theta}_t) - F(\bm{\theta}_\star) \leq  \frac{\|\bm{\theta}_0 - \bm{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2}
+\tag{3.3}</span></span> where <span class="math inline">\bm{\theta}_\star</span> denotes any minimiser of <span class="math inline">F</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<p>Since <span class="math inline">\bm{\theta}_\star</span> is a minimiser of <span class="math inline">F</span>, the left hand side of <a href="#eq-gd-conc" class="quarto-xref">Equation&nbsp;<span>3.3</span></a> is <span class="math inline">\geq 0</span>. The quantity <span id="eq-regret"><span class="math display">
+\frac{1}{T}\sum_{t=0}^{T-1} F(\bm{\theta}_t) - F(\bm{\theta}_\star)
+\tag{3.4}</span></span> is called the <strong>regret</strong>; it measures how much we suffered along the optimisation path, compared to if we had simply known <span class="math inline">\bm{\theta}_\star</span> at the start (we will consider the concept of regret in more detail in ).</p>
+<p>Thus <a href="#thm-gd" class="quarto-xref">Theorem&nbsp;<span>3.1</span></a> shows that, if the learning rate <span class="math inline">\epsilon</span> is small enough, and we are planning to take a large enough number of iterations <span class="math inline">T</span>, then our regret will be small.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Proof
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="prf-gd" class="proof">
+<p><span class="proof-title"><em>Proof 3.1</em>. </span>From the definition of gradient descent</p>
+<p><span class="math display">
+\begin{align*}
+\|\boldsymbol{\theta}_{t+1} - \boldsymbol{\theta}_\star\|^2 &amp; = \|\boldsymbol{\theta}_t - \epsilon \nabla F(\boldsymbol{\theta}_t) - \boldsymbol{\theta}_\star\|^2 \\[0.5em]
+&amp; = \|\boldsymbol{\theta}_t - \boldsymbol{\theta}_\star\|^2 - 2 \epsilon \nabla F(\boldsymbol{\theta}_t)^\top (\boldsymbol{\theta}_t - \boldsymbol{\theta}_\star) + \epsilon^2 \underbrace{ \|\nabla F(\boldsymbol{\theta}_t)\|^2 }_{\leq B^2}
+\end{align*}
+</span> and thus <span id="eq-gd-interm"><span class="math display">
+\nabla F(\bm{\theta}_t)^\top (\bm{\theta}_t - \bm{\theta}_\star)  \leq \frac{1}{2\epsilon} \left\{ \|\bm{\theta}_t - \bm{\theta}_\star\|^2 - \|\bm{\theta}_{t+1} - \bm{\theta}_\star\|^2 \right\} + \frac{1}{2} \epsilon B^2 .
+\tag{3.5}</span></span> Now, since <span class="math inline">F</span> is <span class="xref-no-num"><a href="#def-convex-function" class="quarto-xref">convex&nbsp;<span>3.1</span></a></span> we know that <span id="eq-interm-calc"><span class="math display">
+    F(\bm{\theta}_t) - F(\bm{\theta}_\star)  \leq \nabla F(\bm{\theta}_t)^\top (\bm{\theta}_t - \bm{\theta}_\star) .
+\tag{3.6}</span></span> Using <a href="#eq-gd-interm" class="quarto-xref">Equation&nbsp;<span>3.5</span></a> to bound the right hand side of <a href="#eq-interm-calc" class="quarto-xref">Equation&nbsp;<span>3.6</span></a> leads to <span class="math display">
+\begin{align*}
+    F(\bm{\theta}_t)  - F(\bm{\theta}_\star)   &amp; \leq \frac{1}{2 \epsilon} \left\{ \|\bm{\theta}_t - \bm{\theta}_\star\|^2 - \|\bm{\theta}_{t+1} - \bm{\theta}_\star\|^2 \right\} + \frac{1}{2} \epsilon B^2 .
+\end{align*}
+</span> Averaging both sides over <span class="math inline">t</span>, and noting the <em>telescopic sum</em> (<span class="math inline">\sum_{t=0}^{T-1} x_{t+1} - x_t = x_T - x_0</span>), <span class="math display">
+\begin{align*}
+    \frac{1}{T}  \sum_{t=0}^{T-1} F(\bm{\theta}_t) - F(\bm{\theta}_\star) &amp; \leq \frac{1}{2\epsilon T} \left\{ \|\bm{\theta}_0 - \bm{\theta}_\star\|^2 - \underbrace{ \|\bm{\theta}_T - \bm{\theta}_\star\|^2 }_{\geq 0} \right\} + \frac{1}{2} \epsilon B^2  \\
+    &amp; \leq \frac{\|\bm{\theta}_0 - \bm{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2} ,
+\end{align*}
+</span> completing the argument.</p>
+</div>
+</div>
+</div>
+</div>
+<p>From <a href="#thm-gd" class="quarto-xref">Theorem&nbsp;<span>3.1</span></a> we can elicit a suitable choice of learning rate <span class="math inline">\epsilon</span> by minimising the overall bound, leading to (cf. <a href="../appendix/question-bank.html#q-opt-learning-rate" class="quarto-xref">Question&nbsp;<span>2</span></a>) <span id="eq-optimal-learning-rate"><span class="math display">
+\epsilon = \frac{\|\theta_0 - \theta_\star\|}{\sqrt{T} B} .
+\tag{3.7}</span></span> That is, the learning rate <span class="math inline">\epsilon</span> should be smaller when either (a) the initial state <span class="math inline">\theta_0</span> is close to the minimiser <span class="math inline">\theta_\star</span>, (b) the number of steps <span class="math inline">T</span> to be taken is larger, or (c) we have a larger bound <span class="math inline">B</span> on the stochastic gradient.</p>
+<p>A strategy that is sometimes used in theoretical analysis of gradient descent is to make the learning rate <em>time-dependent</em>, i.e., <span class="math inline">\epsilon_t</span>. For example, the choice <span class="math inline">\epsilon_t = O(t^{-1/2})</span> leads to the slightly stronger result <span class="math display">
+\min_{0 \leq t \leq T-1} F(\theta_t) - F(\theta_\star) = O\left( \frac{\log(T)}{\sqrt{T}} \right) ,
+</span> which you can see by re-running the proof of <a href="#thm-gd" class="quarto-xref">Theorem&nbsp;<span>3.1</span></a> with this choice of learning rate, or by taking a look at <span class="citation" data-cites="bach2024learning">Bach (<a href="#ref-bach2024learning" role="doc-biblioref">2024</a>, Proposition 5.6)</span>.</p>
 </section>
-<section id="stochastic-gradient-descent" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="stochastic-gradient-descent"><span class="header-section-number">3.2</span> Stochastic Gradient Descent</h2>
+<section id="sec-sgd" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="sec-sgd"><span class="header-section-number">3.2</span> Stochastic Gradient Descent</h2>
+<p>The main issue with gradient descent in machine learning is that every gradient step required computing the gradient of the empirical risk, which in turn requires summing over all <span class="math inline">n</span> entries of the training dataset. It is common for dataset sizes to exceed <span class="math inline">n = 10^6</span>, and a typical number of iterations needed for gradient descent might be <span class="math inline">T = 10^3</span>, leading to a high overall computational cost <span class="math inline">O(nT)</span>.</p>
+<p>To mitigate this computational cost, <em>stochastic</em> gradient descent replaces the full gradient with an approximation obtained from a randomly selected subset (often called a <em>minibatch</em>) of the training dataset: <span id="eq-stoch-grad"><span class="math display">
+    \nabla_{\bm{\theta}} \mathcal{R}_n(f_{\bm{\theta}}) \approx \frac{1}{m} \sum_{j=1}^m \nabla_2 L(\mathbf{y}_{i_j} , f_{\bm{\theta}}(\mathbf{x}_{i_j}) ) \nabla_{\bm{\theta}} f_{\bm{\theta}}(\mathbf{x}_{i_j})
+\tag{3.8}</span></span> where <span class="math inline">\{i_j\}_{j=1}^m</span> is a uniformly random subset<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> of <span class="math inline">\{1,\dots,n\}</span>.</p>
+<p>The stochastic gradient <a href="#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a> is an unbiased estimator of the true gradient (cf. <a href="../appendix/question-bank.html#q-stoch-grad-unbiased" class="quarto-xref">Question&nbsp;<span>1</span></a>), and its variance is typically larger when the minibatch size <span class="math inline">m</span> is small. Pseudocode for the general version of <em>stochastic gradient descent</em> is presented in <a href="#algo-sgd" class="quarto-xref">Algorithm 2</a>, and the idea is illustrated in .</p>
+<div id="algo-sgd" class="pseudocode-container quarto-float" data-pseudocode-number="2" data-no-end="true" data-caption-prefix="Algorithm" data-comment-delimiter="//" data-indent-size="1.2em" data-line-number-punc=":" data-line-number="true">
+<div class="pseudocode">
+\begin{algorithm} \caption{Stochastic Gradient Descent on $F : \mathbb{R}^p \rightarrow \mathbb{R}$} \begin{algorithmic} \Require stochastic gradients $G_t : \mathbb{R}^p \rightarrow \mathbb{R}^p$ with $\mathbb{E}[G_t(\cdot)] = \nabla F(\cdot)$ \Require initial state $\boldsymbol{\theta}_0 \in \mathbb{R}^p$ \Require learning rate $\epsilon \in (0,\infty)$ \Require number of steps $T$ \For{$t = 0, \dots, T-1$} \State $\boldsymbol{\theta}_{t+1} \gets \boldsymbol{\theta}_t - \epsilon G_t(\boldsymbol{\theta}_t)$ \EndFor \end{algorithmic} \end{algorithm}
+</div>
+</div>
+<p>The critical design choices in stochastic gradient descent are thus the size <span class="math inline">m</span> of the minibatches and the learning rate <span class="math inline">\epsilon</span>. Theoretical analysis provides insight into how these degrees of freedom should be selected. The mathematical analysis of stochastic gradient descent applied to non-convex objectives is a rich topic, but for our purposes we will settle for the simplest possible analysis which directly generalises <a href="#thm-gd" class="quarto-xref">Theorem&nbsp;<span>3.1</span></a> to stochastic gradient descent:</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="thm-sgd" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 3.2 (Convergence of stochastic gradient descent)</strong></span> Let <span class="math inline">F : \mathbb{R}^p \rightarrow \mathbb{R}</span> be convex and differentiable with <span class="math inline">\|\nabla F(\boldsymbol{\theta})\| \leq B</span> for all <span class="math inline">\boldsymbol{\theta} \in \mathbb{R}^p</span>. Let <span class="math inline">(G_t)_{t \geq 0}</span> be independent and satisfy <span class="math inline">\mathbb{E}[G_t(\boldsymbol{\theta})] = \nabla F(\boldsymbol{\theta})</span> and <span class="math inline">\mathbb{E}[\|G_t(\boldsymbol{\theta})\|^2] \leq B^2</span> for all <span class="math inline">\boldsymbol{\theta} \in \mathbb{R}^p</span>. Then the sequence <span class="math inline">(\boldsymbol{\theta}_t)_{t \geq 0}</span> produced by stochastic gradient descent as in <a href="#algo-sgd" class="quarto-xref">Algorithm 2</a> satisfies <span class="math display">
+\frac{1}{T}\sum_{t=0}^{T-1} \mathbb{E}[F(\boldsymbol{\theta}_t)] - F(\boldsymbol{\theta}_\star) \leq \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2}
+</span> where <span class="math inline">\boldsymbol{\theta}_\star</span> denotes any minimiser of <span class="math inline">F</span>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-beyond-sgd" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="sec-beyond-sgd"><span class="header-section-number">3.3</span> Beyond “Vanilla” Stochastic Gradient Descent <span class="advanced" title="Non-Examinable content"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span></h2>
+</section>
+<section id="sec-autodiff" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="sec-autodiff"><span class="header-section-number">3.4</span> Automatic Differentiation <span class="advanced" title="MAS8607 content"><i class="fa-solid fa-star" aria-label="star"></i></span></h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-bach2024learning" class="csl-entry" role="listitem">
+Bach, Francis. 2024. <em>Learning Theory from First Principles</em>. MIT Press.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>The quantity <span class="math inline">\lambda_{\min}(\mathbf{M}) / \lambda_{\max}(\mathbf{M})</span> is called the <em>reciprocal condition number</em> of the matrix <span class="math inline">\mathbf{M}</span>; this is always between <span class="math inline">0</span> and <span class="math inline">1</span>, and is closer to <span class="math inline">0</span> when <span class="math inline">\mathbf{M}</span> has an “effective low rank”.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The random subset is refreshed at each step of the gradient descent, so eventually and with high probability all of the data are used, just not all at the same time.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
@@ -626,9 +1087,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', onKey);
 })();
 </script>
-
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   // 1) Find the brand container and the existing logo <img>
@@ -679,8 +1137,860 @@ document.addEventListener('DOMContentLoaded', function () {
   // 3) Swap: remove the old <a><img/></a>, insert the new <a><svg/></a>
   const oldAnchor = img.closest('a.navbar-brand-logo') || img;
   brandContainer.replaceChild(a, oldAnchor);
+
+  // ============================
+  // 4) Add Settings Dropdown
+  // ============================
+  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
+  if (!tools) return;
+// Create settings container
+  const settingsContainer = document.createElement('div');
+  settingsContainer.className = 'settings-dropdown';
+  settingsContainer.innerHTML = `
+    <button class="btn-settings" type="button" aria-label="Display settings" title="Display settings">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
+    <div class="settings-menu">
+      <p class="settings-section-label">Display Mode</p>
+      <button class="settings-item" id="lecture-zoom-toggle" type="button">
+        <span class="settings-icon">
+          <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+          <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 14 10 14 10 20"></polyline>
+            <polyline points="20 10 14 10 14 4"></polyline>
+            <line x1="14" y1="10" x2="21" y2="3"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+        </span>
+        <span class="settings-label">Lecture Zoom</span>
+        <span class="settings-status"></span>
+      </button>
+      <button class="settings-item" id="reading-mode-toggle" type="button">
+        <span class="settings-icon">
+          <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </span>
+        <span class="settings-label">Reading Mode</span>
+        <span class="settings-status"></span>
+      </button>
+      
+      <div class="settings-divider"></div>
+      <p class="settings-section-label">Custom Colors</p>
+      
+      <div class="settings-color-row">
+        <label for="settings-bg-color">Background</label>
+        <input type="color" id="settings-bg-color" class="settings-color-input">
+      </div>
+
+      <div class="settings-color-row">
+        <label for="settings-text-color">Text</label>
+        <input type="color" id="settings-text-color" class="settings-color-input">
+      </div>
+
+      <div class="settings-color-row">
+        <label for="settings-accent-color">Accent</label>
+        <input type="color" id="settings-accent-color" class="settings-color-input">
+      </div>    
+        
+      <button class="settings-reset-btn" id="reset-colors" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+        Reset Colors
+      </button>
+    </div>
+  `;
+
+  // Insert after color toggle
+  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
+  if (colorToggle && colorToggle.parentNode) {
+    colorToggle.parentNode.insertBefore(settingsContainer, colorToggle.nextSibling);
+  } else {
+    tools.appendChild(settingsContainer);
+  }
+
+  // Elements
+  const settingsBtn = settingsContainer.querySelector('.btn-settings');
+  const lectureZoomToggle = settingsContainer.querySelector('#lecture-zoom-toggle');
+  const readingModeToggle = settingsContainer.querySelector('#reading-mode-toggle');
+  const bgColorInput = settingsContainer.querySelector('#settings-bg-color');
+  const textColorInput = settingsContainer.querySelector('#settings-text-color');
+  const accentColorInput = settingsContainer.querySelector('#settings-accent-color');
+  const resetColorsBtn = settingsContainer.querySelector('#reset-colors');
+
+  // Default color values
+  const defaultBgColor = '#fafaf8';
+  const defaultTextColor = '#1a1a1a';
+  const defaultAccentColor = '#0d6efd';
+
+  // ============================
+  // Helper Functions (define first)
+  // ============================
+  
+  // Helper function to darken a hex color
+  const darkenColor = (hex, amount) => {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    r = Math.max(0, Math.floor(r * (1 - amount)));
+    g = Math.max(0, Math.floor(g * (1 - amount)));
+    b = Math.max(0, Math.floor(b * (1 - amount)));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  // Helper function to lighten a hex color
+  const lightenColor = (hex, amount) => {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    r = Math.min(255, Math.floor(r + (255 - r) * amount));
+    g = Math.min(255, Math.floor(g + (255 - g) * amount));
+    b = Math.min(255, Math.floor(b + (255 - b) * amount));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  // Reading progress indicator
+  const updateReadingProgress = () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  };
+
+  // Update visual states for display modes
+  const updateActiveStates = () => {
+    const isLectureZoom = document.body.classList.contains('lecture-zoom');
+    const isReadingMode = document.body.classList.contains('reading-mode');
+    lectureZoomToggle.classList.toggle('active', isLectureZoom);
+    readingModeToggle.classList.toggle('active', isReadingMode);
+  };
+
+  // Apply custom colors
+  const applyCustomColors = () => {
+    document.body.classList.add('custom-colors');
+    
+    const bgColor = bgColorInput.value;
+    const textColor = textColorInput.value;
+    const accentColor = accentColorInput.value;
+    
+    document.documentElement.style.setProperty('--custom-bg-color', bgColor);
+    document.documentElement.style.setProperty('--custom-text-color', textColor);
+    document.documentElement.style.setProperty('--custom-accent-color', accentColor);
+    
+    // Compute darker scrollbar thumb color (30% darker)
+    const darkerThumb = darkenColor(bgColor, 0.3);
+    document.documentElement.style.setProperty('--scroll-track', bgColor);
+    document.documentElement.style.setProperty('--scroll-thumb', darkerThumb);
+    
+    // Compute lighter variants for callouts and tabs
+    const lighterBg = lightenColor(bgColor, 0.3);
+    const lighterBgSubtle = lightenColor(bgColor, 0.15);
+    document.documentElement.style.setProperty('--custom-bg-lighter', lighterBg);
+    document.documentElement.style.setProperty('--custom-bg-lighter-subtle', lighterBgSubtle);
+    
+    // Save to localStorage
+    localStorage.setItem('mas2901-custom-bg', bgColor);
+    localStorage.setItem('mas2901-custom-text', textColor);
+    localStorage.setItem('mas2901-custom-accent', accentColor);
+  };
+
+  // Reset colors to defaults
+  const resetColors = () => {
+    document.body.classList.remove('custom-colors');
+    document.documentElement.style.removeProperty('--custom-bg-color');
+    document.documentElement.style.removeProperty('--custom-text-color');
+    document.documentElement.style.removeProperty('--custom-accent-color');
+    document.documentElement.style.removeProperty('--scroll-track');
+    document.documentElement.style.removeProperty('--scroll-thumb');
+    document.documentElement.style.removeProperty('--custom-bg-lighter');
+    document.documentElement.style.removeProperty('--custom-bg-lighter-subtle');
+    
+    // Reset inputs to defaults
+    bgColorInput.value = defaultBgColor;
+    textColorInput.value = defaultTextColor;
+    accentColorInput.value = defaultAccentColor;
+    
+    // Clear localStorage
+    localStorage.removeItem('mas2901-custom-bg');
+    localStorage.removeItem('mas2901-custom-text');
+    localStorage.removeItem('mas2901-custom-accent');
+  };
+
+  // ============================
+  // Event Listeners
+  // ============================
+
+  // Toggle dropdown
+  settingsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    settingsContainer.classList.toggle('open');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!settingsContainer.contains(e.target)) {
+      settingsContainer.classList.remove('open');
+    }
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      settingsContainer.classList.remove('open');
+    }
+  });
+
+  // Lecture Zoom toggle
+  lectureZoomToggle.addEventListener('click', () => {
+    // Turn off reading mode if active
+    if (document.body.classList.contains('reading-mode')) {
+      document.body.classList.remove('reading-mode');
+      document.documentElement.classList.remove('reading-mode');
+      window.removeEventListener('scroll', updateReadingProgress);
+      document.body.style.removeProperty('--scroll-progress');
+    }
+
+    document.body.classList.toggle('lecture-zoom');
+    document.documentElement.classList.toggle('lecture-zoom');
+    updateActiveStates();
+  });
+
+  // Reading Mode toggle
+  readingModeToggle.addEventListener('click', () => {
+    // Turn off lecture zoom if active
+    if (document.body.classList.contains('lecture-zoom')) {
+      document.body.classList.remove('lecture-zoom');
+      document.documentElement.classList.remove('lecture-zoom');
+    }
+
+    document.body.classList.toggle('reading-mode');
+    document.documentElement.classList.toggle('reading-mode');
+
+    // Update progress indicator on scroll
+    if (document.body.classList.contains('reading-mode')) {
+      updateReadingProgress();
+      window.addEventListener('scroll', updateReadingProgress);
+    } else {
+      window.removeEventListener('scroll', updateReadingProgress);
+      document.body.style.removeProperty('--scroll-progress');
+    }
+    
+    updateActiveStates();
+  });
+
+  // Color input listeners
+  bgColorInput.addEventListener('input', applyCustomColors);
+  textColorInput.addEventListener('input', applyCustomColors);
+  accentColorInput.addEventListener('input', applyCustomColors);
+
+  // Reset colors button
+  resetColorsBtn.addEventListener('click', resetColors);
+
+  // ============================
+  // Initialize
+  // ============================
+
+  // Load saved colors or use defaults
+  const savedBg = localStorage.getItem('mas2901-custom-bg');
+  const savedText = localStorage.getItem('mas2901-custom-text');
+  const savedAccent = localStorage.getItem('mas2901-custom-accent');
+
+  // Set input values (saved or default)
+  bgColorInput.value = savedBg || defaultBgColor;
+  textColorInput.value = savedText || defaultTextColor;
+  accentColorInput.value = savedAccent || defaultAccentColor;
+
+  // Apply custom colors if any were saved
+  if (savedBg || savedText || savedAccent) {
+    applyCustomColors();
+  }
+
+  // Initial display mode state
+  updateActiveStates();
 });
 </script>
+
+<style>
+/* ============================
+   Settings Dropdown
+   ============================ */
+.settings-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.btn-settings {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.375rem;
+  margin: 0 0.25rem;
+  border-radius: 0.25rem;
+  color: var(--bs-navbar-color, #333);
+  transition: opacity 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-settings:hover {
+  opacity: 0.7;
+}
+
+.btn-settings svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+/* Rotate cog when open */
+.settings-dropdown.open .btn-settings svg {
+  transform: rotate(45deg);
+}
+
+/* Dropdown menu */
+.settings-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: var(--surface-weak, white);
+  border: 1px solid var(--border, #ddd);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  padding: 0.5rem 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  z-index: 4000;
+}
+
+.settings-dropdown.open .settings-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Section divider */
+.settings-divider {
+  height: 1px;
+  background: var(--border, #ddd);
+  margin: 0.5rem 0;
+}
+
+.settings-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-fg, #666);
+  opacity: 0.6;
+  padding: 0.5rem 1rem 0.25rem;
+  margin: 0;
+}
+
+/* Menu items */
+.settings-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: var(--brand-fg, #333);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  gap: 0.75rem;
+}
+
+.settings-item:hover {
+  background: var(--brand-teal-hover, #f8f9fa);
+  color: var(--brand-bg, #0d6efd);
+}
+
+.settings-item.active {
+  background: var(--brand-teal, #e7f1ff);
+  color: var(--brand-fg, #0d6efd);
+}
+
+.settings-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.settings-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* Icon state switching */
+.settings-icon .icon-exit { display: none; }
+.settings-item.active .settings-icon .icon-enter { display: none; }
+.settings-item.active .settings-icon .icon-exit { display: block; }
+
+.settings-label {
+  flex-grow: 1;
+}
+
+.settings-status {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.settings-item.active .settings-status::after {
+  content: '✓';
+  font-size: 0.9rem;
+  opacity: 1;
+}
+
+/* ============================
+   Color Picker Row
+   ============================ */
+.settings-color-row {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  gap: 0.75rem;
+}
+
+.settings-color-row label {
+  font-size: 0.85rem;
+  color: var(--brand-fg, #333);
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+/* Circular color swatch input */
+.settings-color-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  padding: 0;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.settings-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.settings-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.settings-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.settings-color-input:hover {
+  border-color: var(--brand-teal, #0d6efd);
+}
+
+.settings-color-input:focus {
+  outline: none;
+  border-color: var(--brand-teal, #0d6efd);
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+/* Reset button */
+.settings-reset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 2rem);
+  margin: 0.25rem 1rem 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--brand-fg, #666);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  gap: 0.5rem;
+}
+
+.settings-reset-btn:hover {
+  background: var(--brand-teal-hover, #f8f9fa);
+  border-color: var(--brand-teal, #0d6efd);
+  color: var(--brand-teal, #0d6efd);
+}
+
+.settings-reset-btn svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* Dark mode support */
+.quarto-dark .btn-settings {
+  color: var(--bs-navbar-dark-color, #fff);
+}
+
+.quarto-dark .settings-menu {
+  background: var(--bs-body-bg, #212529);
+  border-color: var(--bs-border-color, #495057);
+}
+
+.quarto-dark .settings-item:hover {
+  background: var(--bs-tertiary-bg, #2b3035);
+}
+
+.quarto-dark .settings-item.active {
+  background: rgba(13, 110, 253, 0.2);
+}
+
+.quarto-dark .settings-color-input {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.quarto-dark .settings-color-row label {
+  color: var(--bs-body-color, #e9ecef);
+}
+
+.quarto-dark .settings-reset-btn {
+  border-color: var(--bs-border-color, #495057);
+  color: var(--bs-body-color, #adb5bd);
+}
+
+.quarto-dark .settings-reset-btn:hover {
+  background: var(--bs-tertiary-bg, #2b3035);
+}
+
+/* ============================
+   Custom Colors Applied
+   ============================ */
+
+/* ============================
+   Custom Colors - Accent Color Elements
+   ============================ */
+body.custom-colors blockquote,
+body.custom-colors .blockquote {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .panel-caption,
+body.custom-colors .figure-caption,
+body.custom-colors .subfigure-caption,
+body.custom-colors .table-caption,
+body.custom-colors figcaption,
+body.custom-colors caption {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .header-section-number {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors details > summary {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors details > summary:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+  
+  /* Scrollbar - thumb is 20% darker than background */
+  scrollbar-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+body.custom-colors *::-webkit-scrollbar-track {
+  background: var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--custom-bg-color) 80%, black);
+  border-radius: 6px;
+  border: 2px solid var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--custom-bg-color) 65%, black);
+}
+
+body.custom-colors main,
+body.custom-colors .content,
+body.custom-colors article,
+body.custom-colors div.sidebar.sidebar-navigation.rollup.quarto-sidebar-toggle-contents,
+body.custom-colors nav.sidebar.sidebar-navigation:not(.rollup) {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Navbar */
+body.custom-colors #quarto-header,
+body.custom-colors #quarto-header nav.navbar,
+body.custom-colors .navbar {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+  border-bottom-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors #quarto-header .navbar-title,
+body.custom-colors #quarto-header .navbar-brand {
+  color: var(--custom-text-color) !important;
+}
+
+/* Navbar icons */
+body.custom-colors #quarto-header .quarto-navbar-tools button,
+body.custom-colors #quarto-header .quarto-navbar-tools a,
+body.custom-colors #quarto-header .quarto-color-scheme-toggle,
+body.custom-colors #quarto-header .btn-settings,
+body.custom-colors #quarto-header .navbar-toggler {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors #quarto-header .quarto-navbar-tools button:hover,
+body.custom-colors #quarto-header .quarto-navbar-tools a:hover,
+body.custom-colors #quarto-header .quarto-color-scheme-toggle:hover,
+body.custom-colors #quarto-header .btn-settings:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors #quarto-header .navbar-logo {
+  color: var(--custom-text-color) !important;
+}
+
+/* Secondary navbar */
+body.custom-colors .quarto-secondary-nav {
+  background-color: var(--custom-bg-color) !important;
+  border-bottom-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors .quarto-secondary-nav .quarto-secondary-nav-title {
+  color: var(--custom-text-color) !important;
+}
+
+/* Autocomplete / Search */
+body.custom-colors .aa-Autocomplete .aa-Form,
+body.custom-colors .aa-DetachedFormContainer .aa-Form {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .aa-Autocomplete .aa-Input,
+body.custom-colors .aa-DetachedFormContainer .aa-Input {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .aa-Autocomplete .aa-Input::placeholder,
+body.custom-colors .aa-DetachedFormContainer .aa-Input::placeholder {
+  color: color-mix(in srgb, var(--custom-text-color) 50%, transparent) !important;
+}
+
+body.custom-colors .aa-Panel,
+body.custom-colors .aa-PanelLayout {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .aa-Item {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .aa-Item[aria-selected="true"],
+body.custom-colors .aa-Item:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+}
+
+body.custom-colors .aa-Item mark {
+  color: var(--custom-accent-color) !important;
+  background: transparent !important;
+}
+
+/* Headings */
+body.custom-colors h1,
+body.custom-colors h2,
+body.custom-colors h3,
+body.custom-colors h4,
+body.custom-colors h5,
+body.custom-colors h6 {
+  color: var(--custom-text-color) !important;
+}
+
+/* Links */
+body.custom-colors a {
+  color: var(--custom-accent-color) !important;
+}
+
+/* Callouts */
+body.custom-colors .callout {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+  border-left-color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .callout-title {
+  color: var(--custom-text-color) !important;
+}
+
+/* Code blocks */
+body.custom-colors pre,
+body.custom-colors code {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 92%, black) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Tables */
+body.custom-colors table {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors th {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors td {
+  border-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors tr:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+}
+
+/* Selection */
+body.custom-colors ::selection {
+  background-color: var(--custom-accent-color);
+  color: white;
+}
+
+/* Sidebar link colors */
+body.custom-colors .sidebar-navigation .sidebar-item a,
+body.custom-colors .sidebar-navigation .sidebar-section a {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .sidebar-navigation .sidebar-item a:hover,
+body.custom-colors .sidebar-navigation .sidebar-section a:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .sidebar-navigation .sidebar-item.active a {
+  color: var(--custom-accent-color) !important;
+}
+
+/* ============================
+   Custom Colors - Callout Headers
+   ============================ */
+body.custom-colors div.callout-note.callout-style-default > .callout-header,
+body.custom-colors div.callout-tip.callout-style-default > .callout-header,
+body.custom-colors div.callout-warning.callout-style-default > .callout-header,
+body.custom-colors div.callout-caution.callout-style-default > .callout-header,
+body.custom-colors div.callout-important.callout-style-default > .callout-header {
+  background-color: var(--custom-bg-lighter) !important;
+}
+
+/* ============================
+   Custom Colors - Nav Tabs
+   ============================ */
+body.custom-colors .nav-tabs .nav-link.active,
+body.custom-colors .nav-tabs .nav-item.show .nav-link {
+  background-color: var(--custom-bg-lighter) !important;
+  color: var(--custom-text-color) !important;
+  border-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .nav-tabs .nav-link {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .nav-tabs .nav-link:hover:not(.active) {
+  background-color: var(--custom-bg-lighter-subtle) !important;
+  border-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .nav-tabs {
+  border-bottom-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .tab-content {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Settings dropdown when custom colors active */
+body.custom-colors .settings-menu {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-item {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-item:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+}
+
+body.custom-colors .settings-item.active {
+  background-color: color-mix(in srgb, var(--custom-accent-color) 20%, var(--custom-bg-color)) !important;
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .settings-section-label {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-color-row label {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-divider {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-reset-btn {
+  color: var(--custom-text-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-reset-btn:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+  color: var(--custom-accent-color) !important;
+  border-color: var(--custom-accent-color) !important;
+}
+
+</style>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Only target IMPORTANT callouts; add more types if needed.
@@ -698,223 +2008,6 @@ document.addEventListener('DOMContentLoaded', () => {
       el.innerHTML = el.innerHTML.replace(re, '');
     }
   });
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
-  if (!tools) return;
-
-  // Create the button
-  const btn = document.createElement('button');
-  btn.id = 'lecture-zoom-header-toggle';
-  btn.className = 'btn-zoom-toggle';
-  btn.type = 'button';
-  btn.setAttribute('aria-pressed', 'false');
-  btn.setAttribute('aria-label', 'Lecture zoom');
-  btn.setAttribute('title', 'Lecture zoom (X)');
-
-  // svg icon
-  btn.innerHTML = `
-    <!-- ENTER: four corners -->
-    <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M3 9V3h6"/>
-        <path d="M21 9V3h-6"/>
-        <path d="M3 15v6h6"/>
-        <path d="M21 15v6h-6"/>
-    </svg>
-
-    <!-- EXIT: corners-in (contract) -->
-    <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M9 3v6H3"/>
-        <path d="M15 3v6h6"/>
-        <path d="M3 15h6v6"/>
-        <path d="M21 15h-6v6"/>
-    </svg>
-  `;
-
-  // Place it next to the colour-scheme toggle (after it, if present)
-  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
-  if (colorToggle && colorToggle.parentNode) {
-    colorToggle.parentNode.insertBefore(btn, colorToggle.nextSibling);
-  } else {
-    tools.appendChild(btn);
-  }
-
-  // Toggle logic
-  const KEY = 'lecture-zoom-enabled';
-  
-  // Helper: are we in lecture zoom?
-  const isLectureZoom = () =>
-    document.body.classList.contains('lecture-zoom') ||
-    document.documentElement.classList.contains('lecture-zoom');
-
-  // Define closeLectureSearch early (forward declaration)
-  let closeLectureSearch;
-
-  const apply = (on) => {
-    document.body.classList.toggle('lecture-zoom', on);
-    document.documentElement.classList.toggle('lecture-zoom', on);
-    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    
-    // Close search overlay when exiting lecture zoom
-    if (!on && closeLectureSearch) {
-      closeLectureSearch();
-    }
-    
-    // Nudge charts/layouts to recompute
-    window.dispatchEvent(new Event('resize'));
-    sessionStorage.setItem(KEY, on ? '1' : '0');
-  };
-
-  // Restore per-tab state
-  apply(sessionStorage.getItem(KEY) === '1');
-
-  // Click handler
-  btn.addEventListener('click', () => apply(!isLectureZoom()));
-  
-  // Keyboard shortcut (Z)
-  document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'x' && !/input|textarea|select/i.test(e.target.tagName)) {
-      apply(!isLectureZoom());
-    }
-  });
-
-  let acAnchor = null;          // where the autocomplete root came from
-  let panelObserver = null;     // to catch newly created panels
-
-  function ensureLectureOverlay() {
-    let overlay = document.getElementById('lecture-search-overlay');
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = 'lecture-search-overlay';
-      overlay.innerHTML = '<div class="lecture-search-modal"></div>';
-      document.body.appendChild(overlay);
-
-      // Close on backdrop click
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay && closeLectureSearch) closeLectureSearch();
-      });
-
-      // Close on Esc
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && closeLectureSearch) closeLectureSearch();
-      });
-    }
-    return overlay;
-  }
-
-  function findAutocomplete() {
-    const root =
-      document.querySelector('.aa-Autocomplete') ||
-      document.querySelector('.quarto-search .aa-Autocomplete') ||
-      document.querySelector('.quarto-search-panel .aa-Autocomplete');
-
-    const input = root?.querySelector('input.aa-Input');
-    return { root, input };
-  }
-
-  // Move the results panel (if any) into the modal and normalize its positioning
-  function reparentPanel(modal) {
-    const panel = document.querySelector('.aa-Panel');
-    if (!panel || modal.contains(panel)) return;
-    modal.appendChild(panel);
-    // Let CSS control layout/width; clear inline positioning from Algolia
-    panel.style.left = '';
-    panel.style.top = '';
-    panel.style.width = '';
-  }
-
-  function startPanelObserver(modal) {
-    if (panelObserver) return;
-    panelObserver = new MutationObserver(() => reparentPanel(modal));
-    // Listen on body, since Algolia often inserts the panel there
-    panelObserver.observe(document.body, { childList: true, subtree: true });
-  }
-
-  function stopPanelObserver() {
-    panelObserver?.disconnect();
-    panelObserver = null;
-  }
-
-  function openLectureSearch() {
-    if (!isLectureZoom()) return false;
-
-    const { root, input } = findAutocomplete();
-    if (!root || !input) return false;
-
-    const overlay = ensureLectureOverlay();
-    const modal = overlay.querySelector('.lecture-search-modal');
-
-    // Anchor the current position of the autocomplete root (only once)
-    if (!acAnchor) {
-      acAnchor = document.createComment('autocomplete-anchor');
-      root.parentNode.insertBefore(acAnchor, root);
-    }
-
-    // Move the autocomplete *root* into the modal
-    modal.appendChild(root);
-
-    // Ensure any results panel gets moved into the modal too
-    reparentPanel(modal);
-    startPanelObserver(modal);
-
-    overlay.classList.add('open');
-    document.documentElement.classList.add('search-open');
-
-    // Focus the input after layout
-    requestAnimationFrame(() => {
-      input.focus();
-      input.select?.();
-      // In case Algolia computes sizes on resize, give it a nudge
-      window.dispatchEvent(new Event('resize'));
-    });
-
-    return true;
-  }
-
-  // Now properly define closeLectureSearch
-  closeLectureSearch = function() {
-    const overlay = document.getElementById('lecture-search-overlay');
-    if (!overlay || !overlay.classList.contains('open')) return;
-
-    stopPanelObserver();
-
-    const { root } = findAutocomplete();
-
-    // Move panel (if currently inside modal) back to body to let Algolia clean up normally
-    const modal = overlay.querySelector('.lecture-search-modal');
-    const panel = modal?.querySelector('.aa-Panel');
-    if (panel) document.body.appendChild(panel);
-
-    // Put the autocomplete root back where it came from
-    if (root && acAnchor && acAnchor.parentNode) {
-      acAnchor.parentNode.insertBefore(root, acAnchor.nextSibling);
-    }
-
-    overlay.classList.remove('open');
-    document.documentElement.classList.remove('search-open');
-  };
-
-  // Existing hotkeys:
-  document.addEventListener('keydown', (e) => {
-    const tag = e.target.tagName.toLowerCase();
-    const typing = tag === 'input' || tag === 'textarea' || tag === 'select' || e.isComposing;
-    if (typing) return;
-
-    if (e.key === 'F' && e.shiftKey) {
-      if (openLectureSearch()) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }
-    if (e.key === 'Escape') {
-      closeLectureSearch();
-    }
-  });
-
 });
 </script>
 <script>
@@ -3023,6 +4116,189 @@ onButton('inkpad-save', () => {
 })();
 </script>
 <script>
+  
+document.addEventListener('DOMContentLoaded', function() {
+  const loadTippy = new Promise((resolve) => {
+    if (typeof tippy !== 'undefined') {
+      resolve();
+      return;
+    }
+    
+    const popper = document.createElement('script');
+    popper.src = 'https://unpkg.com/@popperjs/core@2';
+    popper.onload = () => {
+      const tippyScript = document.createElement('script');
+      tippyScript.src = 'https://unpkg.com/tippy.js@6';
+      tippyScript.onload = resolve;
+      document.head.appendChild(tippyScript);
+    };
+    document.head.appendChild(popper);
+  });
+  
+  loadTippy.then(initCalloutPreviews);
+});
+
+const contentCache = new Map();
+const mathRendered = new WeakSet(); // Track elements where math has been rendered
+
+// Render math in an element using KaTeX (only once)
+function renderMath(element) {
+  if (!element || mathRendered.has(element)) {
+    return; // Already rendered, skip
+  }
+  
+  if (typeof renderMathInElement !== 'undefined') {
+    renderMathInElement(element, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError: false
+    });
+  } else if (typeof katex !== 'undefined') {
+    element.querySelectorAll('.math').forEach(mathEl => {
+      if (mathRendered.has(mathEl)) return;
+      
+      const isDisplay = mathEl.classList.contains('display');
+      const tex = mathEl.textContent || mathEl.innerText;
+      try {
+        katex.render(tex, mathEl, {
+          displayMode: isDisplay,
+          throwOnError: false
+        });
+        mathRendered.add(mathEl);
+      } catch (e) {
+        console.warn('KaTeX render error:', e);
+      }
+    });
+  }
+  
+  // Hide MathML (screen reader version) to avoid duplication
+  element.querySelectorAll('.katex-mathml').forEach(el => {
+    el.style.display = 'none';
+  });
+  
+  // Mark this element as processed
+  mathRendered.add(element);
+}
+
+async function fetchCalloutContent(href) {
+  if (contentCache.has(href)) {
+    return contentCache.get(href);
+  }
+  
+  try {
+    const [file, anchor] = href.split('#');
+    const url = file || window.location.pathname;
+    
+    if (!file || file === '' || url === window.location.pathname) {
+      const element = document.getElementById(anchor);
+      if (element) {
+        const callout = element.closest('.callout');
+        const clone = callout ? callout.cloneNode(true) : element.parentElement.cloneNode(true);
+        clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+        
+        const content = clone.innerHTML;
+        contentCache.set(href, { html: content, needsMathRender: false });
+        return contentCache.get(href);
+      }
+    }
+    
+    const response = await fetch(url);
+    const html = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    const element = doc.getElementById(anchor);
+    if (element) {
+      const callout = element.closest('.callout');
+      const content = callout?.innerHTML || element.parentElement?.innerHTML || '';
+      contentCache.set(href, { html: content, needsMathRender: true });
+      return contentCache.get(href);
+    }
+  } catch (e) {
+    console.warn('Failed to fetch callout content:', e);
+  }
+  
+  return null;
+}
+
+function initCalloutPreviews() {
+  const calloutRefs = document.querySelectorAll('.callout-ref');
+  
+  calloutRefs.forEach(ref => {
+    const label = ref.dataset.calloutLabel;
+    const number = ref.dataset.calloutNumber;
+    const title = ref.dataset.calloutTitle;
+    const preview = ref.dataset.calloutPreview;
+    const targetHref = ref.getAttribute('href');
+    
+    const isRecap = label === 'Recap';
+    const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+    const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+    
+    const initialContent = `
+      <div class="callout-preview-content">
+        <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+          <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+        </div>
+        <div class="callout-preview-body">
+          ${preview ? preview + '...' : '<em>Loading...</em>'}
+        </div>
+      </div>
+    `;
+    
+    let contentLoaded = false;
+    
+    const instance = tippy(ref, {
+      content: initialContent,
+      allowHTML: true,
+      interactive: true,
+      placement: 'top',
+      theme: 'callout',
+      maxWidth: 450,
+      delay: [400, 100],
+      appendTo: document.body,
+      async onShow(instance) {
+        // Only fetch content once
+        if (contentLoaded) return;
+        
+        const result = await fetchCalloutContent(targetHref);
+        if (result && instance.state.isVisible) {
+          const isRecap = label === 'Recap';
+          const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+          const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+          
+          instance.setContent(`
+            <div class="callout-preview-content">
+              <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+                <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+              </div>
+              <div class="callout-preview-body callout-preview-fetched">
+                ${result.html}
+              </div>
+            </div>
+          `);
+          
+          contentLoaded = true;
+        }
+      },
+      onShown(instance) {
+        // Render math only once after content is shown
+        const contentEl = instance.popper.querySelector('.callout-preview-body');
+        if (contentEl) {
+          renderMath(contentEl);
+        }
+      }
+    });
+  });
+}
+
+
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
   const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
   if (!tools) return;
@@ -3109,6 +4385,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 </style>
+<script>
+
+if (document.body.classList.contains('reading-mode')) {
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  });
+}
+
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Ilxue1xuICBjb25zdCB3aWR0aCA9IDUwMDtcbiAgY29uc3QgaGVpZ2h0ID0gMzIwO1xuICBjb25zdCBtYXJnaW4gPSB7IHRvcDogMjAsIHJpZ2h0OiAzMCwgYm90dG9tOiA1MCwgbGVmdDogNTAgfTtcbiAgXG4gIGNvbnN0IHN2ZyA9IGQzLmNyZWF0ZShcInN2Z1wiKVxuICAgIC5hdHRyKFwidmlld0JveFwiLCBbMCwgMCwgd2lkdGgsIGhlaWdodF0pXG4gICAgLmF0dHIoXCJ3aWR0aFwiLCB3aWR0aClcbiAgICAuYXR0cihcImhlaWdodFwiLCBoZWlnaHQpO1xuICBcbiAgLy8gU2NhbGVzXG4gIGNvbnN0IHhNaW4gPSAtMS4wLCB4TWF4ID0gNC4wO1xuICBjb25zdCB5TWluID0gMCwgeU1heCA9IDMuNjtcbiAgXG4gIGNvbnN0IHhTY2FsZSA9IGQzLnNjYWxlTGluZWFyKClcbiAgICAuZG9tYWluKFt4TWluLCB4TWF4XSlcbiAgICAucmFuZ2UoW21hcmdpbi5sZWZ0LCB3aWR0aCAtIG1hcmdpbi5yaWdodF0pO1xuICBcbiAgY29uc3QgeVNjYWxlID0gZDMuc2NhbGVMaW5lYXIoKVxuICAgIC5kb21haW4oW3lNaW4sIHlNYXhdKVxuICAgIC5yYW5nZShbaGVpZ2h0IC0gbWFyZ2luLmJvdHRvbSwgbWFyZ2luLnRvcF0pO1xuICBcbiAgLy8gRnVuY3Rpb24gRih4KSA9IDEgKyAwLjI1Kih4LTEuMileMiArIDAuOCpleHAoLTAuOCooeCswLjIpKVxuICBmdW5jdGlvbiBGKHgpIHtcbiAgICByZXR1cm4gMSArIDAuMjUgKiBNYXRoLnBvdyh4IC0gMS4yLCAyKSArIDAuOCAqIE1hdGguZXhwKC0wLjggKiAoeCArIDAuMikpO1xuICB9XG4gIFxuICAvLyBEZXJpdmF0aXZlIEYnKHgpID0gMC41Kih4LTEuMikgLSAwLjY0KmV4cCgtMC44Kih4KzAuMikpXG4gIGZ1bmN0aW9uIEZwcmltZSh4KSB7XG4gICAgcmV0dXJuIDAuNSAqICh4IC0gMS4yKSAtIDAuNjQgKiBNYXRoLmV4cCgtMC44ICogKHggKyAwLjIpKTtcbiAgfVxuICBcbiAgLy8gUG9pbnQgb2YgdGFuZ2VuY3lcbiAgY29uc3QgdGhldGEgPSAwLjY7XG4gIGNvbnN0IEZ0aGV0YSA9IEYodGhldGEpO1xuICBjb25zdCBzbG9wZSA9IEZwcmltZSh0aGV0YSk7XG4gIFxuICAvLyBUYW5nZW50IGxpbmU6IHkgPSBGKHRoZXRhKSArIEYnKHRoZXRhKSooeCAtIHRoZXRhKVxuICBmdW5jdGlvbiB0YW5nZW50KHgpIHtcbiAgICByZXR1cm4gRnRoZXRhICsgc2xvcGUgKiAoeCAtIHRoZXRhKTtcbiAgfVxuICBcbiAgLy8gRHJhdyBheGVzXG4gIC8vIHgtYXhpc1xuICBzdmcuYXBwZW5kKFwibGluZVwiKVxuICAgIC5hdHRyKFwieDFcIiwgeFNjYWxlKHhNaW4pKS5hdHRyKFwieTFcIiwgeVNjYWxlKDApKVxuICAgIC5hdHRyKFwieDJcIiwgeFNjYWxlKHhNYXgpICsgMTApLmF0dHIoXCJ5MlwiLCB5U2NhbGUoMCkpXG4gICAgLmF0dHIoXCJzdHJva2VcIiwgXCJibGFja1wiKS5hdHRyKFwic3Ryb2tlLXdpZHRoXCIsIDEuNSlcbiAgICAuYXR0cihcIm1hcmtlci1lbmRcIiwgXCJ1cmwoI2Fycm93aGVhZClcIik7XG4gIFxuICAvLyB5LWF4aXNcbiAgc3ZnLmFwcGVuZChcImxpbmVcIilcbiAgICAuYXR0cihcIngxXCIsIHhTY2FsZSh4TWluKSkuYXR0cihcInkxXCIsIHlTY2FsZSgwKSlcbiAgICAuYXR0cihcIngyXCIsIHhTY2FsZSh4TWluKSkuYXR0cihcInkyXCIsIHlTY2FsZSh5TWF4KSAtIDEwKVxuICAgIC5hdHRyKFwic3Ryb2tlXCIsIFwiYmxhY2tcIikuYXR0cihcInN0cm9rZS13aWR0aFwiLCAxLjUpXG4gICAgLmF0dHIoXCJtYXJrZXItZW5kXCIsIFwidXJsKCNhcnJvd2hlYWQpXCIpO1xuICBcbiAgLy8gQXJyb3doZWFkIG1hcmtlclxuICBzdmcuYXBwZW5kKFwiZGVmc1wiKS5hcHBlbmQoXCJtYXJrZXJcIilcbiAgICAuYXR0cihcImlkXCIsIFwiYXJyb3doZWFkXCIpXG4gICAgLmF0dHIoXCJ2aWV3Qm94XCIsIFwiMCAtNSAxMCAxMFwiKVxuICAgIC5hdHRyKFwicmVmWFwiLCA4KS5hdHRyKFwicmVmWVwiLCAwKVxuICAgIC5hdHRyKFwibWFya2VyV2lkdGhcIiwgNikuYXR0cihcIm1hcmtlckhlaWdodFwiLCA2KVxuICAgIC5hdHRyKFwib3JpZW50XCIsIFwiYXV0b1wiKVxuICAgIC5hcHBlbmQoXCJwYXRoXCIpXG4gICAgLmF0dHIoXCJkXCIsIFwiTTAsLTVMMTAsMEwwLDVcIilcbiAgICAuYXR0cihcImZpbGxcIiwgXCJibGFja1wiKTtcbiAgXG4gIC8vIEF4aXMgbGFiZWxcbiAgc3ZnLmFwcGVuZChcInRleHRcIilcbiAgICAuYXR0cihcInhcIiwgeFNjYWxlKHhNYXgpICsgMTUpLmF0dHIoXCJ5XCIsIHlTY2FsZSgwKSArIDUpXG4gICAgLmF0dHIoXCJmb250LXNpemVcIiwgMTQpLmF0dHIoXCJmb250LXN0eWxlXCIsIFwiaXRhbGljXCIpXG4gICAgLnRleHQoXCLPkVwiKTtcbiAgXG4gIC8vIFBsb3QgRih4KVxuICBjb25zdCBsaW5lID0gZDMubGluZSgpXG4gICAgLngoZCA9PiB4U2NhbGUoZCkpXG4gICAgLnkoZCA9PiB5U2NhbGUoRihkKSkpO1xuICBcbiAgY29uc3QgeFZhbHVlcyA9IGQzLnJhbmdlKHhNaW4sIHhNYXgsIDAuMDIpO1xuICBcbiAgc3ZnLmFwcGVuZChcInBhdGhcIilcbiAgICAuZGF0dW0oeFZhbHVlcylcbiAgICAuYXR0cihcImZpbGxcIiwgXCJub25lXCIpXG4gICAgLmF0dHIoXCJzdHJva2VcIiwgXCJibGFja1wiKVxuICAgIC5hdHRyKFwic3Ryb2tlLXdpZHRoXCIsIDIpXG4gICAgLmF0dHIoXCJkXCIsIGxpbmUpO1xuICBcbiAgLy8gTGFiZWwgZm9yIEYoz5EpXG4gIHN2Zy5hcHBlbmQoXCJ0ZXh0XCIpXG4gICAgLmF0dHIoXCJ4XCIsIHhTY2FsZSgyLjEpKS5hdHRyKFwieVwiLCB5U2NhbGUoMi40KSlcbiAgICAuYXR0cihcImZvbnQtc2l6ZVwiLCAxNCkuYXR0cihcImZvbnQtc3R5bGVcIiwgXCJpdGFsaWNcIilcbiAgICAudGV4dChcIkYoz5EpXCIpO1xuICBcbiAgLy8gUGxvdCB0YW5nZW50IGxpbmVcbiAgY29uc3QgdGFuZ2VudExpbmUgPSBkMy5saW5lKClcbiAgICAueChkID0+IHhTY2FsZShkKSlcbiAgICAueShkID0+IHlTY2FsZSh0YW5nZW50KGQpKSk7XG4gIFxuICBjb25zdCB0YW5nZW50WFZhbHVlcyA9IGQzLnJhbmdlKC0wLjUsIDIuNSwgMC4xKTtcbiAgXG4gIHN2Zy5hcHBlbmQoXCJwYXRoXCIpXG4gICAgLmRhdHVtKHRhbmdlbnRYVmFsdWVzKVxuICAgIC5hdHRyKFwiZmlsbFwiLCBcIm5vbmVcIilcbiAgICAuYXR0cihcInN0cm9rZVwiLCBcImJsYWNrXCIpXG4gICAgLmF0dHIoXCJzdHJva2Utd2lkdGhcIiwgMS41KVxuICAgIC5hdHRyKFwiZFwiLCB0YW5nZW50TGluZSk7XG4gIFxuICAvLyBMYWJlbCBmb3IgdGFuZ2VudFxuICBzdmcuYXBwZW5kKFwidGV4dFwiKVxuICAgIC5hdHRyKFwieFwiLCB4U2NhbGUoMi42KSkuYXR0cihcInlcIiwgeVNjYWxlKDAuNSkpXG4gICAgLmF0dHIoXCJmb250LXNpemVcIiwgMTIpLmF0dHIoXCJmb250LXN0eWxlXCIsIFwiaXRhbGljXCIpXG4gICAgLnRleHQoXCJGKM64KSArIOKIh0Yozrgp4bWAKM+RIOKIkiDOuClcIik7XG4gIFxuICAvLyBNYXJrIHRhbmdlbmN5IHBvaW50XG4gIHN2Zy5hcHBlbmQoXCJjaXJjbGVcIilcbiAgICAuYXR0cihcImN4XCIsIHhTY2FsZSh0aGV0YSkpLmF0dHIoXCJjeVwiLCB5U2NhbGUoRnRoZXRhKSlcbiAgICAuYXR0cihcInJcIiwgNClcbiAgICAuYXR0cihcImZpbGxcIiwgXCJibGFja1wiKTtcbiAgXG4gIC8vIERhc2hlZCB2ZXJ0aWNhbCBsaW5lIHRvIGF4aXNcbiAgc3ZnLmFwcGVuZChcImxpbmVcIilcbiAgICAuYXR0cihcIngxXCIsIHhTY2FsZSh0aGV0YSkpLmF0dHIoXCJ5MVwiLCB5U2NhbGUoRnRoZXRhKSlcbiAgICAuYXR0cihcIngyXCIsIHhTY2FsZSh0aGV0YSkpLmF0dHIoXCJ5MlwiLCB5U2NhbGUoMCkpXG4gICAgLmF0dHIoXCJzdHJva2VcIiwgXCJibGFja1wiKVxuICAgIC5hdHRyKFwic3Ryb2tlLXdpZHRoXCIsIDEpXG4gICAgLmF0dHIoXCJzdHJva2UtZGFzaGFycmF5XCIsIFwiNCwzXCIpO1xuICBcbiAgLy8gVGljayBhbmQgbGFiZWwgYXQgdGhldGFcbiAgc3ZnLmFwcGVuZChcImxpbmVcIilcbiAgICAuYXR0cihcIngxXCIsIHhTY2FsZSh0aGV0YSkpLmF0dHIoXCJ5MVwiLCB5U2NhbGUoMCkgLSA0KVxuICAgIC5hdHRyKFwieDJcIiwgeFNjYWxlKHRoZXRhKSkuYXR0cihcInkyXCIsIHlTY2FsZSgwKSArIDQpXG4gICAgLmF0dHIoXCJzdHJva2VcIiwgXCJibGFja1wiKS5hdHRyKFwic3Ryb2tlLXdpZHRoXCIsIDEuNSk7XG4gIFxuICBzdmcuYXBwZW5kKFwidGV4dFwiKVxuICAgIC5hdHRyKFwieFwiLCB4U2NhbGUodGhldGEpKS5hdHRyKFwieVwiLCB5U2NhbGUoMCkgKyAyMClcbiAgICAuYXR0cihcInRleHQtYW5jaG9yXCIsIFwibWlkZGxlXCIpXG4gICAgLmF0dHIoXCJmb250LXNpemVcIiwgMTQpLmF0dHIoXCJmb250LXN0eWxlXCIsIFwiaXRhbGljXCIpXG4gICAgLnRleHQoXCLOuFwiKTtcbiAgXG4gIHJldHVybiBzdmcubm9kZSgpO1xufVxuIn1dfQ==
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../content/main";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "../..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -3535,6 +4834,40 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </nav>
 </div> <!-- /content -->
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+    <script type="text/javascript">
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let pseudocodeOptions = {
+          indentSize: el.dataset.indentSize,
+          commentDelimiter: el.dataset.commentDelimiter,
+          lineNumber: el.dataset.lineNumber.toLowerCase() === "true",
+          lineNumberPunc: el.dataset.lineNumberPunc,
+          noEnd: el.dataset.noEnd.toLowerCase() === "true",
+          titlePrefix: el.dataset.captionPrefix
+        };
+        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
+      });
+    })(document);
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
+      });
+    })(document);
+    </script>
+  
 
 
 

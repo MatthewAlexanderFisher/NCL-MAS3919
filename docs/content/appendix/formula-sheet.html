@@ -31,7 +31,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../content/appendix/revision-sheet.html" rel="next">
-<link href="../../content/practicals/2-ml-models-in-pytorch.html" rel="prev">
+<link href="../../content/practicals/3-training-ml-models-in-pytorch.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -44,9 +44,11 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-eee127bcbcf69f6d1c4f39497eef8043.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-ca592282aabca1dce090d3def4fc59bb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-eee127bcbcf69f6d1c4f39497eef8043.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-f5ee150fb4bd363b356d51bef3bf57f5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-d5e987d2a49f81d99d3c6d2c04d8a2aa.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-f5ee150fb4bd363b356d51bef3bf57f5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
+<link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -182,6 +184,22 @@ ul.task-list li input[type="checkbox"] {
     }
   })();
 </script>
+    <style type="text/css">
+    .ps-root .ps-algorithm {
+      border-top: 2px solid;
+      border-bottom: 2px solid;
+    }
+    .pseudocode-container {
+      text-align: left;
+    }
+    </style>
+  
+      <style type="text/css">
+      .ps-algorithm > .ps-line {
+        text-align: left;
+      }
+      </style>
+    
 
   <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
   <script>document.addEventListener("DOMContentLoaded", function () {
@@ -228,6 +246,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../theming/math-scroll.css">
+<link rel="stylesheet" href="../../theming/practice-details.css">
 <link rel="stylesheet" href="../../theming/callout-style.css">
 <link rel="stylesheet" href="../../theming/floating-code.css">
 <link rel="stylesheet" href="../../theming/font.css">
@@ -240,7 +259,11 @@ window.Quarto = {
 <link rel="stylesheet" href="../../theming/lecture-zoom.css">
 <link rel="stylesheet" href="../../theming/visualisation-controls.css">
 <link rel="stylesheet" href="../../theming/tables.css">
+<link rel="stylesheet" href="../../theming/small-table.css">
+<link rel="stylesheet" href="../../theming/reading-mode.css">
 <link rel="stylesheet" href="../../theming/custom-block.css">
+<link rel="stylesheet" href="../../theming/advanced.css">
+<link rel="stylesheet" href="../../theming/callout-preview.css">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -534,6 +557,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Machine Learning Models in PyTorch</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practicals/3-training-ml-models-in-pytorch.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training Machine Learning Models in Pytorch</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -647,11 +676,11 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="discrete-distributions">Discrete distributions</h2>
 <section id="sec-bern" class="level3">
 <h3 class="anchored" data-anchor-id="sec-bern">Bernoulli</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{Bernoulli}(p)</span> with <span class="math inline">0&lt;p&lt;1</span>.<br>
+<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{Bern}(\rho)</span> with <span class="math inline">0&lt;\rho&lt;1</span>.<br>
 <strong>Support.</strong> <span class="math inline">x \in \{0,1\}</span>.<br>
 <strong>PMF.</strong> <span class="math display">
-\operatorname{Pr}(X=x) = p^{\,x}(1-p)^{1-x}, \quad x\in\{0,1\}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=p,\quad \operatorname{Var}(X)=p(1-p).</span></p>
+p(x) = \rho^{\,x}(1-\rho)^{1-x}, \quad x\in\{0,1\}.
+</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\rho,\quad \operatorname{Var}(X)=\rho(1-\rho).</span></p>
 <hr>
 </section>
 <section id="sec-binom" class="level3">
@@ -934,9 +963,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', onKey);
 })();
 </script>
-
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   // 1) Find the brand container and the existing logo <img>
@@ -987,8 +1013,860 @@ document.addEventListener('DOMContentLoaded', function () {
   // 3) Swap: remove the old <a><img/></a>, insert the new <a><svg/></a>
   const oldAnchor = img.closest('a.navbar-brand-logo') || img;
   brandContainer.replaceChild(a, oldAnchor);
+
+  // ============================
+  // 4) Add Settings Dropdown
+  // ============================
+  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
+  if (!tools) return;
+// Create settings container
+  const settingsContainer = document.createElement('div');
+  settingsContainer.className = 'settings-dropdown';
+  settingsContainer.innerHTML = `
+    <button class="btn-settings" type="button" aria-label="Display settings" title="Display settings">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
+    <div class="settings-menu">
+      <p class="settings-section-label">Display Mode</p>
+      <button class="settings-item" id="lecture-zoom-toggle" type="button">
+        <span class="settings-icon">
+          <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+          <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 14 10 14 10 20"></polyline>
+            <polyline points="20 10 14 10 14 4"></polyline>
+            <line x1="14" y1="10" x2="21" y2="3"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+        </span>
+        <span class="settings-label">Lecture Zoom</span>
+        <span class="settings-status"></span>
+      </button>
+      <button class="settings-item" id="reading-mode-toggle" type="button">
+        <span class="settings-icon">
+          <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </span>
+        <span class="settings-label">Reading Mode</span>
+        <span class="settings-status"></span>
+      </button>
+      
+      <div class="settings-divider"></div>
+      <p class="settings-section-label">Custom Colors</p>
+      
+      <div class="settings-color-row">
+        <label for="settings-bg-color">Background</label>
+        <input type="color" id="settings-bg-color" class="settings-color-input">
+      </div>
+
+      <div class="settings-color-row">
+        <label for="settings-text-color">Text</label>
+        <input type="color" id="settings-text-color" class="settings-color-input">
+      </div>
+
+      <div class="settings-color-row">
+        <label for="settings-accent-color">Accent</label>
+        <input type="color" id="settings-accent-color" class="settings-color-input">
+      </div>    
+        
+      <button class="settings-reset-btn" id="reset-colors" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+        Reset Colors
+      </button>
+    </div>
+  `;
+
+  // Insert after color toggle
+  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
+  if (colorToggle && colorToggle.parentNode) {
+    colorToggle.parentNode.insertBefore(settingsContainer, colorToggle.nextSibling);
+  } else {
+    tools.appendChild(settingsContainer);
+  }
+
+  // Elements
+  const settingsBtn = settingsContainer.querySelector('.btn-settings');
+  const lectureZoomToggle = settingsContainer.querySelector('#lecture-zoom-toggle');
+  const readingModeToggle = settingsContainer.querySelector('#reading-mode-toggle');
+  const bgColorInput = settingsContainer.querySelector('#settings-bg-color');
+  const textColorInput = settingsContainer.querySelector('#settings-text-color');
+  const accentColorInput = settingsContainer.querySelector('#settings-accent-color');
+  const resetColorsBtn = settingsContainer.querySelector('#reset-colors');
+
+  // Default color values
+  const defaultBgColor = '#fafaf8';
+  const defaultTextColor = '#1a1a1a';
+  const defaultAccentColor = '#0d6efd';
+
+  // ============================
+  // Helper Functions (define first)
+  // ============================
+  
+  // Helper function to darken a hex color
+  const darkenColor = (hex, amount) => {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    r = Math.max(0, Math.floor(r * (1 - amount)));
+    g = Math.max(0, Math.floor(g * (1 - amount)));
+    b = Math.max(0, Math.floor(b * (1 - amount)));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  // Helper function to lighten a hex color
+  const lightenColor = (hex, amount) => {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    r = Math.min(255, Math.floor(r + (255 - r) * amount));
+    g = Math.min(255, Math.floor(g + (255 - g) * amount));
+    b = Math.min(255, Math.floor(b + (255 - b) * amount));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  // Reading progress indicator
+  const updateReadingProgress = () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  };
+
+  // Update visual states for display modes
+  const updateActiveStates = () => {
+    const isLectureZoom = document.body.classList.contains('lecture-zoom');
+    const isReadingMode = document.body.classList.contains('reading-mode');
+    lectureZoomToggle.classList.toggle('active', isLectureZoom);
+    readingModeToggle.classList.toggle('active', isReadingMode);
+  };
+
+  // Apply custom colors
+  const applyCustomColors = () => {
+    document.body.classList.add('custom-colors');
+    
+    const bgColor = bgColorInput.value;
+    const textColor = textColorInput.value;
+    const accentColor = accentColorInput.value;
+    
+    document.documentElement.style.setProperty('--custom-bg-color', bgColor);
+    document.documentElement.style.setProperty('--custom-text-color', textColor);
+    document.documentElement.style.setProperty('--custom-accent-color', accentColor);
+    
+    // Compute darker scrollbar thumb color (30% darker)
+    const darkerThumb = darkenColor(bgColor, 0.3);
+    document.documentElement.style.setProperty('--scroll-track', bgColor);
+    document.documentElement.style.setProperty('--scroll-thumb', darkerThumb);
+    
+    // Compute lighter variants for callouts and tabs
+    const lighterBg = lightenColor(bgColor, 0.3);
+    const lighterBgSubtle = lightenColor(bgColor, 0.15);
+    document.documentElement.style.setProperty('--custom-bg-lighter', lighterBg);
+    document.documentElement.style.setProperty('--custom-bg-lighter-subtle', lighterBgSubtle);
+    
+    // Save to localStorage
+    localStorage.setItem('mas2901-custom-bg', bgColor);
+    localStorage.setItem('mas2901-custom-text', textColor);
+    localStorage.setItem('mas2901-custom-accent', accentColor);
+  };
+
+  // Reset colors to defaults
+  const resetColors = () => {
+    document.body.classList.remove('custom-colors');
+    document.documentElement.style.removeProperty('--custom-bg-color');
+    document.documentElement.style.removeProperty('--custom-text-color');
+    document.documentElement.style.removeProperty('--custom-accent-color');
+    document.documentElement.style.removeProperty('--scroll-track');
+    document.documentElement.style.removeProperty('--scroll-thumb');
+    document.documentElement.style.removeProperty('--custom-bg-lighter');
+    document.documentElement.style.removeProperty('--custom-bg-lighter-subtle');
+    
+    // Reset inputs to defaults
+    bgColorInput.value = defaultBgColor;
+    textColorInput.value = defaultTextColor;
+    accentColorInput.value = defaultAccentColor;
+    
+    // Clear localStorage
+    localStorage.removeItem('mas2901-custom-bg');
+    localStorage.removeItem('mas2901-custom-text');
+    localStorage.removeItem('mas2901-custom-accent');
+  };
+
+  // ============================
+  // Event Listeners
+  // ============================
+
+  // Toggle dropdown
+  settingsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    settingsContainer.classList.toggle('open');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!settingsContainer.contains(e.target)) {
+      settingsContainer.classList.remove('open');
+    }
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      settingsContainer.classList.remove('open');
+    }
+  });
+
+  // Lecture Zoom toggle
+  lectureZoomToggle.addEventListener('click', () => {
+    // Turn off reading mode if active
+    if (document.body.classList.contains('reading-mode')) {
+      document.body.classList.remove('reading-mode');
+      document.documentElement.classList.remove('reading-mode');
+      window.removeEventListener('scroll', updateReadingProgress);
+      document.body.style.removeProperty('--scroll-progress');
+    }
+
+    document.body.classList.toggle('lecture-zoom');
+    document.documentElement.classList.toggle('lecture-zoom');
+    updateActiveStates();
+  });
+
+  // Reading Mode toggle
+  readingModeToggle.addEventListener('click', () => {
+    // Turn off lecture zoom if active
+    if (document.body.classList.contains('lecture-zoom')) {
+      document.body.classList.remove('lecture-zoom');
+      document.documentElement.classList.remove('lecture-zoom');
+    }
+
+    document.body.classList.toggle('reading-mode');
+    document.documentElement.classList.toggle('reading-mode');
+
+    // Update progress indicator on scroll
+    if (document.body.classList.contains('reading-mode')) {
+      updateReadingProgress();
+      window.addEventListener('scroll', updateReadingProgress);
+    } else {
+      window.removeEventListener('scroll', updateReadingProgress);
+      document.body.style.removeProperty('--scroll-progress');
+    }
+    
+    updateActiveStates();
+  });
+
+  // Color input listeners
+  bgColorInput.addEventListener('input', applyCustomColors);
+  textColorInput.addEventListener('input', applyCustomColors);
+  accentColorInput.addEventListener('input', applyCustomColors);
+
+  // Reset colors button
+  resetColorsBtn.addEventListener('click', resetColors);
+
+  // ============================
+  // Initialize
+  // ============================
+
+  // Load saved colors or use defaults
+  const savedBg = localStorage.getItem('mas2901-custom-bg');
+  const savedText = localStorage.getItem('mas2901-custom-text');
+  const savedAccent = localStorage.getItem('mas2901-custom-accent');
+
+  // Set input values (saved or default)
+  bgColorInput.value = savedBg || defaultBgColor;
+  textColorInput.value = savedText || defaultTextColor;
+  accentColorInput.value = savedAccent || defaultAccentColor;
+
+  // Apply custom colors if any were saved
+  if (savedBg || savedText || savedAccent) {
+    applyCustomColors();
+  }
+
+  // Initial display mode state
+  updateActiveStates();
 });
 </script>
+
+<style>
+/* ============================
+   Settings Dropdown
+   ============================ */
+.settings-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.btn-settings {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.375rem;
+  margin: 0 0.25rem;
+  border-radius: 0.25rem;
+  color: var(--bs-navbar-color, #333);
+  transition: opacity 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-settings:hover {
+  opacity: 0.7;
+}
+
+.btn-settings svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+/* Rotate cog when open */
+.settings-dropdown.open .btn-settings svg {
+  transform: rotate(45deg);
+}
+
+/* Dropdown menu */
+.settings-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: var(--surface-weak, white);
+  border: 1px solid var(--border, #ddd);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  padding: 0.5rem 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  z-index: 4000;
+}
+
+.settings-dropdown.open .settings-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Section divider */
+.settings-divider {
+  height: 1px;
+  background: var(--border, #ddd);
+  margin: 0.5rem 0;
+}
+
+.settings-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-fg, #666);
+  opacity: 0.6;
+  padding: 0.5rem 1rem 0.25rem;
+  margin: 0;
+}
+
+/* Menu items */
+.settings-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: var(--brand-fg, #333);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  gap: 0.75rem;
+}
+
+.settings-item:hover {
+  background: var(--brand-teal-hover, #f8f9fa);
+  color: var(--brand-bg, #0d6efd);
+}
+
+.settings-item.active {
+  background: var(--brand-teal, #e7f1ff);
+  color: var(--brand-fg, #0d6efd);
+}
+
+.settings-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.settings-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* Icon state switching */
+.settings-icon .icon-exit { display: none; }
+.settings-item.active .settings-icon .icon-enter { display: none; }
+.settings-item.active .settings-icon .icon-exit { display: block; }
+
+.settings-label {
+  flex-grow: 1;
+}
+
+.settings-status {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.settings-item.active .settings-status::after {
+  content: '✓';
+  font-size: 0.9rem;
+  opacity: 1;
+}
+
+/* ============================
+   Color Picker Row
+   ============================ */
+.settings-color-row {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  gap: 0.75rem;
+}
+
+.settings-color-row label {
+  font-size: 0.85rem;
+  color: var(--brand-fg, #333);
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+/* Circular color swatch input */
+.settings-color-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  padding: 0;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.settings-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.settings-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.settings-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.settings-color-input:hover {
+  border-color: var(--brand-teal, #0d6efd);
+}
+
+.settings-color-input:focus {
+  outline: none;
+  border-color: var(--brand-teal, #0d6efd);
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+/* Reset button */
+.settings-reset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 2rem);
+  margin: 0.25rem 1rem 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--brand-fg, #666);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  gap: 0.5rem;
+}
+
+.settings-reset-btn:hover {
+  background: var(--brand-teal-hover, #f8f9fa);
+  border-color: var(--brand-teal, #0d6efd);
+  color: var(--brand-teal, #0d6efd);
+}
+
+.settings-reset-btn svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* Dark mode support */
+.quarto-dark .btn-settings {
+  color: var(--bs-navbar-dark-color, #fff);
+}
+
+.quarto-dark .settings-menu {
+  background: var(--bs-body-bg, #212529);
+  border-color: var(--bs-border-color, #495057);
+}
+
+.quarto-dark .settings-item:hover {
+  background: var(--bs-tertiary-bg, #2b3035);
+}
+
+.quarto-dark .settings-item.active {
+  background: rgba(13, 110, 253, 0.2);
+}
+
+.quarto-dark .settings-color-input {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.quarto-dark .settings-color-row label {
+  color: var(--bs-body-color, #e9ecef);
+}
+
+.quarto-dark .settings-reset-btn {
+  border-color: var(--bs-border-color, #495057);
+  color: var(--bs-body-color, #adb5bd);
+}
+
+.quarto-dark .settings-reset-btn:hover {
+  background: var(--bs-tertiary-bg, #2b3035);
+}
+
+/* ============================
+   Custom Colors Applied
+   ============================ */
+
+/* ============================
+   Custom Colors - Accent Color Elements
+   ============================ */
+body.custom-colors blockquote,
+body.custom-colors .blockquote {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .panel-caption,
+body.custom-colors .figure-caption,
+body.custom-colors .subfigure-caption,
+body.custom-colors .table-caption,
+body.custom-colors figcaption,
+body.custom-colors caption {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .header-section-number {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors details > summary {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors details > summary:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+  
+  /* Scrollbar - thumb is 20% darker than background */
+  scrollbar-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+body.custom-colors *::-webkit-scrollbar-track {
+  background: var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--custom-bg-color) 80%, black);
+  border-radius: 6px;
+  border: 2px solid var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--custom-bg-color) 65%, black);
+}
+
+body.custom-colors main,
+body.custom-colors .content,
+body.custom-colors article,
+body.custom-colors div.sidebar.sidebar-navigation.rollup.quarto-sidebar-toggle-contents,
+body.custom-colors nav.sidebar.sidebar-navigation:not(.rollup) {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Navbar */
+body.custom-colors #quarto-header,
+body.custom-colors #quarto-header nav.navbar,
+body.custom-colors .navbar {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+  border-bottom-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors #quarto-header .navbar-title,
+body.custom-colors #quarto-header .navbar-brand {
+  color: var(--custom-text-color) !important;
+}
+
+/* Navbar icons */
+body.custom-colors #quarto-header .quarto-navbar-tools button,
+body.custom-colors #quarto-header .quarto-navbar-tools a,
+body.custom-colors #quarto-header .quarto-color-scheme-toggle,
+body.custom-colors #quarto-header .btn-settings,
+body.custom-colors #quarto-header .navbar-toggler {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors #quarto-header .quarto-navbar-tools button:hover,
+body.custom-colors #quarto-header .quarto-navbar-tools a:hover,
+body.custom-colors #quarto-header .quarto-color-scheme-toggle:hover,
+body.custom-colors #quarto-header .btn-settings:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors #quarto-header .navbar-logo {
+  color: var(--custom-text-color) !important;
+}
+
+/* Secondary navbar */
+body.custom-colors .quarto-secondary-nav {
+  background-color: var(--custom-bg-color) !important;
+  border-bottom-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors .quarto-secondary-nav .quarto-secondary-nav-title {
+  color: var(--custom-text-color) !important;
+}
+
+/* Autocomplete / Search */
+body.custom-colors .aa-Autocomplete .aa-Form,
+body.custom-colors .aa-DetachedFormContainer .aa-Form {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .aa-Autocomplete .aa-Input,
+body.custom-colors .aa-DetachedFormContainer .aa-Input {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .aa-Autocomplete .aa-Input::placeholder,
+body.custom-colors .aa-DetachedFormContainer .aa-Input::placeholder {
+  color: color-mix(in srgb, var(--custom-text-color) 50%, transparent) !important;
+}
+
+body.custom-colors .aa-Panel,
+body.custom-colors .aa-PanelLayout {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .aa-Item {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .aa-Item[aria-selected="true"],
+body.custom-colors .aa-Item:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+}
+
+body.custom-colors .aa-Item mark {
+  color: var(--custom-accent-color) !important;
+  background: transparent !important;
+}
+
+/* Headings */
+body.custom-colors h1,
+body.custom-colors h2,
+body.custom-colors h3,
+body.custom-colors h4,
+body.custom-colors h5,
+body.custom-colors h6 {
+  color: var(--custom-text-color) !important;
+}
+
+/* Links */
+body.custom-colors a {
+  color: var(--custom-accent-color) !important;
+}
+
+/* Callouts */
+body.custom-colors .callout {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+  border-left-color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .callout-title {
+  color: var(--custom-text-color) !important;
+}
+
+/* Code blocks */
+body.custom-colors pre,
+body.custom-colors code {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 92%, black) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Tables */
+body.custom-colors table {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors th {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors td {
+  border-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors tr:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+}
+
+/* Selection */
+body.custom-colors ::selection {
+  background-color: var(--custom-accent-color);
+  color: white;
+}
+
+/* Sidebar link colors */
+body.custom-colors .sidebar-navigation .sidebar-item a,
+body.custom-colors .sidebar-navigation .sidebar-section a {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .sidebar-navigation .sidebar-item a:hover,
+body.custom-colors .sidebar-navigation .sidebar-section a:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .sidebar-navigation .sidebar-item.active a {
+  color: var(--custom-accent-color) !important;
+}
+
+/* ============================
+   Custom Colors - Callout Headers
+   ============================ */
+body.custom-colors div.callout-note.callout-style-default > .callout-header,
+body.custom-colors div.callout-tip.callout-style-default > .callout-header,
+body.custom-colors div.callout-warning.callout-style-default > .callout-header,
+body.custom-colors div.callout-caution.callout-style-default > .callout-header,
+body.custom-colors div.callout-important.callout-style-default > .callout-header {
+  background-color: var(--custom-bg-lighter) !important;
+}
+
+/* ============================
+   Custom Colors - Nav Tabs
+   ============================ */
+body.custom-colors .nav-tabs .nav-link.active,
+body.custom-colors .nav-tabs .nav-item.show .nav-link {
+  background-color: var(--custom-bg-lighter) !important;
+  color: var(--custom-text-color) !important;
+  border-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .nav-tabs .nav-link {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .nav-tabs .nav-link:hover:not(.active) {
+  background-color: var(--custom-bg-lighter-subtle) !important;
+  border-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .nav-tabs {
+  border-bottom-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .tab-content {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Settings dropdown when custom colors active */
+body.custom-colors .settings-menu {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-item {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-item:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+}
+
+body.custom-colors .settings-item.active {
+  background-color: color-mix(in srgb, var(--custom-accent-color) 20%, var(--custom-bg-color)) !important;
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .settings-section-label {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-color-row label {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-divider {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-reset-btn {
+  color: var(--custom-text-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-reset-btn:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+  color: var(--custom-accent-color) !important;
+  border-color: var(--custom-accent-color) !important;
+}
+
+</style>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Only target IMPORTANT callouts; add more types if needed.
@@ -1006,223 +1884,6 @@ document.addEventListener('DOMContentLoaded', () => {
       el.innerHTML = el.innerHTML.replace(re, '');
     }
   });
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
-  if (!tools) return;
-
-  // Create the button
-  const btn = document.createElement('button');
-  btn.id = 'lecture-zoom-header-toggle';
-  btn.className = 'btn-zoom-toggle';
-  btn.type = 'button';
-  btn.setAttribute('aria-pressed', 'false');
-  btn.setAttribute('aria-label', 'Lecture zoom');
-  btn.setAttribute('title', 'Lecture zoom (X)');
-
-  // svg icon
-  btn.innerHTML = `
-    <!-- ENTER: four corners -->
-    <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M3 9V3h6"/>
-        <path d="M21 9V3h-6"/>
-        <path d="M3 15v6h6"/>
-        <path d="M21 15v6h-6"/>
-    </svg>
-
-    <!-- EXIT: corners-in (contract) -->
-    <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M9 3v6H3"/>
-        <path d="M15 3v6h6"/>
-        <path d="M3 15h6v6"/>
-        <path d="M21 15h-6v6"/>
-    </svg>
-  `;
-
-  // Place it next to the colour-scheme toggle (after it, if present)
-  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
-  if (colorToggle && colorToggle.parentNode) {
-    colorToggle.parentNode.insertBefore(btn, colorToggle.nextSibling);
-  } else {
-    tools.appendChild(btn);
-  }
-
-  // Toggle logic
-  const KEY = 'lecture-zoom-enabled';
-  
-  // Helper: are we in lecture zoom?
-  const isLectureZoom = () =>
-    document.body.classList.contains('lecture-zoom') ||
-    document.documentElement.classList.contains('lecture-zoom');
-
-  // Define closeLectureSearch early (forward declaration)
-  let closeLectureSearch;
-
-  const apply = (on) => {
-    document.body.classList.toggle('lecture-zoom', on);
-    document.documentElement.classList.toggle('lecture-zoom', on);
-    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    
-    // Close search overlay when exiting lecture zoom
-    if (!on && closeLectureSearch) {
-      closeLectureSearch();
-    }
-    
-    // Nudge charts/layouts to recompute
-    window.dispatchEvent(new Event('resize'));
-    sessionStorage.setItem(KEY, on ? '1' : '0');
-  };
-
-  // Restore per-tab state
-  apply(sessionStorage.getItem(KEY) === '1');
-
-  // Click handler
-  btn.addEventListener('click', () => apply(!isLectureZoom()));
-  
-  // Keyboard shortcut (Z)
-  document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'x' && !/input|textarea|select/i.test(e.target.tagName)) {
-      apply(!isLectureZoom());
-    }
-  });
-
-  let acAnchor = null;          // where the autocomplete root came from
-  let panelObserver = null;     // to catch newly created panels
-
-  function ensureLectureOverlay() {
-    let overlay = document.getElementById('lecture-search-overlay');
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = 'lecture-search-overlay';
-      overlay.innerHTML = '<div class="lecture-search-modal"></div>';
-      document.body.appendChild(overlay);
-
-      // Close on backdrop click
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay && closeLectureSearch) closeLectureSearch();
-      });
-
-      // Close on Esc
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && closeLectureSearch) closeLectureSearch();
-      });
-    }
-    return overlay;
-  }
-
-  function findAutocomplete() {
-    const root =
-      document.querySelector('.aa-Autocomplete') ||
-      document.querySelector('.quarto-search .aa-Autocomplete') ||
-      document.querySelector('.quarto-search-panel .aa-Autocomplete');
-
-    const input = root?.querySelector('input.aa-Input');
-    return { root, input };
-  }
-
-  // Move the results panel (if any) into the modal and normalize its positioning
-  function reparentPanel(modal) {
-    const panel = document.querySelector('.aa-Panel');
-    if (!panel || modal.contains(panel)) return;
-    modal.appendChild(panel);
-    // Let CSS control layout/width; clear inline positioning from Algolia
-    panel.style.left = '';
-    panel.style.top = '';
-    panel.style.width = '';
-  }
-
-  function startPanelObserver(modal) {
-    if (panelObserver) return;
-    panelObserver = new MutationObserver(() => reparentPanel(modal));
-    // Listen on body, since Algolia often inserts the panel there
-    panelObserver.observe(document.body, { childList: true, subtree: true });
-  }
-
-  function stopPanelObserver() {
-    panelObserver?.disconnect();
-    panelObserver = null;
-  }
-
-  function openLectureSearch() {
-    if (!isLectureZoom()) return false;
-
-    const { root, input } = findAutocomplete();
-    if (!root || !input) return false;
-
-    const overlay = ensureLectureOverlay();
-    const modal = overlay.querySelector('.lecture-search-modal');
-
-    // Anchor the current position of the autocomplete root (only once)
-    if (!acAnchor) {
-      acAnchor = document.createComment('autocomplete-anchor');
-      root.parentNode.insertBefore(acAnchor, root);
-    }
-
-    // Move the autocomplete *root* into the modal
-    modal.appendChild(root);
-
-    // Ensure any results panel gets moved into the modal too
-    reparentPanel(modal);
-    startPanelObserver(modal);
-
-    overlay.classList.add('open');
-    document.documentElement.classList.add('search-open');
-
-    // Focus the input after layout
-    requestAnimationFrame(() => {
-      input.focus();
-      input.select?.();
-      // In case Algolia computes sizes on resize, give it a nudge
-      window.dispatchEvent(new Event('resize'));
-    });
-
-    return true;
-  }
-
-  // Now properly define closeLectureSearch
-  closeLectureSearch = function() {
-    const overlay = document.getElementById('lecture-search-overlay');
-    if (!overlay || !overlay.classList.contains('open')) return;
-
-    stopPanelObserver();
-
-    const { root } = findAutocomplete();
-
-    // Move panel (if currently inside modal) back to body to let Algolia clean up normally
-    const modal = overlay.querySelector('.lecture-search-modal');
-    const panel = modal?.querySelector('.aa-Panel');
-    if (panel) document.body.appendChild(panel);
-
-    // Put the autocomplete root back where it came from
-    if (root && acAnchor && acAnchor.parentNode) {
-      acAnchor.parentNode.insertBefore(root, acAnchor.nextSibling);
-    }
-
-    overlay.classList.remove('open');
-    document.documentElement.classList.remove('search-open');
-  };
-
-  // Existing hotkeys:
-  document.addEventListener('keydown', (e) => {
-    const tag = e.target.tagName.toLowerCase();
-    const typing = tag === 'input' || tag === 'textarea' || tag === 'select' || e.isComposing;
-    if (typing) return;
-
-    if (e.key === 'F' && e.shiftKey) {
-      if (openLectureSearch()) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }
-    if (e.key === 'Escape') {
-      closeLectureSearch();
-    }
-  });
-
 });
 </script>
 <script>
@@ -3331,6 +3992,189 @@ onButton('inkpad-save', () => {
 })();
 </script>
 <script>
+  
+document.addEventListener('DOMContentLoaded', function() {
+  const loadTippy = new Promise((resolve) => {
+    if (typeof tippy !== 'undefined') {
+      resolve();
+      return;
+    }
+    
+    const popper = document.createElement('script');
+    popper.src = 'https://unpkg.com/@popperjs/core@2';
+    popper.onload = () => {
+      const tippyScript = document.createElement('script');
+      tippyScript.src = 'https://unpkg.com/tippy.js@6';
+      tippyScript.onload = resolve;
+      document.head.appendChild(tippyScript);
+    };
+    document.head.appendChild(popper);
+  });
+  
+  loadTippy.then(initCalloutPreviews);
+});
+
+const contentCache = new Map();
+const mathRendered = new WeakSet(); // Track elements where math has been rendered
+
+// Render math in an element using KaTeX (only once)
+function renderMath(element) {
+  if (!element || mathRendered.has(element)) {
+    return; // Already rendered, skip
+  }
+  
+  if (typeof renderMathInElement !== 'undefined') {
+    renderMathInElement(element, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError: false
+    });
+  } else if (typeof katex !== 'undefined') {
+    element.querySelectorAll('.math').forEach(mathEl => {
+      if (mathRendered.has(mathEl)) return;
+      
+      const isDisplay = mathEl.classList.contains('display');
+      const tex = mathEl.textContent || mathEl.innerText;
+      try {
+        katex.render(tex, mathEl, {
+          displayMode: isDisplay,
+          throwOnError: false
+        });
+        mathRendered.add(mathEl);
+      } catch (e) {
+        console.warn('KaTeX render error:', e);
+      }
+    });
+  }
+  
+  // Hide MathML (screen reader version) to avoid duplication
+  element.querySelectorAll('.katex-mathml').forEach(el => {
+    el.style.display = 'none';
+  });
+  
+  // Mark this element as processed
+  mathRendered.add(element);
+}
+
+async function fetchCalloutContent(href) {
+  if (contentCache.has(href)) {
+    return contentCache.get(href);
+  }
+  
+  try {
+    const [file, anchor] = href.split('#');
+    const url = file || window.location.pathname;
+    
+    if (!file || file === '' || url === window.location.pathname) {
+      const element = document.getElementById(anchor);
+      if (element) {
+        const callout = element.closest('.callout');
+        const clone = callout ? callout.cloneNode(true) : element.parentElement.cloneNode(true);
+        clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+        
+        const content = clone.innerHTML;
+        contentCache.set(href, { html: content, needsMathRender: false });
+        return contentCache.get(href);
+      }
+    }
+    
+    const response = await fetch(url);
+    const html = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    const element = doc.getElementById(anchor);
+    if (element) {
+      const callout = element.closest('.callout');
+      const content = callout?.innerHTML || element.parentElement?.innerHTML || '';
+      contentCache.set(href, { html: content, needsMathRender: true });
+      return contentCache.get(href);
+    }
+  } catch (e) {
+    console.warn('Failed to fetch callout content:', e);
+  }
+  
+  return null;
+}
+
+function initCalloutPreviews() {
+  const calloutRefs = document.querySelectorAll('.callout-ref');
+  
+  calloutRefs.forEach(ref => {
+    const label = ref.dataset.calloutLabel;
+    const number = ref.dataset.calloutNumber;
+    const title = ref.dataset.calloutTitle;
+    const preview = ref.dataset.calloutPreview;
+    const targetHref = ref.getAttribute('href');
+    
+    const isRecap = label === 'Recap';
+    const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+    const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+    
+    const initialContent = `
+      <div class="callout-preview-content">
+        <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+          <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+        </div>
+        <div class="callout-preview-body">
+          ${preview ? preview + '...' : '<em>Loading...</em>'}
+        </div>
+      </div>
+    `;
+    
+    let contentLoaded = false;
+    
+    const instance = tippy(ref, {
+      content: initialContent,
+      allowHTML: true,
+      interactive: true,
+      placement: 'top',
+      theme: 'callout',
+      maxWidth: 450,
+      delay: [400, 100],
+      appendTo: document.body,
+      async onShow(instance) {
+        // Only fetch content once
+        if (contentLoaded) return;
+        
+        const result = await fetchCalloutContent(targetHref);
+        if (result && instance.state.isVisible) {
+          const isRecap = label === 'Recap';
+          const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+          const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+          
+          instance.setContent(`
+            <div class="callout-preview-content">
+              <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+                <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+              </div>
+              <div class="callout-preview-body callout-preview-fetched">
+                ${result.html}
+              </div>
+            </div>
+          `);
+          
+          contentLoaded = true;
+        }
+      },
+      onShown(instance) {
+        // Render math only once after content is shown
+        const contentEl = instance.popper.querySelector('.callout-preview-body');
+        if (contentEl) {
+          renderMath(contentEl);
+        }
+      }
+    });
+  });
+}
+
+
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
   const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
   if (!tools) return;
@@ -3417,6 +4261,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 </style>
+<script>
+
+if (document.body.classList.contains('reading-mode')) {
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  });
+}
+
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -3832,8 +4688,8 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/practicals/2-ml-models-in-pytorch.html" class="pagination-link" aria-label="Machine Learning Models in PyTorch">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Machine Learning Models in PyTorch</span></span>
+      <a href="../../content/practicals/3-training-ml-models-in-pytorch.html" class="pagination-link" aria-label="Training Machine Learning Models in Pytorch">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training Machine Learning Models in Pytorch</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
@@ -3843,6 +4699,40 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </nav>
 </div> <!-- /content -->
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+    <script type="text/javascript">
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let pseudocodeOptions = {
+          indentSize: el.dataset.indentSize,
+          commentDelimiter: el.dataset.commentDelimiter,
+          lineNumber: el.dataset.lineNumber.toLowerCase() === "true",
+          lineNumberPunc: el.dataset.lineNumberPunc,
+          noEnd: el.dataset.noEnd.toLowerCase() === "true",
+          titlePrefix: el.dataset.captionPrefix
+        };
+        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
+      });
+    })(document);
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
+      });
+    })(document);
+    </script>
+  
 
 
 

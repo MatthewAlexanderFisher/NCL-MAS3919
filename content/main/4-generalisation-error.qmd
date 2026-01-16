@@ -4,8 +4,158 @@ execute:
 jupyter: mas2901
 ---
 
-# Generalisation Error
+# Generalisation Error {#sec-generalisation}
 
-## Generalisation Error Bounds ($\star$)
+Statistical *learning theory* broadly refers to the mathematical analysis of generalisation error, which captures how close our machine learning models are to being optimal:
 
-## Domain Shift
+:::{#def-generalisation-error}
+The *generalisation error* of a machine learning model $\mathcal{F}$ trained on a dataset of size $n$ is defined as
+$$
+    \mathcal{R}(f_n) - \min_{f \in \mathcal{F}} \mathcal{R}(f)
+$$
+where $f_n$ denotes the trained machine learning model and $\mathcal{R}$ denotes the (population) risk (cf. @def-risk).
+:::
+
+Generalisation error occurs because in practice we only have access to a finite training dataset, meaning that the true (or "real world") risk functional $\mathcal{R}(\cdot)$ cannot be exactly minimised.
+The generalisation error will depend on both the choice of machine learning model and how it is trained.
+Since $f_n \in \mathcal{F}$ it is clear that the generalisation error is non-negative in general.
+
+## Generalisation Error Bounds [{{< fa star >}}]{.advanced title="MAS8607 Content"}
+
+Statistical learning theory is a deep topic, and we will content ourselves in this module to see only the most basic analytic result, on the generalisation error of empirical risk minimisation, together with some of the key terminology.
+
+For this we need to be familiar with *Hoeffding's concentration inequality*:
+
+:::{#prp-hoeffding}
+### Hoeffding's Inequality
+Let $Z_1 , \dots , Z_n$ be independent and identically distributed random variables with mean $\mu$, and taking values in $[0,1]$.
+Then, for any $t > 0$,
+$$
+\mathbb{P}\left( \left| \frac{1}{n} \sum_{i=1}^n Z_i - \mu  \right| \geq t \right) \leq 2 \exp( - 2 n t^2  ) .
+$$
+:::
+To enable a simple theoretical argument, in the following we restrict attention to the case where the machine learning model is a *finite* set $\mathcal{F}$.
+This is admittedly a bit artificial, but this setting does occur in practice, e.g. when there already exist multiple *pretrained* machine learning models for a given task, and from these we need to select a single "best" pre-trained model (e.g. selecting a "best" large language model for a natural language processing task).
+
+:::{#thm-generalisation-error}
+### Generalisation error for empirical risk minimisation
+Consider the setting of @def-def-supervised-learning-task and let $|\mathcal{F}| < \infty$, $n \in \mathbb{N}$, and $\delta \in (0,1)$ be fixed.
+Let the loss function $L$ take values in $[0,1]$.
+Then, with probability at least $1 - \delta$, 
+$$
+\mathcal{R}(f_n) - \min_{f \in \mathcal{F}} \mathcal{R}(f) \leq \sqrt{ \frac{2}{n} \log \frac{2 |\mathcal{F}| }{\delta} } .
+$$
+:::
+
+@thm-generalisation-error captures some of the basic intuition that we would expect; as the number training data $n \rightarrow \infty$, the generalisation error converges to $0$.
+Further, the size of the generalisation error is controlled by the size of the machine learning model $\mathcal{F}$, and if we require a higher probability bound (i.e. smaller $\delta$) then we must accept a looser bound on the generalisation error.
+
+::: {#prf-generalisation-error}
+### @thm-generalisation-error
+
+For each $f \in \mathcal{F}$ we have from <span class="xref-no-num">[Hoeffding's inequality @prp-hoeffding]</span> that, for any $t > 0$,
+$$
+\mathbb{P}\left( \underbrace{ | \mathcal{R}_n(f) - \mathcal{R}(f)  | \geq t }_{= A_f} \right) \leq 2 \exp( - 2 n t^2  ) .
+$$
+Now, we wish to bound the probability that the events $A_f$ hold *simultaneously* for all $f$, and since $\mathcal{F}$ is a finite set, we can do this via a *union bound*:
+$$
+\begin{align*}
+\mathbb{P}\left( \cup_{f \in \mathcal{F}} A_f \right) & \leq \sum_{f \in \mathcal{F}} \mathbb{P}(A_f) \\
+& \leq \sum_{f \in \mathcal{F}} 2 \exp( - 2 n t^2  )
+= 2 |\mathcal{F}|  \exp( - 2 n t^2  ) .
+\end{align*}
+$$
+Thus, with probability at least $1 - 2 |\mathcal{F}|  \exp( - 2 n t^2  )$ we have that $| \mathcal{R}_n(f) - \mathcal{R}(f)  | < t$ simultaneously for all $f \in \mathcal{F}$.
+This shows that, with high probability, we have *uniform convergence* of $\mathcal{R}_n(\cdot)$ to $\mathcal{R}(\cdot)$.
+To polish the presentation, take $\delta =  2 |\mathcal{F}|  \exp( - 2 n t^2  )$ so that 
+$$
+t = \sqrt{ \frac{1}{2n} \log \left( \frac{2|\mathcal{F}|}{\delta} \right) } .
+$$
+Finally, letting $f_\star \in \argmin_{f \in \mathcal{F}} \mathcal{R}(f)$ minimise the (population) risk $\mathcal{R}(\cdot)$, and recalling that the empirical risk is denoted $\mathcal{R}_n(\cdot)$ (cf. \Cref{def: empirical risk}), we have that with probability at least $1 - \delta$,
+$$
+\begin{align*}
+\mathcal{R}(f_n) & \leq \mathcal{R}_n(f_n) + t \qquad \text{(uniform convergence)} \\
+& \leq \mathcal{R}_n(f_\star)  + t \qquad \text{(since $f_n$ is a minimiser of $\mathcal{R}_n$)} \\
+& \leq \mathcal{R}(f_\star)  + 2 t  \qquad \text{(uniform convergence)}
+\end{align*}
+$$
+completing the argument.
+
+:::
+
+A nice aspect of @thm-generalisation-error is that it does not place any restriction on the data-generating distribution $P$ or the loss function $L$ that define the statistical task (with the exception that $L$ is assumed to take values in $[0,1]$, but this is just to enable a straightforward application of Hoeffding's inequality and is not a fundamental limitation of this type of result).
+
+Generalisation error bounds are useful because they tell us how much data are required to achieve a nominal performance level:
+
+::: {.remark #rem-sample-complexity}
+### Sample Complexity
+In the context of \Cref{thm: generalisation error}, to get to within $\epsilon > 0$ of the best possible risk, with probability at least $1 - \delta$, we need
+$$
+n \geq \frac{2}{\epsilon^2} \log \left( \frac{2 |\mathcal{F}| }{\delta} \right)
+$$
+samples in the training dataset.
+That is, the *sample complexity* (i.e. how many samples are needed in the training dataset to achieve the nominal performance level $\epsilon$ with probability at least $1 - \delta$) scales like $O(\epsilon^{-2})$, e.g. $100\times$ as many training data are required for a $10\times$ reduction in the generalisation error.
+This is a typical sample complexity result in settings where data are independently sampled.
+
+:::
+
+::: {.remark #rem-bias-variance}
+### Bias-Variance Trade-Off
+@thm-generalisation-error demonstrates a *bias-variance trade-off* for the risk:
+$$ 
+ \mathcal{R}(f_n) \leq \underbrace{ \left( \min_{f \in \mathcal{F}} \mathcal{R}(f) \right) }_{\mathrm{bias}} + \underbrace{ \sqrt{ \frac{2}{n} \log \frac{2 |\mathcal{F}| }{\delta} } }_{\mathrm{variance}}
+$${#eq-bias-var-trade}
+Here the first term represents the "irreducible bias" due to the choice of machine learning model $\mathcal{F}$, while the second term represents the "variance", meaning the error that is associated with training the machine learning model from a random dataset.
+
+To illustrate the trade-off, suppose we are considering switching to a more flexible machine learning model $\mathcal{F}' \supseteq \mathcal{F}$. 
+If we switch to $\mathcal{F}'$ then the "bias" term on the right hand side of \eqref{eq-bias-var-trade} can only decrease (since we are taking a minimum over a larger set). However, the second term would increase since $|\mathcal{F}'| \geq |\mathcal{F}|$. 
+
+This provides useful insight into empirical risk minimisation; the machine learning model $\mathcal{F}$ should be both "not too rigid" and "not too flexible".
+
+:::
+
+
+
+::: {.remark #rem-loose-bound}
+### Loose Bound
+
+The union bound in @prf-generalisation-error was used to keep the proof short, but it is crude; if the elements of $\mathcal{F}$ are similar then the events $A_f$ are unlikely to be mutually exclusive, meaning that the union bound is likely to be a loose bound.
+
+:::
+
+There is a rich mathematical theory dealing with the case where $L$ can be unbounded and $\mathcal{F}$ can be infinite, involving interesting and deep mathematical concepts such as *empirical process theory*, *Rademacher complexity*, and *VC-dimension*. A good reference is @bach2024learning [Chapter 4].
+
+
+## Domain Shift {#sec-domain-shift}
+
+The abstract definition of a supervised learning task in @def-supervised-learning-task has the advantage of being well-posed and amenable to a comprehensive mathematical treatment.
+
+However, in real-world applications of supervised learning, the assumption that we have access to a training dataset consisting of $n$ independent samples from the population distribution $P$ on $\mathcal{X} \times \mathcal{Y}$ is almost never satisfied.
+
+For example, our footfall data from the Queen Victoria Road (cf. @exm-regression) arrive sequentially in time; we are in no real sense "sampling" the time index (or the image itself) from a probability distribution.
+
+This raises a serious philosophical issue:
+
+> Are the data that we have gathered up to the present representative of data that we are likely to encounter going forward?
+
+Or, more abstractly:
+
+> Are the training data representative of the data that will be encountered when the machine learning model is deployed?
+
+This is the fundamental issue of *domain shift* in machine learning:
+
+:::{#def-domain-shift}
+### Domain shift
+**Domain shift** describes the error associated to deploying a machine learning model in a setting different to that in which it was trained.
+:::
+
+The issue of domain shift has major ethical implications for machine learning (cf. @sec-ethics); for instance, a machine learning model for medical diagnostics that is trained only on data from an East Asian patient cohort may not perform as intended when applied to patients with European heritage, due to the important role of genetics in disease progression.
+
+Considering the set-up of @thm-generalisation-error, the actual risk $\mathcal{R}_\star$ associated with deploying the machine learning model can be bounded as 
+$$
+\begin{align*}
+\mathcal{R}_\star(f_n) \leq \underbrace{ \max_{f \in \mathcal{F}} | \mathcal{R}_\star(f) - \mathcal{R}(f)| }_{\mathrm{domain \; shift}} + \underbrace{ \left( \min_{f \in \mathcal{F}} \mathcal{R}(f) \right) }_{\mathrm{bias}} + \underbrace{ \sqrt{ \frac{2}{n} \log \frac{2 |\mathcal{F}| }{\delta} } }_{\mathrm{variance}}
+\end{align*}
+$$
+where the first term captures the extent to which risk $\mathcal{R}$ in the training context differs from the risk $\mathcal{R}_\star$ in deployment.
+

@@ -1,0 +1,12 @@
+<script>
+
+if (document.body.classList.contains('reading-mode')) {
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  });
+}
+
+</script>

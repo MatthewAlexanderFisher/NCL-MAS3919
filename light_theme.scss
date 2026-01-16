@@ -2,22 +2,24 @@
 
 /* ===== Base palette (pastels) ===== */
 $charcoal: #333333;   // main text
-$teal:     #55C3CB;   // definitions / primary accent
+$teal:     #55C3CB;   // definitions / primary accent 55C3CB
 $orange:   #F39C65;   // examples
-$purple:   #A180DA;   // important results
+$purple:   #6836bd;   // important results
 $mint:     #DDFFEB;   // emphasis boxes / soft backgrounds
+$teal-link: #006098;
 
 /* ===== Runtime palette as SCSS vars ===== */
 $brand-fg:        #333333;
 $brand-bg:        #f8f8f8;
 $plot-panel-bg:   #f0f1f2;
 
-$brand-teal:      #55a6cb;
+$brand-teal:      #55C3CB;
 $brand-orange:    #F39C65;
-$brand-purple:    #A180DA;
+$brand-purple:    #6836bd;
+$brand-purples:   rgb(123, 83, 193);
 $brand-mint:      #DDFFEB;
 $brand-warn:      #E86D5A;
-$brand-red:       #e65660;
+$brand-red:       #d44b54;
 
 $brand-teal-hover:rgb(65, 137, 142);      /* slightly darker for hover */
 $brand-red-hover: rgb(173,39,24);
@@ -40,6 +42,7 @@ $thumb-scrollbar-bg: rgb(170, 181, 184);
   --brand-teal:      #{$brand-teal};
   --brand-orange:    #{$brand-orange};
   --brand-purple:    #{$brand-purple};
+  --brand-purples:   #{$brand-purples};
   --brand-mint:      #{$brand-mint};
   --brand-warn:      #{$brand-warn};
   --brand-red:       #{$brand-red};
@@ -67,7 +70,7 @@ $thumb-scrollbar-bg: rgb(170, 181, 184);
 /* ===== Subtle neutrals & derived tones ===== */
 $bg-white:  $brand-bg;
 $bg-soft:   #e5ebf0;                     // very light surface for code / blocks
-$teal-600:  darken($teal, 12%);          // for hovers / borders
+$teal-600:  darken($teal, 25%);          // for hovers / borders
 $teal-050:  mix($teal, $bg-white, 12%);  // faint highlight
 $mint-100:  mix($mint, $bg-white, 10%);  // softer mint panel
 $orange-600: darken($orange, 10%);
@@ -76,7 +79,7 @@ $purple-600: darken($purple, 10%);
 /* ===== Page & common UI ===== */
 $body-bg:    $bg-white;
 $body-color: $charcoal;
-$link-color: $teal;
+$link-color: $teal-link;
 $input-bg:   $bg-white;
 $popover-bg: $bg-white;
 

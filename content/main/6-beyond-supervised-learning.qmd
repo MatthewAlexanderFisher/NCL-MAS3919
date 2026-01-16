@@ -6,15 +6,259 @@ jupyter: mas2901
 
 # Beyond Supervised Learning
 
-## Unsupervised Learning
+This module primarily focuses on *supervised* learning, meaning that to each input $\mathbf{X}$ there is an associated *label* $\mathbf{Y}$ that provides information on the quality of the output from a machine learning model $f(\mathbf{X})$ via the loss function $L(\mathbf{Y},f(\mathbf{X}))$.
+Supervised learning is mathematically well-defined and amenable to an advanced theoretical treatment; for strong postgraduate students we recommend the recent textbook of @bach2024learning.
 
-## Semi-supervised Learning
+However, there are other important tasks which cannot be cast as supervised learning, typically because one has no access to labels $\mathbf{Y}$ (*unsupervised* learning; @sec-unsupervised-learning) or partial access to labels (*semi-supervised* learning; @sec-semi-supervised-learning).
+One of the most important and interesting unsupervised learning tasks is *generative modelling*, and we dedicate @sec-generative-modelling to an in-depth look at this task.
 
-## Generative Modelling ($\star$)
+## Unsupervised Learning {#sec-unsupervised-learning}
 
-### Generative Models ($\star$)
+Unsupervised learning refers to analysis of unlabelled data to identify patterns, structures, or relationships without any guidance or explicit instructions on the correct output. Instead of relying on predefined categories, the aim is to autonomously discover groupings or hidden structures within the data, often through techniques such as *clustering* (which we discuss here) or *dimensionality reduction* (which we discuss in @sec-dim-reduction). 
 
-### Training Generative Models ($\star$)
+Clustering involves grouping a set of data points into *clusters*, such that data within the same cluster are more similar to each other than to data in different clusters. 
+This technique is widely applied in areas such as genomics (to identify different genetic populations within a patient cohort), image analysis (to select an appropriate colour palette; cf. @exm-flower), and in commerce (to target advertising to consumers with similar profiles), where understanding the natural groupings of data can support decision-making and insight.
+
+Suppose we have data $\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d$ that we wish to divide into $k$ different sub-groups, or *clusters*[^transformation-comment].
+
+That is, to each datum $\mathbf{x}_i$ we seek to associated a label $y_i \in \{1,\dots,k\}$, such that data with the same label are more similar to each other compared to data with a different label.
+As an example, we can consider the optimisation task
+$$ 
+ \argmin_{y_1,\dots,y_n} \; \sum_{i=1}^n \sum_{j=1}^n 1_{y_i = y_j} \|\mathbf{x}_i - \mathbf{x}_j\|^2 ,    
+$${#eq-kmeans}
+where the aim is to select labels $\{y_i\}_{i=1}^n$ for which the sum of squared distances between data in the same cluster is minimised[^kmeans-comment].
+
+Unfortunately, this is a computationally hard optimisation when $n$ or $k$ are large, because the number of potential label assignments is $k^n$, meaning that an exhaustive search can be impractical.
+
+A simple and popular heuristic algorithm for approximately solving @eq-kmeans is called *$k$-means*.
+The basic idea is that each cluster is represented by a *centroid* $\mathbf{c}_i \in \mathbb{R}^d$, which is the mean location of the data within that cluster, and the location of the centroids are optimised, together with the cluster assignments, so that a surrogate loss function
+$$ 
+ L \equiv L(\{\mathbf{c}_i\}_{i=1}^k , \{y_j\}_{j=1}^n) = \sum_{j=1}^n \| \mathbf{x}_j - \mathbf{c}_{y_j} \|^2
+$$
+is approximately minimised.
+
+Let's randomly initialise the centroids at some values $\{\mathbf{c}_i\}_{i=1}^k \subset \mathbb{R}^d$.
+Then we perform **coordinate descent** on $L$; i.e., the following optimisation steps are iteratively performed:
+
+1.  **Minimise $L$ with respect to $\{y_j\}_{j=1}^n$ while holding $\{\mathbf{c}_i\}_{i=1}^k$ fixed:**
+    It is straightforward to see that this is achieved when each data point $\mathbf{x}_j$ is assigned to the nearest centroid:
+    
+    $$y_j \in \argmin_{i} \|\mathbf{x}_j - \mathbf{c}_i \|^2$$
+    
+    Here, $y_j$ is the index of the centroid to which data point $\mathbf{x}_j$ is assigned (if there is more than one nearest centroid, just pick one at random for the assignment).
 
 
 
+2.  **Minimise $L$ with respect to $\{\mathbf{c}_i\}_{i=1}^k$ while holding $\{y_j\}_{j=1}^n$ fixed:**
+    Since $L$ is a quadratic function of each $\mathbf{c}_i$, we can differentiate $L$ and solve for the unique stationary point:
+    
+    $$
+    \begin{aligned}
+        \frac{\partial L}{\partial \mathbf{c}_i} & = \frac{\partial}{\partial \mathbf{c}_i}  \sum_{j=1}^n \| \mathbf{x}_j - \mathbf{c}_{y_j} \|^2 \\
+        & = \frac{\partial}{\partial \mathbf{c}_i}  \sum_{j=1}^n \mathbb{1}_{\{y_j = i\}} \| \mathbf{x}_j - \mathbf{c}_i \|^2 \\
+        & =  \sum_{j=1}^n \mathbb{1}_{\{y_j = i\}} \frac{\partial}{\partial \mathbf{c}_i}  \| \mathbf{x}_j - \mathbf{c}_i \|^2 \\
+        & =  \sum_{j=1}^n \mathbb{1}_{\{y_j = i\}}  [ - 2 (\mathbf{x}_j - \mathbf{c}_i) ] \\
+        & = - 2 \sum_{j=1}^n \mathbb{1}_{\{y_j = i\}}  \mathbf{x}_j + 2 \sum_{j=1}^n \mathbb{1}_{\{y_j = i\}} \mathbf{c}_i 
+    \end{aligned}
+    $$
+    
+    and so
+    
+    $$\frac{\partial L}{\partial \mathbf{c}_i} = \mathbf{0} \implies \mathbf{c}_i = \frac{\sum_{j=1}^n \mathbb{1}_{\{y_j = i\}} \mathbf{x}_j}{\sum_{j=1}^n \mathbb{1}_{\{y_j = i\}}}$$
+    
+    i.e., $\mathbf{c}_i$ is taken to be the mean location of the data currently assigned to the $i$th cluster.
+  
+These two steps are repeated until the centroids no longer change significantly, or a predefined number of iterations is reached.
+Once the algorithm has terminated, the final cluster assignments are reported.
+
+:::{#exm-flower}
+### Colour quantisation
+
+In computer graphics, $k$-means clustering is frequently used for colour quantisation in image compression. 
+By reducing the number of colours used to represent an image, file sizes can be significantly reduced without a noticeable loss of visual quality. 
+
+For example, consider the image of a flower with millions of colours in the left panel of @fig-flower. 
+By applying $k$-means clustering with $k = 16$  the image can be represented using a limited palette of only 16 colours, resulting in a compressed version that requires less storage space.
+
+::: {#fig-flower layout-ncol=2}
+![](figures/flower.png){width="35%"}
+
+![](figures/quantisation.png){width="35%"}
+
+An application of $k$-means clustering to identify $k = 16$ representative colours than can be used to compress the image of a flower in the left panel. (For illustrative purposes the blue colour channel has been removed.) The blue lines indicate the cluster boundaries; i.e. the locations that lie exactly half way between the two nearest centroids (blue circles). The regions circumscribed by the blue lines are called *Voronoi cells*. [[source](https://en.wikipedia.org/wiki/K-means_clustering)]
+:::
+
+
+
+:::
+
+## Semi-supervised Learning {#sec-semi-supervised-learning}
+
+Suppose that we wish to undertake a supervised learning task (cf. @def-supervised-learning-task) but unfortunately only a small number of the labels $\mathbf{y}_i$ have been recorded in the training dataset.
+
+This is called a **semi-supervised** learning task.
+In an extreme case, suppose we with to perform binary classification (i.e. into two classes) of data based on their covariates $\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d$, but only *two* data have their true labels recorded.
+
+Can anything at all be achieved?
+
+Surprisingly, the answer is sometimes `yes', and the key idea here is called the **manifold hypothesis**:
+
+::: {.definition #def-manifold-hyp}
+### Manifold hypothesis
+The **manifold hypothesis** suggests that possibly high-dimensional data $\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d$ can be effectively represented in a lower-dimensional space, most often a \emph{smooth manifold} embedded in $\mathbb{R}^d$. 
+
+:::
+
+
+## Generative Modelling {#sec-generative-modelling}
+
+
+### Generative Models {#sec-generative-models}
+
+### Training Generative Models {#sec-training-generative-models}
+
+#### Adversarial Training
+
+#### Score Matching[{{< fa star >}}]{.advanced title="MAS8607 Content"}  {#sec-score-matching}
+
+The challenge of working with energy-based models $p_{\bm{\theta}}(\mathbf{x}) \propto \exp( - f_{\bm{\theta}}(\mathbf{x}) )$ is that the normalisation constant
+$$
+\begin{align*}
+    Z_{\bm{\theta}} = \int \exp( - f_{\bm{\theta}}(\mathbf{x}) ) \mathrm{d} \mathbf{x}
+\end{align*}
+$$
+is in general an analytically intractable integral.
+This is a real problem; if we wanted to find the parameters $\bm{\theta}$ that maximise the likelihood we cannot simply find the $\bm{\theta}$ that maximises 
+$$
+\bm{\theta} \mapsto \prod_{i=1}^n \exp( - f_{\bm{\theta}}(\mathbf{x}_i))
+$$ 
+because there is also a $\bm{\theta}$ dependence in the neglected normalisation constant.
+However, there is a clever way to circumvent working directly with this normalising constant, which is to notice that its *Stein score* can be computed without the normalising constant:
+
+::: {.definition #def-stein-score}
+### Stein score
+
+Let $P$ be a probability distribution with density $p$ on $\mathbb{R}^d$. The **Stein score** of $P$ is
+$$
+s_P(\mathbf{x}) = (\nabla \log p)(\mathbf{x})
+$$
+where here $\nabla$ denotes the gradient with respect to the $\mathbf{x}$ argument.
+
+:::
+
+The Stein score is names after Charles Stein (1920-2016), who popularised the use of the Stein score as a theoretical tool (initially for proving central limit theorems) in the 1970s; computational and machine learning applications of the Stein score are a more recent development.
+For an energy-based model $P_{\bm{\theta}}$ the Stein score is
+$$ 
+ s_{P_{\bm{\theta}}}(\mathbf{x}) =  (\nabla \log p)(\mathbf{x}) = \nabla_{\mathbf{x}} \{ - f_{\bm{\theta}}(\mathbf{x}) - \log Z_{\bm{\theta}} \} = - \nabla_{\mathbf{x}} f_{\bm{\theta}}(\mathbf{x})   
+$${#eq-energy-stein-score}
+which can be computed without access to the intractable normalising constant $Z_{\bm{\theta}}$.
+Critically, a Stein score $s_P$ fully characterises the associated distribution $P$:
+
+:::{#prp-stein-score}
+Let $P$ and $Q$ have Stein scores $s_P$ and $s_Q$.
+Then $s_P$ and $s_Q$ are everywhere equal if and only if $P$ and $Q$ are equal.
+:::
+
+::: {#prf-pc}
+#### Not Examinable
+
+The equality of Stein scores is equivalent to the constancy of the ratio of the densities $p$ and $q$ for $P$ and $Q$, since 
+$$
+s_P(\mathbf{x}) - s_Q(\mathbf{x}) = \nabla_{\mathbf{x}} \log \left( \frac{p(\mathbf{x})}{q(\mathbf{x})} \right) .
+$$ 
+Further, the ratio $p/q$ is constant if and only if $p$ and $q$ are equal, since $p/q = C$ if and only if $p(\mathbf{x}) = C q(\mathbf{x})$ for all $\mathbf{x}$, and since both $p$ and $q$ integrate to $1$ this situation can only occur when $C = 1$.
+
+:::
+
+@prp-stein-score suggests a convenient approach to training an energy-based model $P_{\bm{\theta}}$; we can try to "match" the Stein score of $P_{\bm{\theta}}$ to the Stein score of the true data-generating distribution.
+However, we do not have access to the Stein score of the data-generating distribution, we only have a training dataset $\{\mathbf{x}_i\}_{i=1}^n$ consisting of samples from it.
+
+> How then can we proceed?
+
+The solution is essentially a clever application of integration-by-parts[^recap-note], due to @hyvarinen2005estimation. 
+
+:::{#prp-manip-stein-score}
+### Manipulating the Stein score[{{< fa star >}}{{< fa star >}}]{.advanced title="Non-Examinable content"} 
+
+Let $P$ and $Q$ be distributions on $\mathbb{R}^d$ with densities $p$ and $q$, respectively.
+Assuming $q(\mathbf{x}) (\nabla \log p)(\mathbf{x})$ vanishes (uniformly) as $\|\mathbf{x}\| \rightarrow \infty$,
+$$ 
+ \int \| s_P(\mathbf{x}) - s_Q(\mathbf{x}) \|^2 \mathrm{d}Q(\mathbf{x}) = \int \|(\nabla \log p)(\mathbf{x})\|^2 + 2 (\Delta \log p)(\mathbf{x}) \; \mathrm{d}Q(\mathbf{x}) + C_Q   
+$${#eq-hyvarinen}
+where $C_Q$ depends on $Q$ but not on $P$.
+
+:::
+
+:::{#prf-manip-stein-score}
+### Not Examinable
+
+From the *divergence theorem* (i.e. multivariate integration-by-parts; see e.g. MSP2801),
+$$
+\begin{align*}
+    \int \langle \nabla \log p , \nabla \log q \rangle \; \mathrm{d}Q & = \int \left\langle (\nabla \log p)(\mathbf{x}) , \frac{(\nabla q)(\mathbf{x})}{q(\mathbf{x})} \right\rangle \; q(\mathbf{x}) \; \mathrm{d}\mathbf{x} \\
+    & = \int \langle (\nabla \log p)(\mathbf{x}) , (\nabla q)(\mathbf{x}) \rangle \; \mathrm{d}\mathbf{x} \\
+    & = \int q(\mathbf{x}) (\Delta \log p)(\mathbf{x}) \; \mathrm{d}\mathbf{x} \\
+    & = \int (\Delta \log p)(\mathbf{x}) \; \mathrm{d}Q(\mathbf{x})
+\end{align*}
+$$
+where the boundary term that appears in integration-by-parts vanishes since we assumed $q(\mathbf{x}) (\nabla \log p)(\mathbf{x}) \rightarrow \mathbf{0}$ uniformly as $\|\mathbf{x}\| \rightarrow \infty$.
+Thus
+$$
+\begin{align*}
+    \int \| s_P(\mathbf{x}) - s_Q(\mathbf{x}) \|^2 \mathrm{d}Q(\mathbf{x}) & = \int \underbrace{ \langle \nabla \log p , \nabla \log p \rangle }_{\|(\nabla \log p)(\mathbf{x})\|^2} - 2 \langle \nabla \log p , \nabla \log q \rangle + \underbrace{ \langle \nabla \log q , \nabla \log q \rangle }_{\text{independent of $P$}} \; \mathrm{d}Q \\
+    & = \int \|(\nabla \log p)(\mathbf{x})\|^2 + 2 (\Delta \log p)(\mathbf{x}) \; \mathrm{d}Q(\mathbf{x}) + C_Q
+\end{align*}
+$$
+as required.
+
+:::
+
+That is, we *can* indeed train our energy-based model by matching Stein scores, and we do this by minimising the right hand side of @eq-hyvarinen from @prp-manip-stein-score where $P$ is $P_{\bm{\theta}}$ and where $Q$ is replaced by the empirical distribution of the dataset:
+
+:::{#def-score-matching}
+### Score matching
+Given a dataset $\{\mathbf{x}_i\}_{i=1}^n$ and a generative model $P_{\bm{\theta}}$, the *score matching* estimator is
+$$ 
+ \argmin_{\bm{\theta} \in \Theta} \quad \frac{1}{n} \sum_{i=1}^n \|(\nabla \log p_{\bm{\theta}})(\mathbf{x}_i)\|^2 + 2 (\Delta \log p_{\bm{\theta}})(\mathbf{x}_i)   
+$${#eq-score-matching-obj}
+
+:::
+
+The quantities appearing in @def-score-matching can indeed be calculated for energy-based models, due to @eq-energy-stein-score.
+Score matching and maximum likelihood estimation happen to yield the same result when training a normal generative model (\Cref{ex: sm and ml}), but in general these objectives can be different.
+
+Score matching has been around since at least @hyvarinen2005estimation, and has been widely used in statistics to circumvent intractable normalisation constants $Z_{\bm{\theta}}$.
+
+However, the optimisation landscape for score matching in @eq-score-matching-obj can be difficult to navigate, and this limited its potential.
+
+A breakthrough occurred around 2020, when @ho2020denoising and @songdenoising had the idea of constructing a sequence of relaxed optimisation problems, where one first solves an easier problem and leverages the solution to inform the next problem in the sequence, eventually enabling the original problem to be solved:
+
+:::{#exm-denoising-diffusions}
+### Denoising diffusions[{{< fa star >}}{{< fa star >}}]{.advanced title="Non-Examinable content"}
+
+Let $P_0$ be the distribution from which the dataset $\{\mathbf{x}_i\}_{i=1}^n$ are considered to have been sampled.
+Construct a sequence $(P_t)_{t > 0}$ of probability distributions, such that if $\mathbf{X}_t \sim P_t$ and $\mathbf{Z} \sim \mathcal{N}(\mathbf{0},\mathbf{I})$, then $\mathbf{X}_t + (s-t) \mathbf{Z} \sim P_s$ for all $s \geq t$ (one can interpret such a construction as a *diffusion process*, but we do not need this detail).
+Each $P_t$ can be regarded as a *noisy* version of the data-generating distribution, where we have taken the original data points $\mathbf{x}_i$ and added independent Gaussian noise; see @fig-denosing-diffusion.
+
+For large $t$, say $t = T$, the distribution $P_T$ will be approximately equal to $\mathcal{N}(\mathbf{0},T\mathbf{I})$ and the associated Stein score will be approximately $- \mathbf{x} / T$, which can be easily matched using e.g. a linear model.
+The crucial observation is that the Stein score function of $P_s$ is easier to match compared to the Stein score function of $P_t$ whenever $s \geq t$.
+Thus we can start by matching the Stein score for $P_T$ and gradually work backward until we have an accurate approximation to the Stein score of $P_0$.
+This idea has become known as *denoising*, referring to working backward from the noisy $P_T$ to the noiseless $P_0$.
+Using this approach, score matching can achieve state-of-the-art performance in complex generative modelling tasks.
+A prominent example of denoising diffusions is *Stable Diffusion*, which attracted much attention when it was publicly released by Stability AI in 2022.
+
+:::
+
+
+![Illustrating the denoising diffusion generative model. [[source](https://cvpr2023-tutorial-diffusion-models.github.io})]](figures/kernel_trick.png){#fig-denosing-diffusion width=70%}
+
+[^transformation-comment]:
+    If data are not real vector-valued, we can proceed by first *embedding* the data into $\mathbb{R}^d$ using an appropriate transformation $\phi(\mathbf{x}_i) \in \mathbb{R}^d$.
+
+[^kmeans-comment]:
+    To avoid a trivial solution in @eq-kmeans we would need to insist on having at least one data point in each cluster.
+
+[^recap-note]:
+    Recall that $\Delta = \nabla \cdot \nabla$ denotes the Laplacian @rem-calculus-notation. Recall also that $\int \cdots \mathrm{d}Q$ denotes expectation with respect to $Q$; @recap-notation-expectation.
+
+  

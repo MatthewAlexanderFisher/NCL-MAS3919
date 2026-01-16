@@ -7,11 +7,19 @@ project:
     - pwa/offline.html
     - pwa/icons/*
 
+crossref:
+  chapters: true
+  custom:
+    - kind: float
+      key: q
+      reference-prefix: "Question"
+
 execute:
   engine: jupyter
   # debug: true
   # error: true
   jupyter: mas2901
+
 
 book:
   title: "MAS3919: Foundations of Machine Learning"
@@ -30,8 +38,9 @@ book:
         - content/main/7-ethics-of-ml.qmd
     - part: "Practicals"
       chapters:
-        - content/practicals/1-intro-to-pytorch.qmd
-        - content/practicals/2-ml-models-in-pytorch.qmd
+        - content/practicals/1-intro-to-pytorch.ipynb
+        - content/practicals/2-ml-models-in-pytorch.ipynb
+        - content/practicals/3-training-ml-models-in-pytorch.ipynb
     - part: "Additional Material"
       chapters:
         - content/appendix/formula-sheet.qmd
@@ -51,7 +60,7 @@ book:
     type: textbox
     keyboard-shortcut: "F"
 
-# bibliography: references.bib
+bibliography: references.bib
 
 brand: theming/_brand.yml
 format:
@@ -64,8 +73,11 @@ format:
 
     filters:
       - callouty-theorem
+      - pseudocode
+      - custom-callouts
     css: 
       - theming/math-scroll.css
+      - theming/practice-details.css
       - theming/callout-style.css
       - theming/floating-code.css
       - theming/font.css
@@ -78,20 +90,30 @@ format:
       - theming/lecture-zoom.css
       - theming/visualisation-controls.css
       - theming/tables.css
+      - theming/small-table.css
+      - theming/reading-mode.css
       - theming/custom-block.css
+      - theming/advanced.css
+      - theming/callout-preview.css
     include-after-body:
       - theming/no-xref-suffix.html
       - theming/close-codefold.html
       - theming/header.html
       - theming/callout-prefix-removal.html
-      - theming/zoom-button.html
+      # - theming/zoom-button.html
       - theming/print-button.html
       - js/inkpad.html
+      - js/callout-preview.html
       - theming/ink-button.html
-    include-in-header: 
-      # - theming/favicons.html
-      - pwa/pwa-head.html
+      - theming/reading-mode-progress.html
+      - text: |
+          <script src="https://unpkg.com/@popperjs/core@2"></script>
+          <script src="https://unpkg.com/tippy.js@6"></script>
 
+    include-in-header: 
+          # - theming/favicons.html
+          - pwa/pwa-head.html
+          
   # pdf:
   #   documentclass: scrreprt
   #   include-in-header:
@@ -160,13 +182,6 @@ callouty-theorem:
       appearance: default
       collapse: true
       icon: true
-  recap:
-    override-title: true
-    callout:
-      type: tip
-      appearance: default
-      collapse: true
-      icon: true
   exm:
     override-title: false
     callout:
@@ -175,7 +190,13 @@ callouty-theorem:
       collapse: false
 
   # theorems types not specified in the metadata will be rendered as is
-  cor: default # calloutify corollaries with default style
+  cor:
+    override-title: false
+    callout:  # also support default style here
+      appearance: minimal
+      type: note
+      collapse: false
+   
   def:
     override-title: false
     callout:  # also support default style here

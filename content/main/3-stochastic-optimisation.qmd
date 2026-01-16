@@ -4,8 +4,411 @@ execute:
 jupyter: mas2901
 ---
 
-# Stochastic Optimisation
+# Stochastic Optimisation {#sec-stoch-opt}
 
-## Gradient Descent
+At this point we are over half way through the module and we have not yet discussed the mechanics of how a machine learning model is actually trained.
+That is, while we have defined optimisation objectives that we might seek to minimise, we have not discussed how such minimisation is performed.
 
-## Stochastic Gradient Descent
+As we have already acknowledged in @sec-implicit-reg-nn, optimisation over a high-dimensional parameter space $\Theta$ is usually extremely difficult.
+A further complication is that the empirical risk $\mathcal{R}_n$ can be expensive to calculate; we have to sum across the full dataset of size $n$, and for modern machine learning tasks with enormous datasets even computing this sum can be a challenging computational task.
+
+The dominant solution in machine learning is *stochastic optimisation*, and we are going to study these methods in detail.
+At a high level, at least, we can view stochastic optimisation as a fast but approximate numerical method for global optimisation; it may not find global optima, but it often finds the "shallow" local minima that correspond to machine learning models which generalise well.
+
+The simplest example of stochastic optimisation is called *stochastic gradient descent*, and we study this in @sec-sgd.
+As a warm-up, we first consider the analysis of regular gradient descent in @sec-grad-desc.
+
+Some practically important extensions of stochastic gradient descent are highlighted in @sec-beyond-sgd.
+
+Computational frameworks that implement stochastic optimisation build on *automatic differentiation*, and such is its importance in enabling modern machine learning we devote @sec-autodiff to this topic.
+
+
+## Gradient Descent {#sec-grad-desc}
+
+For the purposes of this section we are going to focus on empirical risk minimisation (cf. @def-empirical-risk), which we recall seeks parameters $\hat{\bm{\theta}}$ for which the empirical risk
+$$
+\mathcal{R}_n(f_{\bm{\theta}}) = \frac{1}{n} \sum_{i=1}^n L(\mathbf{y}_i , f_{\bm{\theta}}(\mathbf{x}_i) )
+$$
+is minimised; an extension to include additive regularisation (cf. @def-additive-reg) is straightforward.
+
+> How can we find $\hat{\bm{\theta}}$?
+
+A simple heuristic is to initialise at some parameter values $\bm{\theta}_0$ and iteratively "follow the gradient downhill", constructing a sequence $(\bm{\theta}_t)_{t \in \mathbb{N}}$ that moves toward a local minimum of the empirical risk:
+$$
+\bm{\theta}_{t+1} = \bm{\theta}_t - \epsilon \nabla_{\bm{\theta}} \mathcal{R}_n(f_{\bm{\theta}}) |_{\bm{\theta} = \bm{\theta}_t}.
+$${#eq-gradient-step}
+Here $\epsilon > 0$ is called a *learning rate* and should be selected carefully so that the sequence $(\bm{\theta}_t)_{t \in \mathbb{N}}$ "settles nicely" into a local minimum of the empirical risk (we will discuss the choice of $\epsilon$ theoretically in @thm-sgd and practically in \Cref{sec: text data}).
+In practice @eq-gradient-step is terminiated after a finite number of steps $T$ have been performed, and the resulting $\bm{\theta}_T$ is viewed as an approximation to $\hat{\bm{\theta}}$.
+
+The gradient of the empirical risk follows from the chain rule, as
+$$
+\nabla_{\bm{\theta}} \mathcal{R}_n(f_{\bm{\theta}}) = \frac{1}{n} \sum_{i=1}^n \nabla_2 L( \mathbf{y}_i , f_{\bm{\theta}}(\mathbf{x}_i) ) \nabla_{\bm{\theta}} f_{\bm{\theta}}(\mathbf{x}_i)  
+$${#eq-erm-gradient}
+where $\nabla_2 L$ denotes the gradient of $L$ with respect to its second argument.
+
+Calculating $\nabla_2 L$ is usually straightforward; for example for the squared error loss $L(\mathbf{y},\mathbf{z}) = \|\mathbf{y} - \mathbf{z}\|^2$ we have $\nabla_2 L(\mathbf{y},\mathbf{z}) = - 2 (\mathbf{y} - \mathbf{z})$.
+
+Calculating $\nabla_{\bm{\theta}} f_{\bm{\theta}}$ is in principle more difficult, but huge progress has been made in this direction through the emergence of automatic differentiation frameworks such as Torch and JAX (cf. @sec-autodiff), to the extent that differentiating through the machine learning model is often practically straightforward.
+
+General pseudocode for gradient descent is presented in @algo-gd.
+To reinforce ideas, let's perform a simple example of gradient descent:
+
+
+::: {#exr-least-squares}
+### Gradient descent on a quadratic
+
+Derive a closed-form trajectory for gradient descent on $F(\bm{\theta}) = \frac{1}{2} \|\mathbf{A}\bm{\theta} - \mathbf{b}\|^2$ initialised at $\bm{\theta}_0 \in \mathbb{R}^p$.
+
+Deduce an upper bound on the learning rate $\epsilon > 0$, below which convergence to a global minimum is guaranteed.
+
+```{=html}
+<details>
+<summary><strong>Solution</strong></summary>
+```
+
+The gradient is $\nabla F(\bm{\theta}) = \mathbf{A}^\top \mathbf{A} \bm{\theta} - \mathbf{A}^\top \mathbf{b}$, so gradient descent satisfies $\bm{\theta}_t = \bm{\theta}_{t-1} - \epsilon (\mathbf{A}^\top \mathbf{A} \bm{\theta}_{t-1} - \mathbf{A}^\top \mathbf{b})$.
+In particular, if $\bm{\theta}_\star$ is any minimiser of $F$ then $\mathbf{A}\bm{\theta}_\star = \mathbf{b}$ and we can re-write the gradient descent update as $\bm{\theta}_t - \bm{\theta}_\star = (\mathbf{I} - \epsilon \mathbf{A}^\top \mathbf{A})(\bm{\theta}_{t-1} - \bm{\theta}_\star)$.
+Unwinding the recursion, 
+$$
+\bm{\theta}_t - \bm{\theta}_\star = (\mathbf{I} - \epsilon \mathbf{A}^\top \mathbf{A})^t(\bm{\theta}_0 - \bm{\theta}_\star) .
+$$
+To reason about the size of the right hand side we can consider the eigenvalues of $\mathbf{I} - \epsilon \mathbf{A}^\top \mathbf{A}$.
+Let $\lambda_{\min}(\mathbf{M})$ and $\lambda_{\max}(\mathbf{M})$ indicate the smallest and largest eigenvalues of a matrix $\mathbf{M}$.
+Assume $\mathbf{A} \neq \mathbf{0}$ else $\bm{\theta}_0$ is already a minimiser of $F$.
+Then $\lambda_{\max}(\mathbf{A}^\top \mathbf{A}) > 0$.
+For $\epsilon < 1 / \lambda_{\max}(\mathbf{A}^\top \mathbf{A})$ we have 
+$$
+\lambda_{\max}(\mathbf{I} - \epsilon \mathbf{A}^\top \mathbf{A}) < 1 - \epsilon \lambda_{\min}(\mathbf{A}^\top \mathbf{A}) < 1 - \frac{ \lambda_{\min}(\mathbf{A}^\top \mathbf{A}) }{ \lambda_{\max}(\mathbf{A}^\top \mathbf{A}) } < 1
+$$ 
+and thus 
+$$
+\| \bm{\theta}_t - \bm{\theta}_\star \| 
+\leq \left( 1 - \frac{ \lambda_{\min}(\mathbf{A}^\top \mathbf{A}) }{ \lambda_{\max}(\mathbf{A}^\top \mathbf{A}) } \right)^t \| \bm{\theta}_0 - \bm{\theta}_\star \| \rightarrow 0
+$$
+as $t \rightarrow \infty$, showing that gradient descent is convergent[^condition-number].
+
+```{=html}
+</details>
+```
+
+:::
+
+Gradient descent is an intuitive idea, but does it work in general?
+
+To take a first step toward analysing gradient descent, we consider the favourable case of optimising a *convex* objective function:
+
+::: {.definition #def-convex-function}
+### Convex function
+A differentiable function $F : \mathbb{R}^p \rightarrow \mathbb{R}$ is *convex* if
+$$
+F(\bm{\vartheta}) \geq F(\bm{\theta}) + \nabla F(\bm{\theta})^\top (\bm{\vartheta} - \bm{\theta})
+$$
+for all $\bm{\theta}, \bm{\vartheta} \in \mathbb{R}^d$.
+:::
+
+An example of a convex function is shown in @fig-convex.
+
+The differentiable convex functions are special; they enable *local* information (i.e. a vanishing gradient $\nabla F(\bm{\theta}_\star) = \bm{0}$) to be used to deduce *global* optimality (i.e. $F(\bm{\theta}_\star) = \min_{\bm{\theta} \in \mathbb{R}^p} F(\bm{\theta})$).
+
+```{ojs}
+//| fig-cap: Illustrating a differentiable convex function $F \colon \mathbb{R} \rightarrow \mathbb{R}$.
+//| label: fig-convex
+
+{
+  const width = 500;
+  const height = 320;
+  const margin = { top: 20, right: 30, bottom: 50, left: 50 };
+  
+  const svg = d3.create("svg")
+    .attr("viewBox", [0, 0, width, height])
+    .attr("width", width)
+    .attr("height", height);
+  
+  // Scales
+  const xMin = -1.0, xMax = 4.0;
+  const yMin = 0, yMax = 3.6;
+  
+  const xScale = d3.scaleLinear()
+    .domain([xMin, xMax])
+    .range([margin.left, width - margin.right]);
+  
+  const yScale = d3.scaleLinear()
+    .domain([yMin, yMax])
+    .range([height - margin.bottom, margin.top]);
+  
+  // Function F(x) = 1 + 0.25*(x-1.2)^2 + 0.8*exp(-0.8*(x+0.2))
+  function F(x) {
+    return 1 + 0.25 * Math.pow(x - 1.2, 2) + 0.8 * Math.exp(-0.8 * (x + 0.2));
+  }
+  
+  // Derivative F'(x) = 0.5*(x-1.2) - 0.64*exp(-0.8*(x+0.2))
+  function Fprime(x) {
+    return 0.5 * (x - 1.2) - 0.64 * Math.exp(-0.8 * (x + 0.2));
+  }
+  
+  // Point of tangency
+  const theta = 0.6;
+  const Ftheta = F(theta);
+  const slope = Fprime(theta);
+  
+  // Tangent line: y = F(theta) + F'(theta)*(x - theta)
+  function tangent(x) {
+    return Ftheta + slope * (x - theta);
+  }
+  
+  // Draw axes
+  // x-axis
+  svg.append("line")
+    .attr("x1", xScale(xMin)).attr("y1", yScale(0))
+    .attr("x2", xScale(xMax) + 10).attr("y2", yScale(0))
+    .attr("stroke", "black").attr("stroke-width", 1.5)
+    .attr("marker-end", "url(#arrowhead)");
+  
+  // y-axis
+  svg.append("line")
+    .attr("x1", xScale(xMin)).attr("y1", yScale(0))
+    .attr("x2", xScale(xMin)).attr("y2", yScale(yMax) - 10)
+    .attr("stroke", "black").attr("stroke-width", 1.5)
+    .attr("marker-end", "url(#arrowhead)");
+  
+  // Arrowhead marker
+  svg.append("defs").append("marker")
+    .attr("id", "arrowhead")
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 8).attr("refY", 0)
+    .attr("markerWidth", 6).attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M0,-5L10,0L0,5")
+    .attr("fill", "black");
+  
+  // Axis label
+  svg.append("text")
+    .attr("x", xScale(xMax) + 15).attr("y", yScale(0) + 5)
+    .attr("font-size", 14).attr("font-style", "italic")
+    .text("ϑ");
+  
+  // Plot F(x)
+  const line = d3.line()
+    .x(d => xScale(d))
+    .y(d => yScale(F(d)));
+  
+  const xValues = d3.range(xMin, xMax, 0.02);
+  
+  svg.append("path")
+    .datum(xValues)
+    .attr("fill", "none")
+    .attr("stroke", "black")
+    .attr("stroke-width", 2)
+    .attr("d", line);
+  
+  // Label for F(ϑ)
+  svg.append("text")
+    .attr("x", xScale(2.1)).attr("y", yScale(2.4))
+    .attr("font-size", 14).attr("font-style", "italic")
+    .text("F(ϑ)");
+  
+  // Plot tangent line
+  const tangentLine = d3.line()
+    .x(d => xScale(d))
+    .y(d => yScale(tangent(d)));
+  
+  const tangentXValues = d3.range(-0.5, 2.5, 0.1);
+  
+  svg.append("path")
+    .datum(tangentXValues)
+    .attr("fill", "none")
+    .attr("stroke", "black")
+    .attr("stroke-width", 1.5)
+    .attr("d", tangentLine);
+  
+  // Label for tangent
+  svg.append("text")
+    .attr("x", xScale(2.6)).attr("y", yScale(0.5))
+    .attr("font-size", 12).attr("font-style", "italic")
+    .text("F(θ) + ∇F(θ)ᵀ(ϑ − θ)");
+  
+  // Mark tangency point
+  svg.append("circle")
+    .attr("cx", xScale(theta)).attr("cy", yScale(Ftheta))
+    .attr("r", 4)
+    .attr("fill", "black");
+  
+  // Dashed vertical line to axis
+  svg.append("line")
+    .attr("x1", xScale(theta)).attr("y1", yScale(Ftheta))
+    .attr("x2", xScale(theta)).attr("y2", yScale(0))
+    .attr("stroke", "black")
+    .attr("stroke-width", 1)
+    .attr("stroke-dasharray", "4,3");
+  
+  // Tick and label at theta
+  svg.append("line")
+    .attr("x1", xScale(theta)).attr("y1", yScale(0) - 4)
+    .attr("x2", xScale(theta)).attr("y2", yScale(0) + 4)
+    .attr("stroke", "black").attr("stroke-width", 1.5);
+  
+  svg.append("text")
+    .attr("x", xScale(theta)).attr("y", yScale(0) + 20)
+    .attr("text-anchor", "middle")
+    .attr("font-size", 14).attr("font-style", "italic")
+    .text("θ");
+  
+  return svg.node();
+}
+```
+
+```pseudocode
+#| label: algo-gd
+#| caption: Gradient Descent on $F \colon \mathbb{R}^p \rightarrow \mathbb{R}$
+#| html-indent-size: "1.2em"
+#| html-line-number: true
+#| html-line-number-punc: ":"
+#| html-no-end: true
+#| pdf-placement: "htb!"
+#| pdf-line-number: true
+
+\begin{algorithm}
+\caption{Gradient Descent on $F : \mathbb{R}^p \rightarrow \mathbb{R}$}
+\begin{algorithmic}
+\Require gradients $\nabla F : \mathbb{R}^p \rightarrow \mathbb{R}^p$
+\Require initial state $\bm{\theta}_0 \in \mathbb{R}^p$
+\Require learning rate $\epsilon \in (0,\infty)$
+\Require number of steps $T$
+\Ensure final parameter estimate $\bm{\theta}_T$
+\For{$t = 0, \dots, T-1$}
+  \State $\bm{\theta}_{t+1} \gets \bm{\theta}_t - \epsilon \nabla F(\bm{\theta}_t)$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+```
+
+
+
+::: {.thm #thm-gd}
+### Convergence of gradient descent
+Let $F : \mathbb{R}^p \rightarrow \mathbb{R}$ be convex and differentiable with $\|\nabla F(\bm{\theta})\| \leq B$ for all $\bm{\theta} \in \mathbb{R}^p$.
+Then the sequence $(\bm{\theta}_t)_{t \geq 0}$ produced by gradient descent as in @algo-gd satisfies
+$$
+\frac{1}{T}\sum_{t=0}^{T-1} F(\bm{\theta}_t) - F(\bm{\theta}_\star) \leq  \frac{\|\bm{\theta}_0 - \bm{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2}
+$${#eq-gd-conc}
+where $\bm{\theta}_\star$ denotes any minimiser of $F$.
+:::
+
+ Since $\bm{\theta}_\star$ is a minimiser of $F$, the left hand side of @eq-gd-conc is $\geq 0$.
+The quantity
+$$
+\frac{1}{T}\sum_{t=0}^{T-1} F(\bm{\theta}_t) - F(\bm{\theta}_\star)
+$${#eq-regret}
+is called the **regret**; it measures how much we suffered along the optimisation path, compared to if we had simply known $\bm{\theta}_\star$ at the start (we will consider the concept of regret in more detail in \Cref{subsec: bandit}).
+
+Thus @thm-gd shows that, if the learning rate $\epsilon$ is small enough, and we are planning to take a large enough number of iterations $T$, then our regret will be small.
+
+::: {#prf-gd}
+
+From the definition of gradient descent
+
+$$
+\begin{align*}
+\|\boldsymbol{\theta}_{t+1} - \boldsymbol{\theta}_\star\|^2 & = \|\boldsymbol{\theta}_t - \epsilon \nabla F(\boldsymbol{\theta}_t) - \boldsymbol{\theta}_\star\|^2 \\[0.5em]
+& = \|\boldsymbol{\theta}_t - \boldsymbol{\theta}_\star\|^2 - 2 \epsilon \nabla F(\boldsymbol{\theta}_t)^\top (\boldsymbol{\theta}_t - \boldsymbol{\theta}_\star) + \epsilon^2 \underbrace{ \|\nabla F(\boldsymbol{\theta}_t)\|^2 }_{\leq B^2}
+\end{align*}
+$$
+and thus
+$$
+\nabla F(\bm{\theta}_t)^\top (\bm{\theta}_t - \bm{\theta}_\star)  \leq \frac{1}{2\epsilon} \left\{ \|\bm{\theta}_t - \bm{\theta}_\star\|^2 - \|\bm{\theta}_{t+1} - \bm{\theta}_\star\|^2 \right\} + \frac{1}{2} \epsilon B^2 .
+$${#eq-gd-interm}
+Now, since $F$ is <span class="xref-no-num">[convex @def-convex-function]</span> we know that
+$$
+    F(\bm{\theta}_t) - F(\bm{\theta}_\star)  \leq \nabla F(\bm{\theta}_t)^\top (\bm{\theta}_t - \bm{\theta}_\star) . 
+$${#eq-interm-calc}
+Using @eq-gd-interm to bound the right hand side of @eq-interm-calc leads to
+$$
+\begin{align*}
+    F(\bm{\theta}_t)  - F(\bm{\theta}_\star)   & \leq \frac{1}{2 \epsilon} \left\{ \|\bm{\theta}_t - \bm{\theta}_\star\|^2 - \|\bm{\theta}_{t+1} - \bm{\theta}_\star\|^2 \right\} + \frac{1}{2} \epsilon B^2 .
+\end{align*}
+$$
+Averaging both sides over $t$, and noting the *telescopic sum* ($\sum_{t=0}^{T-1} x_{t+1} - x_t = x_T - x_0$),
+$$
+\begin{align*}
+    \frac{1}{T}  \sum_{t=0}^{T-1} F(\bm{\theta}_t) - F(\bm{\theta}_\star) & \leq \frac{1}{2\epsilon T} \left\{ \|\bm{\theta}_0 - \bm{\theta}_\star\|^2 - \underbrace{ \|\bm{\theta}_T - \bm{\theta}_\star\|^2 }_{\geq 0} \right\} + \frac{1}{2} \epsilon B^2  \\
+    & \leq \frac{\|\bm{\theta}_0 - \bm{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2} ,
+\end{align*}
+$$
+completing the argument.
+:::
+
+From @thm-gd we can elicit a suitable choice of learning rate $\epsilon$ by minimising the overall bound, leading to (cf. @q-opt-learning-rate)
+$$
+\epsilon = \frac{\|\theta_0 - \theta_\star\|}{\sqrt{T} B} . 
+$${#eq-optimal-learning-rate}
+That is, the learning rate $\epsilon$ should be smaller when either (a) the initial state $\theta_0$ is close to the minimiser $\theta_\star$, (b) the number of steps $T$ to be taken is larger, or (c) we have a larger bound $B$ on the stochastic gradient.
+
+A strategy that is sometimes used in theoretical analysis of gradient descent is to make the learning rate *time-dependent*, i.e., $\epsilon_t$. For example, the choice $\epsilon_t = O(t^{-1/2})$ leads to the slightly stronger result
+$$
+\min_{0 \leq t \leq T-1} F(\theta_t) - F(\theta_\star) = O\left( \frac{\log(T)}{\sqrt{T}} \right) ,
+$$
+which you can see by re-running the proof of @thm-gd with this choice of learning rate, or by taking a look at @bach2024learning [Proposition 5.6].
+
+## Stochastic Gradient Descent {#sec-sgd}
+
+The main issue with gradient descent in machine learning is that every gradient step \eqref{eq: gradient step} required computing the gradient \eqref{eq: erm gradient} of the empirical risk, which in turn requires summing over all $n$ entries of the training dataset.
+It is common for dataset sizes to exceed $n = 10^6$, and a typical number of iterations needed for gradient descent might be $T = 10^3$, leading to a high overall computational cost $O(nT)$.
+
+To mitigate this computational cost, *stochastic* gradient descent replaces the full gradient \eqref{eq: erm gradient} with an approximation obtained from a randomly selected subset (often called a *minibatch*) of the training dataset:
+$$
+    \nabla_{\bm{\theta}} \mathcal{R}_n(f_{\bm{\theta}}) \approx \frac{1}{m} \sum_{j=1}^m \nabla_2 L(\mathbf{y}_{i_j} , f_{\bm{\theta}}(\mathbf{x}_{i_j}) ) \nabla_{\bm{\theta}} f_{\bm{\theta}}(\mathbf{x}_{i_j}) 
+$${#eq-stoch-grad}
+where $\{i_j\}_{j=1}^m$ is a uniformly random subset[^random-subset] of $\{1,\dots,n\}$.
+
+The stochastic gradient @eq-stoch-grad is an unbiased estimator of the true gradient (cf. @q-stoch-grad-unbiased), and its variance is typically larger when the minibatch size $m$ is small.
+Pseudocode for the general version of *stochastic gradient descent* is presented in @algo-sgd, and the idea is illustrated in \Cref{fig: SGD}.
+
+
+```pseudocode
+#| label: algo-sgd
+#| html-indent-size: "1.2em"
+#| html-line-number: true
+#| html-line-number-punc: ":"
+#| html-no-end: true
+#| pdf-placement: "htb!"
+#| pdf-line-number: true
+
+\begin{algorithm}
+\caption{Stochastic Gradient Descent on $F : \mathbb{R}^p \rightarrow \mathbb{R}$}
+\begin{algorithmic}
+\Require stochastic gradients $G_t : \mathbb{R}^p \rightarrow \mathbb{R}^p$ with $\mathbb{E}[G_t(\cdot)] = \nabla F(\cdot)$
+\Require initial state $\boldsymbol{\theta}_0 \in \mathbb{R}^p$
+\Require learning rate $\epsilon \in (0,\infty)$
+\Require number of steps $T$
+\For{$t = 0, \dots, T-1$}
+  \State $\boldsymbol{\theta}_{t+1} \gets \boldsymbol{\theta}_t - \epsilon G_t(\boldsymbol{\theta}_t)$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+```
+
+The critical design choices in stochastic gradient descent are thus the size $m$ of the minibatches and the learning rate $\epsilon$. Theoretical analysis provides insight into how these degrees of freedom should be selected. The mathematical analysis of stochastic gradient descent applied to non-convex objectives is a rich topic, but for our purposes we will settle for the simplest possible analysis which directly generalises @thm-gd to stochastic gradient descent:
+
+::: {#thm-sgd}
+## Convergence of stochastic gradient descent
+
+Let $F : \mathbb{R}^p \rightarrow \mathbb{R}$ be convex and differentiable with $\|\nabla F(\boldsymbol{\theta})\| \leq B$ for all $\boldsymbol{\theta} \in \mathbb{R}^p$.
+Let $(G_t)_{t \geq 0}$ be independent and satisfy $\mathbb{E}[G_t(\boldsymbol{\theta})] = \nabla F(\boldsymbol{\theta})$ and $\mathbb{E}[\|G_t(\boldsymbol{\theta})\|^2] \leq B^2$ for all $\boldsymbol{\theta} \in \mathbb{R}^p$.
+Then the sequence $(\boldsymbol{\theta}_t)_{t \geq 0}$ produced by stochastic gradient descent as in @algo-sgd satisfies
+$$
+\frac{1}{T}\sum_{t=0}^{T-1} \mathbb{E}[F(\boldsymbol{\theta}_t)] - F(\boldsymbol{\theta}_\star) \leq \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2}
+$$
+where $\boldsymbol{\theta}_\star$ denotes any minimiser of $F$.
+:::
+
+## Beyond "Vanilla" Stochastic Gradient Descent [{{< fa star >}}{{< fa star >}}]{.advanced title="Non-Examinable content"} {#sec-beyond-sgd}
+
+## Automatic Differentiation [{{< fa star >}}]{.advanced title="MAS8607 content"} {#sec-autodiff}
+
+
+[^condition-number]:
+    The quantity $\lambda_{\min}(\mathbf{M}) / \lambda_{\max}(\mathbf{M})$ is called the *reciprocal condition number* of the matrix $\mathbf{M}$; this is always between $0$ and $1$, and is closer to $0$ when $\mathbf{M}$ has an "effective low rank".
+
+[^random-subset]:
+    The random subset is refreshed at each step of the gradient descent, so eventually and with high probability all of the data are used, just not all at the same time.

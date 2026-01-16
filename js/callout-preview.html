@@ -1,0 +1,183 @@
+<script>
+  
+document.addEventListener('DOMContentLoaded', function() {
+  const loadTippy = new Promise((resolve) => {
+    if (typeof tippy !== 'undefined') {
+      resolve();
+      return;
+    }
+    
+    const popper = document.createElement('script');
+    popper.src = 'https://unpkg.com/@popperjs/core@2';
+    popper.onload = () => {
+      const tippyScript = document.createElement('script');
+      tippyScript.src = 'https://unpkg.com/tippy.js@6';
+      tippyScript.onload = resolve;
+      document.head.appendChild(tippyScript);
+    };
+    document.head.appendChild(popper);
+  });
+  
+  loadTippy.then(initCalloutPreviews);
+});
+
+const contentCache = new Map();
+const mathRendered = new WeakSet(); // Track elements where math has been rendered
+
+// Render math in an element using KaTeX (only once)
+function renderMath(element) {
+  if (!element || mathRendered.has(element)) {
+    return; // Already rendered, skip
+  }
+  
+  if (typeof renderMathInElement !== 'undefined') {
+    renderMathInElement(element, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError: false
+    });
+  } else if (typeof katex !== 'undefined') {
+    element.querySelectorAll('.math').forEach(mathEl => {
+      if (mathRendered.has(mathEl)) return;
+      
+      const isDisplay = mathEl.classList.contains('display');
+      const tex = mathEl.textContent || mathEl.innerText;
+      try {
+        katex.render(tex, mathEl, {
+          displayMode: isDisplay,
+          throwOnError: false
+        });
+        mathRendered.add(mathEl);
+      } catch (e) {
+        console.warn('KaTeX render error:', e);
+      }
+    });
+  }
+  
+  // Hide MathML (screen reader version) to avoid duplication
+  element.querySelectorAll('.katex-mathml').forEach(el => {
+    el.style.display = 'none';
+  });
+  
+  // Mark this element as processed
+  mathRendered.add(element);
+}
+
+async function fetchCalloutContent(href) {
+  if (contentCache.has(href)) {
+    return contentCache.get(href);
+  }
+  
+  try {
+    const [file, anchor] = href.split('#');
+    const url = file || window.location.pathname;
+    
+    if (!file || file === '' || url === window.location.pathname) {
+      const element = document.getElementById(anchor);
+      if (element) {
+        const callout = element.closest('.callout');
+        const clone = callout ? callout.cloneNode(true) : element.parentElement.cloneNode(true);
+        clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+        
+        const content = clone.innerHTML;
+        contentCache.set(href, { html: content, needsMathRender: false });
+        return contentCache.get(href);
+      }
+    }
+    
+    const response = await fetch(url);
+    const html = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    const element = doc.getElementById(anchor);
+    if (element) {
+      const callout = element.closest('.callout');
+      const content = callout?.innerHTML || element.parentElement?.innerHTML || '';
+      contentCache.set(href, { html: content, needsMathRender: true });
+      return contentCache.get(href);
+    }
+  } catch (e) {
+    console.warn('Failed to fetch callout content:', e);
+  }
+  
+  return null;
+}
+
+function initCalloutPreviews() {
+  const calloutRefs = document.querySelectorAll('.callout-ref');
+  
+  calloutRefs.forEach(ref => {
+    const label = ref.dataset.calloutLabel;
+    const number = ref.dataset.calloutNumber;
+    const title = ref.dataset.calloutTitle;
+    const preview = ref.dataset.calloutPreview;
+    const targetHref = ref.getAttribute('href');
+    
+    const isRecap = label === 'Recap';
+    const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+    const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+    
+    const initialContent = `
+      <div class="callout-preview-content">
+        <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+          <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+        </div>
+        <div class="callout-preview-body">
+          ${preview ? preview + '...' : '<em>Loading...</em>'}
+        </div>
+      </div>
+    `;
+    
+    let contentLoaded = false;
+    
+    const instance = tippy(ref, {
+      content: initialContent,
+      allowHTML: true,
+      interactive: true,
+      placement: 'top',
+      theme: 'callout',
+      maxWidth: 450,
+      delay: [400, 100],
+      appendTo: document.body,
+      async onShow(instance) {
+        // Only fetch content once
+        if (contentLoaded) return;
+        
+        const result = await fetchCalloutContent(targetHref);
+        if (result && instance.state.isVisible) {
+          const isRecap = label === 'Recap';
+          const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+          const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+          
+          instance.setContent(`
+            <div class="callout-preview-content">
+              <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+                <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+              </div>
+              <div class="callout-preview-body callout-preview-fetched">
+                ${result.html}
+              </div>
+            </div>
+          `);
+          
+          contentLoaded = true;
+        }
+      },
+      onShown(instance) {
+        // Render math only once after content is shown
+        const contentEl = instance.popper.querySelector('.callout-preview-body');
+        if (contentEl) {
+          renderMath(contentEl);
+        }
+      }
+    });
+  });
+}
+
+
+</script>

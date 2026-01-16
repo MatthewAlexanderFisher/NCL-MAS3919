@@ -79,9 +79,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-eee127bcbcf69f6d1c4f39497eef8043.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-ca592282aabca1dce090d3def4fc59bb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-eee127bcbcf69f6d1c4f39497eef8043.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-f5ee150fb4bd363b356d51bef3bf57f5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-d5e987d2a49f81d99d3c6d2c04d8a2aa.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-f5ee150fb4bd363b356d51bef3bf57f5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
+<link href="../../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -219,6 +223,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 <script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+    <style type="text/css">
+    .ps-root .ps-algorithm {
+      border-top: 2px solid;
+      border-bottom: 2px solid;
+    }
+    .pseudocode-container {
+      text-align: left;
+    }
+    </style>
+  
+      <style type="text/css">
+      .ps-algorithm > .ps-line {
+        text-align: left;
+      }
+      </style>
+    
 
   <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
   <script>document.addEventListener("DOMContentLoaded", function () {
@@ -265,6 +285,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../theming/math-scroll.css">
+<link rel="stylesheet" href="../../theming/practice-details.css">
 <link rel="stylesheet" href="../../theming/callout-style.css">
 <link rel="stylesheet" href="../../theming/floating-code.css">
 <link rel="stylesheet" href="../../theming/font.css">
@@ -277,7 +298,11 @@ window.Quarto = {
 <link rel="stylesheet" href="../../theming/lecture-zoom.css">
 <link rel="stylesheet" href="../../theming/visualisation-controls.css">
 <link rel="stylesheet" href="../../theming/tables.css">
+<link rel="stylesheet" href="../../theming/small-table.css">
+<link rel="stylesheet" href="../../theming/reading-mode.css">
 <link rel="stylesheet" href="../../theming/custom-block.css">
+<link rel="stylesheet" href="../../theming/advanced.css">
+<link rel="stylesheet" href="../../theming/callout-preview.css">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -569,6 +594,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../../content/practicals/2-ml-models-in-pytorch.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Machine Learning Models in PyTorch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practicals/3-training-ml-models-in-pytorch.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training Machine Learning Models in Pytorch</span></span></a>
   </div>
 </li>
       </ul>
@@ -944,24 +975,514 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="probability" data-difficulty="0">
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="kernels" data-difficulty="1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Probability of heads
+<span class="screen-reader-only">Important</span>Sums of kernels are kernels <span class="advanced" title="Advanced content for 4th year students"><i class="fa-solid fa-star" aria-label="star"></i></span>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A fair coin is tossed <span class="math inline">10</span> times. What is the probability of exactly <span class="math inline">6</span> heads?</p>
+<p>Let <span class="math inline">k_1 : \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}</span> and <span class="math inline">k_2 : \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}</span> be kernels. Show that <span class="math inline">k(\mathbf{x},\mathbf{x}') = k_1(\mathbf{x},\mathbf{x}') + k_2(\mathbf{x},\mathbf{x}')</span> is also a kernel. How is the feature space of <span class="math inline">k</span> related to the feature space of <span class="math inline">k_1</span> and <span class="math inline">k_2</span>?</p>
 <details class="solution">
 <summary>
 Solution
 </summary>
-<p>Work it via the Binomial: <span class="math display">
-\mathrm{Pr}(X=6)=\binom{10}{6} (1/2)^{10}.
+<p>Let’s check the axioms of a kernel hold for <span class="math inline">k</span>.</p>
+<p>For symmetry, <span class="math inline">k(\mathbf{x},\mathbf{x}') = k_1(\mathbf{x},\mathbf{x}') + k_2(\mathbf{x},\mathbf{x}') = k_1(\mathbf{x}',\mathbf{x}) + k_2(\mathbf{x}',\mathbf{x}) = k(\mathbf{x}',\mathbf{x})</span> where we have used the symmetry property of <span class="math inline">k_1</span> and <span class="math inline">k_2</span>.</p>
+<p>For positive semi-definiteness, <span class="math display">
+\sum_{i=1}^n \sum_{j=1}^n w_i w_j k(\mathbf{x}_i,\mathbf{x}_j) = \underbrace{ \sum_{i=1}^n \sum_{j=1}^n w_i w_j k_1(\mathbf{x}_i,\mathbf{x}_j) }_{\geq 0} + \underbrace{ \sum_{i=1}^n \sum_{j=1}^n w_i w_j k_2(\mathbf{x}_i,\mathbf{x}_j) }_{\geq 0} \geq 0
+</span> for all <span class="math inline">w_1,\dots,w_n \in \mathbb{R}</span>, all <span class="math inline">\mathbf{x}_1,\dots,\mathbf{x}_n \in \mathcal{X}</span>, and all <span class="math inline">n \in \mathbb{N}</span>, where we have used the positive semi-definiteness of <span class="math inline">k_1</span> and <span class="math inline">k_2</span>.</p>
+<p>Now, let <span class="math inline">k_1(\mathbf{x},\mathbf{x}') = \langle \boldsymbol{\phi}_1(\mathbf{x}) , \boldsymbol{\phi}_1(\mathbf{x}') \rangle</span> and <span class="math inline">k_2(\mathbf{x},\mathbf{x}') = \langle \boldsymbol{\phi}_2(\mathbf{x}) , \boldsymbol{\phi}_2(\mathbf{x}') \rangle</span> be explicit representations of <span class="math inline">k_1</span> and <span class="math inline">k_2</span> as feature space inner products. It follows that <span class="math display">
+k(\mathbf{x},\mathbf{x}') = \langle \boldsymbol{\phi}_1(\mathbf{x}) , \boldsymbol{\phi}_1(\mathbf{x}') \rangle + \langle \boldsymbol{\phi}_2(\mathbf{x}) , \boldsymbol{\phi}_2(\mathbf{x}') \rangle
+= \left\langle \begin{pmatrix} \boldsymbol{\phi}_1(\mathbf{x}) \\ \boldsymbol{\phi}_2(\mathbf{x}) \end{pmatrix} , \begin{pmatrix} \boldsymbol{\phi}_1(\mathbf{x}') \\ \boldsymbol{\phi}_2(\mathbf{x}') \end{pmatrix} \right\rangle,
+</span> so the feature space of <span class="math inline">k</span> is the <em>Cartesian product</em> of the feature spaces of <span class="math inline">k_1</span> and <span class="math inline">k_2</span>.</p>
+</details>
+</div>
+</div>
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="neural-networks" data-difficulty="0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Universal logic gates
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Construct a <em>NOR gate</em>, whose truth table is</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">x_1</span></th>
+<th style="text-align: center;"><span class="math inline">x_2</span></th>
+<th style="text-align: center;"><span class="math inline">\mathrm{NOR}(x_1,x_2)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">0</span></td>
+<td style="text-align: center;"><span class="math inline">0</span></td>
+<td style="text-align: center;"><span class="math inline">1</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">1</span></td>
+<td style="text-align: center;"><span class="math inline">0</span></td>
+<td style="text-align: center;"><span class="math inline">0</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">0</span></td>
+<td style="text-align: center;"><span class="math inline">1</span></td>
+<td style="text-align: center;"><span class="math inline">0</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">1</span></td>
+<td style="text-align: center;"><span class="math inline">1</span></td>
+<td style="text-align: center;"><span class="math inline">0</span></td>
+</tr>
+</tbody>
+</table>
+<p>using the simple activation function <span class="math display">
+\sigma(z) = \begin{cases} 1 &amp; \text{if } z \geq 1 \\ 0 &amp; \text{if } z &lt; 1 \end{cases}.
 </span></p>
+<p>(A fascinating fact about the NOR logic gate is that <a href="https://en.wikipedia.org/wiki/NOR_logic">all other logic gates</a> can be constructed as combinations of NOR logic gates. As a result, the NOR gate is called <em>universal</em>.)</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>This is a simple problem; <span class="math inline">\sigma(1 - x_1 - x_2)</span>.</p>
+</details>
+</div>
+</div>
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="neural-networks" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Logic via deep neural networks
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">\mathbf{x} \in \{0,1\}^d</span> where <span class="math inline">d = 2^m</span> for some <span class="math inline">m \in \mathbb{N}</span>. Construct a neural network using the simple activation function <span class="math display">
+\sigma(z) = \begin{cases} 1 &amp; \text{if } z \geq 1 \\ 0 &amp; \text{if } z &lt; 1 \end{cases}
+</span> to perform a <em>parity check</em>, i.e.&nbsp;to return <span class="math inline">1</span> if the number of non-zero entries in <span class="math inline">\mathbf{x}</span> is odd, and otherwise to return <span class="math inline">0</span>. State how many neurons and how many layers you used in your network as a function of <span class="math inline">d</span>.</p>
+<p><a href="../main/2-machine-learning-models.html#sec-activation" class="quarto-xref">Hint: You may wish to make use of the XOR logic gate that we constructed in&nbsp;<span>Activation Functions</span></a></p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Let’s construct a neural network by induction, with base case <span class="math inline">m=1</span>.</p>
+<p>For the base case, we have a pair of inputs <span class="math inline">(x_1,x_2) \in \{0,1\}^2</span>, and the XOR gate from <a href="../main/2-machine-learning-models.html#sec-activation" class="quarto-xref"><span>Activation Functions</span></a> returns <span class="math inline">1</span> if and only if <span class="math inline">x_1 + x_2</span> is odd. That is, a single XOR gate performs a parity check when <span class="math inline">m = 1</span>.</p>
+<p>Now suppose we have a neural network that can perform a parity check when <span class="math inline">d = 2^{m-1}</span>, and consider the case where <span class="math inline">d = 2^m</span>. The state <span class="math inline">\mathbf{x}</span> can then be decomposed into two parts, <span class="math inline">(\mathbf{x}_1,\mathbf{x}_2)</span>, each with length <span class="math inline">2^{m-1}</span>, and we can construct a neural network parity check <span class="math inline">f_i(\mathbf{x}_i)</span> for each part <span class="math inline">i \in \{1,2\}</span>. Then <span class="math inline">f(\mathbf{x}) = \mathrm{XOR}(f_1(\mathbf{x}_1) , f_2(\mathbf{x}_2))</span> is a neural network parity check for <span class="math inline">\mathbf{x}</span>.</p>
+<p>Let <span class="math inline">n_m</span> be the number of neurons used to construct <span class="math inline">f</span>; then <span class="math inline">n_m = 2 n_{m-1} + 3</span> since <span class="math inline">n_{m-1}</span> neurons were used to construct each <span class="math inline">f_i</span> and we used an additional 3 neurons to construct the final XOR gate. Solving the recursion, we need <span class="math inline">n_m = 3 \cdot 2^m - 3</span> neurons to perform the parity check.</p>
+<p>Incrementing <span class="math inline">m</span> adds an additional <span class="math inline">2</span> layers to the neural network (recall <a href="../main/2-machine-learning-models.html#sec-activation" class="quarto-xref"><span>Activation Functions</span></a>) and thus the number of layers we need is <span class="math inline">2m</span>.</p>
+</details>
+</div>
+</div>
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="neural-networks" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Universal approximation with neural networks
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">f : [0,1] \rightarrow \mathbb{R}</span> be piecewise linear with a finite number of pieces <span class="math inline">m</span> (i.e.&nbsp;you can draw the graph of <span class="math inline">f</span> by “joining the dots”). Show that <span class="math inline">f</span> can be represented exactly using a neural network with the ReLU activation function <span class="math inline">\sigma(z) = \max\{0,z\}</span>.</p>
+<p>(A corollary of this result is that any continuous function <span class="math inline">f</span> on a bounded interval can be arbitrarily well approximated, in the supremum norm, using a neural network with ReLU activation function; this is called a <em>universal approximation</em> result.)</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>First, note that all piecewise linear functions can be constructed as superpositions of <em>triangular bump functions</em>; <span class="math display">
+f(x) = \sum_{i=0}^m t_{a_i,b_i,c_i}(x), \qquad
+t_{a,b,c}(x) = \begin{cases} 0 &amp; x &lt; a \\ \displaystyle \frac{x-a}{b-a} &amp; a \leq x \leq b \\ \displaystyle \frac{c-x}{c-b} &amp; b \leq x \leq c \\ 0 &amp; x &gt; c \end{cases},
+</span> for appropriate choices of the <span class="math inline">a_i, b_i, c_i \in \mathbb{R}</span>.</p>
+<p>It therefore suffices to show that we can construct triangular bump functions using neural networks with ReLU activation functions. This is indeed possible: <span class="math display">
+t_{a,b,c}(x) = \left[ \sigma\left(\frac{x-a}{b-a}\right) - \sigma\left(\frac{x-b}{b-a}\right) \right] - \left[ \sigma\left(\frac{x-b}{c-b}\right) - \sigma\left(\frac{x-c}{c-b}\right) \right]
+</span></p>
+<p>Concatenating these individual neural networks <span class="math inline">t_{a_i,b_i,c_i}</span> into one wide neural network with at most <span class="math inline">4(m+1)</span> hidden units, we have expressed <span class="math inline">f</span> as a neural network. Interestingly, this construction needed only one hidden layer in the neural network.</p>
+</details>
+</div>
+</div>
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="optimisation" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Gradient descent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Explain why gradient descent, initialised at an arbitrary location <span class="math inline">\theta_0</span>, and with fixed learning rate <span class="math inline">\epsilon</span>, will not find the global minimum of <span class="math inline">F(\theta) = |\theta|</span>.</p>
+<p>Instead, suggest a suitable sequence <span class="math inline">(\epsilon_t)_{t = 1}^\infty</span> and argue why, with your learning rate sequence, gradient descent on <span class="math inline">F</span> will succeed (from any initial state <span class="math inline">\theta_0</span>).</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Let’s start with an obvious remark; the unique minimum occurs at <span class="math inline">\theta = 0</span>, so we are concerned with whether or not the iterates <span class="math inline">(\theta_t)_{t=0}^\infty</span> of gradient descent converge to <span class="math inline">0</span>.</p>
+<p>A fixed learning rate <span class="math inline">\epsilon &gt; 0</span> cannot work because then <span class="math inline">|\theta_{t+1} - \theta_t| = \epsilon |F'(\theta_t)| = \epsilon</span> is bounded away from <span class="math inline">0</span> for all <span class="math inline">t</span>, so the sequence <span class="math inline">(\theta_t)_{t = 0}^\infty</span> cannot be convergent (to any limit).</p>
+<p>Consider instead <span class="math inline">\epsilon_t = t^{-p}</span> for some power <span class="math inline">p &gt; 0</span>. We cannot take <span class="math inline">p = 0</span> because then the learning rate would be fixed. We also cannot take <span class="math inline">p &gt; 1</span> because then the total distance we could hope to move is <span class="math inline">\sum_t |\theta_{t+1} - \theta_t| = \sum_t t^{-p} &lt; \infty</span>, and this may not be far enough to move from <span class="math inline">\theta_0</span> to <span class="math inline">0</span> (e.g.&nbsp;for <span class="math inline">p=2</span> we cannot reach <span class="math inline">0</span> if <span class="math inline">|\theta_0| &gt; 2</span>). This suggests we try taking <span class="math inline">p \in (0,1]</span>.</p>
+<p>It remains only to argue why this works (we asked for an <em>argument</em> rather than a <em>proof</em> because to give a truly formal proof here would be unnecessarily technical).</p>
+<p>First, since for this choice the total distance we move is infinite, we are guaranteed that <span class="math inline">(\theta_t)_{t=0}^\infty</span> changes sign infinitely often. Second, if <span class="math inline">\theta_T</span> and <span class="math inline">\theta_{T+1}</span> have different signs, then <span class="math inline">|\theta_{T+1}| \leq |\theta_{T+1} - \theta_T| = \epsilon_T</span>. Furthermore <span class="math inline">\theta_t \in [-\epsilon_T , \epsilon_T]</span> for all <span class="math inline">t &gt; T</span>, since we cannot take two consecutive steps that each move us further from the origin.</p>
+<p>Combining these two observations implies that <span class="math inline">\theta_t \rightarrow 0</span>, as required. Indeed, given <span class="math inline">\gamma &gt; 0</span> we can pick <span class="math inline">T_0</span> such that <span class="math inline">T_0^{-p} \leq \gamma</span>, and we can find a <span class="math inline">T \geq T_0</span> such that <span class="math inline">\theta_{T+1}</span> and <span class="math inline">\theta_T</span> have different signs, implying that <span class="math inline">\theta_t \in [-\epsilon_T,\epsilon_T] \subseteq [-\gamma,\gamma]</span> for all <span class="math inline">t &gt; T</span>, as required.</p>
+</details>
+</div>
+</div>
+<div id="q-stoch-grad-unbiased" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="optimisation" data-difficulty="0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;1: Stochastic gradient is unbiased
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">\{i_j\}_{j=1}^m</span> be a uniformly random subset of <span class="math inline">\{1,\dots,n\}</span>, either with or without replacement. Prove that <span class="math display">
+\hat{S} = \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j})
+</span> is an unbiased estimator of <span class="math display">
+S = \frac{1}{n} \sum_{i=1}^n h(\mathbf{w}_i).
+</span></p>
+<p>(This result implies that the stochastic gradient (<a href="../main/3-stochastic-optimisation.html#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>) is an unbiased estimator of the true gradient (<a href="../main/3-stochastic-optimisation.html#eq-erm-gradient" class="quarto-xref">Equation&nbsp;<span>3.2</span></a>), taking <span class="math inline">\mathbf{w}_i = (\mathbf{x}_i,\mathbf{y}_i)</span> and <span class="math inline">h(\mathbf{w}_i) = \nabla_{\boldsymbol{\theta}} L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i))</span>.)</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>From linearity of expectation, <span class="math display">
+\mathbb{E}[\hat{S}] = \mathbb{E}\left[ \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j}) \right] = \frac{1}{m} \sum_{j=1}^m \mathbb{E}[ h(\mathbf{w}_{i_j}) ].
+</span></p>
+<p>Now, since the <span class="math inline">i_j</span> are uniformly distributed in <span class="math inline">\{1,\dots,n\}</span>, it follows that each <span class="math inline">\mathbf{w}_{i_j}</span> is uniformly distributed in <span class="math inline">\{\mathbf{w}_1,\dots,\mathbf{w}_n\}</span>. Thus <span class="math display">
+\mathbb{E}[ h(\mathbf{w}_{i_j}) ] = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k).
+</span></p>
+<p>Using this fact, we get <span class="math display">
+\mathbb{E}[\hat{S}] = \frac{1}{m} \sum_{j=1}^m \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = S,
+</span> which shows that <span class="math inline">\hat{S}</span> is an unbiased estimator for <span class="math inline">S</span>, as required.</p>
+</details>
+</div>
+</div>
+<div id="q-opt-learning-rate" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="optimisation gradient-descent" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;2: Optimal learning rate for gradient descent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Obtain the optimal learning rate <span class="math display">
+\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
+</span> as claimed in (<a href="../main/3-stochastic-optimisation.html#eq-optimal-learning-rate" class="quarto-xref">Equation&nbsp;<span>3.7</span></a>), by finding the value of <span class="math inline">\epsilon</span> that minimises the bound from <a href="../main/3-stochastic-optimisation.html#thm-gd" class="quarto-xref">Theorem&nbsp;<span>3.1</span></a>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>From <a href="../main/3-stochastic-optimisation.html#thm-gd" class="quarto-xref">Theorem&nbsp;<span>3.1</span></a> we have the bound <span class="math display">
+\frac{1}{T}\sum_{t=0}^{T-1} F(\boldsymbol{\theta}_t) - F(\boldsymbol{\theta}_\star) \leq \underbrace{ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2} }_{r(\epsilon)}
+</span> and we wish to find the value of the learning rate <span class="math inline">\epsilon</span> that minimises the right hand side <span class="math inline">r(\epsilon)</span> of this bound.</p>
+<p>Differentiating with respect to <span class="math inline">\epsilon</span>, <span class="math display">
+\nabla r(\epsilon) = \nabla_{\epsilon} \left[ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2}  \right] = - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T}  + \frac{B^2}{2}.
+</span></p>
+<p>Setting this expression equal to <span class="math inline">0</span> and rearranging, we obtain the claimed result.</p>
+<p>To confirm this is a minimiser we can differentiate a second time, to see that <span class="math display">
+\nabla^2 r(\epsilon) = \nabla_{\epsilon} \left[ - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T}  + \frac{B^2}{2}  \right] =  \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{\epsilon^3 T} &gt; 0,
+</span> as required.</p>
+</details>
+</div>
+</div>
+<div id="q-minibatch-size" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="optimisation" data-difficulty="3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;3: Optimal minibatch size for stochastic gradient descent <span class="advanced" title="Not examinable"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>(This question is intended only for students familiar with Lagrange multipliers.)</p>
+<p>Consider stochastic gradient descent as in <a href="../main/3-stochastic-optimisation.html#sec-sgd" class="quarto-xref"><span>Stochastic Gradient Descent</span></a>, where the stochastic gradients (<a href="../main/3-stochastic-optimisation.html#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>) are based on minibatches of size <span class="math inline">m</span>, so that the computational cost <span class="math inline">c(m)</span> of performing a fixed number of steps <span class="math inline">T</span> of stochastic gradient descent is <span class="math inline">mT</span> (measured in the number of calls to <span class="math inline">\nabla_{\boldsymbol{\theta}}f_{\boldsymbol{\theta}}</span>, the gradient of the machine learning model, whose evaluation is the main computational bottleneck).</p>
+<p>Letting <span class="math inline">B = B_0 m^{-1}</span> for some fixed constant <span class="math inline">B_0</span>, express the optimal learning rate <span class="math display">
+\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
+</span> from (<a href="../main/3-stochastic-optimisation.html#eq-optimal-learning-rate" class="quarto-xref">Equation&nbsp;<span>3.7</span></a>) as a function of the minibatch size <span class="math inline">m</span>.</p>
+<p>Hence, use Lagrange multipliers to show that the minibatch size <span class="math inline">m</span> which minimises the error bound in <a href="../main/3-stochastic-optimisation.html#thm-sgd" class="quarto-xref">Theorem&nbsp;<span>3.2</span></a> subject to a fixed total computational cost <span class="math inline">c(m) = C</span> is <span class="math inline">m \approx C / T</span>.</p>
+<p>Thus smaller minibatch sizes <span class="math inline">m</span> should be preferred when a larger number of steps <span class="math inline">T</span> of stochastic gradient descent are to be performed.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Substituting the optimal learning rate into the overall error bound for stochastic gradient descent from <a href="../main/3-stochastic-optimisation.html#thm-sgd" class="quarto-xref">Theorem&nbsp;<span>3.2</span></a>, we get <span class="math display">
+\frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2} = \frac{B \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T}}.
+</span></p>
+<p>Letting <span class="math inline">B = B_0 m^{-1}</span>, this becomes <span class="math display">
+\frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m \sqrt{T}}.
+</span></p>
+<p>Minimising the error subject to the cost constraint can be achieved using a Lagrangian <span class="math display">
+\mathcal{L}(m,\lambda) = \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m\sqrt{T}} + \lambda ( m T - C )
+</span> where <span class="math inline">\lambda</span> is a Lagrange multiplier.</p>
+<p>The stationary point equations are: <span class="math display">
+\begin{aligned}
+0 = \nabla_m \mathcal{L} &amp; = - \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m^2\sqrt{T}} + \lambda T \\
+0 = \nabla_\lambda \mathcal{L} &amp; = mT - C
+\end{aligned}
+</span></p>
+<p>Rearranging the first, <span class="math display">
+m = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} }{ \lambda^{1/2} T^{3/4} }
+</span> and substituting this into the second, <span class="math display">
+\lambda^{1/2} = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} T^{1/4} }{C}.
+</span></p>
+<p>Putting this all together, <span class="math display">
+m = \frac{C}{T}.
+</span></p>
+<p>Since <span class="math inline">m</span> must be a positive integer, we conclude that <span class="math inline">m \approx C / T</span>.</p>
+</details>
+</div>
+</div>
+<div id="q-mean-est" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="empirical-risk-minimisation statistics" data-difficulty="2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;4: Mean estimation as empirical risk minimisation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The aim of this exercise is to see how estimating the mean of a probability distribution can be cast within the empirical risk minimisation framework.</p>
+<p>Let <span class="math inline">Y \sim P</span>. Our aim is to estimate the mean of <span class="math inline">P</span> from <span class="math inline">n</span> independent observations of <span class="math inline">Y</span>, which we denote <span class="math inline">\{y_i\}_{i=1}^n</span>. To do so we introduce the squared error loss <span class="math inline">L(y,y') = (y-y')^2</span> and the “trivial” machine learning model <span class="math inline">\mathcal{F} = \mathbb{R}</span>.</p>
+<ol type="a">
+<li>Show that the (population) risk <span class="math inline">\mathcal{R}(\cdot)</span> is minimised at <span class="math inline">f_\star = \mathbb{E}_{Y \sim P}[Y]</span>, the mean of <span class="math inline">P</span>.</li>
+<li>Compute the empirical risk minimiser <span class="math inline">f_n \in \mathcal{F}</span>.</li>
+<li>What is the generalisation error of <span class="math inline">f_n</span>?</li>
+<li>Show that the expected generalisation error is <span class="math inline">\frac{1}{n} \mathbb{V}[Y]</span> where <span class="math inline">\mathbb{V}[Y]</span> is the variance of <span class="math inline">P</span>.</li>
+<li>How many samples <span class="math inline">n</span> are needed to guarantee an expected generalisation error smaller than <span class="math inline">\epsilon</span>? (Recall this is the <em>sample complexity</em> of the empirical risk minimiser, telling us how much data we need to achieve a certain level of generalisation performance.)</li>
+</ol>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>The (population) risk is <span class="math display">
+\mathcal{R}(f) = \mathbb{E}_{Y \sim P} [L(Y,f)] = \mathbb{E}_{Y \sim P} [ (Y-f)^2 ] = \mathbb{E}_{Y \sim P}[Y^2] - 2 f \mathbb{E}_{Y \sim P}[Y] + f^2,
+</span> and this quadratic (in <span class="math inline">f</span>) is minimised at <span class="math inline">f_\star = \mathbb{E}_{Y \sim P}[Y]</span>.</p>
+<p>The empirical risk is <span class="math display">
+\mathcal{R}_n(f) = \frac{1}{n} \sum_{i=1}^n L(y_i,f) = \frac{1}{n} \sum_{i=1}^n (y_i - f)^2 = \left( \frac{1}{n} \sum_{i=1}^n y_i^2 \right) - 2 f \left( \frac{1}{n} \sum_{i=1}^n y_i \right) + f^2
+</span> and this quadratic (in <span class="math inline">f</span>) is minimised at <span class="math display">
+f_n = \frac{1}{n} \sum_{i=1}^n y_i,
+</span> the arithmetic mean of the dataset.</p>
+<p>The generalisation error is <span class="math display">
+\begin{aligned}
+\mathcal{R}(f_n) - \mathcal{R}(f_\star) &amp; = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n \mathbb{E}_{Y \sim P}[Y] + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_\star \mathbb{E}_{Y \sim P}[Y] + f_\star^2 \} \\
+&amp; = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n f_\star + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - f_\star^2 \} \\
+&amp; = f_\star^2 - 2 f_n f_\star + f_n^2 \\
+&amp; = (f_\star - f_n)^2.
+\end{aligned}
+</span></p>
+<p>Let <span class="math inline">Y_i</span> be a random variable representing the <span class="math inline">i</span>th element of the dataset. The expected generalisation error is thus <span class="math display">
+\begin{aligned}
+\mathbb{E}[ \mathcal{R}(f_n) - \mathcal{R}(f_\star) ]
+&amp; = \mathbb{E}[ (f_\star - f_n)^2 ] \\
+&amp; = \mathbb{E}\left[ \left( \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y] \right)^2 \right] \\
+&amp; = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y]  \right] \\
+&amp; = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i \right] \\
+&amp; = \frac{1}{n} \mathbb{V}[Y]
+\end{aligned}
+</span> where the final line follows from the properties <span class="math inline">\mathbb{V}[cY] = c^2 \mathbb{V}[Y]</span> and <span class="math inline">\mathbb{V}[Y_i + Y_j] = \mathbb{V}[Y_i] + \mathbb{V}[Y_j]</span> whenever <span class="math inline">i \neq j</span>, since then <span class="math inline">Y_i</span> and <span class="math inline">Y_j</span> are independent.</p>
+<p>To ensure an expected generalisation error less than <span class="math inline">\epsilon</span> we therefore need <span class="math inline">n &gt; \mathbb{V}[Y] / \epsilon</span> number of independent samples in the dataset.</p>
+</details>
+</div>
+</div>
+<div id="q-phys-informed" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-2" data-difficulty="2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;5: Physics-informed machine learning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This exercise considers the problem of predicting spring displacement based on the force applied, following <a href="../main/2-machine-learning-models.html#exm-phys-informed" class="quarto-xref">Example&nbsp;<span>2.4</span></a>.</p>
+<p>A <code>pure' machine learning approach would just use data to learn a predictive model, while a</code>pure’ physics approach would use Hooke’s law of elasticity and attempt to learn the associated proportionality constant.</p>
+<p>A physics-informed machine learning approach uses both the data and Hooke’s law, the latter entering as an additive regulariser on the empirical risk.</p>
+<p>Indeed, for a twice differentiable <span class="math inline">f : [0,1] \rightarrow \mathbb{R}</span>, consider the regulariser <span class="math display">
+\begin{align*}
+R(f) = f(0)^2 + \int_0^1 f''(x)^2 \; \mathrm{d}x  .
+\end{align*}
+</span> Show that <span class="math inline">R(f) = 0</span> if and only if <span class="math inline">f</span> represents an exact proportionality relationship (i.e.&nbsp;<span class="math inline">f(x) \propto x</span>, which is the content of Hooke’s law).</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>If <span class="math inline">R(f) = 0</span> then <span class="math inline">f(0) = 0</span> and <span class="math inline">f''(x) = 0</span> for all <span class="math inline">x \in [0,1]</span>. Integrating the latter gives that <span class="math inline">f'(x) = C</span> for some constant <span class="math inline">C</span>, and integrating again gives <span class="math inline">f(x) = C x + D</span> for some additional constant <span class="math inline">D</span>. Since <span class="math inline">f(0) = 0</span> we deduce that <span class="math inline">D = 0</span>. Thus we have arrived at <span class="math inline">f(x) = C x</span>, which is an exact proportionality relationship as claimed.</p>
+</details>
+</div>
+</div>
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4" data-difficulty="0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Stochastic gradient is unbiased
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">\{i_j\}_{j=1}^m</span> be a uniformly random subset of <span class="math inline">\{1,\dots,n\}</span>, either with or without replacement. Prove that <span class="math display">
+\hat{S} = \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j})
+</span> is an unbiased estimator of <span class="math display">
+S = \frac{1}{n} \sum_{i=1}^n h(\mathbf{w}_i).
+</span></p>
+<p>(This result implies that the stochastic gradient (<a href="../main/3-stochastic-optimisation.html#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>) is an unbiased estimator of the true gradient (<a href="../main/3-stochastic-optimisation.html#eq-erm-gradient" class="quarto-xref">Equation&nbsp;<span>3.2</span></a>), taking <span class="math inline">\mathbf{w}_i = (\mathbf{x}_i,\mathbf{y}_i)</span> and <span class="math inline">h(\mathbf{w}_i) = \nabla_{\boldsymbol{\theta}} L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i))</span>.)</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>From linearity of expectation, <span class="math display">
+\mathbb{E}[\hat{S}] = \mathbb{E}\left[ \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j}) \right] = \frac{1}{m} \sum_{j=1}^m \mathbb{E}[ h(\mathbf{w}_{i_j}) ].
+</span></p>
+<p>Now, since the <span class="math inline">i_j</span> are uniformly distributed in <span class="math inline">\{1,\dots,n\}</span>, it follows that each <span class="math inline">\mathbf{w}_{i_j}</span> is uniformly distributed in <span class="math inline">\{\mathbf{w}_1,\dots,\mathbf{w}_n\}</span>. Thus <span class="math display">
+\mathbb{E}[ h(\mathbf{w}_{i_j}) ] = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k).
+</span></p>
+<p>Using this fact, we get <span class="math display">
+\mathbb{E}[\hat{S}] = \frac{1}{m} \sum_{j=1}^m \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = S,
+</span> which shows that <span class="math inline">\hat{S}</span> is an unbiased estimator for <span class="math inline">S</span>, as required.</p>
+</details>
+</div>
+</div>
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4" data-difficulty="0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Optimal learning rate for gradient descent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Obtain the optimal learning rate <span class="math display">
+\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
+</span> as claimed in (<a href="../main/3-stochastic-optimisation.html#eq-optimal-learning-rate" class="quarto-xref">Equation&nbsp;<span>3.7</span></a>), by finding the value of <span class="math inline">\epsilon</span> that minimises the bound from <a href="../main/3-stochastic-optimisation.html#thm-gd" class="quarto-xref">Theorem&nbsp;<span>3.1</span></a>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>From <a href="../main/3-stochastic-optimisation.html#thm-gd" class="quarto-xref">Theorem&nbsp;<span>3.1</span></a> we have the bound <span class="math display">
+\frac{1}{T}\sum_{t=0}^{T-1} F(\boldsymbol{\theta}_t) - F(\boldsymbol{\theta}_\star) \leq \underbrace{ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2} }_{r(\epsilon)}
+</span> and we wish to find the value of the learning rate <span class="math inline">\epsilon</span> that minimises the right hand side <span class="math inline">r(\epsilon)</span> of this bound.</p>
+<p>Differentiating with respect to <span class="math inline">\epsilon</span>, <span class="math display">
+\nabla r(\epsilon) = \nabla_{\epsilon} \left[ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2} \right] = - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T} + \frac{B^2}{2}.
+</span></p>
+<p>Setting this expression equal to <span class="math inline">0</span> and rearranging, we obtain the claimed result.</p>
+<p>To confirm this is a minimiser we can differentiate a second time, to see that <span class="math display">
+\nabla^2 r(\epsilon) = \nabla_{\epsilon} \left[ - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T} + \frac{B^2}{2} \right] = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{\epsilon^3 T} &gt; 0,
+</span> as required.</p>
+</details>
+</div>
+</div>
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4" data-difficulty="2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Optimal minibatch size for stochastic gradient descent <span class="advanced" title="Advanced content for 4th year students"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>(This question is intended only for students familiar with Lagrange multipliers.)</p>
+<p>Consider stochastic gradient descent as in <span class="citation" data-cites="algo-sgd">(<a href="#ref-algo-sgd" role="doc-biblioref"><strong>algo-sgd?</strong></a>)</span>, where the stochastic gradients (<a href="../main/3-stochastic-optimisation.html#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>) are based on minibatches of size <span class="math inline">m</span>, so that the computational cost <span class="math inline">c(m)</span> of performing a fixed number of steps <span class="math inline">T</span> of stochastic gradient descent is <span class="math inline">mT</span> (measured in the number of calls to <span class="math inline">\nabla_{\boldsymbol{\theta}}f_{\boldsymbol{\theta}}</span>, the gradient of the machine learning model, whose evaluation is the main computational bottleneck).</p>
+<p>Letting <span class="math inline">B = B_0 m^{-1}</span> for some fixed constant <span class="math inline">B_0</span>, express the optimal learning rate <span class="math display">
+\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
+</span> from (<a href="../main/3-stochastic-optimisation.html#eq-optimal-learning-rate" class="quarto-xref">Equation&nbsp;<span>3.7</span></a>) as a function of the minibatch size <span class="math inline">m</span>.</p>
+<p>Hence, use Lagrange multipliers to show that the minibatch size <span class="math inline">m</span> which minimises the error bound in <a href="../main/3-stochastic-optimisation.html#thm-sgd" class="quarto-xref">Theorem&nbsp;<span>3.2</span></a> subject to a fixed total computational cost <span class="math inline">c(m) = C</span> is <span class="math inline">m \approx C / T</span>.</p>
+<p>Thus smaller minibatch sizes <span class="math inline">m</span> should be preferred when a larger number of steps <span class="math inline">T</span> of stochastic gradient descent are to be performed.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Substituting the optimal learning rate into the overall error bound for stochastic gradient descent from <a href="../main/3-stochastic-optimisation.html#thm-sgd" class="quarto-xref">Theorem&nbsp;<span>3.2</span></a>, we get <span class="math display">
+\frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2} = \frac{B \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T}}.
+</span></p>
+<p>Letting <span class="math inline">B = B_0 m^{-1}</span>, this becomes <span class="math display">
+\frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m \sqrt{T}}.
+</span></p>
+<p>Minimising the error subject to the cost constraint can be achieved using a Lagrangian <span class="math display">
+\mathcal{L}(m,\lambda) = \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m\sqrt{T}} + \lambda ( m T - C )
+</span> where <span class="math inline">\lambda</span> is a Lagrange multiplier.</p>
+<p>The stationary point equations are: <span class="math display">
+\begin{aligned}
+0 = \nabla_m \mathcal{L} &amp; = - \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m^2\sqrt{T}} + \lambda T \\
+0 = \nabla_\lambda \mathcal{L} &amp; = mT - C
+\end{aligned}
+</span></p>
+<p>Rearranging the first, <span class="math display">
+m = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} }{ \lambda^{1/2} T^{3/4} }
+</span> and substituting this into the second, <span class="math display">
+\lambda^{1/2} = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} T^{1/4} }{C}.
+</span></p>
+<p>Putting this all together, <span class="math display">
+m = \frac{C}{T}.
+</span></p>
+<p>Since <span class="math inline">m</span> must be a positive integer, we conclude that <span class="math inline">m \approx C / T</span>.</p>
+</details>
+</div>
+</div>
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Mean estimation as empirical risk minimisation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The aim of this exercise is to see how estimating the mean of a probability distribution can be cast within the empirical risk minimisation framework.</p>
+<p>Let <span class="math inline">Y \sim P</span>. Our aim is to estimate the mean of <span class="math inline">P</span> from <span class="math inline">n</span> independent observations of <span class="math inline">Y</span>, which we denote <span class="math inline">\{y_i\}_{i=1}^n</span>. To do so we introduce the squared error loss <span class="math inline">L(y,y') = (y-y')^2</span> and the “trivial” machine learning model <span class="math inline">\mathcal{F} = \mathbb{R}</span>.</p>
+<ol type="a">
+<li>Show that the (population) risk <span class="math inline">\mathcal{R}(\cdot)</span> is minimised at <span class="math inline">f_\star = \mathbb{E}_{Y \sim P}[Y]</span>, the mean of <span class="math inline">P</span>.</li>
+<li>Compute the empirical risk minimiser <span class="math inline">f_n \in \mathcal{F}</span>.</li>
+<li>What is the generalisation error of <span class="math inline">f_n</span>?</li>
+<li>Show that the expected generalisation error is <span class="math inline">\frac{1}{n} \mathbb{V}[Y]</span> where <span class="math inline">\mathbb{V}[Y]</span> is the variance of <span class="math inline">P</span>.</li>
+<li>How many samples <span class="math inline">n</span> are needed to guarantee an expected generalisation error smaller than <span class="math inline">\epsilon</span>? (Recall this is the <em>sample complexity</em> of the empirical risk minimiser, telling us how much data we need to achieve a certain level of generalisation performance.)</li>
+</ol>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>The (population) risk is <span class="math display">
+\mathcal{R}(f) = \mathbb{E}_{Y \sim P} [L(Y,f)] = \mathbb{E}_{Y \sim P} [ (Y-f)^2 ] = \mathbb{E}_{Y \sim P}[Y^2] - 2 f \mathbb{E}_{Y \sim P}[Y] + f^2,
+</span> and this quadratic (in <span class="math inline">f</span>) is minimised at <span class="math inline">f_\star = \mathbb{E}_{Y \sim P}[Y]</span>.</p>
+<p>The empirical risk is <span class="math display">
+\mathcal{R}_n(f) = \frac{1}{n} \sum_{i=1}^n L(y_i,f) = \frac{1}{n} \sum_{i=1}^n (y_i - f)^2 = \left( \frac{1}{n} \sum_{i=1}^n y_i^2 \right) - 2 f \left( \frac{1}{n} \sum_{i=1}^n y_i \right) + f^2
+</span> and this quadratic (in <span class="math inline">f</span>) is minimised at <span class="math display">
+f_n = \frac{1}{n} \sum_{i=1}^n y_i,
+</span> the arithmetic mean of the dataset.</p>
+<p>The generalisation error is <span class="math display">
+\begin{aligned}
+\mathcal{R}(f_n) - \mathcal{R}(f_\star) &amp; = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n \mathbb{E}_{Y \sim P}[Y] + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_\star \mathbb{E}_{Y \sim P}[Y] + f_\star^2 \} \\
+&amp; = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n f_\star + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - f_\star^2 \} \\
+&amp; = f_\star^2 - 2 f_n f_\star + f_n^2 \\
+&amp; = (f_\star - f_n)^2.
+\end{aligned}
+</span></p>
+<p>Let <span class="math inline">Y_i</span> be a random variable representing the <span class="math inline">i</span>th element of the dataset. The expected generalisation error is thus <span class="math display">
+\begin{aligned}
+\mathbb{E}[ \mathcal{R}(f_n) - \mathcal{R}(f_\star) ]
+&amp; = \mathbb{E}[ (f_\star - f_n)^2 ] \\
+&amp; = \mathbb{E}\left[ \left( \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y] \right)^2 \right] \\
+&amp; = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y] \right] \\
+&amp; = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i \right] \\
+&amp; = \frac{1}{n} \mathbb{V}[Y]
+\end{aligned}
+</span> where the final line follows from the properties <span class="math inline">\mathbb{V}[cY] = c^2 \mathbb{V}[Y]</span> and <span class="math inline">\mathbb{V}[Y_i + Y_j] = \mathbb{V}[Y_i] + \mathbb{V}[Y_j]</span> whenever <span class="math inline">i \neq j</span>, since then <span class="math inline">Y_i</span> and <span class="math inline">Y_j</span> are independent.</p>
+<p>To ensure an expected generalisation error less than <span class="math inline">\epsilon</span> we therefore need <span class="math inline">n &gt; \mathbb{V}[Y] / \epsilon</span> number of independent samples in the dataset.</p>
 </details>
 </div>
 </div>
@@ -1013,9 +1534,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', onKey);
 })();
 </script>
-
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   // 1) Find the brand container and the existing logo <img>
@@ -1066,8 +1584,860 @@ document.addEventListener('DOMContentLoaded', function () {
   // 3) Swap: remove the old <a><img/></a>, insert the new <a><svg/></a>
   const oldAnchor = img.closest('a.navbar-brand-logo') || img;
   brandContainer.replaceChild(a, oldAnchor);
+
+  // ============================
+  // 4) Add Settings Dropdown
+  // ============================
+  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
+  if (!tools) return;
+// Create settings container
+  const settingsContainer = document.createElement('div');
+  settingsContainer.className = 'settings-dropdown';
+  settingsContainer.innerHTML = `
+    <button class="btn-settings" type="button" aria-label="Display settings" title="Display settings">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
+    <div class="settings-menu">
+      <p class="settings-section-label">Display Mode</p>
+      <button class="settings-item" id="lecture-zoom-toggle" type="button">
+        <span class="settings-icon">
+          <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+          <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 14 10 14 10 20"></polyline>
+            <polyline points="20 10 14 10 14 4"></polyline>
+            <line x1="14" y1="10" x2="21" y2="3"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+        </span>
+        <span class="settings-label">Lecture Zoom</span>
+        <span class="settings-status"></span>
+      </button>
+      <button class="settings-item" id="reading-mode-toggle" type="button">
+        <span class="settings-icon">
+          <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </span>
+        <span class="settings-label">Reading Mode</span>
+        <span class="settings-status"></span>
+      </button>
+      
+      <div class="settings-divider"></div>
+      <p class="settings-section-label">Custom Colors</p>
+      
+      <div class="settings-color-row">
+        <label for="settings-bg-color">Background</label>
+        <input type="color" id="settings-bg-color" class="settings-color-input">
+      </div>
+
+      <div class="settings-color-row">
+        <label for="settings-text-color">Text</label>
+        <input type="color" id="settings-text-color" class="settings-color-input">
+      </div>
+
+      <div class="settings-color-row">
+        <label for="settings-accent-color">Accent</label>
+        <input type="color" id="settings-accent-color" class="settings-color-input">
+      </div>    
+        
+      <button class="settings-reset-btn" id="reset-colors" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+        Reset Colors
+      </button>
+    </div>
+  `;
+
+  // Insert after color toggle
+  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
+  if (colorToggle && colorToggle.parentNode) {
+    colorToggle.parentNode.insertBefore(settingsContainer, colorToggle.nextSibling);
+  } else {
+    tools.appendChild(settingsContainer);
+  }
+
+  // Elements
+  const settingsBtn = settingsContainer.querySelector('.btn-settings');
+  const lectureZoomToggle = settingsContainer.querySelector('#lecture-zoom-toggle');
+  const readingModeToggle = settingsContainer.querySelector('#reading-mode-toggle');
+  const bgColorInput = settingsContainer.querySelector('#settings-bg-color');
+  const textColorInput = settingsContainer.querySelector('#settings-text-color');
+  const accentColorInput = settingsContainer.querySelector('#settings-accent-color');
+  const resetColorsBtn = settingsContainer.querySelector('#reset-colors');
+
+  // Default color values
+  const defaultBgColor = '#fafaf8';
+  const defaultTextColor = '#1a1a1a';
+  const defaultAccentColor = '#0d6efd';
+
+  // ============================
+  // Helper Functions (define first)
+  // ============================
+  
+  // Helper function to darken a hex color
+  const darkenColor = (hex, amount) => {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    r = Math.max(0, Math.floor(r * (1 - amount)));
+    g = Math.max(0, Math.floor(g * (1 - amount)));
+    b = Math.max(0, Math.floor(b * (1 - amount)));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  // Helper function to lighten a hex color
+  const lightenColor = (hex, amount) => {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+    r = Math.min(255, Math.floor(r + (255 - r) * amount));
+    g = Math.min(255, Math.floor(g + (255 - g) * amount));
+    b = Math.min(255, Math.floor(b + (255 - b) * amount));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  // Reading progress indicator
+  const updateReadingProgress = () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  };
+
+  // Update visual states for display modes
+  const updateActiveStates = () => {
+    const isLectureZoom = document.body.classList.contains('lecture-zoom');
+    const isReadingMode = document.body.classList.contains('reading-mode');
+    lectureZoomToggle.classList.toggle('active', isLectureZoom);
+    readingModeToggle.classList.toggle('active', isReadingMode);
+  };
+
+  // Apply custom colors
+  const applyCustomColors = () => {
+    document.body.classList.add('custom-colors');
+    
+    const bgColor = bgColorInput.value;
+    const textColor = textColorInput.value;
+    const accentColor = accentColorInput.value;
+    
+    document.documentElement.style.setProperty('--custom-bg-color', bgColor);
+    document.documentElement.style.setProperty('--custom-text-color', textColor);
+    document.documentElement.style.setProperty('--custom-accent-color', accentColor);
+    
+    // Compute darker scrollbar thumb color (30% darker)
+    const darkerThumb = darkenColor(bgColor, 0.3);
+    document.documentElement.style.setProperty('--scroll-track', bgColor);
+    document.documentElement.style.setProperty('--scroll-thumb', darkerThumb);
+    
+    // Compute lighter variants for callouts and tabs
+    const lighterBg = lightenColor(bgColor, 0.3);
+    const lighterBgSubtle = lightenColor(bgColor, 0.15);
+    document.documentElement.style.setProperty('--custom-bg-lighter', lighterBg);
+    document.documentElement.style.setProperty('--custom-bg-lighter-subtle', lighterBgSubtle);
+    
+    // Save to localStorage
+    localStorage.setItem('mas2901-custom-bg', bgColor);
+    localStorage.setItem('mas2901-custom-text', textColor);
+    localStorage.setItem('mas2901-custom-accent', accentColor);
+  };
+
+  // Reset colors to defaults
+  const resetColors = () => {
+    document.body.classList.remove('custom-colors');
+    document.documentElement.style.removeProperty('--custom-bg-color');
+    document.documentElement.style.removeProperty('--custom-text-color');
+    document.documentElement.style.removeProperty('--custom-accent-color');
+    document.documentElement.style.removeProperty('--scroll-track');
+    document.documentElement.style.removeProperty('--scroll-thumb');
+    document.documentElement.style.removeProperty('--custom-bg-lighter');
+    document.documentElement.style.removeProperty('--custom-bg-lighter-subtle');
+    
+    // Reset inputs to defaults
+    bgColorInput.value = defaultBgColor;
+    textColorInput.value = defaultTextColor;
+    accentColorInput.value = defaultAccentColor;
+    
+    // Clear localStorage
+    localStorage.removeItem('mas2901-custom-bg');
+    localStorage.removeItem('mas2901-custom-text');
+    localStorage.removeItem('mas2901-custom-accent');
+  };
+
+  // ============================
+  // Event Listeners
+  // ============================
+
+  // Toggle dropdown
+  settingsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    settingsContainer.classList.toggle('open');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!settingsContainer.contains(e.target)) {
+      settingsContainer.classList.remove('open');
+    }
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      settingsContainer.classList.remove('open');
+    }
+  });
+
+  // Lecture Zoom toggle
+  lectureZoomToggle.addEventListener('click', () => {
+    // Turn off reading mode if active
+    if (document.body.classList.contains('reading-mode')) {
+      document.body.classList.remove('reading-mode');
+      document.documentElement.classList.remove('reading-mode');
+      window.removeEventListener('scroll', updateReadingProgress);
+      document.body.style.removeProperty('--scroll-progress');
+    }
+
+    document.body.classList.toggle('lecture-zoom');
+    document.documentElement.classList.toggle('lecture-zoom');
+    updateActiveStates();
+  });
+
+  // Reading Mode toggle
+  readingModeToggle.addEventListener('click', () => {
+    // Turn off lecture zoom if active
+    if (document.body.classList.contains('lecture-zoom')) {
+      document.body.classList.remove('lecture-zoom');
+      document.documentElement.classList.remove('lecture-zoom');
+    }
+
+    document.body.classList.toggle('reading-mode');
+    document.documentElement.classList.toggle('reading-mode');
+
+    // Update progress indicator on scroll
+    if (document.body.classList.contains('reading-mode')) {
+      updateReadingProgress();
+      window.addEventListener('scroll', updateReadingProgress);
+    } else {
+      window.removeEventListener('scroll', updateReadingProgress);
+      document.body.style.removeProperty('--scroll-progress');
+    }
+    
+    updateActiveStates();
+  });
+
+  // Color input listeners
+  bgColorInput.addEventListener('input', applyCustomColors);
+  textColorInput.addEventListener('input', applyCustomColors);
+  accentColorInput.addEventListener('input', applyCustomColors);
+
+  // Reset colors button
+  resetColorsBtn.addEventListener('click', resetColors);
+
+  // ============================
+  // Initialize
+  // ============================
+
+  // Load saved colors or use defaults
+  const savedBg = localStorage.getItem('mas2901-custom-bg');
+  const savedText = localStorage.getItem('mas2901-custom-text');
+  const savedAccent = localStorage.getItem('mas2901-custom-accent');
+
+  // Set input values (saved or default)
+  bgColorInput.value = savedBg || defaultBgColor;
+  textColorInput.value = savedText || defaultTextColor;
+  accentColorInput.value = savedAccent || defaultAccentColor;
+
+  // Apply custom colors if any were saved
+  if (savedBg || savedText || savedAccent) {
+    applyCustomColors();
+  }
+
+  // Initial display mode state
+  updateActiveStates();
 });
 </script>
+
+<style>
+/* ============================
+   Settings Dropdown
+   ============================ */
+.settings-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.btn-settings {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.375rem;
+  margin: 0 0.25rem;
+  border-radius: 0.25rem;
+  color: var(--bs-navbar-color, #333);
+  transition: opacity 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-settings:hover {
+  opacity: 0.7;
+}
+
+.btn-settings svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+/* Rotate cog when open */
+.settings-dropdown.open .btn-settings svg {
+  transform: rotate(45deg);
+}
+
+/* Dropdown menu */
+.settings-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: var(--surface-weak, white);
+  border: 1px solid var(--border, #ddd);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  padding: 0.5rem 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  z-index: 4000;
+}
+
+.settings-dropdown.open .settings-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Section divider */
+.settings-divider {
+  height: 1px;
+  background: var(--border, #ddd);
+  margin: 0.5rem 0;
+}
+
+.settings-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-fg, #666);
+  opacity: 0.6;
+  padding: 0.5rem 1rem 0.25rem;
+  margin: 0;
+}
+
+/* Menu items */
+.settings-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: var(--brand-fg, #333);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  gap: 0.75rem;
+}
+
+.settings-item:hover {
+  background: var(--brand-teal-hover, #f8f9fa);
+  color: var(--brand-bg, #0d6efd);
+}
+
+.settings-item.active {
+  background: var(--brand-teal, #e7f1ff);
+  color: var(--brand-fg, #0d6efd);
+}
+
+.settings-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.settings-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* Icon state switching */
+.settings-icon .icon-exit { display: none; }
+.settings-item.active .settings-icon .icon-enter { display: none; }
+.settings-item.active .settings-icon .icon-exit { display: block; }
+
+.settings-label {
+  flex-grow: 1;
+}
+
+.settings-status {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.settings-item.active .settings-status::after {
+  content: '✓';
+  font-size: 0.9rem;
+  opacity: 1;
+}
+
+/* ============================
+   Color Picker Row
+   ============================ */
+.settings-color-row {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  gap: 0.75rem;
+}
+
+.settings-color-row label {
+  font-size: 0.85rem;
+  color: var(--brand-fg, #333);
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+/* Circular color swatch input */
+.settings-color-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  padding: 0;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.settings-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.settings-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.settings-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.settings-color-input:hover {
+  border-color: var(--brand-teal, #0d6efd);
+}
+
+.settings-color-input:focus {
+  outline: none;
+  border-color: var(--brand-teal, #0d6efd);
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+/* Reset button */
+.settings-reset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 2rem);
+  margin: 0.25rem 1rem 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--brand-fg, #666);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  gap: 0.5rem;
+}
+
+.settings-reset-btn:hover {
+  background: var(--brand-teal-hover, #f8f9fa);
+  border-color: var(--brand-teal, #0d6efd);
+  color: var(--brand-teal, #0d6efd);
+}
+
+.settings-reset-btn svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* Dark mode support */
+.quarto-dark .btn-settings {
+  color: var(--bs-navbar-dark-color, #fff);
+}
+
+.quarto-dark .settings-menu {
+  background: var(--bs-body-bg, #212529);
+  border-color: var(--bs-border-color, #495057);
+}
+
+.quarto-dark .settings-item:hover {
+  background: var(--bs-tertiary-bg, #2b3035);
+}
+
+.quarto-dark .settings-item.active {
+  background: rgba(13, 110, 253, 0.2);
+}
+
+.quarto-dark .settings-color-input {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.quarto-dark .settings-color-row label {
+  color: var(--bs-body-color, #e9ecef);
+}
+
+.quarto-dark .settings-reset-btn {
+  border-color: var(--bs-border-color, #495057);
+  color: var(--bs-body-color, #adb5bd);
+}
+
+.quarto-dark .settings-reset-btn:hover {
+  background: var(--bs-tertiary-bg, #2b3035);
+}
+
+/* ============================
+   Custom Colors Applied
+   ============================ */
+
+/* ============================
+   Custom Colors - Accent Color Elements
+   ============================ */
+body.custom-colors blockquote,
+body.custom-colors .blockquote {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .panel-caption,
+body.custom-colors .figure-caption,
+body.custom-colors .subfigure-caption,
+body.custom-colors .table-caption,
+body.custom-colors figcaption,
+body.custom-colors caption {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .header-section-number {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors details > summary {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors details > summary:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+  
+  /* Scrollbar - thumb is 20% darker than background */
+  scrollbar-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+body.custom-colors *::-webkit-scrollbar-track {
+  background: var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--custom-bg-color) 80%, black);
+  border-radius: 6px;
+  border: 2px solid var(--custom-bg-color);
+}
+
+body.custom-colors *::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--custom-bg-color) 65%, black);
+}
+
+body.custom-colors main,
+body.custom-colors .content,
+body.custom-colors article,
+body.custom-colors div.sidebar.sidebar-navigation.rollup.quarto-sidebar-toggle-contents,
+body.custom-colors nav.sidebar.sidebar-navigation:not(.rollup) {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Navbar */
+body.custom-colors #quarto-header,
+body.custom-colors #quarto-header nav.navbar,
+body.custom-colors .navbar {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+  border-bottom-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors #quarto-header .navbar-title,
+body.custom-colors #quarto-header .navbar-brand {
+  color: var(--custom-text-color) !important;
+}
+
+/* Navbar icons */
+body.custom-colors #quarto-header .quarto-navbar-tools button,
+body.custom-colors #quarto-header .quarto-navbar-tools a,
+body.custom-colors #quarto-header .quarto-color-scheme-toggle,
+body.custom-colors #quarto-header .btn-settings,
+body.custom-colors #quarto-header .navbar-toggler {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors #quarto-header .quarto-navbar-tools button:hover,
+body.custom-colors #quarto-header .quarto-navbar-tools a:hover,
+body.custom-colors #quarto-header .quarto-color-scheme-toggle:hover,
+body.custom-colors #quarto-header .btn-settings:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors #quarto-header .navbar-logo {
+  color: var(--custom-text-color) !important;
+}
+
+/* Secondary navbar */
+body.custom-colors .quarto-secondary-nav {
+  background-color: var(--custom-bg-color) !important;
+  border-bottom-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors .quarto-secondary-nav .quarto-secondary-nav-title {
+  color: var(--custom-text-color) !important;
+}
+
+/* Autocomplete / Search */
+body.custom-colors .aa-Autocomplete .aa-Form,
+body.custom-colors .aa-DetachedFormContainer .aa-Form {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .aa-Autocomplete .aa-Input,
+body.custom-colors .aa-DetachedFormContainer .aa-Input {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .aa-Autocomplete .aa-Input::placeholder,
+body.custom-colors .aa-DetachedFormContainer .aa-Input::placeholder {
+  color: color-mix(in srgb, var(--custom-text-color) 50%, transparent) !important;
+}
+
+body.custom-colors .aa-Panel,
+body.custom-colors .aa-PanelLayout {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .aa-Item {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .aa-Item[aria-selected="true"],
+body.custom-colors .aa-Item:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+}
+
+body.custom-colors .aa-Item mark {
+  color: var(--custom-accent-color) !important;
+  background: transparent !important;
+}
+
+/* Headings */
+body.custom-colors h1,
+body.custom-colors h2,
+body.custom-colors h3,
+body.custom-colors h4,
+body.custom-colors h5,
+body.custom-colors h6 {
+  color: var(--custom-text-color) !important;
+}
+
+/* Links */
+body.custom-colors a {
+  color: var(--custom-accent-color) !important;
+}
+
+/* Callouts */
+body.custom-colors .callout {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+  border-left-color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .callout-title {
+  color: var(--custom-text-color) !important;
+}
+
+/* Code blocks */
+body.custom-colors pre,
+body.custom-colors code {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 92%, black) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Tables */
+body.custom-colors table {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors th {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors td {
+  border-color: color-mix(in srgb, var(--custom-bg-color) 85%, black) !important;
+}
+
+body.custom-colors tr:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 95%, black) !important;
+}
+
+/* Selection */
+body.custom-colors ::selection {
+  background-color: var(--custom-accent-color);
+  color: white;
+}
+
+/* Sidebar link colors */
+body.custom-colors .sidebar-navigation .sidebar-item a,
+body.custom-colors .sidebar-navigation .sidebar-section a {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .sidebar-navigation .sidebar-item a:hover,
+body.custom-colors .sidebar-navigation .sidebar-section a:hover {
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .sidebar-navigation .sidebar-item.active a {
+  color: var(--custom-accent-color) !important;
+}
+
+/* ============================
+   Custom Colors - Callout Headers
+   ============================ */
+body.custom-colors div.callout-note.callout-style-default > .callout-header,
+body.custom-colors div.callout-tip.callout-style-default > .callout-header,
+body.custom-colors div.callout-warning.callout-style-default > .callout-header,
+body.custom-colors div.callout-caution.callout-style-default > .callout-header,
+body.custom-colors div.callout-important.callout-style-default > .callout-header {
+  background-color: var(--custom-bg-lighter) !important;
+}
+
+/* ============================
+   Custom Colors - Nav Tabs
+   ============================ */
+body.custom-colors .nav-tabs .nav-link.active,
+body.custom-colors .nav-tabs .nav-item.show .nav-link {
+  background-color: var(--custom-bg-lighter) !important;
+  color: var(--custom-text-color) !important;
+  border-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .nav-tabs .nav-link {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .nav-tabs .nav-link:hover:not(.active) {
+  background-color: var(--custom-bg-lighter-subtle) !important;
+  border-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .nav-tabs {
+  border-bottom-color: var(--custom-bg-lighter-subtle) !important;
+}
+
+body.custom-colors .tab-content {
+  background-color: var(--custom-bg-color) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* Settings dropdown when custom colors active */
+body.custom-colors .settings-menu {
+  background-color: var(--custom-bg-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-item {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-item:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+}
+
+body.custom-colors .settings-item.active {
+  background-color: color-mix(in srgb, var(--custom-accent-color) 20%, var(--custom-bg-color)) !important;
+  color: var(--custom-accent-color) !important;
+}
+
+body.custom-colors .settings-section-label {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-color-row label {
+  color: var(--custom-text-color) !important;
+}
+
+body.custom-colors .settings-divider {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-reset-btn {
+  color: var(--custom-text-color) !important;
+  border-color: color-mix(in srgb, var(--custom-bg-color) 80%, black) !important;
+}
+
+body.custom-colors .settings-reset-btn:hover {
+  background-color: color-mix(in srgb, var(--custom-bg-color) 90%, black) !important;
+  color: var(--custom-accent-color) !important;
+  border-color: var(--custom-accent-color) !important;
+}
+
+</style>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Only target IMPORTANT callouts; add more types if needed.
@@ -1085,223 +2455,6 @@ document.addEventListener('DOMContentLoaded', () => {
       el.innerHTML = el.innerHTML.replace(re, '');
     }
   });
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
-  if (!tools) return;
-
-  // Create the button
-  const btn = document.createElement('button');
-  btn.id = 'lecture-zoom-header-toggle';
-  btn.className = 'btn-zoom-toggle';
-  btn.type = 'button';
-  btn.setAttribute('aria-pressed', 'false');
-  btn.setAttribute('aria-label', 'Lecture zoom');
-  btn.setAttribute('title', 'Lecture zoom (X)');
-
-  // svg icon
-  btn.innerHTML = `
-    <!-- ENTER: four corners -->
-    <svg class="icon-enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M3 9V3h6"/>
-        <path d="M21 9V3h-6"/>
-        <path d="M3 15v6h6"/>
-        <path d="M21 15v6h-6"/>
-    </svg>
-
-    <!-- EXIT: corners-in (contract) -->
-    <svg class="icon-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M9 3v6H3"/>
-        <path d="M15 3v6h6"/>
-        <path d="M3 15h6v6"/>
-        <path d="M21 15h-6v6"/>
-    </svg>
-  `;
-
-  // Place it next to the colour-scheme toggle (after it, if present)
-  const colorToggle = tools.querySelector('.quarto-color-scheme-toggle');
-  if (colorToggle && colorToggle.parentNode) {
-    colorToggle.parentNode.insertBefore(btn, colorToggle.nextSibling);
-  } else {
-    tools.appendChild(btn);
-  }
-
-  // Toggle logic
-  const KEY = 'lecture-zoom-enabled';
-  
-  // Helper: are we in lecture zoom?
-  const isLectureZoom = () =>
-    document.body.classList.contains('lecture-zoom') ||
-    document.documentElement.classList.contains('lecture-zoom');
-
-  // Define closeLectureSearch early (forward declaration)
-  let closeLectureSearch;
-
-  const apply = (on) => {
-    document.body.classList.toggle('lecture-zoom', on);
-    document.documentElement.classList.toggle('lecture-zoom', on);
-    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    
-    // Close search overlay when exiting lecture zoom
-    if (!on && closeLectureSearch) {
-      closeLectureSearch();
-    }
-    
-    // Nudge charts/layouts to recompute
-    window.dispatchEvent(new Event('resize'));
-    sessionStorage.setItem(KEY, on ? '1' : '0');
-  };
-
-  // Restore per-tab state
-  apply(sessionStorage.getItem(KEY) === '1');
-
-  // Click handler
-  btn.addEventListener('click', () => apply(!isLectureZoom()));
-  
-  // Keyboard shortcut (Z)
-  document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'x' && !/input|textarea|select/i.test(e.target.tagName)) {
-      apply(!isLectureZoom());
-    }
-  });
-
-  let acAnchor = null;          // where the autocomplete root came from
-  let panelObserver = null;     // to catch newly created panels
-
-  function ensureLectureOverlay() {
-    let overlay = document.getElementById('lecture-search-overlay');
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = 'lecture-search-overlay';
-      overlay.innerHTML = '<div class="lecture-search-modal"></div>';
-      document.body.appendChild(overlay);
-
-      // Close on backdrop click
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay && closeLectureSearch) closeLectureSearch();
-      });
-
-      // Close on Esc
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && closeLectureSearch) closeLectureSearch();
-      });
-    }
-    return overlay;
-  }
-
-  function findAutocomplete() {
-    const root =
-      document.querySelector('.aa-Autocomplete') ||
-      document.querySelector('.quarto-search .aa-Autocomplete') ||
-      document.querySelector('.quarto-search-panel .aa-Autocomplete');
-
-    const input = root?.querySelector('input.aa-Input');
-    return { root, input };
-  }
-
-  // Move the results panel (if any) into the modal and normalize its positioning
-  function reparentPanel(modal) {
-    const panel = document.querySelector('.aa-Panel');
-    if (!panel || modal.contains(panel)) return;
-    modal.appendChild(panel);
-    // Let CSS control layout/width; clear inline positioning from Algolia
-    panel.style.left = '';
-    panel.style.top = '';
-    panel.style.width = '';
-  }
-
-  function startPanelObserver(modal) {
-    if (panelObserver) return;
-    panelObserver = new MutationObserver(() => reparentPanel(modal));
-    // Listen on body, since Algolia often inserts the panel there
-    panelObserver.observe(document.body, { childList: true, subtree: true });
-  }
-
-  function stopPanelObserver() {
-    panelObserver?.disconnect();
-    panelObserver = null;
-  }
-
-  function openLectureSearch() {
-    if (!isLectureZoom()) return false;
-
-    const { root, input } = findAutocomplete();
-    if (!root || !input) return false;
-
-    const overlay = ensureLectureOverlay();
-    const modal = overlay.querySelector('.lecture-search-modal');
-
-    // Anchor the current position of the autocomplete root (only once)
-    if (!acAnchor) {
-      acAnchor = document.createComment('autocomplete-anchor');
-      root.parentNode.insertBefore(acAnchor, root);
-    }
-
-    // Move the autocomplete *root* into the modal
-    modal.appendChild(root);
-
-    // Ensure any results panel gets moved into the modal too
-    reparentPanel(modal);
-    startPanelObserver(modal);
-
-    overlay.classList.add('open');
-    document.documentElement.classList.add('search-open');
-
-    // Focus the input after layout
-    requestAnimationFrame(() => {
-      input.focus();
-      input.select?.();
-      // In case Algolia computes sizes on resize, give it a nudge
-      window.dispatchEvent(new Event('resize'));
-    });
-
-    return true;
-  }
-
-  // Now properly define closeLectureSearch
-  closeLectureSearch = function() {
-    const overlay = document.getElementById('lecture-search-overlay');
-    if (!overlay || !overlay.classList.contains('open')) return;
-
-    stopPanelObserver();
-
-    const { root } = findAutocomplete();
-
-    // Move panel (if currently inside modal) back to body to let Algolia clean up normally
-    const modal = overlay.querySelector('.lecture-search-modal');
-    const panel = modal?.querySelector('.aa-Panel');
-    if (panel) document.body.appendChild(panel);
-
-    // Put the autocomplete root back where it came from
-    if (root && acAnchor && acAnchor.parentNode) {
-      acAnchor.parentNode.insertBefore(root, acAnchor.nextSibling);
-    }
-
-    overlay.classList.remove('open');
-    document.documentElement.classList.remove('search-open');
-  };
-
-  // Existing hotkeys:
-  document.addEventListener('keydown', (e) => {
-    const tag = e.target.tagName.toLowerCase();
-    const typing = tag === 'input' || tag === 'textarea' || tag === 'select' || e.isComposing;
-    if (typing) return;
-
-    if (e.key === 'F' && e.shiftKey) {
-      if (openLectureSearch()) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }
-    if (e.key === 'Escape') {
-      closeLectureSearch();
-    }
-  });
-
 });
 </script>
 <script>
@@ -3410,6 +4563,189 @@ onButton('inkpad-save', () => {
 })();
 </script>
 <script>
+  
+document.addEventListener('DOMContentLoaded', function() {
+  const loadTippy = new Promise((resolve) => {
+    if (typeof tippy !== 'undefined') {
+      resolve();
+      return;
+    }
+    
+    const popper = document.createElement('script');
+    popper.src = 'https://unpkg.com/@popperjs/core@2';
+    popper.onload = () => {
+      const tippyScript = document.createElement('script');
+      tippyScript.src = 'https://unpkg.com/tippy.js@6';
+      tippyScript.onload = resolve;
+      document.head.appendChild(tippyScript);
+    };
+    document.head.appendChild(popper);
+  });
+  
+  loadTippy.then(initCalloutPreviews);
+});
+
+const contentCache = new Map();
+const mathRendered = new WeakSet(); // Track elements where math has been rendered
+
+// Render math in an element using KaTeX (only once)
+function renderMath(element) {
+  if (!element || mathRendered.has(element)) {
+    return; // Already rendered, skip
+  }
+  
+  if (typeof renderMathInElement !== 'undefined') {
+    renderMathInElement(element, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError: false
+    });
+  } else if (typeof katex !== 'undefined') {
+    element.querySelectorAll('.math').forEach(mathEl => {
+      if (mathRendered.has(mathEl)) return;
+      
+      const isDisplay = mathEl.classList.contains('display');
+      const tex = mathEl.textContent || mathEl.innerText;
+      try {
+        katex.render(tex, mathEl, {
+          displayMode: isDisplay,
+          throwOnError: false
+        });
+        mathRendered.add(mathEl);
+      } catch (e) {
+        console.warn('KaTeX render error:', e);
+      }
+    });
+  }
+  
+  // Hide MathML (screen reader version) to avoid duplication
+  element.querySelectorAll('.katex-mathml').forEach(el => {
+    el.style.display = 'none';
+  });
+  
+  // Mark this element as processed
+  mathRendered.add(element);
+}
+
+async function fetchCalloutContent(href) {
+  if (contentCache.has(href)) {
+    return contentCache.get(href);
+  }
+  
+  try {
+    const [file, anchor] = href.split('#');
+    const url = file || window.location.pathname;
+    
+    if (!file || file === '' || url === window.location.pathname) {
+      const element = document.getElementById(anchor);
+      if (element) {
+        const callout = element.closest('.callout');
+        const clone = callout ? callout.cloneNode(true) : element.parentElement.cloneNode(true);
+        clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+        
+        const content = clone.innerHTML;
+        contentCache.set(href, { html: content, needsMathRender: false });
+        return contentCache.get(href);
+      }
+    }
+    
+    const response = await fetch(url);
+    const html = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    const element = doc.getElementById(anchor);
+    if (element) {
+      const callout = element.closest('.callout');
+      const content = callout?.innerHTML || element.parentElement?.innerHTML || '';
+      contentCache.set(href, { html: content, needsMathRender: true });
+      return contentCache.get(href);
+    }
+  } catch (e) {
+    console.warn('Failed to fetch callout content:', e);
+  }
+  
+  return null;
+}
+
+function initCalloutPreviews() {
+  const calloutRefs = document.querySelectorAll('.callout-ref');
+  
+  calloutRefs.forEach(ref => {
+    const label = ref.dataset.calloutLabel;
+    const number = ref.dataset.calloutNumber;
+    const title = ref.dataset.calloutTitle;
+    const preview = ref.dataset.calloutPreview;
+    const targetHref = ref.getAttribute('href');
+    
+    const isRecap = label === 'Recap';
+    const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+    const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+    
+    const initialContent = `
+      <div class="callout-preview-content">
+        <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+          <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+        </div>
+        <div class="callout-preview-body">
+          ${preview ? preview + '...' : '<em>Loading...</em>'}
+        </div>
+      </div>
+    `;
+    
+    let contentLoaded = false;
+    
+    const instance = tippy(ref, {
+      content: initialContent,
+      allowHTML: true,
+      interactive: true,
+      placement: 'top',
+      theme: 'callout',
+      maxWidth: 450,
+      delay: [400, 100],
+      appendTo: document.body,
+      async onShow(instance) {
+        // Only fetch content once
+        if (contentLoaded) return;
+        
+        const result = await fetchCalloutContent(targetHref);
+        if (result && instance.state.isVisible) {
+          const isRecap = label === 'Recap';
+          const borderColor = isRecap ? 'var(--bs-info, #0dcaf0)' : 'var(--bs-warning, #ffc107)';
+          const bgColor = isRecap ? 'rgba(13, 202, 240, 0.1)' : 'rgba(255, 193, 7, 0.1)';
+          
+          instance.setContent(`
+            <div class="callout-preview-content">
+              <div class="callout-preview-header" style="border-left: 3px solid ${borderColor}; padding-left: 10px; background: ${bgColor}; margin: -12px -12px 10px -12px; padding: 10px 12px 10px 12px;">
+                <strong>${label} ${number}</strong>${title ? ' (' + title + ')' : ''}
+              </div>
+              <div class="callout-preview-body callout-preview-fetched">
+                ${result.html}
+              </div>
+            </div>
+          `);
+          
+          contentLoaded = true;
+        }
+      },
+      onShown(instance) {
+        // Render math only once after content is shown
+        const contentEl = instance.popper.querySelector('.callout-preview-body');
+        if (contentEl) {
+          renderMath(contentEl);
+        }
+      }
+    });
+  });
+}
+
+
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
   const tools = document.querySelector('#quarto-header .quarto-navbar-tools');
   if (!tools) return;
@@ -3496,6 +4832,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 </style>
+<script>
+
+if (document.body.classList.contains('reading-mode')) {
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.body.style.setProperty('--scroll-progress', `${progress}%`);
+  });
+}
+
+</script>
 <script type="ojs-module-contents">
 eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImJvZHlGb250ID0gZ2V0Q29tcHV0ZWRTdHlsZShkb2N1bWVudC5ib2R5KS5mb250RmFtaWx5XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIvLyByZWFjdGl2ZSB2YXJzICh2aXNpYmxlIHRvIGxhdGVyIGNlbGxzKVxuYWxsUXVlc3Rpb25zID0gQXJyYXkuZnJvbShkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCcucXVlc3Rpb24nKSlcblxuYWxsVGFncyA9IEFycmF5LmZyb20obmV3IFNldChcbiAgYWxsUXVlc3Rpb25zLmZsYXRNYXAoZWwgPT4gKGVsLmRhdGFzZXQudGFncyB8fCBcIlwiKVxuICAgIC5zcGxpdCgvXFxzKy8pLm1hcCh0ID0+IHQudHJpbSgpKS5maWx0ZXIoQm9vbGVhbikpXG4pKS5zb3J0KClcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IntcbiAgZm9yIChjb25zdCBlbCBvZiBhbGxRdWVzdGlvbnMpIHtcbiAgICAvLyAtLS0gVGFnYmFyICh1bmNoYW5nZWQpIC0tLVxuICAgIGlmICghZWwucXVlcnlTZWxlY3RvcignLnRhZ2JhcicpKSB7XG4gICAgICBjb25zdCB0YWdzID0gKGVsLmRhdGFzZXQudGFncyB8fCBcIlwiKS5zcGxpdCgvXFxzKy8pLmZpbHRlcihCb29sZWFuKTtcbiAgICAgIGNvbnN0IGJhciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuICAgICAgYmFyLmNsYXNzTmFtZSA9ICd0YWdiYXInO1xuICAgICAgYmFyLmFwcGVuZCguLi50YWdzLm1hcCh0ID0+IE9iamVjdC5hc3NpZ24oZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnc3BhbicpLCB7XG4gICAgICAgIGNsYXNzTmFtZTogJ3RhZycsIHRleHRDb250ZW50OiB0XG4gICAgICB9KSkpO1xuICAgICAgZWwuYXBwZW5kQ2hpbGQoYmFyKTtcbiAgICB9XG5cbiAgICAvLyAtLS0gRGlmZmljdWx0eSBwZXBwZXJzIGluIGhlYWRlciAoUkhTKSAtLS1cbiAgICBjb25zdCBoZWFkZXIgPSBlbC5xdWVyeVNlbGVjdG9yKCcuY2FsbG91dC1oZWFkZXInKTtcbiAgICBpZiAoaGVhZGVyICYmICFoZWFkZXIucXVlcnlTZWxlY3RvcignLmRpZmZpY3VsdHktcGVwcGVycycpKSB7XG4gICAgICBjb25zdCBsZXZlbCA9IE51bWJlcihlbC5kYXRhc2V0LmRpZmZpY3VsdHkgPz8gMCk7XG5cbiAgICAgIC8vIEFsd2F5cyBzaG93LCBidXQgb25seSBhZGQgcGVwcGVycyBpZiA+MFxuICAgICAgY29uc3Qgc3BhbiA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NwYW4nKTtcbiAgICAgIHNwYW4uY2xhc3NOYW1lID0gYGRpZmZpY3VsdHktcGVwcGVycyBsZXZlbC0ke2xldmVsfWA7XG4gICAgICBzcGFuLnNldEF0dHJpYnV0ZSgnYXJpYS1sYWJlbCcsIGBEaWZmaWN1bHR5ICR7bGV2ZWx9YCk7XG4gICAgICBzcGFuLnRleHRDb250ZW50ID0gbGV2ZWwgPiAwID8gYCgkeyBcIvCfjLZcIi5yZXBlYXQobGV2ZWwpIH0pYCA6IFwiKCApXCI7XG4gICAgICBoZWFkZXIuYXBwZW5kQ2hpbGQoc3Bhbik7XG4gICAgfVxuICB9XG4gIHJldHVybiBodG1sYGAgIC8vIHNpbGVuY2Vcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiB0eXBlZCA9IHtcbiAgLy8gLS0tIERPTVxuICBjb25zdCB3cmFwcGVyID0gaHRtbGA8ZGl2IGNsYXNzPVwidG9rZW4tYXV0b2NvbXBsZXRlXCI+PC9kaXY+YDtcbiAgY29uc3QgbGFiZWxFbCA9IGh0bWxgPGxhYmVsIGNsYXNzPVwidG9rZW4tbGFiZWxcIj5GaWx0ZXIgYnkgdGFncyAodHlwZSwgc3BhY2Utc2VwYXJhdGVkKTo8L2xhYmVsPmA7XG4gIGNvbnN0IGlucHV0ICAgPSBodG1sYDxpbnB1dCBjbGFzcz1cInRva2VuLWlucHV0XCIgdHlwZT1cInRleHRcIiBwbGFjZWhvbGRlcj1cImUuZy4gYmF5ZXMgcHJvYmFiaWxpdHlcIj5gO1xuICB3cmFwcGVyLmFwcGVuZChsYWJlbEVsLCBpbnB1dCk7XG5cbiAgLy8gLS0tIFBPUlRBTDogc3VnZ2VzdGlvbnMgbGlzdCBsaXZlcyBhdCBkb2N1bWVudC5ib2R5IHNvIGl0IGNhbiBvdmVybGF5IGV2ZXJ5dGhpbmdcbiAgY29uc3QgbGlzdCA9IGh0bWxgPGRpdiBjbGFzcz1cInRva2VuLXN1Z2dlc3Rpb25zXCIgcm9sZT1cImxpc3Rib3hcIiBoaWRkZW4+PC9kaXY+YDtcbiAgZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZChsaXN0KTtcblxuICAvLyBNYWtlIHN1cmUgaXQgZmxvYXRzIGFib3ZlIGFsbCBjb250ZW50XG4gIGxpc3Quc3R5bGUucG9zaXRpb24gPSBcImZpeGVkXCI7XG4gIGxpc3Quc3R5bGUuekluZGV4ID0gXCI5OTk5XCI7IC8vIGhpZ2ggei1pbmRleCB0byBvdmVybGF5IGV2ZXJ5dGhpbmdcblxuICAvLyAtLS0gdmFsdWUgcGx1bWJpbmdcbiAgT2JqZWN0LmRlZmluZVByb3BlcnR5KHdyYXBwZXIsIFwidmFsdWVcIiwge1xuICAgIGdldCgpIHsgcmV0dXJuIGlucHV0LnZhbHVlOyB9LFxuICAgIHNldCh2KSB7IGlucHV0LnZhbHVlID0gdiA/PyBcIlwiOyB9XG4gIH0pO1xuXG4gIC8vIC0tLSBoZWxwZXJzXG4gIGNvbnN0IFRBR1MgPSAoKSA9PiAodHlwZW9mIGFsbFRhZ3MgIT09IFwidW5kZWZpbmVkXCIgPyBhbGxUYWdzIDogW10pO1xuICBjb25zdCB0b2tlbnMgPSAoKSA9PiBpbnB1dC52YWx1ZS5zcGxpdCgvXFxzKy8pLmZpbHRlcihCb29sZWFuKTtcbiAgY29uc3QgbGFzdFRva2VuID0gKCkgPT4gKGlucHV0LnZhbHVlLm1hdGNoKC8oPzpefFxccykoXFxTKikkLyk/LlsxXSkgPz8gXCJcIjtcbiAgY29uc3QgcHJldHR5ID0gdCA9PiB0LnJlcGxhY2UoLy0vZywgXCIgXCIpLnJlcGxhY2UoL1xcYlxcdy9nLCBjID0+IGMudG9VcHBlckNhc2UoKSk7XG5cbiAgLy8gUG9zaXRpb24gcG9ydGFsIGRpcmVjdGx5IGJlbG93IHRoZSBpbnB1dCwgbWF0Y2hpbmcgaXRzIHdpZHRoXG4gIGNvbnN0IGFsaWduTGlzdCA9ICgpID0+IHtcbiAgICBjb25zdCByID0gaW5wdXQuZ2V0Qm91bmRpbmdDbGllbnRSZWN0KCk7XG4gICAgbGlzdC5zdHlsZS5sZWZ0ID0gYCR7ci5sZWZ0fXB4YDtcbiAgICBsaXN0LnN0eWxlLnRvcCAgPSBgJHtyLmJvdHRvbSArIDR9cHhgO1xuICAgIGxpc3Quc3R5bGUud2lkdGggPSBgJHtyLndpZHRofXB4YDtcbiAgfTtcblxuICAvLyAtLS0gcmVuZGVyIHN1Z2dlc3Rpb25zXG4gIGxldCBzZWxlY3RlZEluZGV4ID0gLTE7XG4gIGNvbnN0IGFwcGx5QWN0aXZlU3R5bGVzID0gKCkgPT4ge1xuICAgIGNvbnN0IGl0ZW1zID0gQXJyYXkuZnJvbShsaXN0LmNoaWxkcmVuKTtcbiAgICBpdGVtcy5mb3JFYWNoKChlbCwgaSkgPT4gZWwuY2xhc3NMaXN0LnRvZ2dsZShcImFjdGl2ZVwiLCBpID09PSBzZWxlY3RlZEluZGV4KSk7XG4gIH07XG5cbiAgZnVuY3Rpb24gcmVuZGVyU3VnZ2VzdGlvbnMoKSB7XG4gICAgY29uc3QgcSA9IGxhc3RUb2tlbigpLnRvTG93ZXJDYXNlKCk7XG4gICAgY29uc3QgYWxyZWFkeSA9IG5ldyBTZXQodG9rZW5zKCkubWFwKHMgPT4gcy50b0xvd2VyQ2FzZSgpKSk7XG4gICAgY29uc3QgdGFncyA9IFRBR1MoKTtcblxuICAgIGNvbnN0IGNhbmRpZGF0ZXMgPSBxXG4gICAgICA/IHRhZ3MuZmlsdGVyKHQgPT4gdC50b0xvd2VyQ2FzZSgpLnN0YXJ0c1dpdGgocSkgJiYgIWFscmVhZHkuaGFzKHQudG9Mb3dlckNhc2UoKSkpXG4gICAgICA6IFtdO1xuXG4gICAgbGlzdC5pbm5lckhUTUwgPSBcIlwiO1xuICAgIGlmIChjYW5kaWRhdGVzLmxlbmd0aCA9PT0gMCkgeyBsaXN0LmhpZGRlbiA9IHRydWU7IHJldHVybjsgfVxuXG4gICAgZm9yIChjb25zdCB0IG9mIGNhbmRpZGF0ZXMuc2xpY2UoMCwgOCkpIHtcbiAgICAgIGNvbnN0IGl0ZW0gPSBodG1sYDxkaXYgY2xhc3M9XCJ0b2tlbi1zdWdnZXN0aW9uXCIgcm9sZT1cIm9wdGlvblwiIGRhdGEtdG9rZW49XCIke3R9XCI+JHtwcmV0dHkodCl9PC9kaXY+YDtcbiAgICAgIGl0ZW0uYWRkRXZlbnRMaXN0ZW5lcihcIm1vdXNlZG93blwiLCAoZSkgPT4geyBlLnByZXZlbnREZWZhdWx0KCk7IGFjY2VwdFN1Z2dlc3Rpb24odCk7IH0pO1xuICAgICAgbGlzdC5hcHBlbmRDaGlsZChpdGVtKTtcbiAgICB9XG4gICAgc2VsZWN0ZWRJbmRleCA9IC0xO1xuICAgIGFwcGx5QWN0aXZlU3R5bGVzKCk7XG4gICAgbGlzdC5oaWRkZW4gPSBmYWxzZTtcbiAgICBhbGlnbkxpc3QoKTsgLy8gZW5zdXJlIGNvcnJlY3QgcG9zaXRpb24gd2hlbiBzaG93blxuICB9XG5cbiAgZnVuY3Rpb24gY29tbWl0KCkge1xuICAgIGNvbnN0IHBhcnRzID0gdG9rZW5zKCk7XG4gICAgaW5wdXQudmFsdWUgPSBwYXJ0cy5qb2luKFwiIFwiKSArIChwYXJ0cy5sZW5ndGggPyBcIiBcIiA6IFwiXCIpO1xuICAgIHdyYXBwZXIuZGlzcGF0Y2hFdmVudChuZXcgRXZlbnQoXCJpbnB1dFwiLCB7IGJ1YmJsZXM6IHRydWUgfSkpO1xuICB9XG5cbiAgZnVuY3Rpb24gYWNjZXB0U3VnZ2VzdGlvbih0YWcpIHtcbiAgICBjb25zdCBwYXJ0cyA9IGlucHV0LnZhbHVlLnNwbGl0KC9cXHMrLyk7XG4gICAgaWYgKC9cXFMvLnRlc3QoaW5wdXQudmFsdWUpKSBwYXJ0cy5wb3AoKTsgLy8gcmVwbGFjZSBsYXN0IHRva2VuXG4gICAgY29uc3Qgc2V0ID0gbmV3IFNldChwYXJ0cy5maWx0ZXIoQm9vbGVhbikubWFwKHMgPT4gcy50b0xvd2VyQ2FzZSgpKSk7XG4gICAgaWYgKCFzZXQuaGFzKHRhZy50b0xvd2VyQ2FzZSgpKSkgcGFydHMucHVzaCh0YWcpO1xuICAgIGlucHV0LnZhbHVlID0gcGFydHMuZmlsdGVyKEJvb2xlYW4pLmpvaW4oXCIgXCIpICsgXCIgXCI7XG4gICAgbGlzdC5oaWRkZW4gPSB0cnVlO1xuICAgIGNvbW1pdCgpO1xuICAgIGlucHV0LmZvY3VzKCk7XG4gIH1cblxuICBmdW5jdGlvbiBtb3ZlU2VsZWN0aW9uKGRlbHRhKSB7XG4gICAgY29uc3QgaXRlbXMgPSBBcnJheS5mcm9tKGxpc3QuY2hpbGRyZW4pO1xuICAgIGlmIChpdGVtcy5sZW5ndGggPT09IDApIHJldHVybjtcbiAgICBzZWxlY3RlZEluZGV4ID0gKHNlbGVjdGVkSW5kZXggKyBkZWx0YSArIGl0ZW1zLmxlbmd0aCkgJSBpdGVtcy5sZW5ndGg7XG4gICAgYXBwbHlBY3RpdmVTdHlsZXMoKTtcbiAgICBpZiAoc2VsZWN0ZWRJbmRleCA+PSAwKSBpdGVtc1tzZWxlY3RlZEluZGV4XS5zY3JvbGxJbnRvVmlldyh7IGJsb2NrOiBcIm5lYXJlc3RcIiB9KTtcbiAgfVxuXG4gIC8vIC0tLSBldmVudHNcbiAgaW5wdXQuYWRkRXZlbnRMaXN0ZW5lcihcImlucHV0XCIsIHJlbmRlclN1Z2dlc3Rpb25zKTtcbiAgaW5wdXQuYWRkRXZlbnRMaXN0ZW5lcihcImZvY3VzXCIsICgpID0+IHsgYWxpZ25MaXN0KCk7IH0pOyAvLyByZWFsaWduIG9uIGZvY3VzXG5cbiAgaW5wdXQuYWRkRXZlbnRMaXN0ZW5lcihcImtleWRvd25cIiwgKGUpID0+IHtcbiAgICBpZiAoIWxpc3QuaGlkZGVuICYmIChlLmtleSA9PT0gXCJBcnJvd0Rvd25cIiB8fCBlLmtleSA9PT0gXCJBcnJvd1VwXCIpKSB7XG4gICAgICBlLnByZXZlbnREZWZhdWx0KCk7IG1vdmVTZWxlY3Rpb24oZS5rZXkgPT09IFwiQXJyb3dEb3duXCIgPyArMSA6IC0xKTsgcmV0dXJuO1xuICAgIH1cbiAgICBpZiAoZS5rZXkgPT09IFwiRW50ZXJcIikge1xuICAgICAgaWYgKCFsaXN0LmhpZGRlbiAmJiBzZWxlY3RlZEluZGV4ID49IDApIHtcbiAgICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpO1xuICAgICAgICBjb25zdCBjaG9pY2UgPSBsaXN0LmNoaWxkcmVuW3NlbGVjdGVkSW5kZXhdPy5kYXRhc2V0LnRva2VuO1xuICAgICAgICBpZiAoY2hvaWNlKSBhY2NlcHRTdWdnZXN0aW9uKGNob2ljZSk7XG4gICAgICB9IGVsc2Uge1xuICAgICAgICBjb21taXQoKTtcbiAgICAgIH1cbiAgICB9IGVsc2UgaWYgKGUua2V5ID09PSBcIkVzY2FwZVwiKSB7XG4gICAgICBsaXN0LmhpZGRlbiA9IHRydWU7XG4gICAgfVxuICB9KTtcblxuICAvLyBEZWxheSBibHVyIHRvIGFsbG93IG1vdXNlZG93biBvbiBzdWdnZXN0aW9uIHRvIGZpcmUgZmlyc3RcbiAgaW5wdXQuYWRkRXZlbnRMaXN0ZW5lcihcImJsdXJcIiwgKCkgPT4ge1xuICAgIHNldFRpbWVvdXQoKCkgPT4geyBsaXN0LmhpZGRlbiA9IHRydWU7IGNvbW1pdCgpOyB9LCAyMDApO1xuICB9KTtcblxuICAvLyBDbG9zZSB3aGVuIGNsaWNraW5nIG91dHNpZGUgKHJlbWVtYmVyIGxpc3QgaXMgb3V0c2lkZSB3cmFwcGVyIG5vdylcbiAgY29uc3Qgb25Eb2NDbGljayA9IChlKSA9PiB7XG4gICAgaWYgKGUudGFyZ2V0ICE9PSBpbnB1dCAmJiAhbGlzdC5jb250YWlucyhlLnRhcmdldCkpIGxpc3QuaGlkZGVuID0gdHJ1ZTtcbiAgfTtcbiAgZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcihcImNsaWNrXCIsIG9uRG9jQ2xpY2ssIHRydWUpO1xuXG4gIC8vIFJlcG9zaXRpb24gb24gYW55IHNjcm9sbC9yZXNpemUgKGNhcHR1cmUgc2Nyb2xscyBmcm9tIG5lc3RlZCBjb250YWluZXJzKVxuICBjb25zdCBvblZpZXdwb3J0Q2hhbmdlID0gKCkgPT4geyBpZiAoIWxpc3QuaGlkZGVuKSBhbGlnbkxpc3QoKTsgfTtcbiAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoXCJyZXNpemVcIiwgb25WaWV3cG9ydENoYW5nZSwgeyBwYXNzaXZlOiB0cnVlIH0pO1xuICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcihcInNjcm9sbFwiLCBvblZpZXdwb3J0Q2hhbmdlLCB0cnVlKTtcblxuICAvLyBJbml0aWFsIGFsaWdubWVudFxuICBxdWV1ZU1pY3JvdGFzayhhbGlnbkxpc3QpO1xuXG4gIC8vIENsZWFudXAgd2hlbiB0aGUgY2VsbCByZS1ydW5zXG4gIHdyYXBwZXIuZGlzcG9zZSA9ICgpID0+IHtcbiAgICBkb2N1bWVudC5yZW1vdmVFdmVudExpc3RlbmVyKFwiY2xpY2tcIiwgb25Eb2NDbGljaywgdHJ1ZSk7XG4gICAgd2luZG93LnJlbW92ZUV2ZW50TGlzdGVuZXIoXCJyZXNpemVcIiwgb25WaWV3cG9ydENoYW5nZSwgeyBwYXNzaXZlOiB0cnVlIH0pO1xuICAgIHdpbmRvdy5yZW1vdmVFdmVudExpc3RlbmVyKFwic2Nyb2xsXCIsIG9uVmlld3BvcnRDaGFuZ2UsIHRydWUpO1xuICAgIGxpc3QucmVtb3ZlKCk7XG4gIH07XG5cbiAgLy8gSW5pdGlhbCByZW5kZXJcbiAgcmVuZGVyU3VnZ2VzdGlvbnMoKTtcblxuICByZXR1cm4gd3JhcHBlcjtcbn1cblxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoidmlld29mIGNob3NlbiA9IElucHV0cy5jaGVja2JveChhbGxUYWdzLCB7XG4gIGxhYmVsOiBtZGBPciBwaWNrIHRhZ3M6YCxcbiAgdmFsdWU6IFtdXG59KVxuXG52aWV3b2YgbGV2ZWxzID0gSW5wdXRzLmNoZWNrYm94KFxuICBbMCwgMSwgMiwgM10sXG4gIHtcbiAgICBsYWJlbDogbWRgRGlmZmljdWx0eTpgLFxuICAgIHZhbHVlOiBbMCwgMSwgMiwgM10sICAgICAgICAgICAgICAgICAvLyBkZWZhdWx0OiBzaG93IGFsbFxuICAgIGZvcm1hdDogZCA9PiBbXCJFYXN5XCIsIFwiTWVkaXVtXCIsIFwiSGFyZFwiLCBcIlRvbyBoYXJkXCJdW2RdXG4gIH1cbilcblxuXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTYiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ7XG4gIC8vIFN5bmMgY2hlY2tib3hlcyB0byB0aGUgY29tbWl0dGVkIHRleHQgdG9rZW5zXG4gIGNvbnN0IGxjTWFwID0gbmV3IE1hcChhbGxUYWdzLm1hcCh0ID0+IFt0LnRvTG93ZXJDYXNlKCksIHRdKSk7IC8vIGxvd2VyIOKGkiBvcmlnaW5hbFxuICBjb25zdCB0eXBlZE5vdyA9ICh0eXBlZCB8fCBcIlwiKS5zcGxpdCgvXFxzKy8pLmZpbHRlcihCb29sZWFuKS5tYXAocyA9PiBzLnRvTG93ZXJDYXNlKCkpO1xuICBjb25zdCBzZWxlY3RlZCA9IHR5cGVkTm93Lm1hcChzID0+IGxjTWFwLmdldChzKSkuZmlsdGVyKEJvb2xlYW4pO1xuXG4gIGNvbnN0IGVsID0gdmlld29mIGNob3NlbjtcbiAgaWYgKGVsICYmIEFycmF5LmlzQXJyYXkoZWwudmFsdWUpKSB7XG4gICAgLy8gY29tcGFyZSBzZXRzIHRvIGF2b2lkIGNodXJuXG4gICAgY29uc3QgY3VyID0gbmV3IFNldChlbC52YWx1ZSk7XG4gICAgbGV0IGVxdWFsID0gc2VsZWN0ZWQubGVuZ3RoID09PSBjdXIuc2l6ZSAmJiBzZWxlY3RlZC5ldmVyeSh2ID0+IGN1ci5oYXModikpO1xuICAgIGlmICghZXF1YWwpIHtcbiAgICAgIGVsLnZhbHVlID0gc2VsZWN0ZWQ7XG4gICAgICBlbC5kaXNwYXRjaEV2ZW50KG5ldyBFdmVudChcImlucHV0XCIsIHtidWJibGVzOnRydWV9KSk7XG4gICAgfVxuICB9XG4gIHJldHVybiBodG1sYGA7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTciLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHR5cGVkU2V0ICA9IG5ldyBTZXQoKHR5cGVkIHx8IFwiXCIpLnNwbGl0KC9cXHMrLykuZmlsdGVyKEJvb2xlYW4pKTtcbiAgY29uc3QgY2hvc2VuU2V0ID0gbmV3IFNldChjaG9zZW4gfHwgW10pO1xuICBjb25zdCByZXF1aXJlZCAgPSBuZXcgU2V0KFsuLi50eXBlZFNldCwgLi4uY2hvc2VuU2V0XSk7ICAgLy8gQU5EIG92ZXIgdGFnc1xuICBjb25zdCBjaG9zZW5MdiAgPSBuZXcgU2V0KGxldmVscyB8fCBbXSk7ICAgICAgICAgICAgICAgICAgLy8gYWxsb3dlZCBsZXZlbHNcblxuICBsZXQgc2hvd24gPSAwO1xuICBmb3IgKGNvbnN0IGVsIG9mIGFsbFF1ZXN0aW9ucykge1xuICAgIC8vIHRhZ3MgY2hlY2tcbiAgICBjb25zdCBlbFRhZ3MgPSBuZXcgU2V0KChlbC5kYXRhc2V0LnRhZ3MgfHwgXCJcIikuc3BsaXQoL1xccysvKS5maWx0ZXIoQm9vbGVhbikpO1xuICAgIGNvbnN0IHBhc3NUYWdzID0gcmVxdWlyZWQuc2l6ZSA9PT0gMCB8fCBbLi4ucmVxdWlyZWRdLmV2ZXJ5KHQgPT4gZWxUYWdzLmhhcyh0KSk7XG5cbiAgICAvLyBkaWZmaWN1bHR5IGNoZWNrICgwIGRlZmF1bHQpXG4gICAgY29uc3QgbGV2ZWwgPSBOdW1iZXIoZWwuZGF0YXNldC5kaWZmaWN1bHR5ID8/IDApO1xuICAgIGNvbnN0IHBhc3NEaWZmID0gY2hvc2VuTHYuaGFzKGxldmVsKTtcblxuICAgIGNvbnN0IHNob3cgPSBwYXNzVGFncyAmJiBwYXNzRGlmZjtcbiAgICBlbC5zdHlsZS5kaXNwbGF5ID0gc2hvdyA/IFwiXCIgOiBcIm5vbmVcIjtcbiAgICBpZiAoc2hvdykgc2hvd24gKz0gMTtcbiAgfVxuXG4gIHJldHVybiBodG1sYDxkaXY+PHN0cm9uZz5TaG93aW5nICR7c2hvd259PC9zdHJvbmc+IG9mICR7YWxsUXVlc3Rpb25zLmxlbmd0aH0gcXVlc3Rpb25zLjwvZGl2PmBcbn1cblxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCd0eXBlZCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdjaG9zZW4nKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnbGV2ZWxzJykifV19
 </script>
@@ -3933,6 +5281,40 @@ window._ojs.runtime.interpretFromScriptTags();
   </div>
 </nav>
 </div> <!-- /content -->
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+    <script type="text/javascript">
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let pseudocodeOptions = {
+          indentSize: el.dataset.indentSize,
+          commentDelimiter: el.dataset.commentDelimiter,
+          lineNumber: el.dataset.lineNumber.toLowerCase() === "true",
+          lineNumberPunc: el.dataset.lineNumberPunc,
+          noEnd: el.dataset.noEnd.toLowerCase() === "true",
+          titlePrefix: el.dataset.captionPrefix
+        };
+        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
+      });
+    })(document);
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
+      });
+    })(document);
+    </script>
+  
 
 
 

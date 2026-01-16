@@ -6,9 +6,191 @@ jupyter: mas2901
 
 # Online Supervised Learning
 
-## Continual Learning
+Up to this point we have talked about training a machine learning model once, using a fixed dataset, after which the model is deployed for its intended task. 
 
-## Bandits
+*Online learning*, on the other hand, updates the machine learning model incrementally as new data arrive, allowing it to adapt to changing patterns in real-time. 
+This helps maintain model relevance in dynamic environments, and is also useful for large or streaming datasets where storing and retraining on all past data is impractical.
 
-## Reinforcement Learning
+To fix ideas, we can precisely formulate an online supervised learning task:
 
+:::{#def-online-ml-task}
+### Online Supervised Learning Task
+Fix sets $\mathcal{X}$, $\mathcal{Y}$, and $\mathcal{Z}$, a loss function $L : \mathcal{Y} \times \mathcal{Z} \rightarrow \mathbb{R}$, and a time horizon $T \in \mathbb{N}$.
+At time $t+1$ we have access to data $\{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^t$ where each $(\mathbf{x}_i,\mathbf{y}_i)$ is a sample from an (unknown) distribution $P_t$.
+The aim is to find a function $f : \mathcal{X} \rightarrow \mathcal{Z}$ for which the *cumulative loss*
+$$
+\frac{1}{T} \sum_{t=1}^T \mathbb{E}[ L(\mathbf{y}_t,f(\mathbf{x}_t)) ] 
+$$ 
+is minimal.
+:::
+
+@def-online-ml-task is deliberately vague about where the sequence of data-generating distributions $P_t$ might come from; there are two main situations to consider
+
+1. **No feedback:** The sequence of distributions $P_t$ arise from some natural process that is unaffected by our actions; e.g. whether or not I carry an umbrella on day $t$ can be modelled as a Bernoulli distribution $P_t = \mathrm{Bern}(\rho_t)$ whose success parameter $\rho_t$ depends in turn on the weather on day $t$, which we do not control.
+2. **Feedback:** The distribution $P_t$ may depend on the actions that we took in the past. For example, the probability $\rho_t$ that my friend will lend me an umbrella is likely to decrease if I keep asking to borrow their umbrella.
+
+The simplest example of online machine learning without feedback is called the *bandit*, which we are going to meet in @sec-bandits.
+
+Online machine learning with feedback is such a rich topic that we cannot hope to cover it in this module, but we give a passing nod to *reinforcement learning*, one of the main methods that address this task, in @sec-rl.
+
+
+## Bandits {#sec-bandits}
+
+Slot machines are also known pejoratively as *one-armed bandits*, alluding to the large mechanical levers affixed to the sides of early mechanical machines (cf. \Cref{fig: bandit}), and to the games' ability to empty players' pockets and wallets as thieves would.
+
+At time $t$ the player inserts a coin (say $\pounds 1$), pulls the lever, and receives a random *reward* $\pounds R_t$ which has expectation $\mu \geq 0$ and is independent of all other rewards that have been received.
+Their average expected reward after playing $T$ rounds is simply the expected reward $\mu$ from the bandit, i.e.
+$$
+\mathbb{E}\left[ \frac{1}{T} \sum_{t=1}^T R_t \right] = \frac{1}{T} \sum_{t=1}^T \mathbb{E}[R_t] = \frac{1}{T} \sum_{t=1}^T \mu = \mu ,
+$$
+So far, so straightforward.
+The complication comes in when there is more than one bandit (we call this situation a *multi-armed bandit*), since the player must then select, at time $t$, which bandit to play next.
+This is non-trivial when not all bandits are equal; the expected reward $\mu_i$ from the $i$th bandit may not be the same as the expected reward $\mu_j$ from another bandit ($j \neq i$), and the actual values of the $\mu_i$ will be unknown to the player in general.
+Supposing there are $B$ bandits in total, the aim is then to minimise the *regret*
+$$ 
+ \mu_\star - \frac{1}{T} \sum_{t=1}^T R_t , \qquad \mu_\star = \max_{1 \leq i \leq B} \mu_i ,    
+$${#eq-bandit-regret}
+where $R_t$ denotes the reward received at time $t \in \{1,\dots,T\}$.
+If a player was lucky enough to only play the bandit with highest expected reward $\mu_\star$, then the player would have no expected regret:
+$$
+\mathbb{E}\left[ \mu_\star - \frac{1}{T} \sum_{t=1}^T R_t \right] 
+= \mu_\star - \frac{1}{T} \sum_{t=1}^T \mathbb{E}[ R_t] 
+= \mu_\star - \frac{1}{T} \sum_{t=1}^T \mu_{\star} = 0 
+$$
+However, only by experimenting with each bandit, and potentially losing money in the process, can the player hope to truly discover which bandit provides the highest expected reward.
+
+Though the terminology is inherited from gambling, multi-arm bandits appear in diverse application areas.
+For example, in online advertising the advertiser would like to dynamically select which among a selection of different advertisements maximises click-through rates, or in sequential clinical trials one seeks to allocate treatments to maximise patient welfare with only a partial understanding of which treatments are effective at the outset.
+
+Multi-arm bandits can be seen as a special case of the general online supervised learning task (cf. @def-online-ml-task) by taking $\mathcal{X} = \emptyset$, $\mathcal{Z} \in \{1,\dots,B\}$ indexes the bandits that can be played, $\mathbf{y}_t = (R_t^{(1)} , \dots , R_t^{(B)})$ are the rewards that would have been paid by each bandit at time $t$, and $L(\mathbf{y}_t , f) = - [\mathbf{y}_t]_f = - R_t^{(f)}$.
+In particular, the regret @eq-bandit-regret is consistent with the notion of regret that we saw earlier in @eq-regret.
+
+Although there is some redundancy in talking about both losses and rewards, the "reward" terminology feels much more natural in the bandit context, so we will use it.
+
+
+::: {.remark #rem-context-bandit}
+### Contextual Bandit[{{< fa star >}}{{< fa star >}}]{.advanced title="Non-Examinable content"}
+
+A natural extension of the multi-arm bandit, which we will not consider in this module, is when the output from the bandit depends also on observable covariates $\mathbf{x}_t \in \mathcal{X}$.
+
+For example, in a clinical trial we may know that patients with a specific genetic trait are more likely to respond well to a particular treatment, and we can use this information to help decide to which arm of the trial they are assigned.
+
+This is known as a *contextual* bandit, with $\mathbf{x}_t$ representing the *context*.
+:::
+
+![A row of classical *bandit* machines, on display at Wookey Hole Caves in Somerset, England. Since there are four bandits, we call this setting a *4-armed bandit*.. [[source](https://commons.wikimedia.org/w/index.php?curid=4828058)]](figures/bandit.jpeg){#fig-bandit width=70%}
+
+The reason that multi-arm bandits are non-trivial is because the player must balance two competing objectives; *exploration*, to find out which bandit provides the highest expected reward, and *exploitation*, to repeatedly play the machine that is believed to provide the highest expected reward. This is known as an **exploration-exploitation trade-off**.
+
+Let's examine the two edge cases in turn:
+
+
+### Pure Exploration {#sec-pure-exploration}
+
+If we want to learn as much as we can about the vector $\bm{\mu} = (\mu_1,\dots,\mu_B)$ of expected rewards, then an intuitively reasonable strategy is to spend an equal amount of time playing each bandit.
+The expected regret is then
+$$
+\begin{align*}
+\mathbb{E}\left[ \mu_\star - \frac{1}{T} \sum_{t=1}^T R_t  \right] & = \mu_\star - \frac{1}{T} \sum_{t=1}^T \mathbb{E}[R_t] \\
+& = \mu_\star - \frac{1}{T} \sum_{t=1}^T \frac{1}{B} \sum_{i=1}^B \mu_i \\
+& = \frac{1}{B} \sum_{i=1}^B (\mu_\star - \mu_i) 
+\end{align*}
+$$
+which does not vanish (assuming the $\mu_i$ are not all equal) as $T \rightarrow \infty$; we always have some regret if we play a pure exploitation strategy!
+
+### Pure Exploitation {#sec-pure-exploitation}
+
+The opposite of exploration is to repeatedly play the machine that we believe has the highest expected reward.
+Of course, we know nothing at the outset, so let's suppose we allocate the first $T_0$ attempts to performing some form of exploration, enabling us to estimate the vector $\bm{\mu}$ of expected rewards from these data, say using $\hat{\bm{\mu}}$.
+Thereafter we will continue to play any bandit which maximises $i \mapsto \hat{\mu}_i$.
+Since the exploration dataset has finite size $T_0$, we cannot expect $\hat{\bm{\mu}}$ to be in exact agreement with $\bm{\mu}$; as such, there is a positive probability that
+$$
+\argmax_{1 \leq i \leq B} \hat{\mu}_i \notin \argmax_{1 \leq i \leq B} \mu_i ,
+$$
+and we will go on to indefinitely play a sub-optimal bandit.
+Let $\gamma = 1$ if this event occurs, and otherwise $\gamma = 0$.
+Let $\rho = \mathbb{E}[\gamma]$ be the probability of this event, and let 
+$$
+\Delta = \mu_\star - \max\left\{ \mu_i : \mu_i \neq \mu_\star \right\}
+$$
+be the difference in expectation between the best bandit(s) and the second best bandit(s).
+Then
+$$
+\begin{align*}
+    \mathbb{E}\left[ \mu_\star - \frac{1}{T} \sum_{t=1}^T R_t  \right] 
+    & = \underbrace{ \frac{1}{T} \sum_{t=1}^{T_0} \mathbb{E}[ \mu_\star -  R_t ] }_{\rightarrow 0 \text{ as } T \rightarrow \infty} + \underbrace{ \frac{1}{T} \sum_{t=T_0+1}^T \mathbb{E}[ \mu_\star - R_t]  }_{(*)}
+\end{align*}
+$$
+where, using the tower property of conditional expectation,
+$$
+\begin{align*}
+    (\star) & = \frac{1}{T} \sum_{t = T_0 + 1}^T \mathbb{E}[ \mathbb{E}[ \mu_\star - R_t | \gamma] ] 
+    \geq \frac{1}{T} \sum_{t = T_0 + 1}^T [ (1 - \rho) \times 0 + \rho \times \Delta ] 
+    = \frac{\rho}{T} \sum_{t=T_0+1}^T \Delta 
+\end{align*}
+$$
+which does not vanish as $T \rightarrow \infty$.
+Thus we are not much better off than the pure exploration strategy in @sec-pure-exploration; we have non-vanishing expected regret.
+
+### $\epsilon$-greedy {#sec-epsilon-greedy}
+
+From @sec-pure-exploration and @sec-pure-exploitation, it is intuitively clear that neither pure exploration or pure exploitation are satisfactory; given an infinite number of attempts, we ought to be able to eventually identify the bandit paying the highest expected reward and then exploit it.
+That is, there ought to be a mixed strategy, involving both exploration and exploitation, for which we have asymptotically vanishing regret.
+Such strategies do indeed exist and are not unique; in this section we consider a particularly simple idea called the *$\epsilon$-greedy* method.
+
+The idea behind $\epsilon$-greedy is that we eventually want to have accurate estimates for the vector $\bm{\mu}$ of average rewards, but we only want to devote a small proportion $\epsilon$ of our playing to achieve this goal.
+
+To operationalise this, we can imagine that at each time $t$ we "flip an $\epsilon$ coin" to decide whether to play a bandit selected uniformly at random (i.e. with probability $\epsilon$ we explore by playing a random bandit), or to play the bandit we currently believe to be the best (i.e. with probability $1 - \epsilon$ we exploit our current knowledge to play what we believe is most likely to be the best bandit).
+
+Let's calculate our expected regret under the $\epsilon$-greedy method.
+Let $\gamma_t$ be the event that our belief about which is the best bandit is incorrect at time $t$ and let $\rho_t = \mathbb{E}[\gamma_t]$.
+Using again the tower property of conditional expectation, this time we derive an upper bound
+$$
+\begin{align*}
+    \mathbb{E}\left[ \mu_\star - \frac{1}{T} \sum_{t=1}^T R_t  \right] 
+        & = \frac{1}{T} \sum_{t=1}^T \mathbb{E}[\mu_\star - \mathbb{E}[R_t | \gamma_t]  ]
+        \leq \frac{1}{T} \sum_{t=1}^T \rho_t \Delta
+\end{align*}
+$$
+which vanishes as $T \rightarrow \infty$ whenever $\rho_t \rightarrow 0$ as $t \rightarrow \infty$.
+In other words, as long as we eventually learn which is the best bandit, we will have asymptotically zero regret.
+
+A simple strategy to learn the best bandit is to let $\hat{\mu}_i$ be the average of the rewards that we have obtained from the $i$th bandit at time $t$; from Hoeffding's inequality (\Cref{lem: Hoeffding}) we know that each $\hat{\mu}_i$ converges to $\mu_i$ in probability as the total number of plays of the $i$th bandit is increased, and from this we can deduce that $\rho_t$, the probability of selecting a sub-optimal bandit, becomes vanishingly small.
+ 
+
+## Reinforcement Learning {#sec-rl}
+
+The challenge of online supervised learning is markedly increased when our actions at time $t$ can affect future outcomes; i.e. in the presence of feedback.
+An important example of this is a *Markov decision process*, where the *states* $(\mathbf{x}_t)_{t \geq 1}$ evolve as a Markov chain, and $\mathbf{x}_{t+1}$ is allowed to depend on the *action* $f(\mathbf{x}_t)$ that we take at time $t$.
+
+The study of how to select a *policy* $f(\cdot)$ to minimise regret is called *reinforcement learning*. All of the previous considerations from @sec-bandits apply here; we also are faced with an exploration-exploitation trade-off, since we want to both find and exploit an optimal policy $f(\cdot)$.
+
+![The first 99 moves in AlphaGo (white) v. Tang Weixing (31 December 2016). [[source](https://en.wikipedia.org/wiki/AlphaGo)]](figures/go.png){#fig-go width=70%}
+
+
+::: {#exm-alphago}
+### AlphaGo
+
+Go, an abstract strategy board game for two players in which the aim is to fence off more territory than the opponent, was invented in China more than 2,500 years ago (@fig-go). A decade or so ago many people believed that computers would not be able to compete with the most skilled human players at Go. 
+
+This was not an unreasonable belief; the most powerful chess engines were exploiting tree search to explore the consequences of a large number of moves several steps ahead, but by comparison the combinatorial complexity of Go would render tree search impractical.
+
+This all changed with *AlphaGo*, which in 2016 defeated one of the world’s top professional players @silver2016mastering.
+
+AlphaGo was in effect a demonstration of the potential of reinforcement learning, showing how this enables a computer to evaluate board positions and anticipate future moves with remarkable precision. 
+
+Let's see how this online supervised learning task is formulated:
+
+*  The state $\mathbf{x}_t$ represents the current configuration of the Go board, including the positions of all black and white stones, whose turn it is, and any additional game-specific information (for Go aficionados, this includes *ko* situations).
+*  The policy $f(\cdot)$ is constructed using a deep neural network and tells us where to place our next stone on the board[^alphago-comment]. 
+*  The next state $\mathbf{x}_{t+1}$ is obtained from the current state $\mathbf{x}_t$ and the action $f(\mathbf{x}_t)$. For Go this is fully deterministic; placing a stone on a legal point leads to a new board configuration (with any captures resolved).
+*  AlphaGo used a *sparse* reward, with $R_t = 0$ for all intermediate moves and either $R_t = 1$ or $–1$ at the end of the game, depending on whether the game was won or lost. 
+
+:::
+
+The field of reinforcement learning is moving fast.
+For example, the performance of AlphaGo has been superseded by a general-purpose machine learning tool for game-playing called *MuZero* @schrittwieser2020mastering.
+
+
+[^alphago-comment]:
+    Of course we are glossing over details here; for example, in AlphaGo a *stochastic* policy was actually used.
