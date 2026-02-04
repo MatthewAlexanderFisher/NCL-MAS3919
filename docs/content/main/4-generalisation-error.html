@@ -708,7 +708,7 @@ window.Quarto = {
 </div>
 <div class="callout-body-container">
 <div id="thm-generalisation-error" class="theorem">
-<p><span class="theorem-title"><strong>Theorem 4.1 (Generalisation error for empirical risk minimisation)</strong></span> Consider the setting of <span class="quarto-unresolved-ref">?def-def-supervised-learning-task</span> and let <span class="math inline">|\mathcal{F}| &lt; \infty</span>, <span class="math inline">n \in \mathbb{N}</span>, and <span class="math inline">\delta \in (0,1)</span> be fixed. Let the loss function <span class="math inline">L</span> take values in <span class="math inline">[0,1]</span>. Then, with probability at least <span class="math inline">1 - \delta</span>, <span class="math display">
+<p><span class="theorem-title"><strong>Theorem 4.1 (Generalisation error for empirical risk minimisation)</strong></span> Consider the setting of <a href="1-overview-of-machine-learning.html#def-supervised-learning-task" class="quarto-xref">Definition&nbsp;<span>1.1</span></a> and let <span class="math inline">|\mathcal{F}| &lt; \infty</span>, <span class="math inline">n \in \mathbb{N}</span>, and <span class="math inline">\delta \in (0,1)</span> be fixed. Let the loss function <span class="math inline">L</span> take values in <span class="math inline">[0,1]</span>. Then, with probability at least <span class="math inline">1 - \delta</span>, <span class="math display">
 \mathcal{R}(f_n) - \min_{f \in \mathcal{F}} \mathcal{R}(f) \leq \sqrt{ \frac{2}{n} \log \frac{2 |\mathcal{F}| }{\delta} } .
 </span></p>
 </div>
@@ -739,7 +739,7 @@ window.Quarto = {
 \end{align*}
 </span> Thus, with probability at least <span class="math inline">1 - 2 |\mathcal{F}|  \exp( - 2 n t^2  )</span> we have that <span class="math inline">| \mathcal{R}_n(f) - \mathcal{R}(f)  | &lt; t</span> simultaneously for all <span class="math inline">f \in \mathcal{F}</span>. This shows that, with high probability, we have <em>uniform convergence</em> of <span class="math inline">\mathcal{R}_n(\cdot)</span> to <span class="math inline">\mathcal{R}(\cdot)</span>. To polish the presentation, take <span class="math inline">\delta =  2 |\mathcal{F}|  \exp( - 2 n t^2  )</span> so that <span class="math display">
 t = \sqrt{ \frac{1}{2n} \log \left( \frac{2|\mathcal{F}|}{\delta} \right) } .
-</span> Finally, letting <span class="math inline">f_\star \in \argmin_{f \in \mathcal{F}} \mathcal{R}(f)</span> minimise the (population) risk <span class="math inline">\mathcal{R}(\cdot)</span>, and recalling that the empirical risk is denoted <span class="math inline">\mathcal{R}_n(\cdot)</span> (cf.&nbsp;), we have that with probability at least <span class="math inline">1 - \delta</span>, <span class="math display">
+</span> Finally, letting <span class="math inline">f_\star \in \argmin_{f \in \mathcal{F}} \mathcal{R}(f)</span> minimise the (population) risk <span class="math inline">\mathcal{R}(\cdot)</span>, and recalling that the empirical risk is denoted <span class="math inline">\mathcal{R}_n(\cdot)</span> (cf. <a href="1-overview-of-machine-learning.html#def-empirical-risk" class="quarto-xref">Definition&nbsp;<span>1.4</span></a>), we have that with probability at least <span class="math inline">1 - \delta</span>, <span class="math display">
 \begin{align*}
 \mathcal{R}(f_n) &amp; \leq \mathcal{R}_n(f_n) + t \qquad \text{(uniform convergence)} \\
 &amp; \leq \mathcal{R}_n(f_\star)  + t \qquad \text{(since $f_n$ is a minimiser of $\mathcal{R}_n$)} \\
@@ -765,7 +765,7 @@ t = \sqrt{ \frac{1}{2n} \log \left( \frac{2|\mathcal{F}|}{\delta} \right) } .
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div id="rem-sample-complexity" class="proof remark">
-<p><span class="proof-title"><em>Remark 4.1</em> (Sample Complexity). </span>In the context of , to get to within <span class="math inline">\epsilon &gt; 0</span> of the best possible risk, with probability at least <span class="math inline">1 - \delta</span>, we need <span class="math display">
+<p><span class="proof-title"><em>Remark 4.1</em> (Sample Complexity). </span>In the context of <a href="#thm-generalisation-error" class="quarto-xref">Theorem&nbsp;<span>4.1</span></a>, to get to within <span class="math inline">\epsilon &gt; 0</span> of the best possible risk, with probability at least <span class="math inline">1 - \delta</span>, we need <span class="math display">
 n \geq \frac{2}{\epsilon^2} \log \left( \frac{2 |\mathcal{F}| }{\delta} \right)
 </span> samples in the training dataset. That is, the <em>sample complexity</em> (i.e.&nbsp;how many samples are needed in the training dataset to achieve the nominal performance level <span class="math inline">\epsilon</span> with probability at least <span class="math inline">1 - \delta</span>) scales like <span class="math inline">O(\epsilon^{-2})</span>, e.g.&nbsp;<span class="math inline">100\times</span> as many training data are required for a <span class="math inline">10\times</span> reduction in the generalisation error. This is a typical sample complexity result in settings where data are independently sampled.</p>
 </div>

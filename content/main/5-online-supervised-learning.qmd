@@ -36,7 +36,7 @@ Online machine learning with feedback is such a rich topic that we cannot hope t
 
 ## Bandits {#sec-bandits}
 
-Slot machines are also known pejoratively as *one-armed bandits*, alluding to the large mechanical levers affixed to the sides of early mechanical machines (cf. \Cref{fig: bandit}), and to the games' ability to empty players' pockets and wallets as thieves would.
+Slot machines are also known pejoratively as *one-armed bandits*, alluding to the large mechanical levers affixed to the sides of early mechanical machines (cf. @fig-bandit), and to the games' ability to empty players' pockets and wallets as thieves would.
 
 At time $t$ the player inserts a coin (say $\pounds 1$), pulls the lever, and receives a random *reward* $\pounds R_t$ which has expectation $\mu \geq 0$ and is independent of all other rewards that have been received.
 Their average expected reward after playing $T$ rounds is simply the expected reward $\mu$ from the bandit, i.e.
@@ -155,7 +155,7 @@ $$
 which vanishes as $T \rightarrow \infty$ whenever $\rho_t \rightarrow 0$ as $t \rightarrow \infty$.
 In other words, as long as we eventually learn which is the best bandit, we will have asymptotically zero regret.
 
-A simple strategy to learn the best bandit is to let $\hat{\mu}_i$ be the average of the rewards that we have obtained from the $i$th bandit at time $t$; from Hoeffding's inequality (\Cref{lem: Hoeffding}) we know that each $\hat{\mu}_i$ converges to $\mu_i$ in probability as the total number of plays of the $i$th bandit is increased, and from this we can deduce that $\rho_t$, the probability of selecting a sub-optimal bandit, becomes vanishingly small.
+A simple strategy to learn the best bandit is to let $\hat{\mu}_i$ be the average of the rewards that we have obtained from the $i$th bandit at time $t$; from <span class="xref-no-num">[Hoeffding's inequality @prp-hoeffding]</span> we know that each $\hat{\mu}_i$ converges to $\mu_i$ in probability as the total number of plays of the $i$th bandit is increased, and from this we can deduce that $\rho_t$, the probability of selecting a sub-optimal bandit, becomes vanishingly small.
  
 
 ## Reinforcement Learning {#sec-rl}
@@ -164,8 +164,6 @@ The challenge of online supervised learning is markedly increased when our actio
 An important example of this is a *Markov decision process*, where the *states* $(\mathbf{x}_t)_{t \geq 1}$ evolve as a Markov chain, and $\mathbf{x}_{t+1}$ is allowed to depend on the *action* $f(\mathbf{x}_t)$ that we take at time $t$.
 
 The study of how to select a *policy* $f(\cdot)$ to minimise regret is called *reinforcement learning*. All of the previous considerations from @sec-bandits apply here; we also are faced with an exploration-exploitation trade-off, since we want to both find and exploit an optimal policy $f(\cdot)$.
-
-![The first 99 moves in AlphaGo (white) v. Tang Weixing (31 December 2016). [[source](https://en.wikipedia.org/wiki/AlphaGo)]](figures/go.png){#fig-go width=70%}
 
 
 ::: {#exm-alphago}
@@ -185,6 +183,8 @@ Let's see how this online supervised learning task is formulated:
 *  The policy $f(\cdot)$ is constructed using a deep neural network and tells us where to place our next stone on the board[^alphago-comment]. 
 *  The next state $\mathbf{x}_{t+1}$ is obtained from the current state $\mathbf{x}_t$ and the action $f(\mathbf{x}_t)$. For Go this is fully deterministic; placing a stone on a legal point leads to a new board configuration (with any captures resolved).
 *  AlphaGo used a *sparse* reward, with $R_t = 0$ for all intermediate moves and either $R_t = 1$ or $–1$ at the end of the game, depending on whether the game was won or lost. 
+
+![The first 99 moves in AlphaGo (white) v. Tang Weixing (31 December 2016). [[source](https://en.wikipedia.org/wiki/AlphaGo)]](figures/go.png){#fig-go width=70%}
 
 :::
 

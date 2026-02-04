@@ -23,9 +23,6 @@ Please bear the distinction between machine learning and AI in mind, and conside
 
 :::
 
-@iss-bias-and-fairness
-
-
 :::{#iss-bias-and-fairness .iss}
 ### Bias and Fairness
 
@@ -104,7 +101,7 @@ Could relaxing laws around data-sharing and copyright help to boost AI research 
 ### Environmental impact
 
 The carbon footprint of training large machine learning models can be significant.
-Consider AlphaGo, which was initially trained on a database of 30 million human expert games, before going on to be adversarially trained by playing against itself (cf. \Cref{ex: alphago}).
+Consider AlphaGo, which was initially trained on a database of 30 million human expert games, before going on to be adversarially trained by playing against itself (cf. @exm-alphago).
 
 Taking the first training phase for concreteness, this was performed on 50 GPUs running in parallel and took 3 weeks in total. 
 Roughly speaking, the power consumption of 1 high-performance GPU is about 1kW, similar to that of a domestic vacuum; so the energy consumption of this training phase for AlphaGo is roughly equivalent to running 50 vacuums continuously in your house for 3 weeks[^trained-cost-note].
@@ -186,7 +183,7 @@ Should there be regulation in place about how children interact with AI, and if 
 :::{#iss-trust .iss}
 ### Veracity and trust
 
-The potential applications for text-to-video technology are vast, ranging from entertainment and education to marketing and virtual reality (cf. \Cref{ex: text to video}). 
+The potential applications for text-to-video technology are vast, ranging from entertainment and education to marketing and virtual reality (cf. @exm-text-to-vid). 
 
 In education, for instance, it can be used to create engaging visual content that makes learning more accessible. 
 
@@ -199,7 +196,7 @@ There is currently no general mechanism (e.g. legislation) in place to prevent f
 :::
 
 This is not an exhaustive exploration of ethical issues associated with machine learning and AI, but it serves to indicate the depth and breadth of this topic.
-An important learning outcome, which *is* examinable, is to be able to highlight and explain some possible ethical considerations associated with deployment of a machine learning model in a given context (cf. \Cref{ex: ethical}). 
+An important learning outcome, which *is* examinable, is to be able to highlight and explain some possible ethical considerations associated with deployment of a machine learning model in a given context (cf. @q-ethical-considerations). 
 
 
 [^trained-cost-note]:

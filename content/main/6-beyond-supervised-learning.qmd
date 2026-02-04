@@ -81,13 +81,18 @@ For example, consider the image of a flower with millions of colours in the left
 By applying $k$-means clustering with $k = 16$  the image can be represented using a limited palette of only 16 colours, resulting in a compressed version that requires less storage space.
 
 ::: {#fig-flower layout-ncol=2}
-![](figures/flower.png){width="35%"}
+![](figures/flower.png){width="50%"}
 
 ![](figures/quantisation.png){width="35%"}
 
 An application of $k$-means clustering to identify $k = 16$ representative colours than can be used to compress the image of a flower in the left panel. (For illustrative purposes the blue colour channel has been removed.) The blue lines indicate the cluster boundaries; i.e. the locations that lie exactly half way between the two nearest centroids (blue circles). The regions circumscribed by the blue lines are called *Voronoi cells*. [[source](https://en.wikipedia.org/wiki/K-means_clustering)]
 :::
 
+It is worth emphasising that $k$-means clustering is not guaranteed to solve @eq-kmeans; it is sensitive to the initial placement of centroids and may result in different clusters for different initialisations. 
+Therefore, it is often run multiple times with different initial seeds to find a stable solution. 
+
+Additionally, the value of $k$ (the number of clusters) should be chosen carefully, and several heuristics have been developed.
+This module will not discuss selecting $k$, but you can read about different strategies on [Wikipedia](https://en.wikipedia.org/wiki/Determining_the_number_of_clusters_in_a_data_set) if you are interested.
 
 
 :::
@@ -99,25 +104,200 @@ Suppose that we wish to undertake a supervised learning task (cf. @def-supervise
 This is called a **semi-supervised** learning task.
 In an extreme case, suppose we with to perform binary classification (i.e. into two classes) of data based on their covariates $\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d$, but only *two* data have their true labels recorded.
 
-Can anything at all be achieved?
+> Can anything at all be achieved?
 
-Surprisingly, the answer is sometimes `yes', and the key idea here is called the **manifold hypothesis**:
+Surprisingly, the answer is sometimes "yes", and the key idea here is called the **manifold hypothesis**:
 
-::: {.definition #def-manifold-hyp}
+::: {#def-manifold-hyp}
 ### Manifold hypothesis
-The **manifold hypothesis** suggests that possibly high-dimensional data $\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d$ can be effectively represented in a lower-dimensional space, most often a \emph{smooth manifold} embedded in $\mathbb{R}^d$. 
+The **manifold hypothesis** suggests that possibly high-dimensional data $\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d$ can be effectively represented in a lower-dimensional space, most often a **smooth manifold** embedded in $\mathbb{R}^d$. 
+
+:::
+
+::: {#exm-manifold-hypothesis-images}
+### Manifold hypothesis for image data
+
+For example, images of handwritten digits (see @fig-mnist) may lie close to a low-dimensional manifold that captures most of the variations of those digits, despite their high-dimensional pixel representation; see @fig-manifold-hypothesis.
 
 :::
 
 
+::: {#fig-manifold-hypothesis layout-ncol=1}
+![](figures/manifold.png){width="70%"}
+
+An illustration of how images of hand-drawn digits can be mapped onto a lower-dimensional manifold without significant loss of information content.  
+[[source](https://scikit-learn.org/stable/auto_examples/manifold/plot_lle_digits.html)]
+:::
+
+The unlabelled data are therefore *not* useless in cases where the manifold hypothesis holds; they can be leveraged to learn the manifold, reducing the dimension (and therefore the difficulty) of the learning task.
+This is closely related to the concept of featurisation, discussed in @sec-data-featurisation.
+
+
+::: {#exm-label-propagation}
+### Label propagation for a binary classification task
+
+@fig-spirals illustrates a setting in which we can perform binary classification when only a handful of labels are recorded in the training dataset.
+The term *label propagation* is sometimes used to capture the idea that information from labelled data spreads to unlabelled data based on their proximity on the manifold.
+
+:::
+
+
+::: {#fig-spirals}
+![](figures/semisup.png){width="70%"}
+
+Illustrating supervised, semi-supervised, and unsupervised learning.  
+[[source](https://teksands.ai/blog/semi-supervised-learning)]
+:::
+
+
+It is common to *assume* that the manifold hypothesis holds in tasks such as image classification, natural language processing and medical diagnosis, where data are typically high-dimensional.
+In many real-world problems, data have a much lower *effective dimension* than their *notional dimension* (cf. @sec-dim-reduction), and modern machine learning models are often designed to discover and exploit this underlying low-dimensional manifold.
+
+
+
 ## Generative Modelling {#sec-generative-modelling}
+
+One of the most important tasks in unsupervised learning is **generative modelling**; given a dataset $\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d$ we seek a probability distribution $P \in \mathcal{P}(\mathbb{R}^d)$ for which (a) the $\mathbf{x}_i$ "look like typical samples" from $P$, and (b) further "new" samples can be generated from $P$, which are distinct from those $\mathbf{x}_i$ in the dataset.
+Of course, you have seen this task already in MAS2901 or MAS8601 when you used a method like maximum likelihood to fit a statistical model (e.g. a normal distribution) to a given dataset.
+
+The main distinction between classical statistical modelling and generative modelling in machine learning is the complexity of the dataset; for example, each $\mathbf{x}_i$ could represent the image of a cat, and we want to learn a probability distribution $P$ for which "typical" samples from $P$ look like cats; a normal distribution is clearly going to be inadequate for this task.
+This poses two main challenges to "traditional" statistical modelling; we cannot expect to write down a suitable statistical model by hand, and even if we could then it may not make sense to train such a model using maximum likelihood:
+
+::: {#rem-fail-ml}
+### Failure of maximum likelihood under the manifold hypothesis [{{< fa star >}}]{.advanced title="MAS8607 Content"} 
+
+Suppose we are in a setting where data $\{\mathbf{x}_i\}_{i=1}^n$ lie on a lower-dimensional manifold $M \subset \mathbb{R}^d$ (for example, $M$ is the manifold of images of cats, a subspace of the space of all images; see @def-manifold-hyp).
+Suppose further that we have a “good” parametric statistical model $P_{\boldsymbol{\theta}}$ that is aware of the manifold; that is, the density $p_{\boldsymbol{\theta}}(\mathbf{x})$ is zero for $\mathbf{x} \in \mathbb{R}^d \setminus M$ (we say that $P_{\boldsymbol{\theta}}$ is *supported* on $M$).
+Then the density $p_{\boldsymbol{\theta}}(\cdot)$ must necessarily take the value $\infty$ on $M$, meaning that the maximum likelihood estimator is not well defined[^failure-of-mle-note].
+
+:::
+
+
+Despite the apparent challenges of generative modelling, we now have machine learning models and ways to train them that can perform astonishingly well at this task; see @fig-gan.
+In this section we are going to learn more about modern generative models (@sec-generative-models) and how they are trained (@sec-training-generative-models).
+
+::: {#fig-gan}
+![](figures/GAN.jpg){width="80%"}
+
+Illustrating a generative model. [[source](https://arxiv.org/abs/2103.09742)]
+:::
 
 
 ### Generative Models {#sec-generative-models}
 
+A natural first question is:
+
+> What sort of model could we write down that has the capacity to generate realistic samples? 
+
+One can keep in mind image data as motivation, but the concept of a generative model is general. As such, we distinguish at a high level between the two main approaches:
+
+::: {#def-simulation-based-models}
+### Simulation-based models
+
+Recall that sometimes it is easier to reason with random variables than with probability distributions (cf. @recap-probabilistic-calculus).
+To this end, let $f_{\boldsymbol{\theta}} : \mathbb{R}^c \rightarrow \mathbb{R}^d$ be a parametric function and define a random variable by
+$$
+\mathbf{X} = f_{\boldsymbol{\theta}}(\mathbf{Z}),
+$$
+where $\mathbf{Z}$ is a simple random variable that can be easily sampled, such as
+$$
+\mathbf{Z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I}).
+$$
+The distribution of $\mathbf{X}$ then defines a generative model $P_{\boldsymbol{\theta}}$, parametrised by $\boldsymbol{\theta}$.
+For obvious reasons, such a generative model is called *simulation-based*.
+
+:::
+
+::: {#def-energy-based-models}
+### Energy-based models
+
+Alternatively, we may proceed based on densities and define the density of our generative model $P_{\boldsymbol{\theta}}$ as
+$$
+p_{\boldsymbol{\theta}}(\mathbf{x})
+\propto
+\exp\!\big(- f_{\boldsymbol{\theta}}(\mathbf{x})\big),
+$$
+for some function $f_{\boldsymbol{\theta}} : \mathbb{R}^d \rightarrow \mathbb{R}$, which again could be a neural network.
+Such a generative model is called *energy-based* because of an analogy from physics, in which $P_{\boldsymbol{\theta}}$ is viewed as a *Gibbs measure* and $f_{\boldsymbol{\theta}}(\mathbf{x})$ corresponds to the *energy* of the configuration $\mathbf{x} \in \mathbb{R}^d$.
+
+:::
+
+Simulation-based models are easy to sample from by design, but depending on $f_{\bm{\theta}}$ it can be hard to compute quantities relating to the density function of the model, for example as you would need for maximum likelihood.
+On the other hand, energy-based models provide direct access to the density function by design (up to a normalisation constant), but it can require complicated numerical methods to sample from the model (such as Markov chain Monte Carlo, which you may have met in MAS3929 or MAS8600).
+
+In either case, the expressive capacity of the generative model depends on the expressive capacity of the function $f_{\bm{\theta}}$; for challenging applications $f_{\bm{\theta}}$ may need to be extremely flexible, for the example in @fig-gan the function $f_{\bm{\theta}}$ was a deep neural network.
+
 ### Training Generative Models {#sec-training-generative-models}
 
-#### Adversarial Training
+#### Adversarial Training {#sec-adversarial-training}
+
+Simulation-based models are conveniently designed for generating samples, but do not provide explicit access to the density function $p_{\boldsymbol{\theta}}$ (or derived quantities, such as its gradient).
+As such, ideas such as maximum likelihood cannot easily be implemented, irrespective of how well these methods for training may work (cf. @rem-fail-ml).
+Instead, to guide the selection of the model parameters $\boldsymbol{\theta}$, we need another way to judge whether samples $\mathbf{X}$ from the model $P_{\boldsymbol{\theta}}$ are “similar” or not to those of the training dataset $\{\mathbf{x}_i\}_{i=1}^n$.
+How are we going to achieve this?
+
+Taking image data as an example, it does not make sense to compare $\mathbf{X}$ and $\mathbf{x}_i$ through Euclidean distance $\lVert \mathbf{X} - \mathbf{x}_i \rVert$ because we do not expect our artificially generated image $\mathbf{X}$ to be similar pixel-by-pixel to an image $\mathbf{x}_i$ in the training dataset.
+(If it were, we would have simply *memorised* the training dataset, which is not in the spirit of fitting a generative model.)
+What makes a cat picture a cat picture is not the pixel-by-pixel information content; it is the appearance of fur, whiskers, and the general air of disdain. How can we capture these aspects of $\mathbf{X}$?
+
+The solution is to recall the concept of *featurisation*.
+Consider a feature map (cf. @def-feature-space)
+$$
+\boldsymbol{\phi}(\mathbf{x})
+=
+\begin{bmatrix}
+\phi_1(\mathbf{x}) \\
+\vdots \\
+\phi_p(\mathbf{x})
+\end{bmatrix}
+$$
+and the associated *discrepancy*
+$$
+D_{\boldsymbol{\phi}}(P_{\boldsymbol{\theta}})
+=
+\left\|
+\int
+\boldsymbol{\phi}(\mathbf{x})\, p_{\boldsymbol{\theta}}(\mathbf{x}) \, \mathrm{d}\mathbf{x}
+-
+\frac{1}{n}\sum_{i=1}^n \boldsymbol{\phi}(\mathbf{x}_i)
+\right\|.
+$${#eq-discrepancy}
+
+If we were able to find features $\phi_1, \dots, \phi_p$ that codify the “essence” of cats, then we could seek the parameter values $\boldsymbol{\theta}$ for which the discrepancy $D_{\boldsymbol{\phi}}(P_{\boldsymbol{\theta}})$ is minimised.
+That is, we could ensure that the samples $\mathbf{X}$ from our generative model $P_{\boldsymbol{\theta}}$ most closely resemble the dataset in the respects that count.
+
+For example, if $\phi_1(\mathbf{x})$ is whisker length and $\phi_2(\mathbf{x})$ is squared whisker length, then minimising $D_{\boldsymbol{\phi}}(P_{\boldsymbol{\theta}})$ would amount to matching the first and second moment (equivalently, mean and variance) of whisker length between our generative model and the dataset.
+But how could we hope to find features that are so specifically engineered to capture the relevant aspects of the dataset?
+
+The key, as we have already seen (cf. @sec-featurisation), is to use *data-driven* features, and one way to do this is to select features *adversarially*:
+$$
+D_{\Phi}(P_{\boldsymbol{\theta}})
+=
+\sup_{\boldsymbol{\phi} \in \Phi}
+D_{\boldsymbol{\phi}}(P_{\boldsymbol{\theta}}).
+$${#eq-gan}
+
+Here the supremum is taken over some appropriate set $\Phi$ of possible feature functions $\boldsymbol{\phi}$.
+
+We can interpret @eq-gan as a two-player game:
+
+Player 1 simulates artificial samples from their model $P_{\boldsymbol{\theta}}$, and Player 2 has to pick features $\boldsymbol{\phi}$ that will help them to detect which samples are artificial and which are real.
+Typically we do not want to employ a human to act as Player 2, so a natural idea is to replace Player 2 by a classifier whose feature map $\boldsymbol{\phi}$ can be trained to maximally distinguish between the artificial and real samples; for example, $\boldsymbol{\phi}$ can be a deep neural network[^adversarial-training-note].
+
+The resulting framework for training simulation-based models is called a *generative adversarial network* (or **GAN**).
+Until around 2020, generative adversarial networks were among the state of the art for generating realistic images; the example in @fig-gan was produced in this way in 2021.
+However, a step change in generative model performance occurred around 2020, and the state of the art are now (extensions of) energy-based models, as we will discuss next.
+
+
+::: {#rem-adversarial-power}
+### The power of adversarial training
+
+Adversarial training of a machine learning model is a powerful idea that enables simpler or pre-trained machine learning models to assist with the training of more sophisticated machine learning models.
+
+For example, although <span class="xref-no-num">[AlphaGo @exm-alphago]</span> was initially trained on historical game data, it was honed and refined by playing millions of games against itself.
+
+:::
+
 
 #### Score Matching[{{< fa star >}}]{.advanced title="MAS8607 Content"}  {#sec-score-matching}
 
@@ -225,7 +405,7 @@ $${#eq-score-matching-obj}
 :::
 
 The quantities appearing in @def-score-matching can indeed be calculated for energy-based models, due to @eq-energy-stein-score.
-Score matching and maximum likelihood estimation happen to yield the same result when training a normal generative model (\Cref{ex: sm and ml}), but in general these objectives can be different.
+Score matching and maximum likelihood estimation happen to yield the same result when training a normal generative model (cf. @q-score-matching-ml), but in general these objectives can be different.
 
 Score matching has been around since at least @hyvarinen2005estimation, and has been widely used in statistics to circumvent intractable normalisation constants $Z_{\bm{\theta}}$.
 
@@ -250,7 +430,7 @@ A prominent example of denoising diffusions is *Stable Diffusion*, which attract
 :::
 
 
-![Illustrating the denoising diffusion generative model. [[source](https://cvpr2023-tutorial-diffusion-models.github.io})]](figures/kernel_trick.png){#fig-denosing-diffusion width=70%}
+![Illustrating the denoising diffusion generative model. [[source](https://cvpr2023-tutorial-diffusion-models.github.io})]](figures/diffusion.png){#fig-denosing-diffusion width=70%}
 
 [^transformation-comment]:
     If data are not real vector-valued, we can proceed by first *embedding* the data into $\mathbb{R}^d$ using an appropriate transformation $\phi(\mathbf{x}_i) \in \mathbb{R}^d$.
@@ -261,4 +441,8 @@ A prominent example of denoising diffusions is *Stable Diffusion*, which attract
 [^recap-note]:
     Recall that $\Delta = \nabla \cdot \nabla$ denotes the Laplacian @rem-calculus-notation. Recall also that $\int \cdots \mathrm{d}Q$ denotes expectation with respect to $Q$; @recap-notation-expectation.
 
-  
+[^failure-of-mle-note]:
+    The mathematical explanation for this requires measure theory, but intuitively $M$ has “size” zero in $\mathbb{R}^d$, and so the only way for the statistical model to assign unit probability mass is for $p_{\boldsymbol{\theta}}$ to take infinite values on $M$.
+
+[^adversarial-training-note]:
+    We can also replace the discrepancy in @eq-discrepancy with a measure of classification error and directly optimise that.

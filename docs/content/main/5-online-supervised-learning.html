@@ -697,7 +697,7 @@ window.Quarto = {
 <p>Online machine learning with feedback is such a rich topic that we cannot hope to cover it in this module, but we give a passing nod to <em>reinforcement learning</em>, one of the main methods that address this task, in <a href="#sec-rl" class="quarto-xref"><span>Section 5.2</span></a>.</p>
 <section id="sec-bandits" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="sec-bandits"><span class="header-section-number">5.1</span> Bandits</h2>
-<p>Slot machines are also known pejoratively as <em>one-armed bandits</em>, alluding to the large mechanical levers affixed to the sides of early mechanical machines (cf.&nbsp;), and to the games’ ability to empty players’ pockets and wallets as thieves would.</p>
+<p>Slot machines are also known pejoratively as <em>one-armed bandits</em>, alluding to the large mechanical levers affixed to the sides of early mechanical machines (cf. <a href="#fig-bandit" class="quarto-xref">Figure&nbsp;<span>5.1</span></a>), and to the games’ ability to empty players’ pockets and wallets as thieves would.</p>
 <p>At time <span class="math inline">t</span> the player inserts a coin (say <span class="math inline">\pounds 1</span>), pulls the lever, and receives a random <em>reward</em> <span class="math inline">\pounds R_t</span> which has expectation <span class="math inline">\mu \geq 0</span> and is independent of all other rewards that have been received. Their average expected reward after playing <span class="math inline">T</span> rounds is simply the expected reward <span class="math inline">\mu</span> from the bandit, i.e. <span class="math display">
 \mathbb{E}\left[ \frac{1}{T} \sum_{t=1}^T R_t \right] = \frac{1}{T} \sum_{t=1}^T \mathbb{E}[R_t] = \frac{1}{T} \sum_{t=1}^T \mu = \mu ,
 </span> So far, so straightforward. The complication comes in when there is more than one bandit (we call this situation a <em>multi-armed bandit</em>), since the player must then select, at time <span class="math inline">t</span>, which bandit to play next. This is non-trivial when not all bandits are equal; the expected reward <span class="math inline">\mu_i</span> from the <span class="math inline">i</span>th bandit may not be the same as the expected reward <span class="math inline">\mu_j</span> from another bandit (<span class="math inline">j \neq i</span>), and the actual values of the <span class="math inline">\mu_i</span> will be unknown to the player in general. Supposing there are <span class="math inline">B</span> bandits in total, the aim is then to minimise the <em>regret</em> <span id="eq-bandit-regret"><span class="math display">
@@ -783,23 +783,13 @@ Figure&nbsp;5.1: A row of classical <em>bandit</em> machines, on display at Wook
         \leq \frac{1}{T} \sum_{t=1}^T \rho_t \Delta
 \end{align*}
 </span> which vanishes as <span class="math inline">T \rightarrow \infty</span> whenever <span class="math inline">\rho_t \rightarrow 0</span> as <span class="math inline">t \rightarrow \infty</span>. In other words, as long as we eventually learn which is the best bandit, we will have asymptotically zero regret.</p>
-<p>A simple strategy to learn the best bandit is to let <span class="math inline">\hat{\mu}_i</span> be the average of the rewards that we have obtained from the <span class="math inline">i</span>th bandit at time <span class="math inline">t</span>; from Hoeffding’s inequality () we know that each <span class="math inline">\hat{\mu}_i</span> converges to <span class="math inline">\mu_i</span> in probability as the total number of plays of the <span class="math inline">i</span>th bandit is increased, and from this we can deduce that <span class="math inline">\rho_t</span>, the probability of selecting a sub-optimal bandit, becomes vanishingly small.</p>
+<p>A simple strategy to learn the best bandit is to let <span class="math inline">\hat{\mu}_i</span> be the average of the rewards that we have obtained from the <span class="math inline">i</span>th bandit at time <span class="math inline">t</span>; from <span class="xref-no-num"><a href="4-generalisation-error.html#prp-hoeffding" class="quarto-xref">Hoeffding’s inequality&nbsp;<span>4.1</span></a></span> we know that each <span class="math inline">\hat{\mu}_i</span> converges to <span class="math inline">\mu_i</span> in probability as the total number of plays of the <span class="math inline">i</span>th bandit is increased, and from this we can deduce that <span class="math inline">\rho_t</span>, the probability of selecting a sub-optimal bandit, becomes vanishingly small.</p>
 </section>
 </section>
 <section id="sec-rl" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="sec-rl"><span class="header-section-number">5.2</span> Reinforcement Learning</h2>
 <p>The challenge of online supervised learning is markedly increased when our actions at time <span class="math inline">t</span> can affect future outcomes; i.e.&nbsp;in the presence of feedback. An important example of this is a <em>Markov decision process</em>, where the <em>states</em> <span class="math inline">(\mathbf{x}_t)_{t \geq 1}</span> evolve as a Markov chain, and <span class="math inline">\mathbf{x}_{t+1}</span> is allowed to depend on the <em>action</em> <span class="math inline">f(\mathbf{x}_t)</span> that we take at time <span class="math inline">t</span>.</p>
 <p>The study of how to select a <em>policy</em> <span class="math inline">f(\cdot)</span> to minimise regret is called <em>reinforcement learning</em>. All of the previous considerations from <a href="#sec-bandits" class="quarto-xref"><span>Section 5.1</span></a> apply here; we also are faced with an exploration-exploitation trade-off, since we want to both find and exploit an optimal policy <span class="math inline">f(\cdot)</span>.</p>
-<div id="fig-go" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-go-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="figures/go.png" class="img-fluid figure-img" style="width:70.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-go-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.2: The first 99 moves in AlphaGo (white) v. Tang Weixing (31 December 2016). [<a href="https://en.wikipedia.org/wiki/AlphaGo">source</a>]
-</figcaption>
-</figure>
-</div>
 <div class="callout callout-style-simple callout-caution no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -818,6 +808,16 @@ Figure&nbsp;5.2: The first 99 moves in AlphaGo (white) v. Tang Weixing (31 Decem
 <li>The next state <span class="math inline">\mathbf{x}_{t+1}</span> is obtained from the current state <span class="math inline">\mathbf{x}_t</span> and the action <span class="math inline">f(\mathbf{x}_t)</span>. For Go this is fully deterministic; placing a stone on a legal point leads to a new board configuration (with any captures resolved).</li>
 <li>AlphaGo used a <em>sparse</em> reward, with <span class="math inline">R_t = 0</span> for all intermediate moves and either <span class="math inline">R_t = 1</span> or <span class="math inline">–1</span> at the end of the game, depending on whether the game was won or lost.</li>
 </ul>
+<div id="fig-go" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-go-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/go.png" class="img-fluid figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-go-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.2: The first 99 moves in AlphaGo (white) v. Tang Weixing (31 December 2016). [<a href="https://en.wikipedia.org/wiki/AlphaGo">source</a>]
+</figcaption>
+</figure>
+</div>
 </div>
 </div>
 </div>

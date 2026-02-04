@@ -660,7 +660,6 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p><a href="#iss-bias-and-fairness" class="callout-ref" data-callout-label="Issue" data-callout-number="7.1" data-callout-title="Bias and Fairness" data-callout-preview="Suppose we train a machine learning model to predict disease progression for cancer patients with a Caucasian genetic background. Such a model may struggle to generalise to patients from other genetic">Issue&nbsp;7.1</a></p>
 <div class="callout callout-iss callout-warning" data-callout-type="iss" data-callout-number="7.1">
 <p><span id="iss-bias-and-fairness"><strong>Issue 7.1</strong></span> (Bias and Fairness). Suppose we train a machine learning model to predict disease progression for cancer patients with a Caucasian genetic background. Such a model may struggle to generalise to patients from other genetic backgrounds; is this fair, for example if such a model was to be deployed in the NHS? What if the only available training data pertain to a study on a Caucasian patients? Or, suppose a bank trains a machine learning model to predict individual probabilities of credit default based on factors such as age, current salary, and credit history. Then you and your friend may be offered different interest rates on loans from the bank; is this fair? Or, perhaps you think this would happen anyway irrespective of whether we use a machine learning model or some other criteria to set an interest rate? How can we <em>build in</em> fairness into a machine learning model? If we can be clear about what fairness should mean, then we may be able to write down a regulariser <span class="math inline">R(f)</span> that penalises departure from fairness. But being clear about the definition of fairness is often difficult, and if we prioritise fairness we may decrease other aspects of performance, reducing the effectiveness of the model at its intended task.</p>
 </div>
@@ -690,7 +689,7 @@ window.Quarto = {
 <p>Could relaxing laws around data-sharing and copyright help to boost AI research and development in the UK, or should the UK be leading on protections for individuals in the age of large-scale corporate AI?</p>
 </div>
 <div class="callout callout-iss callout-warning" data-callout-type="iss" data-callout-number="7.5">
-<p><span id="iss-environmental-impact"><strong>Issue 7.5</strong></span> (Environmental impact). The carbon footprint of training large machine learning models can be significant. Consider AlphaGo, which was initially trained on a database of 30 million human expert games, before going on to be adversarially trained by playing against itself (cf.&nbsp;).</p>
+<p><span id="iss-environmental-impact"><strong>Issue 7.5</strong></span> (Environmental impact). The carbon footprint of training large machine learning models can be significant. Consider AlphaGo, which was initially trained on a database of 30 million human expert games, before going on to be adversarially trained by playing against itself (cf. <a href="5-online-supervised-learning.html#exm-alphago" class="quarto-xref">Example&nbsp;<span>5.1</span></a>).</p>
 <p>Taking the first training phase for concreteness, this was performed on 50 GPUs running in parallel and took 3 weeks in total. Roughly speaking, the power consumption of 1 high-performance GPU is about 1kW, similar to that of a domestic vacuum; so the energy consumption of this training phase for AlphaGo is roughly equivalent to running 50 vacuums continuously in your house for 3 weeks<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 <p>This training cost pales into insignificance compared with Chat-GPT 4 (<a href="2-machine-learning-models.html#sec-architectures" class="quarto-xref"><span>Section 2.2.2</span></a>), with estimates suggesting that training required around 60GWh of electricity; to put this into equivalent terms, this amounts to around 100,000 vacuums running continuously for 3 weeks, costing around £100M in electricity alone (not to mention aspects like water consumption, to keep the GPUs cool).</p>
 <p>Can such exorbitant energy use be justified?</p>
@@ -699,7 +698,7 @@ window.Quarto = {
 </div>
 <div class="callout callout-iss callout-warning" data-callout-type="iss" data-callout-number="7.6">
 <p><span id="iss-job-impact"><strong>Issue 7.6</strong></span> (Job displacement and transformation of the labour market). It is often argued that AI has the potential to displace jobs, particularly in sectors like manufacturing, logistics, and customer service. But, history shows us that the actual impacts of AI can be difficult to predict.</p>
-<p>For example, it was widely believed that machine learning models would not be able to compete with the creative industries until the emergence of powerful generative models for images demonstrated otherwise (e.g. <a href="6-beyond-supervised-learning.html#exm-denoising-diffusions" class="quarto-xref">Example&nbsp;<span>6.2</span></a>).</p>
+<p>For example, it was widely believed that machine learning models would not be able to compete with the creative industries until the emergence of powerful generative models for images demonstrated otherwise (e.g. <a href="6-beyond-supervised-learning.html#exm-denoising-diffusions" class="quarto-xref">Example&nbsp;<span>6.4</span></a>).</p>
 <p>While new jobs may be created in AI development and maintenance, there is concern about the speed and scale of this transition.</p>
 <p>What sectors do you think are likely to be impacted by machine learning and AI, and do you think the overall impact will be positive or negative?</p>
 <p>How do you think the emergence of powerful AI had/will impact the graduate job market?</p>
@@ -726,13 +725,13 @@ window.Quarto = {
 <p>Should there be regulation in place about how children interact with AI, and if so what?</p>
 </div>
 <div class="callout callout-iss callout-warning" data-callout-type="iss" data-callout-number="7.10">
-<p><span id="iss-trust"><strong>Issue 7.10</strong></span> (Veracity and trust). The potential applications for text-to-video technology are vast, ranging from entertainment and education to marketing and virtual reality (cf.&nbsp;).</p>
+<p><span id="iss-trust"><strong>Issue 7.10</strong></span> (Veracity and trust). The potential applications for text-to-video technology are vast, ranging from entertainment and education to marketing and virtual reality (cf. <a href="1-overview-of-machine-learning.html#exm-text-to-vid" class="quarto-xref">Example&nbsp;<span>1.11</span></a>).</p>
 <p>In education, for instance, it can be used to create engaging visual content that makes learning more accessible.</p>
 <p>In marketing, companies can swiftly generate promotional videos tailored to specific audiences, increasing engagement and conversion rates.</p>
 <p>However, the rise of text-to-video also presents challenges, particularly concerning veracity and trust; how can we determine whether or not a video is real or AI-generated?</p>
 <p>There is currently no general mechanism (e.g.&nbsp;legislation) in place to prevent fake videos from being presented as real; do we have to accept this as the new reality in the age of AI, or should something be done about it (and if so, what)?</p>
 </div>
-<p>This is not an exhaustive exploration of ethical issues associated with machine learning and AI, but it serves to indicate the depth and breadth of this topic. An important learning outcome, which <em>is</em> examinable, is to be able to highlight and explain some possible ethical considerations associated with deployment of a machine learning model in a given context (cf.&nbsp;).</p>
+<p>This is not an exhaustive exploration of ethical issues associated with machine learning and AI, but it serves to indicate the depth and breadth of this topic. An important learning outcome, which <em>is</em> examinable, is to be able to highlight and explain some possible ethical considerations associated with deployment of a machine learning model in a given context (cf. <a href="../appendix/question-bank.html#q-ethical-considerations" class="quarto-xref">Question&nbsp;<span>18</span></a>).</p>
 
 
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">

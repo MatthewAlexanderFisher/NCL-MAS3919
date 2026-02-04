@@ -4,6 +4,10 @@ execute:
 jupyter: mas2901
 ---
 
+```{ojs}
+bodyFont = getComputedStyle(document.body).fontFamily
+```
+
 # Stochastic Optimisation {#sec-stoch-opt}
 
 At this point we are over half way through the module and we have not yet discussed the mechanics of how a machine learning model is actually trained.
@@ -300,7 +304,7 @@ The quantity
 $$
 \frac{1}{T}\sum_{t=0}^{T-1} F(\bm{\theta}_t) - F(\bm{\theta}_\star)
 $${#eq-regret}
-is called the **regret**; it measures how much we suffered along the optimisation path, compared to if we had simply known $\bm{\theta}_\star$ at the start (we will consider the concept of regret in more detail in \Cref{subsec: bandit}).
+is called the **regret**; it measures how much we suffered along the optimisation path, compared to if we had simply known $\bm{\theta}_\star$ at the start (we will consider the concept of regret in more detail in @sec-bandits).
 
 Thus @thm-gd shows that, if the learning rate $\epsilon$ is small enough, and we are planning to take a large enough number of iterations $T$, then our regret will be small.
 
@@ -362,8 +366,209 @@ $${#eq-stoch-grad}
 where $\{i_j\}_{j=1}^m$ is a uniformly random subset[^random-subset] of $\{1,\dots,n\}$.
 
 The stochastic gradient @eq-stoch-grad is an unbiased estimator of the true gradient (cf. @q-stoch-grad-unbiased), and its variance is typically larger when the minibatch size $m$ is small.
-Pseudocode for the general version of *stochastic gradient descent* is presented in @algo-sgd, and the idea is illustrated in \Cref{fig: SGD}.
+Pseudocode for the general version of *stochastic gradient descent* is presented in @algo-sgd, and the idea is illustrated in @fig-sgd.
 
+
+```{ojs}
+//| classes: flex-center
+//| fig-cap: Comparison of gradient descent (left) and stochastic gradient descent (right).
+//| label: fig-sgd
+
+sgdComparison = {
+  const width = 700;
+  const height = 320;
+  const panelWidth = 300;
+  const panelGap = 100;
+  
+  // Theme-aware colors
+  const contourColor = "var(--fg-muted, #9ca3af)";
+  const gdColor = "var(--brand-blue, #3b82f6)";
+  const sgdColor = "var(--brand-red, #ef4444)";
+  const centerColor = "currentColor";
+  
+  const svg = d3.create("svg")
+    .attr("viewBox", [0, 0, width, height])
+    .attr("width", width)
+    .attr("height", height)
+    .style("background", "transparent")
+    .style("font-family", bodyFont);
+  
+  // Arrow marker definitions
+  const defs = svg.append("defs");
+  
+  // GD arrow marker
+  defs.append("marker")
+    .attr("id", "arrow-gd")
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 9)
+    .attr("refY", 5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto-start-reverse")
+    .append("path")
+    .attr("d", "M 0 0 L 10 5 L 0 10 z")
+    .attr("fill", gdColor);
+  
+  // SGD arrow marker
+  defs.append("marker")
+    .attr("id", "arrow-sgd")
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 9)
+    .attr("refY", 5)
+    .attr("markerWidth", 5)
+    .attr("markerHeight", 5)
+    .attr("orient", "auto-start-reverse")
+    .append("path")
+    .attr("d", "M 0 0 L 10 5 L 0 10 z")
+    .attr("fill", sgdColor);
+  
+  // Function to draw contours (rotated ellipses)
+  function drawContours(g, cx, cy) {
+    const ellipses = [
+      {a: 110, b: 40},
+      {a: 90, b: 32},
+      {a: 70, b: 25},
+      {a: 52, b: 19},
+      {a: 35, b: 13},
+      {a: 20, b: 8}
+    ];
+    const rotation = -20;
+    
+    ellipses.forEach(({a, b}) => {
+      g.append("ellipse")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("rx", a)
+        .attr("ry", b)
+        .attr("transform", `rotate(${rotation}, ${cx}, ${cy})`)
+        .attr("fill", "none")
+        .attr("stroke", contourColor)
+        .attr("stroke-width", 1)
+        .attr("stroke-opacity", 0.5);
+    });
+    
+    // Center point (minimum)
+    g.append("circle")
+      .attr("cx", cx)
+      .attr("cy", cy)
+      .attr("r", 3)
+      .attr("fill", centerColor);
+  }
+  
+  // Function to draw start point
+  function drawStart(g, x, y, label) {
+    g.append("circle")
+      .attr("cx", x)
+      .attr("cy", y)
+      .attr("r", 3)
+      .attr("fill", "var(--bg, white)")
+      .attr("stroke", centerColor)
+      .attr("stroke-width", 1.);
+    
+    g.append("text")
+      .attr("x", x)
+      .attr("y", y - 12)
+      .attr("text-anchor", "middle")
+      .attr("fill", "currentColor")
+      .attr("font-size", 14)
+      .html("θ₀");
+  }
+  
+  // ===== Panel 1: Gradient Descent =====
+  const panel1 = svg.append("g");
+  const cx1 = 150;
+  const cy1 = 140;
+  
+  drawContours(panel1, cx1, cy1);
+  
+  // Start point
+  const start1 = {x: cx1 + 115, y: cy1 - 50};
+  drawStart(panel1, start1.x, start1.y);
+  
+  // GD path: smooth big steps
+  const gdPath = [
+    {x: start1.x, y: start1.y},
+    {x: cx1 + 51, y: cy1 - 23},
+    {x: cx1 + 9, y: cy1 - 4},
+    {x: cx1 + 1.5, y: cy1 - 0.5}
+  ];
+  
+  // Draw GD arrows
+  for (let i = 0; i < gdPath.length - 1; i++) {
+    panel1.append("line")
+      .attr("x1", gdPath[i].x)
+      .attr("y1", gdPath[i].y)
+      .attr("x2", gdPath[i + 1].x)
+      .attr("y2", gdPath[i + 1].y)
+      .attr("stroke", gdColor)
+      .attr("stroke-width", 2.5)
+      .attr("marker-end", "url(#arrow-gd)");
+  }
+  
+  // Panel 1 title
+  panel1.append("text")
+    .attr("x", cx1)
+    .attr("y", height - 30)
+    .attr("text-anchor", "middle")
+    .attr("fill", "currentColor")
+    .attr("font-weight", "600")
+    .attr("font-size", 14)
+    .text("Gradient Descent");
+  
+  // ===== Panel 2: Stochastic Gradient Descent =====
+  const panel2 = svg.append("g");
+  const cx2 = 550;
+  const cy2 = 140;
+  
+  drawContours(panel2, cx2, cy2);
+  
+  // Start point
+  const start2 = {x: cx2 + 115, y: cy2 - 50};
+  drawStart(panel2, start2.x, start2.y);
+  
+  // SGD path: noisy steps
+  const sgdPath = [
+    {x: start2.x, y: start2.y},
+    {x: cx2 + 102, y: cy2 - 35},
+    {x: cx2 + 109, y: cy2 - 24},
+    {x: cx2 + 95, y: cy2 - 20},
+    {x: cx2 + 102, y: cy2 - 5},
+    {x: cx2 + 85, y: cy2 - 2},
+    {x: cx2 + 97, y: cy2 + 7},
+    {x: cx2 + 77, y: cy2 + 9},
+    {x: cx2 + 65, y: cy2 + 11},
+    {x: cx2 + 52, y: cy2 + 13},
+    {x: cx2 + 49, y: cy2 + 16},
+    {x: cx2 + 32, y: cy2 + 18},
+    {x: cx2 + 5, y: cy2 + 8},
+    {x: cx2 + 1, y: cy2 + 0.25}
+  ];
+  
+  // Draw SGD arrows
+  for (let i = 0; i < sgdPath.length - 1; i++) {
+    panel2.append("line")
+      .attr("x1", sgdPath[i].x)
+      .attr("y1", sgdPath[i].y)
+      .attr("x2", sgdPath[i + 1].x)
+      .attr("y2", sgdPath[i + 1].y)
+      .attr("stroke", sgdColor)
+      .attr("stroke-width", 2)
+      .attr("marker-end", "url(#arrow-sgd)");
+  }
+  
+  // Panel 2 title
+  panel2.append("text")
+    .attr("x", cx2)
+    .attr("y", height - 30)
+    .attr("text-anchor", "middle")
+    .attr("fill", "currentColor")
+    .attr("font-weight", "600")
+    .attr("font-size", 14)
+    .text("Stochastic Gradient Descent");
+  
+  return svg.node();
+}
+```
 
 ```pseudocode
 #| label: algo-sgd
@@ -404,8 +609,135 @@ where $\boldsymbol{\theta}_\star$ denotes any minimiser of $F$.
 
 ## Beyond "Vanilla" Stochastic Gradient Descent [{{< fa star >}}{{< fa star >}}]{.advanced title="Non-Examinable content"} {#sec-beyond-sgd}
 
+Stochastic gradient descent is a popular and effective optimisation method for training machine learning models, but it can be quite slow in general.  
+Several ideas have emerged that aim to accelerate convergence in stochastic optimisation; in fact we have already seen a simple example, in the form of a time-dependent learning rate $\epsilon_t$ in @sec-grad-desc.  
+Here we briefly discuss some of the other extensions that are most commonly used.
+
+- *Momentum* is an enhancement to stochastic gradient descent that helps accelerate convergence by “smoothing out” the fluctuations in the stochastic gradient.  
+  The gradient update with momentum looks like
+  $$
+  \begin{aligned}
+  \boldsymbol{\rho}_{t+1} &= \beta \boldsymbol{\rho}_t + (1 - \beta)\,\nabla F(\boldsymbol{\theta}_t), \\
+  \boldsymbol{\theta}_{t+1} &= \boldsymbol{\theta}_t - \epsilon \boldsymbol{\rho}_{t+1}.
+  \end{aligned}
+  $$
+  where $\beta$ is the *momentum coefficient*.  
+  By adding a proportion $\beta$ of the previous direction $\boldsymbol{\rho}_t$ to the current direction $\boldsymbol{\rho}_{t+1}$, momentum helps the optimiser move in a consistent direction, reducing oscillations (as illustrated in the right panel of @fig-sgd) and often speeding up convergence as a result.
+
+- *Adaptive learning rates* allow for the learning rate $\epsilon_t$ to be increased or decreased based on observed gradients
+  $\nabla F(\boldsymbol{\theta}_t), \nabla F(\boldsymbol{\theta}_{t-1}), \dots$.
+  The idea is useful because manual selection of $\epsilon$ is often a difficult task (e.g. because $B$ in @thm-sgd will be unknown in general).
+  The intuition for adapting the learning rate is that if the gradients are large then a small step size should typically be used, and conversely if the gradients are small then a large step size should typically be used.
+  A famous example is *Adagrad*:
+  $$
+  \epsilon_t
+  =
+  \frac{\epsilon_0}{
+    \sqrt{\sum_{s \le t} \lVert \nabla F(\boldsymbol{\theta}_s) \rVert^2} + \zeta
+  } ,
+  $$
+  where $\zeta > 0$ is some small constant to avoid division by $0$.
+
+- *Gradient clipping* can be useful in settings where occasionally a very large value of the gradient $\nabla F$ is encountered.
+  This can occur when dealing with a complex *loss landscape*, where some areas of the parameter space give rise to a very steep gradient (e.g. as illustrated in the right part of @fig-minima).
+  The idea is simply to replace the “raw” gradients $\nabla F(\boldsymbol{\theta})$ with a clipped version, such as
+  $$
+  \begin{cases}
+  \nabla F(\boldsymbol{\theta}),
+  & \text{if } \lVert \nabla F(\boldsymbol{\theta}) \rVert < \tau, \\[4pt]
+  \dfrac{\tau}{\lVert \nabla F(\boldsymbol{\theta}) \rVert}
+  \nabla F(\boldsymbol{\theta}),
+  & \text{if } \lVert \nabla F(\boldsymbol{\theta}) \rVert \ge \tau,
+  \end{cases}
+  $$
+  where $\tau$ controls the largest allowed norm of a gradient.
+
+Each of these improvements aims to address specific limitations of the basic stochastic gradient descent algorithm, such as slow convergence, sensitivity to tuning parameters, and difficulty in navigating complex loss landscapes.  
+By carefully selecting and combining these techniques, it is often possible to significantly enhance the performance and efficiency of stochastic optimisation when training a machine learning model.
+
+::: {.remark #rem-learning-to-learn}
+### Learning to learn
+
+It is common to view the search for a good optimiser as a supervised machine learning task in its own right, and to describe this concept the phrase *learning to learn* is sometimes used.
+
+:::
+
+::: {.remark #rem-biological-analogy}
+### Gradient descent as a biological analogy for learning in neural networks?
+
+The biological interpretation of neural networks as a model of the brain is generally considered sound, but attempts to interpret training via (stochastic) gradient descent as an analogue of how the brain learns in the real world is controversial [@lillicrap2020backpropagation].
+
+:::
+
+
 ## Automatic Differentiation [{{< fa star >}}]{.advanced title="MAS8607 content"} {#sec-autodiff}
 
+It is remarkable that complex machine learning models can now be defined and trained using just a few lines of code in a high-level programming language like [PyTorch](https://pytorch.org/).
+The key engineering breakthrough that makes all of this possible is *automatic differentiation*; the ability to quickly compute gradients such as
+$\nabla_{\boldsymbol{\theta}} \mathcal{R}_n(f_{\boldsymbol{\theta}})$.
+Though differentiation is in no way a novel concept, what separates automatic differentiation from alternatives such as “numerical differentiation” based on finite–difference formulae, for example
+$$
+f'(x) \approx \frac{ f(x + \delta) - f(x - \delta) }{2 \delta},
+$$
+is that automatic differentiation is *exact* (at least, in exact arithmetic) while oftentimes also being *fast*.
+
+::: {#exm-autodiff}
+### Automatic differentiation from scratch
+
+For the sake of illustration, suppose we wish to build an automatic differentiation tool from scratch.
+The first step would be to define the elementary functions in a way that also encodes instructions for how these elementary functions are differentiated.
+Taking the sine function as an example:
+
+```python
+import math
+
+def sin_ad(x, dx=1.0):
+    f = math.sin(x)
+    df = math.cos(x) * dx
+    return f, df
+```
+
+Here, `sin_ad` returns both the usual function value $\sin(x)$, and the analytic derivative $\cos(x)$. A rich framework like [PyTorch](https://pytorch.org/) will include essentially all of the elementary functions we can think of, with names such as `torch.sin`; we simply illustrate the idea here by adding one more function to our toolkit, the exponential:
+
+```python
+def exp_ad(x, dx=1.0):
+    f = math.exp(x)
+    df = math.exp(x) * dx
+    return f, df
+```
+
+Armed with at least some of the elementary functions, we can now try to compute the derivative of composite functions such as 
+$$
+f(x) = \exp(\sin(x)) , \qquad x = \frac{\pi}{4} .
+$$
+To do so we will first compute $y = \sin(x)$ and then $\exp(y)$ in what is called **forward mode** differentiation:
+
+```python
+x = math.pi / 4   # input
+dx = 1.0          # derivative of x w.r.t itself
+y, dy = sin_ad(x, dx)
+f, df = exp_ad(y, dy)
+```
+
+The output `f` is the function value $f(x)$, while `df` represents the derivative $f'(x)$ of interest.
+Tracking back through the computation, we can see that forward mode differentiation is an explicit implementation of the chain rule
+$$
+f'(x) = \exp'(\sin(x)) \sin'(x) = \exp(\sin(x)) \cos(x)
+$$
+which of course in this small example we could have implemented by hand.
+:::
+
+This example is shown only for illustrative purposes; where frameworks such as [PyTorch](https://pytorch.org/) or [JAX](https://docs.jax.dev/en/latest/) excel is in performing fast vectorised computations in a memory-efficient way, often on one or more GPUs.
+Automatic differentiation has revolutionised machine learning and underpins the recent AI boom; we argue that the contributors to these tools deserve greater credit.
+
+::: {.remark #rem-forward-backward}
+### Forward versus backward
+
+@exm-autodiff demonstrated so-called **forward mode** differentiation, where derivatives are computed in the direction from input to output. This is generally more efficient when dealing with functions with many outputs and few inputs.
+
+**Reverse mode** is often preferred for functions with many inputs and few outputs, such as most neural networks, as it computes the derivatives in the reverse order, allowing gradients to be calculated more efficiently.
+
+:::
 
 [^condition-number]:
     The quantity $\lambda_{\min}(\mathbf{M}) / \lambda_{\max}(\mathbf{M})$ is called the *reciprocal condition number* of the matrix $\mathbf{M}$; this is always between $0$ and $1$, and is closer to $0$ when $\mathbf{M}$ has an "effective low rank".

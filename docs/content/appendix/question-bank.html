@@ -746,7 +746,7 @@ window.Quarto = {
 <span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>  <span class="co">// --- DOM</span></span>
 <span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wrapper <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;div class="token-autocomplete"&gt;&lt;/div&gt;`</span><span class="op">;</span></span>
 <span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> labelEl <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;label class="token-label"&gt;Filter by tags (type, space-separated):&lt;/label&gt;`</span><span class="op">;</span></span>
-<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> input   <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;input class="token-input" type="text" placeholder="e.g. bayes probability"&gt;`</span><span class="op">;</span></span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> input   <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;input class="token-input" type="text" placeholder="e.g. risk loss-function"&gt;`</span><span class="op">;</span></span>
 <span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>  wrapper<span class="op">.</span><span class="fu">append</span>(labelEl<span class="op">,</span> input)<span class="op">;</span></span>
 <span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>  <span class="co">// --- PORTAL: suggestions list lives at document.body so it can overlay everything</span></span>
@@ -975,13 +975,362 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="kernels" data-difficulty="1">
+<div id="q-formulate-sl-task" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="supervised-learning exercise-sheet-1" data-difficulty="1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Sums of kernels are kernels <span class="advanced" title="Advanced content for 4th year students"><i class="fa-solid fa-star" aria-label="star"></i></span>
+Important&nbsp;1: Formulating a supervised learning task
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The aim of this exercise is to practise formulating a well-defined supervised learning task in the sense of <a href="../main/1-overview-of-machine-learning.html#def-supervised-learning-task" class="quarto-xref">Definition&nbsp;<span>1.1</span></a>. That is, for each of the following real-world tasks, identify suitable choices of <span class="math inline">\mathcal{X}</span>, <span class="math inline">\mathcal{Y}</span>, <span class="math inline">\mathcal{Z}</span> and <span class="math inline">L</span>, and suggest suitable training data, in order to turn the real-world task into a supervised learning task.</p>
+<ol type="1">
+<li><p>An unknown food ingredient can make me feel unwell, and I would like to find out what it is.</p></li>
+<li><p>I accidentally had my thumb in the way when taking a photo, so part of the image is obscured. I would like to digitally remove my thumb and fill the region that was obscured with realistic content.</p></li>
+</ol>
+<p>Formulating a well-defined task is often the main challenge in real-world applications of machine learning, together with acquiring a suitable training dataset.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>There is no unique solution here; the main goal is to think about what is required to define a well-posed supervised learning task.</p>
+<p>An example solution for the first problem is:</p>
+<ul>
+<li><p><span class="math inline">\mathcal{X} = \{0,1\}^d</span>, where <span class="math inline">\mathbf{x}_i</span> is a binary vector indicating the presence or absence of <span class="math inline">d</span> different common allergens in the <span class="math inline">i</span>th item of food that was consumed.</p></li>
+<li><p><span class="math inline">\mathcal{Y} = \{0,1\}</span>, where <span class="math inline">y_i</span> indicates whether or not symptoms occurred after eating the <span class="math inline">i</span>th item of food.</p></li>
+<li><p><span class="math inline">\mathcal{Z} = \mathcal{P}(\{0,1\})</span>, so that the output <span class="math inline">f(\mathbf{x})</span> of a machine learning model is a probabilistic prediction for whether symptoms occur after consuming food with allergen profile <span class="math inline">\mathbf{x}</span>.</p></li>
+<li><p><span class="math inline">L(y,P) = -\log p(y)</span>, the cross-entropy loss associated with the predictive distribution <span class="math inline">P</span> (with probability mass function <span class="math inline">p</span>) when the observed response is <span class="math inline">y</span> (recall how this loss function is used for classification tasks in <a href="../main/1-overview-of-machine-learning.html#exm-classification" class="quarto-xref">Example&nbsp;<span>1.10</span></a>).</p></li>
+</ul>
+<p>The training dataset then consists of pairs <span class="math inline">(\mathbf{x}_i,y_i)</span> of allergen profiles <span class="math inline">\mathbf{x}_i</span> and observed symptoms <span class="math inline">y_i</span>.</p>
+<p>Of course, many refinements are possible. For example, one could measure the <em>amount</em> of each allergen in each food item, incorporate the time elapsed before symptoms occurred, or record a more detailed measure of symptom severity.</p>
+<p>An example solution for the second task is:</p>
+<ul>
+<li><p><span class="math inline">\mathcal{X} = \mathbb{R}^d</span>, where <span class="math inline">\mathbf{x}_i</span> contains the RGB values of each unobscured pixel in the <span class="math inline">i</span>th image.</p></li>
+<li><p><span class="math inline">\mathcal{Y} = \mathbb{R}^p</span>, where <span class="math inline">\mathbf{y}_i</span> contains the RGB values of each obscured pixel in the <span class="math inline">i</span>th image.</p></li>
+<li><p><span class="math inline">\mathcal{Z} = \mathbb{R}^p</span>, so that the output <span class="math inline">f(\mathbf{x})</span> of a machine learning model represents a prediction for the values of the obscured pixels.</p></li>
+<li><p>For example, <span class="math display">
+L(\mathbf{y},\mathbf{z}) = \lVert \mathbf{y} - \mathbf{z} \rVert,
+</span> as a simple measure of dissimilarity between the predicted and true hidden pixels.</p></li>
+</ul>
+<p>The training dataset can be obtained by taking real images and artificially obscuring parts of them, producing inputs <span class="math inline">\mathbf{x}_i</span>, while retaining the true hidden pixels <span class="math inline">\mathbf{y}_i</span> as ground truth.</p>
+<p>The choice of loss function here is in fact not ideal, because the generated pixels <span class="math inline">\mathbf{z}</span> could look entirely realistic while still being very different from <span class="math inline">\mathbf{y}</span> in a pixel-wise sense. A better approach would be to measure how well a classifier can distinguish real from fake hidden regions, but this idea has not yet been introduced; see <a href="../main/6-beyond-supervised-learning.html#sec-adversarial-training" class="quarto-xref"><span>Adversarial Training</span></a>.</p>
+</details>
+</div>
+</div>
+<div id="q-cross-entropy-loss" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="risk loss-function exercise-sheet-1" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;2: Cross-entropy loss
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">Y_1,\dots,Y_n \sim \mathrm{Bern}(\rho)</span> be independent, for an unknown success parameter <span class="math inline">\rho \in [0,1]</span>. Estimating <span class="math inline">\rho</span> can be cast as empirical risk minimisation with <span class="math inline">\mathcal{X} = \emptyset</span>, <span class="math inline">f(\mathcal{X}) = \rho</span>, and the cross-entropy loss <span class="math display">
+L(y,\rho) = -\log p_\rho(y),
+</span> where <span class="math inline">p_\rho</span> is the probability mass function of <span class="math inline">\mathrm{Bern}(\rho)</span>. Compute the empirical risk minimiser <span class="math inline">\hat{\rho}</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>The empirical risk is <span class="math display">
+\mathcal{R}_n(f)
+=
+\frac{1}{n}\sum_{i=1}^n L(Y_i,\rho)
+=
+- \frac{1}{n}\sum_{i=1}^n
+\big[
+Y_i \log \rho + (1-Y_i)\log(1-\rho)
+\big].
+</span></p>
+<p>Differentiating with respect to <span class="math inline">\rho</span> and setting the derivative equal to zero gives <span class="math display">
+0
+=
+\partial_\rho \mathcal{R}_n(f)
+=
+- \frac{1}{n}\sum_{i=1}^n
+\left[
+\frac{Y_i}{\rho}
+-
+\frac{1-Y_i}{1-\rho}
+\right].
+</span></p>
+<p>Solving this equation yields <span class="math display">
+\hat{\rho}
+=
+\frac{1}{n}\sum_{i=1}^n Y_i,
+</span> the arithmetic mean of the data.</p>
+</details>
+</div>
+</div>
+<div id="q-zero-one-loss" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="classification risk loss-function exercise-sheet-1" data-difficulty="2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;3: The 0–1 loss
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">P</span> be a probability distribution on <span class="math inline">\mathcal{X} \times \mathcal{Y}</span> where <span class="math inline">\mathcal{Y} = \mathcal{Z} = \{0,1\}</span>, and let <span class="math display">
+L(y,z)
+=
+\begin{cases}
+0, &amp; y = z,\\
+1, &amp; y \neq z,
+\end{cases}
+</span> be the <em>0–1 loss</em>. Let <span class="math inline">p(\cdot \mid \mathbf{x})</span> denote the probability mass function of <span class="math inline">Y \mid \mathbf{X}=\mathbf{x}</span>.</p>
+<p>Show that the <em>Bayes predictor</em> <span class="math display">
+f_\star(\mathbf{x})
+=
+\begin{cases}
+1, &amp; p(1\mid\mathbf{x}) \ge \displaystyle \frac{1}{2},\\
+0, &amp; \text{otherwise},
+\end{cases}
+</span> is optimal, in the sense that no other function <span class="math inline">f : \mathcal{X} \rightarrow \mathcal{Z}</span> achieves a lower risk <span class="math inline">\mathcal{R}(f)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Using the tower property of conditional expectation, the risk for a general function <span class="math inline">f : \mathcal{X} \rightarrow \mathcal{Z}</span> is <span class="math display">
+\begin{aligned}
+\mathcal{R}(f)
+&amp;=
+\mathbb{E}_{(\mathbf{X},Y)\sim P}\!\left[ L\big(Y,f(\mathbf{X})\big) \right] \\
+&amp;=
+\mathbb{E}\!\left[
+\mathbb{E}\!\left[ L\big(Y,f(\mathbf{X})\big)\mid \mathbf{X} \right]
+\right] \\
+&amp;=
+\mathbb{E}\!\left[
+p(0\mid \mathbf{X})\, f(\mathbf{X})
++
+p(1\mid \mathbf{X})\,\big(1-f(\mathbf{X})\big)
+\right].
+\end{aligned}
+</span></p>
+<p>Since <span class="math inline">f(\mathbf{x})</span> can only take values in <span class="math inline">\{0,1\}</span>, for each fixed <span class="math inline">\mathbf{X}=\mathbf{x}</span> the inner expression is minimised by choosing <span class="math inline">f(\mathbf{x}) = f_\star(\mathbf{x})</span>.</p>
+<p>Because this choice can be made independently for each <span class="math inline">\mathbf{x}</span>, it follows that <span class="math inline">f_\star</span> minimises the risk <span class="math inline">\mathcal{R}(f)</span>.</p>
+</details>
+</div>
+</div>
+<div id="q-nn-linear-model" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-1 neural-networks" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;4: Neural networks and linear models
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Show that the machine learning model <span class="math display">
+\mathcal{F} = \{ f_{\boldsymbol{\theta}} \}_{\boldsymbol{\theta} \in \Theta},
+</span> where <span class="math inline">f_{\boldsymbol{\theta}} : \mathbb{R}^d \rightarrow \mathbb{R}</span> is an <span class="math inline">L</span>-layer fully connected neural network whose weights and bias parameters are collectively represented by <span class="math inline">\boldsymbol{\theta} \in \Theta</span>, is identical to a linear model with features <span class="math display">
+\phi_0(\mathbf{x}) = 1, \quad \phi_1(\mathbf{x}) = x_1, \dots, \phi_d(\mathbf{x}) = x_d
+</span> when the identity activation function <span class="math inline">\sigma(z)=z</span> is used<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>An <span class="math inline">L</span>-layer fully connected neural network with scalar output can be written (see <a href="../main/1-overview-of-machine-learning.html#exm-neural-network" class="quarto-xref">Example&nbsp;<span>1.15</span></a>) as <span class="math display">
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\mathbf{w}^{(L)}
+\,
+\sigma\!\left(
+\mathbf{W}^{(L-1)}
+\sigma\!\left(
+\cdots
+\sigma\!\left(
+\mathbf{W}^{(1)}\mathbf{x}
++
+\mathbf{b}^{(1)}
+\right)
+\cdots
+\right)
++
+\mathbf{b}^{(L-1)}
+\right)
++
+b^{(L)},
+</span> where <span class="math inline">\mathbf{w}^{(L)}</span> is a row vector and <span class="math inline">b^{(L)}</span> is a scalar.</p>
+<p>If we substitute <span class="math inline">\sigma(\cdot)</span> with the identity function, this becomes <span class="math display">
+\begin{aligned}
+f_{\boldsymbol{\theta}}(\mathbf{x})
+&amp;=
+\mathbf{w}^{(L)}
+\Big(
+\mathbf{W}^{(L-1)}
+(
+\cdots
+(
+\mathbf{W}^{(1)}\mathbf{x}
++
+\mathbf{b}^{(1)}
+)
+\cdots
+)
++
+\mathbf{b}^{(L-1)}
+\Big)
++
+b^{(L)} \\[4pt]
+&amp;=
+\underbrace{
+\big(
+\mathbf{w}^{(L)}
+\mathbf{W}^{(L-1)}
+\cdots
+\mathbf{W}^{(1)}
+\big)
+}_{=(\vartheta_1,\dots,\vartheta_d)}
+\mathbf{x}
++
+\underbrace{
+\big(
+\mathbf{w}^{(L)}
+\mathbf{W}^{(L-1)}
+\cdots
+\mathbf{W}^{(2)}
+\big)
+\mathbf{b}^{(1)}
++
+\cdots
++
+b^{(L)}
+}_{=\vartheta_0}.
+\end{aligned}
+</span></p>
+<p>Writing the resulting coefficients as <span class="math inline">\boldsymbol{\vartheta}=(\vartheta_0,\vartheta_1,\dots,\vartheta_d)</span>, we obtain <span class="math display">
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\vartheta_0 \phi_0(\mathbf{x})
++
+\vartheta_1 \phi_1(\mathbf{x})
++
+\cdots
++
+\vartheta_d \phi_d(\mathbf{x}),
+</span> which is precisely a linear model (cf. <a href="../main/1-overview-of-machine-learning.html#exm-linear-regression" class="quarto-xref">Example&nbsp;<span>1.12</span></a>).</p>
+</details>
+</div>
+</div>
+<div id="q-training-ml-model" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-3 training overfitting" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;5: Training a machine learning model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A biotech<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> start-up asks you to train a deep neural network to distinguish between benign skin lesions, such as freckles and moles, and harmful skin lesions, such as carcinoma and melanoma.<br>
+Your line manager is enthusiastic and supportive, but does not have a machine learning background.</p>
+<p>The data consist of a large number of images of skin lesions, together with the outcome of a biopsy to determine whether the lesion was benign or malignant.</p>
+<p>For the purposes of performance assessment, you plan to train the deep neural network on <span class="math inline">90\%</span> of the dataset, and to reserve <span class="math inline">10\%</span> as a test dataset. You instantiate a deep neural network in Torch and perform training via empirical risk minimisation, based on the cross-entropy loss and gradient descent. During training you monitor the empirical risk computed over the training dataset, and also the empirical risk computed over the test dataset. You observe something like the following:</p>
+<div class="cell flex-center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb8" data-startfrom="604" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 603;"><span id="cb8-604"><a href="#cb8-604" aria-hidden="true" tabindex="-1"></a><span class="co">// Empirical Risk vs Iterations Plot</span></span>
+<span id="cb8-605"><a href="#cb8-605" aria-hidden="true" tabindex="-1"></a>empiricalRiskPlot <span class="op">=</span> {</span>
+<span id="cb8-606"><a href="#cb8-606" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> width <span class="op">=</span> <span class="dv">640</span><span class="op">;</span></span>
+<span id="cb8-607"><a href="#cb8-607" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> height <span class="op">=</span> <span class="dv">400</span><span class="op">;</span></span>
+<span id="cb8-608"><a href="#cb8-608" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> margin <span class="op">=</span> {<span class="dt">top</span><span class="op">:</span> <span class="dv">20</span><span class="op">,</span> <span class="dt">right</span><span class="op">:</span> <span class="dv">120</span><span class="op">,</span> <span class="dt">bottom</span><span class="op">:</span> <span class="dv">50</span><span class="op">,</span> <span class="dt">left</span><span class="op">:</span> <span class="dv">60</span>}<span class="op">;</span></span>
+<span id="cb8-609"><a href="#cb8-609" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-610"><a href="#cb8-610" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Theme-aware colors</span></span>
+<span id="cb8-611"><a href="#cb8-611" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> textColor <span class="op">=</span> <span class="st">"currentColor"</span><span class="op">;</span></span>
+<span id="cb8-612"><a href="#cb8-612" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> gridColor <span class="op">=</span> <span class="st">"var(--plot-grid, #e5e5e5)"</span><span class="op">;</span></span>
+<span id="cb8-613"><a href="#cb8-613" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> testingColor <span class="op">=</span> <span class="st">"var(--brand-red, #e41a1c)"</span><span class="op">;</span></span>
+<span id="cb8-614"><a href="#cb8-614" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> trainingColor <span class="op">=</span> <span class="st">"var(--brand-blue, #377eb8)"</span><span class="op">;</span></span>
+<span id="cb8-615"><a href="#cb8-615" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-616"><a href="#cb8-616" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Generate data points</span></span>
+<span id="cb8-617"><a href="#cb8-617" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> n <span class="op">=</span> <span class="dv">200</span><span class="op">;</span></span>
+<span id="cb8-618"><a href="#cb8-618" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> data <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>({<span class="dt">length</span><span class="op">:</span> n}<span class="op">,</span> (_<span class="op">,</span> i) <span class="kw">=&gt;</span> {</span>
+<span id="cb8-619"><a href="#cb8-619" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> x <span class="op">=</span> i <span class="op">/</span> (n <span class="op">-</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb8-620"><a href="#cb8-620" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb8-621"><a href="#cb8-621" aria-hidden="true" tabindex="-1"></a>      <span class="dt">x</span><span class="op">:</span> x<span class="op">,</span></span>
+<span id="cb8-622"><a href="#cb8-622" aria-hidden="true" tabindex="-1"></a>      <span class="dt">testing</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">exp</span>(<span class="op">-</span><span class="fl">2.6</span> <span class="op">*</span> x) <span class="op">+</span> <span class="fl">0.6</span> <span class="op">*</span> x <span class="op">*</span> x<span class="op">,</span></span>
+<span id="cb8-623"><a href="#cb8-623" aria-hidden="true" tabindex="-1"></a>      <span class="dt">training</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">exp</span>(<span class="op">-</span><span class="fl">2.6</span> <span class="op">*</span> x)</span>
+<span id="cb8-624"><a href="#cb8-624" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb8-625"><a href="#cb8-625" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb8-626"><a href="#cb8-626" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-627"><a href="#cb8-627" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Flatten for Plot</span></span>
+<span id="cb8-628"><a href="#cb8-628" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> testingData <span class="op">=</span> data<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> ({<span class="dt">x</span><span class="op">:</span> d<span class="op">.</span><span class="at">x</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> d<span class="op">.</span><span class="at">testing</span><span class="op">,</span> <span class="dt">series</span><span class="op">:</span> <span class="st">"testing"</span>}))<span class="op">;</span></span>
+<span id="cb8-629"><a href="#cb8-629" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> trainingData <span class="op">=</span> data<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> ({<span class="dt">x</span><span class="op">:</span> d<span class="op">.</span><span class="at">x</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> d<span class="op">.</span><span class="at">training</span><span class="op">,</span> <span class="dt">series</span><span class="op">:</span> <span class="st">"training"</span>}))<span class="op">;</span></span>
+<span id="cb8-630"><a href="#cb8-630" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-631"><a href="#cb8-631" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> plot <span class="op">=</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb8-632"><a href="#cb8-632" aria-hidden="true" tabindex="-1"></a>    width<span class="op">,</span></span>
+<span id="cb8-633"><a href="#cb8-633" aria-hidden="true" tabindex="-1"></a>    height<span class="op">,</span></span>
+<span id="cb8-634"><a href="#cb8-634" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marginTop</span><span class="op">:</span> margin<span class="op">.</span><span class="at">top</span><span class="op">,</span></span>
+<span id="cb8-635"><a href="#cb8-635" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marginRight</span><span class="op">:</span> margin<span class="op">.</span><span class="at">right</span><span class="op">,</span></span>
+<span id="cb8-636"><a href="#cb8-636" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marginBottom</span><span class="op">:</span> margin<span class="op">.</span><span class="at">bottom</span><span class="op">,</span></span>
+<span id="cb8-637"><a href="#cb8-637" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marginLeft</span><span class="op">:</span> margin<span class="op">.</span><span class="at">left</span><span class="op">,</span></span>
+<span id="cb8-638"><a href="#cb8-638" aria-hidden="true" tabindex="-1"></a>    <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb8-639"><a href="#cb8-639" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> {</span>
+<span id="cb8-640"><a href="#cb8-640" aria-hidden="true" tabindex="-1"></a>      <span class="dt">background</span><span class="op">:</span> <span class="st">"transparent"</span><span class="op">,</span></span>
+<span id="cb8-641"><a href="#cb8-641" aria-hidden="true" tabindex="-1"></a>      <span class="dt">fontFamily</span><span class="op">:</span> bodyFont<span class="op">,</span></span>
+<span id="cb8-642"><a href="#cb8-642" aria-hidden="true" tabindex="-1"></a>      <span class="dt">color</span><span class="op">:</span> textColor</span>
+<span id="cb8-643"><a href="#cb8-643" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb8-644"><a href="#cb8-644" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span> {</span>
+<span id="cb8-645"><a href="#cb8-645" aria-hidden="true" tabindex="-1"></a>      <span class="dt">domain</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span></span>
+<span id="cb8-646"><a href="#cb8-646" aria-hidden="true" tabindex="-1"></a>      <span class="dt">label</span><span class="op">:</span> <span class="st">"number of iterations × 10⁶"</span><span class="op">,</span></span>
+<span id="cb8-647"><a href="#cb8-647" aria-hidden="true" tabindex="-1"></a>      <span class="dt">ticks</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="fl">0.1</span><span class="op">,</span> <span class="fl">0.2</span><span class="op">,</span> <span class="fl">0.3</span><span class="op">,</span> <span class="fl">0.4</span><span class="op">,</span> <span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.6</span><span class="op">,</span> <span class="fl">0.7</span><span class="op">,</span> <span class="fl">0.8</span><span class="op">,</span> <span class="fl">0.9</span><span class="op">,</span> <span class="fl">1.0</span>]</span>
+<span id="cb8-648"><a href="#cb8-648" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb8-649"><a href="#cb8-649" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span> {</span>
+<span id="cb8-650"><a href="#cb8-650" aria-hidden="true" tabindex="-1"></a>      <span class="dt">domain</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span></span>
+<span id="cb8-651"><a href="#cb8-651" aria-hidden="true" tabindex="-1"></a>      <span class="dt">label</span><span class="op">:</span> <span class="st">"empirical risk"</span><span class="op">,</span></span>
+<span id="cb8-652"><a href="#cb8-652" aria-hidden="true" tabindex="-1"></a>      <span class="dt">ticks</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="fl">0.1</span><span class="op">,</span> <span class="fl">0.2</span><span class="op">,</span> <span class="fl">0.3</span><span class="op">,</span> <span class="fl">0.4</span><span class="op">,</span> <span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.6</span><span class="op">,</span> <span class="fl">0.7</span><span class="op">,</span> <span class="fl">0.8</span><span class="op">,</span> <span class="fl">0.9</span><span class="op">,</span> <span class="fl">1.0</span>]</span>
+<span id="cb8-653"><a href="#cb8-653" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb8-654"><a href="#cb8-654" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb8-655"><a href="#cb8-655" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Grid styling via frame</span></span>
+<span id="cb8-656"><a href="#cb8-656" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">frame</span>({<span class="dt">stroke</span><span class="op">:</span> gridColor<span class="op">,</span> <span class="dt">strokeOpacity</span><span class="op">:</span> <span class="fl">0.3</span>})<span class="op">,</span></span>
+<span id="cb8-657"><a href="#cb8-657" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">line</span>(testingData<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> testingColor<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="dv">2</span>})<span class="op">,</span></span>
+<span id="cb8-658"><a href="#cb8-658" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">line</span>(trainingData<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> trainingColor<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="dv">2</span>})<span class="op">,</span></span>
+<span id="cb8-659"><a href="#cb8-659" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>([{<span class="dt">x</span><span class="op">:</span> <span class="fl">0.85</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="fl">0.95</span>}]<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">text</span><span class="op">:</span> [<span class="st">"testing"</span>]<span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> testingColor<span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"bold"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">12</span>})<span class="op">,</span></span>
+<span id="cb8-660"><a href="#cb8-660" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>([{<span class="dt">x</span><span class="op">:</span> <span class="fl">0.85</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="fl">0.88</span>}]<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">text</span><span class="op">:</span> [<span class="st">"training"</span>]<span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> trainingColor<span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"bold"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">12</span>})</span>
+<span id="cb8-661"><a href="#cb8-661" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb8-662"><a href="#cb8-662" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb8-663"><a href="#cb8-663" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-664"><a href="#cb8-664" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> plot<span class="op">;</span></span>
+<span id="cb8-665"><a href="#cb8-665" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<ol type="1">
+<li><p>Explain what is happening in this figure, in terms that your line manager can understand.</p></li>
+<li><p>You recommend terminating the training after <span class="math inline">0.5 \times 10^6</span> iterations in order to minimise the testing risk, but your line manager does not like this idea (they are worried that this approach is influenced by the initial choice of which <span class="math inline">10\%</span> of the data were held out). Suggest alternative solutions that could stop the test risk from increasing again as more iterations are performed.</p></li>
+</ol>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>The test risk begins to increase because the model is <em>over-fitting</em> to the training dataset. The deep neural network is very flexible and can start to exploit small artefacts in individual images that are unrelated to the underlying skin lesion itself, in order to memorise whether a particular training image was labelled as benign or malignant.</p>
+<p>As training continues, the performance on the training set keeps improving, but the ability of the model to generalise to new, unseen images deteriorates.</p>
+<p>Stopping gradient descent early reduces the opportunity for the neural network to pick up on these spurious patterns.</p>
+<p>If early stopping is not desirable, then explicit regularisation strategies could be used instead, for example:</p>
+<ul>
+<li>additive (weight) regularisation,</li>
+<li>dropout,</li>
+<li>or reducing the size and complexity of the neural network.</li>
+</ul>
+<p>All of these approaches aim to limit how closely the model can fit the training data and thereby improve generalisation.</p>
+</details>
+</div>
+</div>
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-3 kernel" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Sums of kernels are kernels <span class="advanced" title="MAS8607 content"><i class="fa-solid fa-star" aria-label="star"></i></span>
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1002,7 +1351,7 @@ k(\mathbf{x},\mathbf{x}') = \langle \boldsymbol{\phi}_1(\mathbf{x}) , \boldsymbo
 </details>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="neural-networks" data-difficulty="0">
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-3 neural-networks" data-difficulty="0">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -1056,7 +1405,7 @@ Solution
 </details>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="neural-networks" data-difficulty="1">
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-3 neural-networks" data-difficulty="1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -1069,7 +1418,7 @@ Solution
 <p>Let <span class="math inline">\mathbf{x} \in \{0,1\}^d</span> where <span class="math inline">d = 2^m</span> for some <span class="math inline">m \in \mathbb{N}</span>. Construct a neural network using the simple activation function <span class="math display">
 \sigma(z) = \begin{cases} 1 &amp; \text{if } z \geq 1 \\ 0 &amp; \text{if } z &lt; 1 \end{cases}
 </span> to perform a <em>parity check</em>, i.e.&nbsp;to return <span class="math inline">1</span> if the number of non-zero entries in <span class="math inline">\mathbf{x}</span> is odd, and otherwise to return <span class="math inline">0</span>. State how many neurons and how many layers you used in your network as a function of <span class="math inline">d</span>.</p>
-<p><a href="../main/2-machine-learning-models.html#sec-activation" class="quarto-xref">Hint: You may wish to make use of the XOR logic gate that we constructed in&nbsp;<span>Activation Functions</span></a></p>
+<p><em>Hint: You may wish to make use of the XOR logic gate that we constructed in <a href="../main/2-machine-learning-models.html#sec-activation" class="quarto-xref"><span>Activation Functions</span></a>.</em></p>
 <details class="solution">
 <summary>
 Solution
@@ -1082,7 +1431,7 @@ Solution
 </details>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="neural-networks" data-difficulty="1">
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-3 neural-networks" data-difficulty="1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -1109,7 +1458,7 @@ t_{a,b,c}(x) = \left[ \sigma\left(\frac{x-a}{b-a}\right) - \sigma\left(\frac{x-b
 </details>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="optimisation" data-difficulty="1">
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-3 optimisation gradient-descent" data-difficulty="1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -1134,22 +1483,21 @@ Solution
 </details>
 </div>
 </div>
-<div id="q-stoch-grad-unbiased" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="optimisation" data-difficulty="0">
+<div id="q-stoch-grad-unbiased" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4 optimisation stochastic-gradient-descent" data-difficulty="1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;1: Stochastic gradient is unbiased
+Important&nbsp;6: Stochastic gradient is unbiased
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Let <span class="math inline">\{i_j\}_{j=1}^m</span> be a uniformly random subset of <span class="math inline">\{1,\dots,n\}</span>, either with or without replacement. Prove that <span class="math display">
+<p>Let <span class="math inline">\{i_j\}_{j=1}^m</span> be a uniformly random subset of <span class="math inline">\{1,\dots,n\}</span>, either with or without replacement<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Prove that <span class="math display">
 \hat{S} = \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j})
 </span> is an unbiased estimator of <span class="math display">
 S = \frac{1}{n} \sum_{i=1}^n h(\mathbf{w}_i).
 </span></p>
-<p>(This result implies that the stochastic gradient (<a href="../main/3-stochastic-optimisation.html#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>) is an unbiased estimator of the true gradient (<a href="../main/3-stochastic-optimisation.html#eq-erm-gradient" class="quarto-xref">Equation&nbsp;<span>3.2</span></a>), taking <span class="math inline">\mathbf{w}_i = (\mathbf{x}_i,\mathbf{y}_i)</span> and <span class="math inline">h(\mathbf{w}_i) = \nabla_{\boldsymbol{\theta}} L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i))</span>.)</p>
 <details class="solution">
 <summary>
 Solution
@@ -1166,13 +1514,13 @@ Solution
 </details>
 </div>
 </div>
-<div id="q-opt-learning-rate" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="optimisation gradient-descent" data-difficulty="1">
+<div id="q-opt-learning-rate" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4 optimisation gradient-descent" data-difficulty="1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;2: Optimal learning rate for gradient descent
+Important&nbsp;7: Optimal learning rate for gradient descent
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1196,61 +1544,13 @@ Solution
 </details>
 </div>
 </div>
-<div id="q-minibatch-size" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="optimisation" data-difficulty="3">
+<div id="q-mean-est" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="risk statistics exercise-sheet-4" data-difficulty="2">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;3: Optimal minibatch size for stochastic gradient descent <span class="advanced" title="Not examinable"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>(This question is intended only for students familiar with Lagrange multipliers.)</p>
-<p>Consider stochastic gradient descent as in <a href="../main/3-stochastic-optimisation.html#sec-sgd" class="quarto-xref"><span>Stochastic Gradient Descent</span></a>, where the stochastic gradients (<a href="../main/3-stochastic-optimisation.html#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>) are based on minibatches of size <span class="math inline">m</span>, so that the computational cost <span class="math inline">c(m)</span> of performing a fixed number of steps <span class="math inline">T</span> of stochastic gradient descent is <span class="math inline">mT</span> (measured in the number of calls to <span class="math inline">\nabla_{\boldsymbol{\theta}}f_{\boldsymbol{\theta}}</span>, the gradient of the machine learning model, whose evaluation is the main computational bottleneck).</p>
-<p>Letting <span class="math inline">B = B_0 m^{-1}</span> for some fixed constant <span class="math inline">B_0</span>, express the optimal learning rate <span class="math display">
-\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
-</span> from (<a href="../main/3-stochastic-optimisation.html#eq-optimal-learning-rate" class="quarto-xref">Equation&nbsp;<span>3.7</span></a>) as a function of the minibatch size <span class="math inline">m</span>.</p>
-<p>Hence, use Lagrange multipliers to show that the minibatch size <span class="math inline">m</span> which minimises the error bound in <a href="../main/3-stochastic-optimisation.html#thm-sgd" class="quarto-xref">Theorem&nbsp;<span>3.2</span></a> subject to a fixed total computational cost <span class="math inline">c(m) = C</span> is <span class="math inline">m \approx C / T</span>.</p>
-<p>Thus smaller minibatch sizes <span class="math inline">m</span> should be preferred when a larger number of steps <span class="math inline">T</span> of stochastic gradient descent are to be performed.</p>
-<details class="solution">
-<summary>
-Solution
-</summary>
-<p>Substituting the optimal learning rate into the overall error bound for stochastic gradient descent from <a href="../main/3-stochastic-optimisation.html#thm-sgd" class="quarto-xref">Theorem&nbsp;<span>3.2</span></a>, we get <span class="math display">
-\frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2} = \frac{B \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T}}.
-</span></p>
-<p>Letting <span class="math inline">B = B_0 m^{-1}</span>, this becomes <span class="math display">
-\frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m \sqrt{T}}.
-</span></p>
-<p>Minimising the error subject to the cost constraint can be achieved using a Lagrangian <span class="math display">
-\mathcal{L}(m,\lambda) = \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m\sqrt{T}} + \lambda ( m T - C )
-</span> where <span class="math inline">\lambda</span> is a Lagrange multiplier.</p>
-<p>The stationary point equations are: <span class="math display">
-\begin{aligned}
-0 = \nabla_m \mathcal{L} &amp; = - \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m^2\sqrt{T}} + \lambda T \\
-0 = \nabla_\lambda \mathcal{L} &amp; = mT - C
-\end{aligned}
-</span></p>
-<p>Rearranging the first, <span class="math display">
-m = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} }{ \lambda^{1/2} T^{3/4} }
-</span> and substituting this into the second, <span class="math display">
-\lambda^{1/2} = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} T^{1/4} }{C}.
-</span></p>
-<p>Putting this all together, <span class="math display">
-m = \frac{C}{T}.
-</span></p>
-<p>Since <span class="math inline">m</span> must be a positive integer, we conclude that <span class="math inline">m \approx C / T</span>.</p>
-</details>
-</div>
-</div>
-<div id="q-mean-est" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="empirical-risk-minimisation statistics" data-difficulty="2">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important&nbsp;4: Mean estimation as empirical risk minimisation
+Important&nbsp;8: Mean estimation as empirical risk minimisation
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1297,18 +1597,18 @@ f_n = \frac{1}{n} \sum_{i=1}^n y_i,
 </details>
 </div>
 </div>
-<div id="q-phys-informed" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-2" data-difficulty="2">
+<div id="q-phys-informed" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-2 regularisation" data-difficulty="2">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;5: Physics-informed machine learning
+Important&nbsp;9: Physics-informed machine learning
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>This exercise considers the problem of predicting spring displacement based on the force applied, following <a href="../main/2-machine-learning-models.html#exm-phys-informed" class="quarto-xref">Example&nbsp;<span>2.4</span></a>.</p>
-<p>A <code>pure' machine learning approach would just use data to learn a predictive model, while a</code>pure’ physics approach would use Hooke’s law of elasticity and attempt to learn the associated proportionality constant.</p>
+<p>A “pure” machine learning approach would just use data to learn a predictive model, while a “pure” physics approach would use Hooke’s law of elasticity and attempt to learn the associated proportionality constant.</p>
 <p>A physics-informed machine learning approach uses both the data and Hooke’s law, the latter entering as an additive regulariser on the empirical risk.</p>
 <p>Indeed, for a twice differentiable <span class="math inline">f : [0,1] \rightarrow \mathbb{R}</span>, consider the regulariser <span class="math display">
 \begin{align*}
@@ -1323,80 +1623,245 @@ Solution
 </details>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4" data-difficulty="0">
+<div id="q-convex-regularisation" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-2 regularisation" data-difficulty="2">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Stochastic gradient is unbiased
+Important&nbsp;10: Convex regularisation
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Let <span class="math inline">\{i_j\}_{j=1}^m</span> be a uniformly random subset of <span class="math inline">\{1,\dots,n\}</span>, either with or without replacement. Prove that <span class="math display">
-\hat{S} = \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j})
-</span> is an unbiased estimator of <span class="math display">
-S = \frac{1}{n} \sum_{i=1}^n h(\mathbf{w}_i).
-</span></p>
-<p>(This result implies that the stochastic gradient (<a href="../main/3-stochastic-optimisation.html#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>) is an unbiased estimator of the true gradient (<a href="../main/3-stochastic-optimisation.html#eq-erm-gradient" class="quarto-xref">Equation&nbsp;<span>3.2</span></a>), taking <span class="math inline">\mathbf{w}_i = (\mathbf{x}_i,\mathbf{y}_i)</span> and <span class="math inline">h(\mathbf{w}_i) = \nabla_{\boldsymbol{\theta}} L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i))</span>.)</p>
+<p>Show that the regulariser <span class="math inline">R(\boldsymbol{\theta}) = \lVert \boldsymbol{\theta} \rVert_s</span> is convex for each <span class="math inline">s \in \{1,2,\infty\}</span>. Conversely, show that <span class="math inline">\lVert \boldsymbol{\theta} \rVert_0</span> (i.e.&nbsp;the number of non-zero entries in <span class="math inline">\boldsymbol{\theta}</span>) is neither a norm nor convex.</p>
 <details class="solution">
 <summary>
 Solution
 </summary>
-<p>From linearity of expectation, <span class="math display">
-\mathbb{E}[\hat{S}] = \mathbb{E}\left[ \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j}) \right] = \frac{1}{m} \sum_{j=1}^m \mathbb{E}[ h(\mathbf{w}_{i_j}) ].
-</span></p>
-<p>Now, since the <span class="math inline">i_j</span> are uniformly distributed in <span class="math inline">\{1,\dots,n\}</span>, it follows that each <span class="math inline">\mathbf{w}_{i_j}</span> is uniformly distributed in <span class="math inline">\{\mathbf{w}_1,\dots,\mathbf{w}_n\}</span>. Thus <span class="math display">
-\mathbb{E}[ h(\mathbf{w}_{i_j}) ] = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k).
-</span></p>
-<p>Using this fact, we get <span class="math display">
-\mathbb{E}[\hat{S}] = \frac{1}{m} \sum_{j=1}^m \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = S,
-</span> which shows that <span class="math inline">\hat{S}</span> is an unbiased estimator for <span class="math inline">S</span>, as required.</p>
+<p>To show convexity of <span class="math inline">R</span>, we need to verify that <span class="math display">
+R\big(\lambda \boldsymbol{\theta} + (1-\lambda)\boldsymbol{\vartheta}\big)
+\le
+\lambda R(\boldsymbol{\theta}) + (1-\lambda) R(\boldsymbol{\vartheta})
+</span> for all <span class="math inline">\boldsymbol{\theta},\boldsymbol{\vartheta}\in\mathbb{R}^p</span> and all <span class="math inline">\lambda \in [0,1]</span>.</p>
+<p>Now, for <span class="math inline">s\in\{1,2,\infty\}</span> we know (or can check directly) that <span class="math inline">\lVert \cdot \rVert_s</span> is a norm. Hence we may use the triangle inequality and homogeneity: <span class="math display">
+\begin{aligned}
+\lVert \lambda \boldsymbol{\theta} + (1-\lambda)\boldsymbol{\vartheta} \rVert_s
+&amp;\le
+\lVert \lambda \boldsymbol{\theta} \rVert_s
++
+\lVert (1-\lambda)\boldsymbol{\vartheta} \rVert_s \\
+&amp;=
+\lambda \lVert \boldsymbol{\theta} \rVert_s
++
+(1-\lambda)\lVert \boldsymbol{\vartheta} \rVert_s,
+\end{aligned}
+</span> which is exactly the desired convexity inequality.</p>
+<p>(The triangle inequality for general <span class="math inline">1 \le s \le \infty</span> is known as <em>Minkowski’s inequality</em>.)</p>
+<p>To see that <span class="math inline">\lVert \cdot \rVert_0</span> is neither convex nor a norm, fix <span class="math inline">\lambda\in(0,1)</span> and take <span class="math inline">\boldsymbol{\theta}\neq \mathbf{0}</span>. Then <span class="math display">
+\lVert \lambda \boldsymbol{\theta} + (1-\lambda)\mathbf{0} \rVert_0
+=
+\lVert \lambda \boldsymbol{\theta} \rVert_0
+=
+\lVert \boldsymbol{\theta} \rVert_0,
+</span> whereas <span class="math display">
+\lambda \lVert \boldsymbol{\theta} \rVert_0 + (1-\lambda)\lVert \mathbf{0} \rVert_0
+=
+\lambda \lVert \boldsymbol{\theta} \rVert_0.
+</span> Since <span class="math inline">\lVert \boldsymbol{\theta} \rVert_0 \nleq \lambda \lVert \boldsymbol{\theta} \rVert_0</span> for <span class="math inline">\lambda\in(0,1)</span>, the convexity inequality fails, so <span class="math inline">\lVert \cdot \rVert_0</span> is not convex.</p>
+<p>Moreover, this same calculation shows it cannot be a norm: norms must satisfy homogeneity, <span class="math inline">\lVert \lambda \boldsymbol{\theta} \rVert = |\lambda| \lVert \boldsymbol{\theta} \rVert</span>, but <span class="math inline">\lVert \lambda \boldsymbol{\theta} \rVert_0 = \lVert \boldsymbol{\theta} \rVert_0</span> for all <span class="math inline">\lambda\neq 0</span>.</p>
 </details>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4" data-difficulty="0">
+<div id="q-pca" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-2 pca" data-difficulty="1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Optimal learning rate for gradient descent
+Important&nbsp;11: Principal component analysis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Obtain the optimal learning rate <span class="math display">
-\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
-</span> as claimed in (<a href="../main/3-stochastic-optimisation.html#eq-optimal-learning-rate" class="quarto-xref">Equation&nbsp;<span>3.7</span></a>), by finding the value of <span class="math inline">\epsilon</span> that minimises the bound from <a href="../main/3-stochastic-optimisation.html#thm-gd" class="quarto-xref">Theorem&nbsp;<span>3.1</span></a>.</p>
+<p>Find the first and second principal components for the following dataset: <span class="math display">
+\mathbf{D}
+=
+\begin{bmatrix}
+0.28 &amp; 0.05 \\
+1.58 &amp; 1.43 \\
+-2.52 &amp; -2.58 \\
+0.60 &amp; 0.86 \\
+0.06 &amp; 0.24
+\end{bmatrix}.
+</span> How much of the variance is explained by the first principal component? Interpret your results in non-technical language.</p>
 <details class="solution">
 <summary>
 Solution
 </summary>
-<p>From <a href="../main/3-stochastic-optimisation.html#thm-gd" class="quarto-xref">Theorem&nbsp;<span>3.1</span></a> we have the bound <span class="math display">
-\frac{1}{T}\sum_{t=0}^{T-1} F(\boldsymbol{\theta}_t) - F(\boldsymbol{\theta}_\star) \leq \underbrace{ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2} }_{r(\epsilon)}
-</span> and we wish to find the value of the learning rate <span class="math inline">\epsilon</span> that minimises the right hand side <span class="math inline">r(\epsilon)</span> of this bound.</p>
-<p>Differentiating with respect to <span class="math inline">\epsilon</span>, <span class="math display">
-\nabla r(\epsilon) = \nabla_{\epsilon} \left[ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2} \right] = - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T} + \frac{B^2}{2}.
+<p>First note that the data are already centred: the column totals are <span class="math inline">0</span>.</p>
+<p>The sample covariance matrix (using <span class="math inline">1/n</span>) is therefore <span class="math display">
+\frac{1}{n}\mathbf{D}^\top \mathbf{D}
+=
+\begin{bmatrix}
+1.86 &amp; 1.86 \\
+1.86 &amp; 1.90
+\end{bmatrix}.
 </span></p>
-<p>Setting this expression equal to <span class="math inline">0</span> and rearranging, we obtain the claimed result.</p>
-<p>To confirm this is a minimiser we can differentiate a second time, to see that <span class="math display">
-\nabla^2 r(\epsilon) = \nabla_{\epsilon} \left[ - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T} + \frac{B^2}{2} \right] = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{\epsilon^3 T} &gt; 0,
-</span> as required.</p>
+<p>The eigendecomposition of this matrix is <span class="math display">
+\lambda_1 = 3.74,
+\qquad
+\mathbf{a}_1 =
+\begin{bmatrix}
+0.70 \\
+0.71
+\end{bmatrix},
+\qquad
+\lambda_2 = 0.02,
+\qquad
+\mathbf{a}_2 =
+\begin{bmatrix}
+-0.71 \\
+0.70
+\end{bmatrix}.
+</span></p>
+<p>The first principal component direction is <span class="math inline">\mathbf{a}_1</span> and the second is <span class="math inline">\mathbf{a}_2</span>.</p>
+<p>The proportion of variance explained by the first principal component is <span class="math display">
+\frac{\lambda_1}{\lambda_1 + \lambda_2}
+=
+0.99.
+</span></p>
+<p>In non-technical language: almost all of the variation in the data can be described by movement along a single diagonal line — the points lie very tightly around the <span class="math inline">x \approx y</span> direction.</p>
 </details>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4" data-difficulty="2">
+<div id="q-quadratic-kernel" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-2 kernel" data-difficulty="2">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Optimal minibatch size for stochastic gradient descent <span class="advanced" title="Advanced content for 4th year students"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>
+Important&nbsp;12: Quadratic kernel <span class="advanced" title="MAS8607 content"><i class="fa-solid fa-star" aria-label="star"></i></span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Express the quadratic kernel <span class="math display">
+k(x,x') = (1 + x x')^2
+</span> as a feature space inner product <span class="math display">
+k(x,x') = \langle \boldsymbol{\phi}(x), \boldsymbol{\phi}(x') \rangle.
+</span></p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>There is no unique solution, but there is a most natural one. Expanding the square gives <span class="math display">
+k(x,x') = 1 + 2xx' + x^2(x')^2.
+</span></p>
+<p>We can realise this as an inner product by defining <span class="math display">
+\boldsymbol{\phi}(x)
+=
+\begin{bmatrix}
+1 \\
+\sqrt{2}\,x \\
+x^2
+\end{bmatrix},
+\qquad
+\boldsymbol{\phi}(x')
+=
+\begin{bmatrix}
+1 \\
+\sqrt{2}\,x' \\
+(x')^2
+\end{bmatrix}.
+</span></p>
+<p>Then <span class="math display">
+\langle \boldsymbol{\phi}(x), \boldsymbol{\phi}(x') \rangle
+=
+1\cdot 1
++
+(\sqrt{2}x)(\sqrt{2}x')
++
+x^2(x')^2
+=
+1 + 2xx' + x^2(x')^2
+=
+k(x,x').
+</span></p>
+<p>Other solutions correspond to re-ordering the features, or simple rescalings/splittings (e.g.&nbsp;replacing the feature <span class="math inline">x^2</span> with two copies of <span class="math inline">\frac{1}{\sqrt{2}}x^2</span>).</p>
+</details>
+</div>
+</div>
+<div id="q-multivariate-gaussian-kernel" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-2 kernel" data-difficulty="3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;13: Multivariate Gaussian kernel <span class="advanced" title="MAS8607 content"><i class="fa-solid fa-star" aria-label="star"></i></span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Express the multivariate Gaussian kernel <span class="math display">
+k(\mathbf{x},\mathbf{x}')
+=
+\exp\!\big(-\alpha \lVert \mathbf{x} - \mathbf{x}' \rVert^2\big)
+</span> as a feature space inner product.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>From <a href="../main/2-machine-learning-models.html#exr-gaussian-kernel" class="quarto-xref">Exercise&nbsp;<span>2.3</span></a> we know that, in one dimension, <span class="math display">
+\exp\!\big(-\alpha(x-x')^2\big)
+=
+\sum_{l=0}^\infty \phi_l(x)\,\phi_l(x'),
+\qquad
+\phi_l(x)
+=
+\sqrt{\frac{(2\alpha)^l}{l!}}\,
+x^l \exp(-\alpha x^2).
+</span></p>
+<p>Now note that <span class="math display">
+\lVert \mathbf{x} - \mathbf{x}' \rVert^2
+=
+\sum_{i=1}^d (x_i - x_i')^2,
+</span> so we can factorise the multivariate kernel as <span class="math display">
+k(\mathbf{x},\mathbf{x}')
+=
+\exp\!\left(-\alpha \sum_{i=1}^d (x_i-x_i')^2\right)
+=
+\prod_{i=1}^d \exp\!\big(-\alpha(x_i-x_i')^2\big).
+</span></p>
+<p>Substituting the 1D expansion into each factor gives <span class="math display">
+\begin{aligned}
+k(\mathbf{x},\mathbf{x}')
+&amp;=
+\prod_{i=1}^d \sum_{l=0}^\infty \phi_l(x_i)\,\phi_l(x_i') \\
+&amp;=
+\sum_{\boldsymbol{\ell}=(\ell_1,\dots,\ell_d)\in\mathbb{N}_0^d}
+\underbrace{\big[\phi_{\ell_1}(x_1)\cdots \phi_{\ell_d}(x_d)\big]}_{\phi_{\boldsymbol{\ell}}(\mathbf{x})}
+\underbrace{\big[\phi_{\ell_1}(x_1')\cdots \phi_{\ell_d}(x_d')\big]}_{\phi_{\boldsymbol{\ell}}(\mathbf{x}')}.
+\end{aligned}
+</span></p>
+<p>This has the form <span class="math display">
+k(\mathbf{x},\mathbf{x}')
+=
+\sum_{\boldsymbol{\ell}\in\mathbb{N}_0^d}
+\phi_{\boldsymbol{\ell}}(\mathbf{x})\,
+\phi_{\boldsymbol{\ell}}(\mathbf{x}'),
+</span> which we can interpret as an (infinite-dimensional) feature-space inner product <span class="math inline">\langle \boldsymbol{\phi}(\mathbf{x}), \boldsymbol{\phi}(\mathbf{x}') \rangle</span>, where the coordinates of <span class="math inline">\boldsymbol{\phi}(\mathbf{x})</span> are indexed by multi-indices <span class="math inline">\boldsymbol{\ell}\in\mathbb{N}_0^d</span> and given by <span class="math inline">\phi_{\boldsymbol{\ell}}(\mathbf{x})</span>.</p>
+</details>
+</div>
+</div>
+<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4 stochastic-gradient-descent" data-difficulty="2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Optimal minibatch size for stochastic gradient descent <span class="advanced" title="Non-Examinable content."><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>(This question is intended only for students familiar with Lagrange multipliers.)</p>
-<p>Consider stochastic gradient descent as in <span class="citation" data-cites="algo-sgd">(<a href="#ref-algo-sgd" role="doc-biblioref"><strong>algo-sgd?</strong></a>)</span>, where the stochastic gradients (<a href="../main/3-stochastic-optimisation.html#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>) are based on minibatches of size <span class="math inline">m</span>, so that the computational cost <span class="math inline">c(m)</span> of performing a fixed number of steps <span class="math inline">T</span> of stochastic gradient descent is <span class="math inline">mT</span> (measured in the number of calls to <span class="math inline">\nabla_{\boldsymbol{\theta}}f_{\boldsymbol{\theta}}</span>, the gradient of the machine learning model, whose evaluation is the main computational bottleneck).</p>
+<p>Consider stochastic gradient descent as in <a href="../main/3-stochastic-optimisation.html#sec-sgd" class="quarto-xref"><span>Stochastic Gradient Descent</span></a>, where the stochastic gradients (<a href="../main/3-stochastic-optimisation.html#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>) are based on minibatches of size <span class="math inline">m</span>, so that the computational cost <span class="math inline">c(m)</span> of performing a fixed number of steps <span class="math inline">T</span> of stochastic gradient descent is <span class="math inline">mT</span> (measured in the number of calls to <span class="math inline">\nabla_{\boldsymbol{\theta}}f_{\boldsymbol{\theta}}</span>, the gradient of the machine learning model, whose evaluation is the main computational bottleneck).</p>
 <p>Letting <span class="math inline">B = B_0 m^{-1}</span> for some fixed constant <span class="math inline">B_0</span>, express the optimal learning rate <span class="math display">
 \epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
 </span> from (<a href="../main/3-stochastic-optimisation.html#eq-optimal-learning-rate" class="quarto-xref">Equation&nbsp;<span>3.7</span></a>) as a function of the minibatch size <span class="math inline">m</span>.</p>
@@ -1433,61 +1898,297 @@ m = \frac{C}{T}.
 </details>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4" data-difficulty="1">
+<div id="q-ml-tasks-2" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-5 learning-tasks" data-difficulty="0">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Mean estimation as empirical risk minimisation
+Important&nbsp;14: Machine learning tasks
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The aim of this exercise is to see how estimating the mean of a probability distribution can be cast within the empirical risk minimisation framework.</p>
-<p>Let <span class="math inline">Y \sim P</span>. Our aim is to estimate the mean of <span class="math inline">P</span> from <span class="math inline">n</span> independent observations of <span class="math inline">Y</span>, which we denote <span class="math inline">\{y_i\}_{i=1}^n</span>. To do so we introduce the squared error loss <span class="math inline">L(y,y') = (y-y')^2</span> and the “trivial” machine learning model <span class="math inline">\mathcal{F} = \mathbb{R}</span>.</p>
-<ol type="a">
-<li>Show that the (population) risk <span class="math inline">\mathcal{R}(\cdot)</span> is minimised at <span class="math inline">f_\star = \mathbb{E}_{Y \sim P}[Y]</span>, the mean of <span class="math inline">P</span>.</li>
-<li>Compute the empirical risk minimiser <span class="math inline">f_n \in \mathcal{F}</span>.</li>
-<li>What is the generalisation error of <span class="math inline">f_n</span>?</li>
-<li>Show that the expected generalisation error is <span class="math inline">\frac{1}{n} \mathbb{V}[Y]</span> where <span class="math inline">\mathbb{V}[Y]</span> is the variance of <span class="math inline">P</span>.</li>
-<li>How many samples <span class="math inline">n</span> are needed to guarantee an expected generalisation error smaller than <span class="math inline">\epsilon</span>? (Recall this is the <em>sample complexity</em> of the empirical risk minimiser, telling us how much data we need to achieve a certain level of generalisation performance.)</li>
+<p>For each of the following, state whether the task is <em>supervised learning</em>, <em>semi-supervised learning</em> or <em>unsupervised learning</em>, and whether it is <em>online learning</em> or <em>offline learning</em>.</p>
+<ol type="1">
+<li><p>Predicting house prices using a dataset of past homes with sale prices provided.</p></li>
+<li><p>Grouping news articles into topics when no labels are given.</p></li>
+<li><p>A spam filter that is initially trained on a small set of labelled emails but then improves as it receives many more unlabelled emails.</p></li>
+<li><p>Clustering customer purchasing behaviour to find market segments.</p></li>
+<li><p>A real-time recommendation system that updates its model with every new user click event.</p></li>
+<li><p>Training a text sentiment classifier using a small labelled dataset plus a large unlabelled corpus.</p></li>
+<li><p>A financial model that updates its predictions as each new tick of stock-price data arrives.</p></li>
 </ol>
 <details class="solution">
 <summary>
 Solution
 </summary>
-<p>The (population) risk is <span class="math display">
-\mathcal{R}(f) = \mathbb{E}_{Y \sim P} [L(Y,f)] = \mathbb{E}_{Y \sim P} [ (Y-f)^2 ] = \mathbb{E}_{Y \sim P}[Y^2] - 2 f \mathbb{E}_{Y \sim P}[Y] + f^2,
-</span> and this quadratic (in <span class="math inline">f</span>) is minimised at <span class="math inline">f_\star = \mathbb{E}_{Y \sim P}[Y]</span>.</p>
-<p>The empirical risk is <span class="math display">
-\mathcal{R}_n(f) = \frac{1}{n} \sum_{i=1}^n L(y_i,f) = \frac{1}{n} \sum_{i=1}^n (y_i - f)^2 = \left( \frac{1}{n} \sum_{i=1}^n y_i^2 \right) - 2 f \left( \frac{1}{n} \sum_{i=1}^n y_i \right) + f^2
-</span> and this quadratic (in <span class="math inline">f</span>) is minimised at <span class="math display">
-f_n = \frac{1}{n} \sum_{i=1}^n y_i,
-</span> the arithmetic mean of the dataset.</p>
-<p>The generalisation error is <span class="math display">
-\begin{aligned}
-\mathcal{R}(f_n) - \mathcal{R}(f_\star) &amp; = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n \mathbb{E}_{Y \sim P}[Y] + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_\star \mathbb{E}_{Y \sim P}[Y] + f_\star^2 \} \\
-&amp; = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n f_\star + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - f_\star^2 \} \\
-&amp; = f_\star^2 - 2 f_n f_\star + f_n^2 \\
-&amp; = (f_\star - f_n)^2.
-\end{aligned}
+<ol type="1">
+<li><p>Supervised learning, offline learning.</p></li>
+<li><p>Unsupervised learning, offline learning.</p></li>
+<li><p>Semi-supervised learning, online learning.</p></li>
+<li><p>Unsupervised learning, offline learning.</p></li>
+<li><p>Supervised learning, online learning.</p></li>
+<li><p>Semi-supervised learning, offline learning.</p></li>
+<li><p>Supervised learning, online learning.</p></li>
+</ol>
+<p>Of course, there is scope for interpretation in a question like this, and other categorisations may also be valid. The important point is to understand the meaning of the terms involved.</p>
+</details>
+</div>
+</div>
+<div id="q-epsilon-greedy-bandits" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-5 bandits reinforcement-learning" data-difficulty="2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;15: <span class="math inline">\epsilon</span>-greedy bandits
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider a 4-armed bandit, with arms labelled <span class="math inline">\{1,2,3,4\}</span>. Your friend is playing the <span class="math inline">\epsilon</span>-greedy strategy, meaning that at time <span class="math inline">t</span>, with probability <span class="math inline">1-\epsilon</span> they play the bandit from which they have so far received the highest average reward, and with probability <span class="math inline">\epsilon</span> they play a bandit chosen uniformly at random instead.</p>
+<p>The bandit they choose to play is denoted <span class="math inline">B_t</span> and the reward they receive is denoted <span class="math inline">R_t</span>.</p>
+<p>Your friend has no knowledge about which bandit is best at the outset and therefore assumes each bandit returns zero reward on average, until it has been tried.</p>
+<p>Here is what happens next:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">t</span></th>
+<th style="text-align: center;"><span class="math inline">B_t</span></th>
+<th style="text-align: center;"><span class="math inline">R_t</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><span class="math inline">-1</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><span class="math inline">1</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><span class="math inline">-2</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><span class="math inline">2</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><span class="math inline">0</span></td>
+</tr>
+</tbody>
+</table>
+<p>On some of these time steps the <span class="math inline">\epsilon</span> case may have occurred, causing your friend to select a random bandit.</p>
+<ul>
+<li>At which times <span class="math inline">t</span> did this <em>definitely</em> happen?</li>
+<li>At which times <span class="math inline">t</span> did this <em>definitely not</em> happen?</li>
+</ul>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>The final part of this question is a trick: we can never rule out the possibility of the <span class="math inline">\epsilon</span> case, because your friend could have selected the greedy bandit purely by chance.</p>
+<p>To infer which time steps must have been <span class="math inline">\epsilon</span> steps, suppose instead that we ourselves follow a purely greedy strategy and compare this behaviour with what actually happened.</p>
+<p>After the first iteration, we have evidence that bandit <span class="math inline">1</span> performs worse than expected, since <span class="math inline">B_1=1</span> and <span class="math inline">R_1=-1</span>. We would therefore select one of the remaining bandits next, and we may take <span class="math inline">B_2=2</span>.</p>
+<p>The reward <span class="math inline">R_2=1</span> is encouraging, so we now believe that bandit <span class="math inline">2</span> is best. A greedy strategy therefore plays bandit <span class="math inline">2</span> again, giving <span class="math inline">B_3=2</span>. The reward is now <span class="math inline">R_3=-2</span>, so the empirical mean reward of bandit <span class="math inline">2</span> becomes <span class="math display">
+\frac{1}{2}(1-2)=-\frac{1}{2}.
 </span></p>
-<p>Let <span class="math inline">Y_i</span> be a random variable representing the <span class="math inline">i</span>th element of the dataset. The expected generalisation error is thus <span class="math display">
-\begin{aligned}
-\mathbb{E}[ \mathcal{R}(f_n) - \mathcal{R}(f_\star) ]
-&amp; = \mathbb{E}[ (f_\star - f_n)^2 ] \\
-&amp; = \mathbb{E}\left[ \left( \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y] \right)^2 \right] \\
-&amp; = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y] \right] \\
-&amp; = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i \right] \\
-&amp; = \frac{1}{n} \mathbb{V}[Y]
-\end{aligned}
-</span> where the final line follows from the properties <span class="math inline">\mathbb{V}[cY] = c^2 \mathbb{V}[Y]</span> and <span class="math inline">\mathbb{V}[Y_i + Y_j] = \mathbb{V}[Y_i] + \mathbb{V}[Y_j]</span> whenever <span class="math inline">i \neq j</span>, since then <span class="math inline">Y_i</span> and <span class="math inline">Y_j</span> are independent.</p>
-<p>To ensure an expected generalisation error less than <span class="math inline">\epsilon</span> we therefore need <span class="math inline">n &gt; \mathbb{V}[Y] / \epsilon</span> number of independent samples in the dataset.</p>
+<p>At this point, a greedy strategy would switch to one of bandits <span class="math inline">3</span> or <span class="math inline">4</span>. However, your friend instead played <span class="math inline">B_4=2</span>. We therefore infer that time <span class="math inline">t=4</span> must have been an <span class="math inline">\epsilon</span> step.</p>
+<p>The reward is <span class="math inline">R_4=2</span>, and the empirical mean reward of bandit <span class="math inline">2</span> becomes <span class="math display">
+\frac{1}{3}(1-2+2)=\frac{1}{3},
+</span> which is now the best option available.</p>
+<p>A greedy strategy would therefore play bandit <span class="math inline">2</span> again at the next step. Instead, your friend chose <span class="math inline">B_5=3</span>, so time <span class="math inline">t=5</span> must also have been an <span class="math inline">\epsilon</span> step.</p>
+<p>In summary, the <span class="math inline">\epsilon</span> case definitely occurred at iterations <span class="math inline">t=4</span> and <span class="math inline">t=5</span>. At no iteration can we be certain that the <span class="math inline">\epsilon</span> case did not occur.</p>
+</details>
+</div>
+</div>
+<div id="q-kmeans" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-5 clustering" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;16: <span class="math inline">k</span>-means
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Cluster the data <span class="math inline">\{1,2,\dots,10\}</span> into <span class="math inline">k=2</span> clusters by performing <span class="math inline">k</span>-means by hand, with the centroids initialised at <span class="math inline">c_1=1</span> and <span class="math inline">c_2=2</span>. What is the fewest number of iterations needed for convergence of the cluster assignment?</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p><strong>Iteration 1.</strong><br>
+Each data point is assigned to the nearest centroid, so <span class="math inline">\{1\}</span> is assigned to <span class="math inline">c_1</span> and <span class="math inline">\{2,3,\dots,10\}</span> are assigned to <span class="math inline">c_2</span>. The centroids are updated to <span class="math inline">c_1=1</span> and <span class="math inline">c_2=6</span>.</p>
+<p><strong>Iteration 2.</strong><br>
+Now <span class="math inline">\{1,2,3\}</span> are assigned to <span class="math inline">c_1</span> and <span class="math inline">\{4,5,6,7,8,9,10\}</span> to <span class="math inline">c_2</span>. The centroids become <span class="math inline">c_1=2</span> and <span class="math inline">c_2=7</span>.</p>
+<p><strong>Iteration 3.</strong><br>
+We assign <span class="math inline">\{1,2,3,4\}</span> to <span class="math inline">c_1</span> and <span class="math inline">\{5,6,7,8,9,10\}</span> to <span class="math inline">c_2</span>. The centroids update to <span class="math inline">c_1=2.5</span> and <span class="math inline">c_2=7.5</span>.</p>
+<p><strong>Iteration 4.</strong><br>
+The datum <span class="math inline">5</span> lies exactly half way between <span class="math inline">c_1</span> and <span class="math inline">c_2</span>, and may therefore be assigned to either cluster. Since we are interested in the <em>fewest</em> number of iterations needed for convergence, we assign it to the first cluster.</p>
+<p>This yields the assignments <span class="math inline">\{1,2,3,4,5\}</span> and <span class="math inline">\{6,7,8,9,10\}</span>, with updated centroids <span class="math inline">c_1=3</span> and <span class="math inline">c_2=8</span>.</p>
+<p>After 4 iterations, the <span class="math inline">k</span>-means algorithm has converged: neither the cluster assignments nor the centroids change under further iterations.</p>
+</details>
+</div>
+</div>
+<div id="q-score-matching-ml" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-5 energy-based-models estimation" data-difficulty="3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;17: Score matching and maximum likelihood <span class="advanced" title="MAS8607 content"><i class="fa-solid fa-star" aria-label="star"></i></span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">P_{\boldsymbol{\theta}}=\mathcal{N}(\boldsymbol{\mu},\boldsymbol{\Sigma})</span> be a generative model for the dataset <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n</span>, where the parameters <span class="math inline">\boldsymbol{\theta}</span> include the mean vector <span class="math inline">\boldsymbol{\mu}</span> and the covariance matrix <span class="math inline">\boldsymbol{\Sigma}</span>.</p>
+<p>Recall that the maximum likelihood estimator for <span class="math inline">\boldsymbol{\mu}</span> is the sample mean of the data and that the maximum likelihood estimator for <span class="math inline">\boldsymbol{\Sigma}</span> is the sample covariance.</p>
+<p>Show that, for this model, the score-matching estimator and the maximum likelihood estimator coincide.</p>
+<p><em>Hint.</em><br>
+It may be easier to work with the <em>precision matrix</em> <span class="math inline">\boldsymbol{\Omega}=\boldsymbol{\Sigma}^{-1}</span>. Useful identities include <span class="math display">
+\partial_{\boldsymbol{\mu}}
+(\mathbf{x}-\boldsymbol{\mu})^\top
+\boldsymbol{\Omega}^2
+(\mathbf{x}-\boldsymbol{\mu})
+=
+-2\boldsymbol{\Omega}^2(\mathbf{x}-\boldsymbol{\mu}),
+</span> <span class="math display">
+\partial_{\boldsymbol{\Omega}}\operatorname{tr}(\boldsymbol{\Omega})=\mathbf{I},
+\qquad
+\partial_{\boldsymbol{\Omega}}
+\mathbf{a}^\top\boldsymbol{\Omega}^2\mathbf{b}
+=
+2\boldsymbol{\Omega}\mathbf{b}\mathbf{a}^\top .
+</span></p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Using the multivariate normal log-density (see <a href="../main/1-overview-of-machine-learning.html#exr-mvn" class="quarto-xref">Exercise&nbsp;<span>1.2</span></a>), <span class="math display">
+\log p_{\boldsymbol{\theta}}(\mathbf{x})
+=
+-\tfrac12(\mathbf{x}-\boldsymbol{\mu})^\top
+\boldsymbol{\Sigma}^{-1}
+(\mathbf{x}-\boldsymbol{\mu})
++
+C_{\boldsymbol{\theta}},
+</span> where <span class="math inline">C_{\boldsymbol{\theta}}</span> does not depend on <span class="math inline">\mathbf{x}</span>, we obtain <span class="math display">
+(\nabla_{\mathbf{x}}\log p_{\boldsymbol{\theta}})(\mathbf{x})
+=
+-\boldsymbol{\Sigma}^{-1}(\mathbf{x}-\boldsymbol{\mu}),
+\qquad
+(\Delta_{\mathbf{x}}\log p_{\boldsymbol{\theta}})(\mathbf{x})
+=
+-\operatorname{tr}(\boldsymbol{\Sigma}^{-1}).
+</span></p>
+<p>The score-matching objective is therefore <span class="math display">
+\arg\min_{\boldsymbol{\theta}}
+\;
+\frac{1}{n}\sum_{i=1}^n
+\lVert
+\boldsymbol{\Sigma}^{-1}(\mathbf{x}_i-\boldsymbol{\mu})
+\rVert^2
+-
+2\,\operatorname{tr}(\boldsymbol{\Sigma}^{-1}).
+</span></p>
+<p>Writing <span class="math inline">\boldsymbol{\Omega}=\boldsymbol{\Sigma}^{-1}</span>, this can be expressed as <span class="math display">
+\arg\min_{\boldsymbol{\mu},\boldsymbol{\Omega}}
+\;
+J(\boldsymbol{\mu},\boldsymbol{\Omega})
+=
+\frac{1}{n}\sum_{i=1}^n
+\lVert
+\boldsymbol{\Omega}(\mathbf{x}_i-\boldsymbol{\mu})
+\rVert^2
+-
+2\,\operatorname{tr}(\boldsymbol{\Omega}).
+</span></p>
+<p>Differentiating and setting the gradients to zero gives <span class="math display">
+\mathbf{0}
+=
+\nabla_{\boldsymbol{\mu}}J
+=
+-\frac{2}{n}\sum_{i=1}^n
+\boldsymbol{\Omega}^2(\mathbf{x}_i-\boldsymbol{\mu}),
+</span> and <span class="math display">
+\mathbf{0}
+=
+\nabla_{\boldsymbol{\Omega}}J
+=
+\frac{2}{n}\sum_{i=1}^n
+\boldsymbol{\Omega}(\mathbf{x}_i-\boldsymbol{\mu})
+(\mathbf{x}_i-\boldsymbol{\mu})^\top
+-
+2\mathbf{I}.
+</span></p>
+<p>Rearranging yields <span class="math display">
+\boldsymbol{\mu}
+=
+\frac{1}{n}\sum_{i=1}^n\mathbf{x}_i,
+\qquad
+\boldsymbol{\Sigma}
+=
+\boldsymbol{\Omega}^{-1}
+=
+\frac{1}{n}\sum_{i=1}^n
+(\mathbf{x}_i-\boldsymbol{\mu})
+(\mathbf{x}_i-\boldsymbol{\mu})^\top .
+</span></p>
+<p>These are exactly the sample mean and sample covariance. Hence, for a multivariate Gaussian model, the score-matching estimator coincides with the maximum likelihood estimator.</p>
+</details>
+</div>
+</div>
+<div id="q-ethical-considerations" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-5 ethics" data-difficulty="1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;18: Ethical considerations
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After graduating from Newcastle University you join a tech start-up that wants you to develop a machine learning model capable of automatically ranking candidates for a given job advert. Only the top-<span class="math inline">k</span> ranked candidates will be interviewed. The ranking should be determined solely from the content of the job advert and the content of candidates’ LinkedIn profiles.</p>
+<p>Describe some of the ethical issues that might arise in this context.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Some relevant considerations include:</p>
+<ul>
+<li><p><strong>Training data and consent.</strong><br>
+Historical recruitment data (for example, previous short-listing decisions) would be required for training and should only be used with appropriate consent.</p></li>
+<li><p><strong>Fairness.</strong><br>
+The training data may not be representative of the population of future applicants. If this is the case, the resulting model may perpetuate or amplify existing biases.</p></li>
+<li><p><strong>Responsibility.</strong><br>
+What safeguards will prevent the system from recommending inappropriate rankings? Should a human decision-maker always review the output?</p></li>
+<li><p><strong>Transparency.</strong><br>
+Will candidates be informed about how interview decisions were made, and can meaningful explanations be provided?</p></li>
+<li><p><strong>Inequality.</strong><br>
+Is it fair to base decisions solely on LinkedIn profiles? Could this disadvantage particular groups of candidates?</p></li>
+<li><p><strong>Veracity.</strong><br>
+Information on LinkedIn may be incomplete, outdated or inaccurate.</p></li>
+</ul>
+<p>These points are not exhaustive, but they highlight some of the key issues that arise when deploying machine learning systems in hiring.</p>
 </details>
 </div>
 </div>
 
 
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p><a href="#q-nn-linear-model" class="quarto-xref">Question&nbsp;<span>4</span></a> serves as a cautionary tale against the use of the identity activation function: there would be no need to use such a neural network when we can simply use a linear model.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>This question is based on a real machine learning task, and machine learning classifiers for skin lesions have been <a href="https://www.dermasensor.com">approved for clinical use</a> in the USA.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>This result implies that the stochastic gradient (<a href="../main/3-stochastic-optimisation.html#eq-stoch-grad" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>) is an unbiased estimator of the true gradient (<a href="../main/3-stochastic-optimisation.html#eq-erm-gradient" class="quarto-xref">Equation&nbsp;<span>3.2</span></a>), taking <span class="math inline">\mathbf{w}_i = (\mathbf{x}_i,\mathbf{y}_i)</span> and <span class="math inline">h(\mathbf{w}_i) = \nabla_{\boldsymbol{\theta}} L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i))</span>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 
 </main> <!-- /main -->
 <script>
@@ -4845,7 +5546,7 @@ if (document.body.classList.contains('reading-mode')) {
 
 </script>
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImJvZHlGb250ID0gZ2V0Q29tcHV0ZWRTdHlsZShkb2N1bWVudC5ib2R5KS5mb250RmFtaWx5XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIvLyByZWFjdGl2ZSB2YXJzICh2aXNpYmxlIHRvIGxhdGVyIGNlbGxzKVxuYWxsUXVlc3Rpb25zID0gQXJyYXkuZnJvbShkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCcucXVlc3Rpb24nKSlcblxuYWxsVGFncyA9IEFycmF5LmZyb20obmV3IFNldChcbiAgYWxsUXVlc3Rpb25zLmZsYXRNYXAoZWwgPT4gKGVsLmRhdGFzZXQudGFncyB8fCBcIlwiKVxuICAgIC5zcGxpdCgvXFxzKy8pLm1hcCh0ID0+IHQudHJpbSgpKS5maWx0ZXIoQm9vbGVhbikpXG4pKS5zb3J0KClcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IntcbiAgZm9yIChjb25zdCBlbCBvZiBhbGxRdWVzdGlvbnMpIHtcbiAgICAvLyAtLS0gVGFnYmFyICh1bmNoYW5nZWQpIC0tLVxuICAgIGlmICghZWwucXVlcnlTZWxlY3RvcignLnRhZ2JhcicpKSB7XG4gICAgICBjb25zdCB0YWdzID0gKGVsLmRhdGFzZXQudGFncyB8fCBcIlwiKS5zcGxpdCgvXFxzKy8pLmZpbHRlcihCb29sZWFuKTtcbiAgICAgIGNvbnN0IGJhciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuICAgICAgYmFyLmNsYXNzTmFtZSA9ICd0YWdiYXInO1xuICAgICAgYmFyLmFwcGVuZCguLi50YWdzLm1hcCh0ID0+IE9iamVjdC5hc3NpZ24oZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnc3BhbicpLCB7XG4gICAgICAgIGNsYXNzTmFtZTogJ3RhZycsIHRleHRDb250ZW50OiB0XG4gICAgICB9KSkpO1xuICAgICAgZWwuYXBwZW5kQ2hpbGQoYmFyKTtcbiAgICB9XG5cbiAgICAvLyAtLS0gRGlmZmljdWx0eSBwZXBwZXJzIGluIGhlYWRlciAoUkhTKSAtLS1cbiAgICBjb25zdCBoZWFkZXIgPSBlbC5xdWVyeVNlbGVjdG9yKCcuY2FsbG91dC1oZWFkZXInKTtcbiAgICBpZiAoaGVhZGVyICYmICFoZWFkZXIucXVlcnlTZWxlY3RvcignLmRpZmZpY3VsdHktcGVwcGVycycpKSB7XG4gICAgICBjb25zdCBsZXZlbCA9IE51bWJlcihlbC5kYXRhc2V0LmRpZmZpY3VsdHkgPz8gMCk7XG5cbiAgICAgIC8vIEFsd2F5cyBzaG93LCBidXQgb25seSBhZGQgcGVwcGVycyBpZiA+MFxuICAgICAgY29uc3Qgc3BhbiA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NwYW4nKTtcbiAgICAgIHNwYW4uY2xhc3NOYW1lID0gYGRpZmZpY3VsdHktcGVwcGVycyBsZXZlbC0ke2xldmVsfWA7XG4gICAgICBzcGFuLnNldEF0dHJpYnV0ZSgnYXJpYS1sYWJlbCcsIGBEaWZmaWN1bHR5ICR7bGV2ZWx9YCk7XG4gICAgICBzcGFuLnRleHRDb250ZW50ID0gbGV2ZWwgPiAwID8gYCgkeyBcIvCfjLZcIi5yZXBlYXQobGV2ZWwpIH0pYCA6IFwiKCApXCI7XG4gICAgICBoZWFkZXIuYXBwZW5kQ2hpbGQoc3Bhbik7XG4gICAgfVxuICB9XG4gIHJldHVybiBodG1sYGAgIC8vIHNpbGVuY2Vcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiB0eXBlZCA9IHtcbiAgLy8gLS0tIERPTVxuICBjb25zdCB3cmFwcGVyID0gaHRtbGA8ZGl2IGNsYXNzPVwidG9rZW4tYXV0b2NvbXBsZXRlXCI+PC9kaXY+YDtcbiAgY29uc3QgbGFiZWxFbCA9IGh0bWxgPGxhYmVsIGNsYXNzPVwidG9rZW4tbGFiZWxcIj5GaWx0ZXIgYnkgdGFncyAodHlwZSwgc3BhY2Utc2VwYXJhdGVkKTo8L2xhYmVsPmA7XG4gIGNvbnN0IGlucHV0ICAgPSBodG1sYDxpbnB1dCBjbGFzcz1cInRva2VuLWlucHV0XCIgdHlwZT1cInRleHRcIiBwbGFjZWhvbGRlcj1cImUuZy4gYmF5ZXMgcHJvYmFiaWxpdHlcIj5gO1xuICB3cmFwcGVyLmFwcGVuZChsYWJlbEVsLCBpbnB1dCk7XG5cbiAgLy8gLS0tIFBPUlRBTDogc3VnZ2VzdGlvbnMgbGlzdCBsaXZlcyBhdCBkb2N1bWVudC5ib2R5IHNvIGl0IGNhbiBvdmVybGF5IGV2ZXJ5dGhpbmdcbiAgY29uc3QgbGlzdCA9IGh0bWxgPGRpdiBjbGFzcz1cInRva2VuLXN1Z2dlc3Rpb25zXCIgcm9sZT1cImxpc3Rib3hcIiBoaWRkZW4+PC9kaXY+YDtcbiAgZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZChsaXN0KTtcblxuICAvLyBNYWtlIHN1cmUgaXQgZmxvYXRzIGFib3ZlIGFsbCBjb250ZW50XG4gIGxpc3Quc3R5bGUucG9zaXRpb24gPSBcImZpeGVkXCI7XG4gIGxpc3Quc3R5bGUuekluZGV4ID0gXCI5OTk5XCI7IC8vIGhpZ2ggei1pbmRleCB0byBvdmVybGF5IGV2ZXJ5dGhpbmdcblxuICAvLyAtLS0gdmFsdWUgcGx1bWJpbmdcbiAgT2JqZWN0LmRlZmluZVByb3BlcnR5KHdyYXBwZXIsIFwidmFsdWVcIiwge1xuICAgIGdldCgpIHsgcmV0dXJuIGlucHV0LnZhbHVlOyB9LFxuICAgIHNldCh2KSB7IGlucHV0LnZhbHVlID0gdiA/PyBcIlwiOyB9XG4gIH0pO1xuXG4gIC8vIC0tLSBoZWxwZXJzXG4gIGNvbnN0IFRBR1MgPSAoKSA9PiAodHlwZW9mIGFsbFRhZ3MgIT09IFwidW5kZWZpbmVkXCIgPyBhbGxUYWdzIDogW10pO1xuICBjb25zdCB0b2tlbnMgPSAoKSA9PiBpbnB1dC52YWx1ZS5zcGxpdCgvXFxzKy8pLmZpbHRlcihCb29sZWFuKTtcbiAgY29uc3QgbGFzdFRva2VuID0gKCkgPT4gKGlucHV0LnZhbHVlLm1hdGNoKC8oPzpefFxccykoXFxTKikkLyk/LlsxXSkgPz8gXCJcIjtcbiAgY29uc3QgcHJldHR5ID0gdCA9PiB0LnJlcGxhY2UoLy0vZywgXCIgXCIpLnJlcGxhY2UoL1xcYlxcdy9nLCBjID0+IGMudG9VcHBlckNhc2UoKSk7XG5cbiAgLy8gUG9zaXRpb24gcG9ydGFsIGRpcmVjdGx5IGJlbG93IHRoZSBpbnB1dCwgbWF0Y2hpbmcgaXRzIHdpZHRoXG4gIGNvbnN0IGFsaWduTGlzdCA9ICgpID0+IHtcbiAgICBjb25zdCByID0gaW5wdXQuZ2V0Qm91bmRpbmdDbGllbnRSZWN0KCk7XG4gICAgbGlzdC5zdHlsZS5sZWZ0ID0gYCR7ci5sZWZ0fXB4YDtcbiAgICBsaXN0LnN0eWxlLnRvcCAgPSBgJHtyLmJvdHRvbSArIDR9cHhgO1xuICAgIGxpc3Quc3R5bGUud2lkdGggPSBgJHtyLndpZHRofXB4YDtcbiAgfTtcblxuICAvLyAtLS0gcmVuZGVyIHN1Z2dlc3Rpb25zXG4gIGxldCBzZWxlY3RlZEluZGV4ID0gLTE7XG4gIGNvbnN0IGFwcGx5QWN0aXZlU3R5bGVzID0gKCkgPT4ge1xuICAgIGNvbnN0IGl0ZW1zID0gQXJyYXkuZnJvbShsaXN0LmNoaWxkcmVuKTtcbiAgICBpdGVtcy5mb3JFYWNoKChlbCwgaSkgPT4gZWwuY2xhc3NMaXN0LnRvZ2dsZShcImFjdGl2ZVwiLCBpID09PSBzZWxlY3RlZEluZGV4KSk7XG4gIH07XG5cbiAgZnVuY3Rpb24gcmVuZGVyU3VnZ2VzdGlvbnMoKSB7XG4gICAgY29uc3QgcSA9IGxhc3RUb2tlbigpLnRvTG93ZXJDYXNlKCk7XG4gICAgY29uc3QgYWxyZWFkeSA9IG5ldyBTZXQodG9rZW5zKCkubWFwKHMgPT4gcy50b0xvd2VyQ2FzZSgpKSk7XG4gICAgY29uc3QgdGFncyA9IFRBR1MoKTtcblxuICAgIGNvbnN0IGNhbmRpZGF0ZXMgPSBxXG4gICAgICA/IHRhZ3MuZmlsdGVyKHQgPT4gdC50b0xvd2VyQ2FzZSgpLnN0YXJ0c1dpdGgocSkgJiYgIWFscmVhZHkuaGFzKHQudG9Mb3dlckNhc2UoKSkpXG4gICAgICA6IFtdO1xuXG4gICAgbGlzdC5pbm5lckhUTUwgPSBcIlwiO1xuICAgIGlmIChjYW5kaWRhdGVzLmxlbmd0aCA9PT0gMCkgeyBsaXN0LmhpZGRlbiA9IHRydWU7IHJldHVybjsgfVxuXG4gICAgZm9yIChjb25zdCB0IG9mIGNhbmRpZGF0ZXMuc2xpY2UoMCwgOCkpIHtcbiAgICAgIGNvbnN0IGl0ZW0gPSBodG1sYDxkaXYgY2xhc3M9XCJ0b2tlbi1zdWdnZXN0aW9uXCIgcm9sZT1cIm9wdGlvblwiIGRhdGEtdG9rZW49XCIke3R9XCI+JHtwcmV0dHkodCl9PC9kaXY+YDtcbiAgICAgIGl0ZW0uYWRkRXZlbnRMaXN0ZW5lcihcIm1vdXNlZG93blwiLCAoZSkgPT4geyBlLnByZXZlbnREZWZhdWx0KCk7IGFjY2VwdFN1Z2dlc3Rpb24odCk7IH0pO1xuICAgICAgbGlzdC5hcHBlbmRDaGlsZChpdGVtKTtcbiAgICB9XG4gICAgc2VsZWN0ZWRJbmRleCA9IC0xO1xuICAgIGFwcGx5QWN0aXZlU3R5bGVzKCk7XG4gICAgbGlzdC5oaWRkZW4gPSBmYWxzZTtcbiAgICBhbGlnbkxpc3QoKTsgLy8gZW5zdXJlIGNvcnJlY3QgcG9zaXRpb24gd2hlbiBzaG93blxuICB9XG5cbiAgZnVuY3Rpb24gY29tbWl0KCkge1xuICAgIGNvbnN0IHBhcnRzID0gdG9rZW5zKCk7XG4gICAgaW5wdXQudmFsdWUgPSBwYXJ0cy5qb2luKFwiIFwiKSArIChwYXJ0cy5sZW5ndGggPyBcIiBcIiA6IFwiXCIpO1xuICAgIHdyYXBwZXIuZGlzcGF0Y2hFdmVudChuZXcgRXZlbnQoXCJpbnB1dFwiLCB7IGJ1YmJsZXM6IHRydWUgfSkpO1xuICB9XG5cbiAgZnVuY3Rpb24gYWNjZXB0U3VnZ2VzdGlvbih0YWcpIHtcbiAgICBjb25zdCBwYXJ0cyA9IGlucHV0LnZhbHVlLnNwbGl0KC9cXHMrLyk7XG4gICAgaWYgKC9cXFMvLnRlc3QoaW5wdXQudmFsdWUpKSBwYXJ0cy5wb3AoKTsgLy8gcmVwbGFjZSBsYXN0IHRva2VuXG4gICAgY29uc3Qgc2V0ID0gbmV3IFNldChwYXJ0cy5maWx0ZXIoQm9vbGVhbikubWFwKHMgPT4gcy50b0xvd2VyQ2FzZSgpKSk7XG4gICAgaWYgKCFzZXQuaGFzKHRhZy50b0xvd2VyQ2FzZSgpKSkgcGFydHMucHVzaCh0YWcpO1xuICAgIGlucHV0LnZhbHVlID0gcGFydHMuZmlsdGVyKEJvb2xlYW4pLmpvaW4oXCIgXCIpICsgXCIgXCI7XG4gICAgbGlzdC5oaWRkZW4gPSB0cnVlO1xuICAgIGNvbW1pdCgpO1xuICAgIGlucHV0LmZvY3VzKCk7XG4gIH1cblxuICBmdW5jdGlvbiBtb3ZlU2VsZWN0aW9uKGRlbHRhKSB7XG4gICAgY29uc3QgaXRlbXMgPSBBcnJheS5mcm9tKGxpc3QuY2hpbGRyZW4pO1xuICAgIGlmIChpdGVtcy5sZW5ndGggPT09IDApIHJldHVybjtcbiAgICBzZWxlY3RlZEluZGV4ID0gKHNlbGVjdGVkSW5kZXggKyBkZWx0YSArIGl0ZW1zLmxlbmd0aCkgJSBpdGVtcy5sZW5ndGg7XG4gICAgYXBwbHlBY3RpdmVTdHlsZXMoKTtcbiAgICBpZiAoc2VsZWN0ZWRJbmRleCA+PSAwKSBpdGVtc1tzZWxlY3RlZEluZGV4XS5zY3JvbGxJbnRvVmlldyh7IGJsb2NrOiBcIm5lYXJlc3RcIiB9KTtcbiAgfVxuXG4gIC8vIC0tLSBldmVudHNcbiAgaW5wdXQuYWRkRXZlbnRMaXN0ZW5lcihcImlucHV0XCIsIHJlbmRlclN1Z2dlc3Rpb25zKTtcbiAgaW5wdXQuYWRkRXZlbnRMaXN0ZW5lcihcImZvY3VzXCIsICgpID0+IHsgYWxpZ25MaXN0KCk7IH0pOyAvLyByZWFsaWduIG9uIGZvY3VzXG5cbiAgaW5wdXQuYWRkRXZlbnRMaXN0ZW5lcihcImtleWRvd25cIiwgKGUpID0+IHtcbiAgICBpZiAoIWxpc3QuaGlkZGVuICYmIChlLmtleSA9PT0gXCJBcnJvd0Rvd25cIiB8fCBlLmtleSA9PT0gXCJBcnJvd1VwXCIpKSB7XG4gICAgICBlLnByZXZlbnREZWZhdWx0KCk7IG1vdmVTZWxlY3Rpb24oZS5rZXkgPT09IFwiQXJyb3dEb3duXCIgPyArMSA6IC0xKTsgcmV0dXJuO1xuICAgIH1cbiAgICBpZiAoZS5rZXkgPT09IFwiRW50ZXJcIikge1xuICAgICAgaWYgKCFsaXN0LmhpZGRlbiAmJiBzZWxlY3RlZEluZGV4ID49IDApIHtcbiAgICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpO1xuICAgICAgICBjb25zdCBjaG9pY2UgPSBsaXN0LmNoaWxkcmVuW3NlbGVjdGVkSW5kZXhdPy5kYXRhc2V0LnRva2VuO1xuICAgICAgICBpZiAoY2hvaWNlKSBhY2NlcHRTdWdnZXN0aW9uKGNob2ljZSk7XG4gICAgICB9IGVsc2Uge1xuICAgICAgICBjb21taXQoKTtcbiAgICAgIH1cbiAgICB9IGVsc2UgaWYgKGUua2V5ID09PSBcIkVzY2FwZVwiKSB7XG4gICAgICBsaXN0LmhpZGRlbiA9IHRydWU7XG4gICAgfVxuICB9KTtcblxuICAvLyBEZWxheSBibHVyIHRvIGFsbG93IG1vdXNlZG93biBvbiBzdWdnZXN0aW9uIHRvIGZpcmUgZmlyc3RcbiAgaW5wdXQuYWRkRXZlbnRMaXN0ZW5lcihcImJsdXJcIiwgKCkgPT4ge1xuICAgIHNldFRpbWVvdXQoKCkgPT4geyBsaXN0LmhpZGRlbiA9IHRydWU7IGNvbW1pdCgpOyB9LCAyMDApO1xuICB9KTtcblxuICAvLyBDbG9zZSB3aGVuIGNsaWNraW5nIG91dHNpZGUgKHJlbWVtYmVyIGxpc3QgaXMgb3V0c2lkZSB3cmFwcGVyIG5vdylcbiAgY29uc3Qgb25Eb2NDbGljayA9IChlKSA9PiB7XG4gICAgaWYgKGUudGFyZ2V0ICE9PSBpbnB1dCAmJiAhbGlzdC5jb250YWlucyhlLnRhcmdldCkpIGxpc3QuaGlkZGVuID0gdHJ1ZTtcbiAgfTtcbiAgZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcihcImNsaWNrXCIsIG9uRG9jQ2xpY2ssIHRydWUpO1xuXG4gIC8vIFJlcG9zaXRpb24gb24gYW55IHNjcm9sbC9yZXNpemUgKGNhcHR1cmUgc2Nyb2xscyBmcm9tIG5lc3RlZCBjb250YWluZXJzKVxuICBjb25zdCBvblZpZXdwb3J0Q2hhbmdlID0gKCkgPT4geyBpZiAoIWxpc3QuaGlkZGVuKSBhbGlnbkxpc3QoKTsgfTtcbiAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoXCJyZXNpemVcIiwgb25WaWV3cG9ydENoYW5nZSwgeyBwYXNzaXZlOiB0cnVlIH0pO1xuICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcihcInNjcm9sbFwiLCBvblZpZXdwb3J0Q2hhbmdlLCB0cnVlKTtcblxuICAvLyBJbml0aWFsIGFsaWdubWVudFxuICBxdWV1ZU1pY3JvdGFzayhhbGlnbkxpc3QpO1xuXG4gIC8vIENsZWFudXAgd2hlbiB0aGUgY2VsbCByZS1ydW5zXG4gIHdyYXBwZXIuZGlzcG9zZSA9ICgpID0+IHtcbiAgICBkb2N1bWVudC5yZW1vdmVFdmVudExpc3RlbmVyKFwiY2xpY2tcIiwgb25Eb2NDbGljaywgdHJ1ZSk7XG4gICAgd2luZG93LnJlbW92ZUV2ZW50TGlzdGVuZXIoXCJyZXNpemVcIiwgb25WaWV3cG9ydENoYW5nZSwgeyBwYXNzaXZlOiB0cnVlIH0pO1xuICAgIHdpbmRvdy5yZW1vdmVFdmVudExpc3RlbmVyKFwic2Nyb2xsXCIsIG9uVmlld3BvcnRDaGFuZ2UsIHRydWUpO1xuICAgIGxpc3QucmVtb3ZlKCk7XG4gIH07XG5cbiAgLy8gSW5pdGlhbCByZW5kZXJcbiAgcmVuZGVyU3VnZ2VzdGlvbnMoKTtcblxuICByZXR1cm4gd3JhcHBlcjtcbn1cblxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoidmlld29mIGNob3NlbiA9IElucHV0cy5jaGVja2JveChhbGxUYWdzLCB7XG4gIGxhYmVsOiBtZGBPciBwaWNrIHRhZ3M6YCxcbiAgdmFsdWU6IFtdXG59KVxuXG52aWV3b2YgbGV2ZWxzID0gSW5wdXRzLmNoZWNrYm94KFxuICBbMCwgMSwgMiwgM10sXG4gIHtcbiAgICBsYWJlbDogbWRgRGlmZmljdWx0eTpgLFxuICAgIHZhbHVlOiBbMCwgMSwgMiwgM10sICAgICAgICAgICAgICAgICAvLyBkZWZhdWx0OiBzaG93IGFsbFxuICAgIGZvcm1hdDogZCA9PiBbXCJFYXN5XCIsIFwiTWVkaXVtXCIsIFwiSGFyZFwiLCBcIlRvbyBoYXJkXCJdW2RdXG4gIH1cbilcblxuXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTYiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ7XG4gIC8vIFN5bmMgY2hlY2tib3hlcyB0byB0aGUgY29tbWl0dGVkIHRleHQgdG9rZW5zXG4gIGNvbnN0IGxjTWFwID0gbmV3IE1hcChhbGxUYWdzLm1hcCh0ID0+IFt0LnRvTG93ZXJDYXNlKCksIHRdKSk7IC8vIGxvd2VyIOKGkiBvcmlnaW5hbFxuICBjb25zdCB0eXBlZE5vdyA9ICh0eXBlZCB8fCBcIlwiKS5zcGxpdCgvXFxzKy8pLmZpbHRlcihCb29sZWFuKS5tYXAocyA9PiBzLnRvTG93ZXJDYXNlKCkpO1xuICBjb25zdCBzZWxlY3RlZCA9IHR5cGVkTm93Lm1hcChzID0+IGxjTWFwLmdldChzKSkuZmlsdGVyKEJvb2xlYW4pO1xuXG4gIGNvbnN0IGVsID0gdmlld29mIGNob3NlbjtcbiAgaWYgKGVsICYmIEFycmF5LmlzQXJyYXkoZWwudmFsdWUpKSB7XG4gICAgLy8gY29tcGFyZSBzZXRzIHRvIGF2b2lkIGNodXJuXG4gICAgY29uc3QgY3VyID0gbmV3IFNldChlbC52YWx1ZSk7XG4gICAgbGV0IGVxdWFsID0gc2VsZWN0ZWQubGVuZ3RoID09PSBjdXIuc2l6ZSAmJiBzZWxlY3RlZC5ldmVyeSh2ID0+IGN1ci5oYXModikpO1xuICAgIGlmICghZXF1YWwpIHtcbiAgICAgIGVsLnZhbHVlID0gc2VsZWN0ZWQ7XG4gICAgICBlbC5kaXNwYXRjaEV2ZW50KG5ldyBFdmVudChcImlucHV0XCIsIHtidWJibGVzOnRydWV9KSk7XG4gICAgfVxuICB9XG4gIHJldHVybiBodG1sYGA7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTciLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHR5cGVkU2V0ICA9IG5ldyBTZXQoKHR5cGVkIHx8IFwiXCIpLnNwbGl0KC9cXHMrLykuZmlsdGVyKEJvb2xlYW4pKTtcbiAgY29uc3QgY2hvc2VuU2V0ID0gbmV3IFNldChjaG9zZW4gfHwgW10pO1xuICBjb25zdCByZXF1aXJlZCAgPSBuZXcgU2V0KFsuLi50eXBlZFNldCwgLi4uY2hvc2VuU2V0XSk7ICAgLy8gQU5EIG92ZXIgdGFnc1xuICBjb25zdCBjaG9zZW5MdiAgPSBuZXcgU2V0KGxldmVscyB8fCBbXSk7ICAgICAgICAgICAgICAgICAgLy8gYWxsb3dlZCBsZXZlbHNcblxuICBsZXQgc2hvd24gPSAwO1xuICBmb3IgKGNvbnN0IGVsIG9mIGFsbFF1ZXN0aW9ucykge1xuICAgIC8vIHRhZ3MgY2hlY2tcbiAgICBjb25zdCBlbFRhZ3MgPSBuZXcgU2V0KChlbC5kYXRhc2V0LnRhZ3MgfHwgXCJcIikuc3BsaXQoL1xccysvKS5maWx0ZXIoQm9vbGVhbikpO1xuICAgIGNvbnN0IHBhc3NUYWdzID0gcmVxdWlyZWQuc2l6ZSA9PT0gMCB8fCBbLi4ucmVxdWlyZWRdLmV2ZXJ5KHQgPT4gZWxUYWdzLmhhcyh0KSk7XG5cbiAgICAvLyBkaWZmaWN1bHR5IGNoZWNrICgwIGRlZmF1bHQpXG4gICAgY29uc3QgbGV2ZWwgPSBOdW1iZXIoZWwuZGF0YXNldC5kaWZmaWN1bHR5ID8/IDApO1xuICAgIGNvbnN0IHBhc3NEaWZmID0gY2hvc2VuTHYuaGFzKGxldmVsKTtcblxuICAgIGNvbnN0IHNob3cgPSBwYXNzVGFncyAmJiBwYXNzRGlmZjtcbiAgICBlbC5zdHlsZS5kaXNwbGF5ID0gc2hvdyA/IFwiXCIgOiBcIm5vbmVcIjtcbiAgICBpZiAoc2hvdykgc2hvd24gKz0gMTtcbiAgfVxuXG4gIHJldHVybiBodG1sYDxkaXY+PHN0cm9uZz5TaG93aW5nICR7c2hvd259PC9zdHJvbmc+IG9mICR7YWxsUXVlc3Rpb25zLmxlbmd0aH0gcXVlc3Rpb25zLjwvZGl2PmBcbn1cblxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCd0eXBlZCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdjaG9zZW4nKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnbGV2ZWxzJykifV19
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImJvZHlGb250ID0gZ2V0Q29tcHV0ZWRTdHlsZShkb2N1bWVudC5ib2R5KS5mb250RmFtaWx5XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIvLyByZWFjdGl2ZSB2YXJzICh2aXNpYmxlIHRvIGxhdGVyIGNlbGxzKVxuYWxsUXVlc3Rpb25zID0gQXJyYXkuZnJvbShkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCcucXVlc3Rpb24nKSlcblxuYWxsVGFncyA9IEFycmF5LmZyb20obmV3IFNldChcbiAgYWxsUXVlc3Rpb25zLmZsYXRNYXAoZWwgPT4gKGVsLmRhdGFzZXQudGFncyB8fCBcIlwiKVxuICAgIC5zcGxpdCgvXFxzKy8pLm1hcCh0ID0+IHQudHJpbSgpKS5maWx0ZXIoQm9vbGVhbikpXG4pKS5zb3J0KClcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IntcbiAgZm9yIChjb25zdCBlbCBvZiBhbGxRdWVzdGlvbnMpIHtcbiAgICAvLyAtLS0gVGFnYmFyICh1bmNoYW5nZWQpIC0tLVxuICAgIGlmICghZWwucXVlcnlTZWxlY3RvcignLnRhZ2JhcicpKSB7XG4gICAgICBjb25zdCB0YWdzID0gKGVsLmRhdGFzZXQudGFncyB8fCBcIlwiKS5zcGxpdCgvXFxzKy8pLmZpbHRlcihCb29sZWFuKTtcbiAgICAgIGNvbnN0IGJhciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xuICAgICAgYmFyLmNsYXNzTmFtZSA9ICd0YWdiYXInO1xuICAgICAgYmFyLmFwcGVuZCguLi50YWdzLm1hcCh0ID0+IE9iamVjdC5hc3NpZ24oZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnc3BhbicpLCB7XG4gICAgICAgIGNsYXNzTmFtZTogJ3RhZycsIHRleHRDb250ZW50OiB0XG4gICAgICB9KSkpO1xuICAgICAgZWwuYXBwZW5kQ2hpbGQoYmFyKTtcbiAgICB9XG5cbiAgICAvLyAtLS0gRGlmZmljdWx0eSBwZXBwZXJzIGluIGhlYWRlciAoUkhTKSAtLS1cbiAgICBjb25zdCBoZWFkZXIgPSBlbC5xdWVyeVNlbGVjdG9yKCcuY2FsbG91dC1oZWFkZXInKTtcbiAgICBpZiAoaGVhZGVyICYmICFoZWFkZXIucXVlcnlTZWxlY3RvcignLmRpZmZpY3VsdHktcGVwcGVycycpKSB7XG4gICAgICBjb25zdCBsZXZlbCA9IE51bWJlcihlbC5kYXRhc2V0LmRpZmZpY3VsdHkgPz8gMCk7XG5cbiAgICAgIC8vIEFsd2F5cyBzaG93LCBidXQgb25seSBhZGQgcGVwcGVycyBpZiA+MFxuICAgICAgY29uc3Qgc3BhbiA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NwYW4nKTtcbiAgICAgIHNwYW4uY2xhc3NOYW1lID0gYGRpZmZpY3VsdHktcGVwcGVycyBsZXZlbC0ke2xldmVsfWA7XG4gICAgICBzcGFuLnNldEF0dHJpYnV0ZSgnYXJpYS1sYWJlbCcsIGBEaWZmaWN1bHR5ICR7bGV2ZWx9YCk7XG4gICAgICBzcGFuLnRleHRDb250ZW50ID0gbGV2ZWwgPiAwID8gYCgkeyBcIvCfjLZcIi5yZXBlYXQobGV2ZWwpIH0pYCA6IFwiKCApXCI7XG4gICAgICBoZWFkZXIuYXBwZW5kQ2hpbGQoc3Bhbik7XG4gICAgfVxuICB9XG4gIHJldHVybiBodG1sYGAgIC8vIHNpbGVuY2Vcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiB0eXBlZCA9IHtcbiAgLy8gLS0tIERPTVxuICBjb25zdCB3cmFwcGVyID0gaHRtbGA8ZGl2IGNsYXNzPVwidG9rZW4tYXV0b2NvbXBsZXRlXCI+PC9kaXY+YDtcbiAgY29uc3QgbGFiZWxFbCA9IGh0bWxgPGxhYmVsIGNsYXNzPVwidG9rZW4tbGFiZWxcIj5GaWx0ZXIgYnkgdGFncyAodHlwZSwgc3BhY2Utc2VwYXJhdGVkKTo8L2xhYmVsPmA7XG4gIGNvbnN0IGlucHV0ICAgPSBodG1sYDxpbnB1dCBjbGFzcz1cInRva2VuLWlucHV0XCIgdHlwZT1cInRleHRcIiBwbGFjZWhvbGRlcj1cImUuZy4gcmlzayBsb3NzLWZ1bmN0aW9uXCI+YDtcbiAgd3JhcHBlci5hcHBlbmQobGFiZWxFbCwgaW5wdXQpO1xuXG4gIC8vIC0tLSBQT1JUQUw6IHN1Z2dlc3Rpb25zIGxpc3QgbGl2ZXMgYXQgZG9jdW1lbnQuYm9keSBzbyBpdCBjYW4gb3ZlcmxheSBldmVyeXRoaW5nXG4gIGNvbnN0IGxpc3QgPSBodG1sYDxkaXYgY2xhc3M9XCJ0b2tlbi1zdWdnZXN0aW9uc1wiIHJvbGU9XCJsaXN0Ym94XCIgaGlkZGVuPjwvZGl2PmA7XG4gIGRvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQobGlzdCk7XG5cbiAgLy8gTWFrZSBzdXJlIGl0IGZsb2F0cyBhYm92ZSBhbGwgY29udGVudFxuICBsaXN0LnN0eWxlLnBvc2l0aW9uID0gXCJmaXhlZFwiO1xuICBsaXN0LnN0eWxlLnpJbmRleCA9IFwiOTk5OVwiOyAvLyBoaWdoIHotaW5kZXggdG8gb3ZlcmxheSBldmVyeXRoaW5nXG5cbiAgLy8gLS0tIHZhbHVlIHBsdW1iaW5nXG4gIE9iamVjdC5kZWZpbmVQcm9wZXJ0eSh3cmFwcGVyLCBcInZhbHVlXCIsIHtcbiAgICBnZXQoKSB7IHJldHVybiBpbnB1dC52YWx1ZTsgfSxcbiAgICBzZXQodikgeyBpbnB1dC52YWx1ZSA9IHYgPz8gXCJcIjsgfVxuICB9KTtcblxuICAvLyAtLS0gaGVscGVyc1xuICBjb25zdCBUQUdTID0gKCkgPT4gKHR5cGVvZiBhbGxUYWdzICE9PSBcInVuZGVmaW5lZFwiID8gYWxsVGFncyA6IFtdKTtcbiAgY29uc3QgdG9rZW5zID0gKCkgPT4gaW5wdXQudmFsdWUuc3BsaXQoL1xccysvKS5maWx0ZXIoQm9vbGVhbik7XG4gIGNvbnN0IGxhc3RUb2tlbiA9ICgpID0+IChpbnB1dC52YWx1ZS5tYXRjaCgvKD86XnxcXHMpKFxcUyopJC8pPy5bMV0pID8/IFwiXCI7XG4gIGNvbnN0IHByZXR0eSA9IHQgPT4gdC5yZXBsYWNlKC8tL2csIFwiIFwiKS5yZXBsYWNlKC9cXGJcXHcvZywgYyA9PiBjLnRvVXBwZXJDYXNlKCkpO1xuXG4gIC8vIFBvc2l0aW9uIHBvcnRhbCBkaXJlY3RseSBiZWxvdyB0aGUgaW5wdXQsIG1hdGNoaW5nIGl0cyB3aWR0aFxuICBjb25zdCBhbGlnbkxpc3QgPSAoKSA9PiB7XG4gICAgY29uc3QgciA9IGlucHV0LmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpO1xuICAgIGxpc3Quc3R5bGUubGVmdCA9IGAke3IubGVmdH1weGA7XG4gICAgbGlzdC5zdHlsZS50b3AgID0gYCR7ci5ib3R0b20gKyA0fXB4YDtcbiAgICBsaXN0LnN0eWxlLndpZHRoID0gYCR7ci53aWR0aH1weGA7XG4gIH07XG5cbiAgLy8gLS0tIHJlbmRlciBzdWdnZXN0aW9uc1xuICBsZXQgc2VsZWN0ZWRJbmRleCA9IC0xO1xuICBjb25zdCBhcHBseUFjdGl2ZVN0eWxlcyA9ICgpID0+IHtcbiAgICBjb25zdCBpdGVtcyA9IEFycmF5LmZyb20obGlzdC5jaGlsZHJlbik7XG4gICAgaXRlbXMuZm9yRWFjaCgoZWwsIGkpID0+IGVsLmNsYXNzTGlzdC50b2dnbGUoXCJhY3RpdmVcIiwgaSA9PT0gc2VsZWN0ZWRJbmRleCkpO1xuICB9O1xuXG4gIGZ1bmN0aW9uIHJlbmRlclN1Z2dlc3Rpb25zKCkge1xuICAgIGNvbnN0IHEgPSBsYXN0VG9rZW4oKS50b0xvd2VyQ2FzZSgpO1xuICAgIGNvbnN0IGFscmVhZHkgPSBuZXcgU2V0KHRva2VucygpLm1hcChzID0+IHMudG9Mb3dlckNhc2UoKSkpO1xuICAgIGNvbnN0IHRhZ3MgPSBUQUdTKCk7XG5cbiAgICBjb25zdCBjYW5kaWRhdGVzID0gcVxuICAgICAgPyB0YWdzLmZpbHRlcih0ID0+IHQudG9Mb3dlckNhc2UoKS5zdGFydHNXaXRoKHEpICYmICFhbHJlYWR5Lmhhcyh0LnRvTG93ZXJDYXNlKCkpKVxuICAgICAgOiBbXTtcblxuICAgIGxpc3QuaW5uZXJIVE1MID0gXCJcIjtcbiAgICBpZiAoY2FuZGlkYXRlcy5sZW5ndGggPT09IDApIHsgbGlzdC5oaWRkZW4gPSB0cnVlOyByZXR1cm47IH1cblxuICAgIGZvciAoY29uc3QgdCBvZiBjYW5kaWRhdGVzLnNsaWNlKDAsIDgpKSB7XG4gICAgICBjb25zdCBpdGVtID0gaHRtbGA8ZGl2IGNsYXNzPVwidG9rZW4tc3VnZ2VzdGlvblwiIHJvbGU9XCJvcHRpb25cIiBkYXRhLXRva2VuPVwiJHt0fVwiPiR7cHJldHR5KHQpfTwvZGl2PmA7XG4gICAgICBpdGVtLmFkZEV2ZW50TGlzdGVuZXIoXCJtb3VzZWRvd25cIiwgKGUpID0+IHsgZS5wcmV2ZW50RGVmYXVsdCgpOyBhY2NlcHRTdWdnZXN0aW9uKHQpOyB9KTtcbiAgICAgIGxpc3QuYXBwZW5kQ2hpbGQoaXRlbSk7XG4gICAgfVxuICAgIHNlbGVjdGVkSW5kZXggPSAtMTtcbiAgICBhcHBseUFjdGl2ZVN0eWxlcygpO1xuICAgIGxpc3QuaGlkZGVuID0gZmFsc2U7XG4gICAgYWxpZ25MaXN0KCk7IC8vIGVuc3VyZSBjb3JyZWN0IHBvc2l0aW9uIHdoZW4gc2hvd25cbiAgfVxuXG4gIGZ1bmN0aW9uIGNvbW1pdCgpIHtcbiAgICBjb25zdCBwYXJ0cyA9IHRva2VucygpO1xuICAgIGlucHV0LnZhbHVlID0gcGFydHMuam9pbihcIiBcIikgKyAocGFydHMubGVuZ3RoID8gXCIgXCIgOiBcIlwiKTtcbiAgICB3cmFwcGVyLmRpc3BhdGNoRXZlbnQobmV3IEV2ZW50KFwiaW5wdXRcIiwgeyBidWJibGVzOiB0cnVlIH0pKTtcbiAgfVxuXG4gIGZ1bmN0aW9uIGFjY2VwdFN1Z2dlc3Rpb24odGFnKSB7XG4gICAgY29uc3QgcGFydHMgPSBpbnB1dC52YWx1ZS5zcGxpdCgvXFxzKy8pO1xuICAgIGlmICgvXFxTLy50ZXN0KGlucHV0LnZhbHVlKSkgcGFydHMucG9wKCk7IC8vIHJlcGxhY2UgbGFzdCB0b2tlblxuICAgIGNvbnN0IHNldCA9IG5ldyBTZXQocGFydHMuZmlsdGVyKEJvb2xlYW4pLm1hcChzID0+IHMudG9Mb3dlckNhc2UoKSkpO1xuICAgIGlmICghc2V0Lmhhcyh0YWcudG9Mb3dlckNhc2UoKSkpIHBhcnRzLnB1c2godGFnKTtcbiAgICBpbnB1dC52YWx1ZSA9IHBhcnRzLmZpbHRlcihCb29sZWFuKS5qb2luKFwiIFwiKSArIFwiIFwiO1xuICAgIGxpc3QuaGlkZGVuID0gdHJ1ZTtcbiAgICBjb21taXQoKTtcbiAgICBpbnB1dC5mb2N1cygpO1xuICB9XG5cbiAgZnVuY3Rpb24gbW92ZVNlbGVjdGlvbihkZWx0YSkge1xuICAgIGNvbnN0IGl0ZW1zID0gQXJyYXkuZnJvbShsaXN0LmNoaWxkcmVuKTtcbiAgICBpZiAoaXRlbXMubGVuZ3RoID09PSAwKSByZXR1cm47XG4gICAgc2VsZWN0ZWRJbmRleCA9IChzZWxlY3RlZEluZGV4ICsgZGVsdGEgKyBpdGVtcy5sZW5ndGgpICUgaXRlbXMubGVuZ3RoO1xuICAgIGFwcGx5QWN0aXZlU3R5bGVzKCk7XG4gICAgaWYgKHNlbGVjdGVkSW5kZXggPj0gMCkgaXRlbXNbc2VsZWN0ZWRJbmRleF0uc2Nyb2xsSW50b1ZpZXcoeyBibG9jazogXCJuZWFyZXN0XCIgfSk7XG4gIH1cblxuICAvLyAtLS0gZXZlbnRzXG4gIGlucHV0LmFkZEV2ZW50TGlzdGVuZXIoXCJpbnB1dFwiLCByZW5kZXJTdWdnZXN0aW9ucyk7XG4gIGlucHV0LmFkZEV2ZW50TGlzdGVuZXIoXCJmb2N1c1wiLCAoKSA9PiB7IGFsaWduTGlzdCgpOyB9KTsgLy8gcmVhbGlnbiBvbiBmb2N1c1xuXG4gIGlucHV0LmFkZEV2ZW50TGlzdGVuZXIoXCJrZXlkb3duXCIsIChlKSA9PiB7XG4gICAgaWYgKCFsaXN0LmhpZGRlbiAmJiAoZS5rZXkgPT09IFwiQXJyb3dEb3duXCIgfHwgZS5rZXkgPT09IFwiQXJyb3dVcFwiKSkge1xuICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpOyBtb3ZlU2VsZWN0aW9uKGUua2V5ID09PSBcIkFycm93RG93blwiID8gKzEgOiAtMSk7IHJldHVybjtcbiAgICB9XG4gICAgaWYgKGUua2V5ID09PSBcIkVudGVyXCIpIHtcbiAgICAgIGlmICghbGlzdC5oaWRkZW4gJiYgc2VsZWN0ZWRJbmRleCA+PSAwKSB7XG4gICAgICAgIGUucHJldmVudERlZmF1bHQoKTtcbiAgICAgICAgY29uc3QgY2hvaWNlID0gbGlzdC5jaGlsZHJlbltzZWxlY3RlZEluZGV4XT8uZGF0YXNldC50b2tlbjtcbiAgICAgICAgaWYgKGNob2ljZSkgYWNjZXB0U3VnZ2VzdGlvbihjaG9pY2UpO1xuICAgICAgfSBlbHNlIHtcbiAgICAgICAgY29tbWl0KCk7XG4gICAgICB9XG4gICAgfSBlbHNlIGlmIChlLmtleSA9PT0gXCJFc2NhcGVcIikge1xuICAgICAgbGlzdC5oaWRkZW4gPSB0cnVlO1xuICAgIH1cbiAgfSk7XG5cbiAgLy8gRGVsYXkgYmx1ciB0byBhbGxvdyBtb3VzZWRvd24gb24gc3VnZ2VzdGlvbiB0byBmaXJlIGZpcnN0XG4gIGlucHV0LmFkZEV2ZW50TGlzdGVuZXIoXCJibHVyXCIsICgpID0+IHtcbiAgICBzZXRUaW1lb3V0KCgpID0+IHsgbGlzdC5oaWRkZW4gPSB0cnVlOyBjb21taXQoKTsgfSwgMjAwKTtcbiAgfSk7XG5cbiAgLy8gQ2xvc2Ugd2hlbiBjbGlja2luZyBvdXRzaWRlIChyZW1lbWJlciBsaXN0IGlzIG91dHNpZGUgd3JhcHBlciBub3cpXG4gIGNvbnN0IG9uRG9jQ2xpY2sgPSAoZSkgPT4ge1xuICAgIGlmIChlLnRhcmdldCAhPT0gaW5wdXQgJiYgIWxpc3QuY29udGFpbnMoZS50YXJnZXQpKSBsaXN0LmhpZGRlbiA9IHRydWU7XG4gIH07XG4gIGRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoXCJjbGlja1wiLCBvbkRvY0NsaWNrLCB0cnVlKTtcblxuICAvLyBSZXBvc2l0aW9uIG9uIGFueSBzY3JvbGwvcmVzaXplIChjYXB0dXJlIHNjcm9sbHMgZnJvbSBuZXN0ZWQgY29udGFpbmVycylcbiAgY29uc3Qgb25WaWV3cG9ydENoYW5nZSA9ICgpID0+IHsgaWYgKCFsaXN0LmhpZGRlbikgYWxpZ25MaXN0KCk7IH07XG4gIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKFwicmVzaXplXCIsIG9uVmlld3BvcnRDaGFuZ2UsIHsgcGFzc2l2ZTogdHJ1ZSB9KTtcbiAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoXCJzY3JvbGxcIiwgb25WaWV3cG9ydENoYW5nZSwgdHJ1ZSk7XG5cbiAgLy8gSW5pdGlhbCBhbGlnbm1lbnRcbiAgcXVldWVNaWNyb3Rhc2soYWxpZ25MaXN0KTtcblxuICAvLyBDbGVhbnVwIHdoZW4gdGhlIGNlbGwgcmUtcnVuc1xuICB3cmFwcGVyLmRpc3Bvc2UgPSAoKSA9PiB7XG4gICAgZG9jdW1lbnQucmVtb3ZlRXZlbnRMaXN0ZW5lcihcImNsaWNrXCIsIG9uRG9jQ2xpY2ssIHRydWUpO1xuICAgIHdpbmRvdy5yZW1vdmVFdmVudExpc3RlbmVyKFwicmVzaXplXCIsIG9uVmlld3BvcnRDaGFuZ2UsIHsgcGFzc2l2ZTogdHJ1ZSB9KTtcbiAgICB3aW5kb3cucmVtb3ZlRXZlbnRMaXN0ZW5lcihcInNjcm9sbFwiLCBvblZpZXdwb3J0Q2hhbmdlLCB0cnVlKTtcbiAgICBsaXN0LnJlbW92ZSgpO1xuICB9O1xuXG4gIC8vIEluaXRpYWwgcmVuZGVyXG4gIHJlbmRlclN1Z2dlc3Rpb25zKCk7XG5cbiAgcmV0dXJuIHdyYXBwZXI7XG59XG5cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBjaG9zZW4gPSBJbnB1dHMuY2hlY2tib3goYWxsVGFncywge1xuICBsYWJlbDogbWRgT3IgcGljayB0YWdzOmAsXG4gIHZhbHVlOiBbXVxufSlcblxudmlld29mIGxldmVscyA9IElucHV0cy5jaGVja2JveChcbiAgWzAsIDEsIDIsIDNdLFxuICB7XG4gICAgbGFiZWw6IG1kYERpZmZpY3VsdHk6YCxcbiAgICB2YWx1ZTogWzAsIDEsIDIsIDNdLCAgICAgICAgICAgICAgICAgLy8gZGVmYXVsdDogc2hvdyBhbGxcbiAgICBmb3JtYXQ6IGQgPT4gW1wiRWFzeVwiLCBcIk1lZGl1bVwiLCBcIkhhcmRcIiwgXCJUb28gaGFyZFwiXVtkXVxuICB9XG4pXG5cblxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoie1xuICAvLyBTeW5jIGNoZWNrYm94ZXMgdG8gdGhlIGNvbW1pdHRlZCB0ZXh0IHRva2Vuc1xuICBjb25zdCBsY01hcCA9IG5ldyBNYXAoYWxsVGFncy5tYXAodCA9PiBbdC50b0xvd2VyQ2FzZSgpLCB0XSkpOyAvLyBsb3dlciDihpIgb3JpZ2luYWxcbiAgY29uc3QgdHlwZWROb3cgPSAodHlwZWQgfHwgXCJcIikuc3BsaXQoL1xccysvKS5maWx0ZXIoQm9vbGVhbikubWFwKHMgPT4gcy50b0xvd2VyQ2FzZSgpKTtcbiAgY29uc3Qgc2VsZWN0ZWQgPSB0eXBlZE5vdy5tYXAocyA9PiBsY01hcC5nZXQocykpLmZpbHRlcihCb29sZWFuKTtcblxuICBjb25zdCBlbCA9IHZpZXdvZiBjaG9zZW47XG4gIGlmIChlbCAmJiBBcnJheS5pc0FycmF5KGVsLnZhbHVlKSkge1xuICAgIC8vIGNvbXBhcmUgc2V0cyB0byBhdm9pZCBjaHVyblxuICAgIGNvbnN0IGN1ciA9IG5ldyBTZXQoZWwudmFsdWUpO1xuICAgIGxldCBlcXVhbCA9IHNlbGVjdGVkLmxlbmd0aCA9PT0gY3VyLnNpemUgJiYgc2VsZWN0ZWQuZXZlcnkodiA9PiBjdXIuaGFzKHYpKTtcbiAgICBpZiAoIWVxdWFsKSB7XG4gICAgICBlbC52YWx1ZSA9IHNlbGVjdGVkO1xuICAgICAgZWwuZGlzcGF0Y2hFdmVudChuZXcgRXZlbnQoXCJpbnB1dFwiLCB7YnViYmxlczp0cnVlfSkpO1xuICAgIH1cbiAgfVxuICByZXR1cm4gaHRtbGBgO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC03IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoie1xuICBjb25zdCB0eXBlZFNldCAgPSBuZXcgU2V0KCh0eXBlZCB8fCBcIlwiKS5zcGxpdCgvXFxzKy8pLmZpbHRlcihCb29sZWFuKSk7XG4gIGNvbnN0IGNob3NlblNldCA9IG5ldyBTZXQoY2hvc2VuIHx8IFtdKTtcbiAgY29uc3QgcmVxdWlyZWQgID0gbmV3IFNldChbLi4udHlwZWRTZXQsIC4uLmNob3NlblNldF0pOyAgIC8vIEFORCBvdmVyIHRhZ3NcbiAgY29uc3QgY2hvc2VuTHYgID0gbmV3IFNldChsZXZlbHMgfHwgW10pOyAgICAgICAgICAgICAgICAgIC8vIGFsbG93ZWQgbGV2ZWxzXG5cbiAgbGV0IHNob3duID0gMDtcbiAgZm9yIChjb25zdCBlbCBvZiBhbGxRdWVzdGlvbnMpIHtcbiAgICAvLyB0YWdzIGNoZWNrXG4gICAgY29uc3QgZWxUYWdzID0gbmV3IFNldCgoZWwuZGF0YXNldC50YWdzIHx8IFwiXCIpLnNwbGl0KC9cXHMrLykuZmlsdGVyKEJvb2xlYW4pKTtcbiAgICBjb25zdCBwYXNzVGFncyA9IHJlcXVpcmVkLnNpemUgPT09IDAgfHwgWy4uLnJlcXVpcmVkXS5ldmVyeSh0ID0+IGVsVGFncy5oYXModCkpO1xuXG4gICAgLy8gZGlmZmljdWx0eSBjaGVjayAoMCBkZWZhdWx0KVxuICAgIGNvbnN0IGxldmVsID0gTnVtYmVyKGVsLmRhdGFzZXQuZGlmZmljdWx0eSA/PyAwKTtcbiAgICBjb25zdCBwYXNzRGlmZiA9IGNob3Nlbkx2LmhhcyhsZXZlbCk7XG5cbiAgICBjb25zdCBzaG93ID0gcGFzc1RhZ3MgJiYgcGFzc0RpZmY7XG4gICAgZWwuc3R5bGUuZGlzcGxheSA9IHNob3cgPyBcIlwiIDogXCJub25lXCI7XG4gICAgaWYgKHNob3cpIHNob3duICs9IDE7XG4gIH1cblxuICByZXR1cm4gaHRtbGA8ZGl2PjxzdHJvbmc+U2hvd2luZyAke3Nob3dufTwvc3Ryb25nPiBvZiAke2FsbFF1ZXN0aW9ucy5sZW5ndGh9IHF1ZXN0aW9ucy48L2Rpdj5gXG59XG5cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Ii8vIEVtcGlyaWNhbCBSaXNrIHZzIEl0ZXJhdGlvbnMgUGxvdFxuZW1waXJpY2FsUmlza1Bsb3QgPSB7XG4gIGNvbnN0IHdpZHRoID0gNjQwO1xuICBjb25zdCBoZWlnaHQgPSA0MDA7XG4gIGNvbnN0IG1hcmdpbiA9IHt0b3A6IDIwLCByaWdodDogMTIwLCBib3R0b206IDUwLCBsZWZ0OiA2MH07XG4gIFxuICAvLyBUaGVtZS1hd2FyZSBjb2xvcnNcbiAgY29uc3QgdGV4dENvbG9yID0gXCJjdXJyZW50Q29sb3JcIjtcbiAgY29uc3QgZ3JpZENvbG9yID0gXCJ2YXIoLS1wbG90LWdyaWQsICNlNWU1ZTUpXCI7XG4gIGNvbnN0IHRlc3RpbmdDb2xvciA9IFwidmFyKC0tYnJhbmQtcmVkLCAjZTQxYTFjKVwiO1xuICBjb25zdCB0cmFpbmluZ0NvbG9yID0gXCJ2YXIoLS1icmFuZC1ibHVlLCAjMzc3ZWI4KVwiO1xuICBcbiAgLy8gR2VuZXJhdGUgZGF0YSBwb2ludHNcbiAgY29uc3QgbiA9IDIwMDtcbiAgY29uc3QgZGF0YSA9IEFycmF5LmZyb20oe2xlbmd0aDogbn0sIChfLCBpKSA9PiB7XG4gICAgY29uc3QgeCA9IGkgLyAobiAtIDEpO1xuICAgIHJldHVybiB7XG4gICAgICB4OiB4LFxuICAgICAgdGVzdGluZzogTWF0aC5leHAoLTIuNiAqIHgpICsgMC42ICogeCAqIHgsXG4gICAgICB0cmFpbmluZzogTWF0aC5leHAoLTIuNiAqIHgpXG4gICAgfTtcbiAgfSk7XG4gIFxuICAvLyBGbGF0dGVuIGZvciBQbG90XG4gIGNvbnN0IHRlc3RpbmdEYXRhID0gZGF0YS5tYXAoZCA9PiAoe3g6IGQueCwgeTogZC50ZXN0aW5nLCBzZXJpZXM6IFwidGVzdGluZ1wifSkpO1xuICBjb25zdCB0cmFpbmluZ0RhdGEgPSBkYXRhLm1hcChkID0+ICh7eDogZC54LCB5OiBkLnRyYWluaW5nLCBzZXJpZXM6IFwidHJhaW5pbmdcIn0pKTtcbiAgXG4gIGNvbnN0IHBsb3QgPSBQbG90LnBsb3Qoe1xuICAgIHdpZHRoLFxuICAgIGhlaWdodCxcbiAgICBtYXJnaW5Ub3A6IG1hcmdpbi50b3AsXG4gICAgbWFyZ2luUmlnaHQ6IG1hcmdpbi5yaWdodCxcbiAgICBtYXJnaW5Cb3R0b206IG1hcmdpbi5ib3R0b20sXG4gICAgbWFyZ2luTGVmdDogbWFyZ2luLmxlZnQsXG4gICAgZ3JpZDogdHJ1ZSxcbiAgICBzdHlsZToge1xuICAgICAgYmFja2dyb3VuZDogXCJ0cmFuc3BhcmVudFwiLFxuICAgICAgZm9udEZhbWlseTogYm9keUZvbnQsXG4gICAgICBjb2xvcjogdGV4dENvbG9yXG4gICAgfSxcbiAgICB4OiB7XG4gICAgICBkb21haW46IFswLCAxXSxcbiAgICAgIGxhYmVsOiBcIm51bWJlciBvZiBpdGVyYXRpb25zIMOXIDEw4oG2XCIsXG4gICAgICB0aWNrczogWzAsIDAuMSwgMC4yLCAwLjMsIDAuNCwgMC41LCAwLjYsIDAuNywgMC44LCAwLjksIDEuMF1cbiAgICB9LFxuICAgIHk6IHtcbiAgICAgIGRvbWFpbjogWzAsIDFdLFxuICAgICAgbGFiZWw6IFwiZW1waXJpY2FsIHJpc2tcIixcbiAgICAgIHRpY2tzOiBbMCwgMC4xLCAwLjIsIDAuMywgMC40LCAwLjUsIDAuNiwgMC43LCAwLjgsIDAuOSwgMS4wXVxuICAgIH0sXG4gICAgbWFya3M6IFtcbiAgICAgIC8vIEdyaWQgc3R5bGluZyB2aWEgZnJhbWVcbiAgICAgIFBsb3QuZnJhbWUoe3N0cm9rZTogZ3JpZENvbG9yLCBzdHJva2VPcGFjaXR5OiAwLjN9KSxcbiAgICAgIFBsb3QubGluZSh0ZXN0aW5nRGF0YSwge3g6IFwieFwiLCB5OiBcInlcIiwgc3Ryb2tlOiB0ZXN0aW5nQ29sb3IsIHN0cm9rZVdpZHRoOiAyfSksXG4gICAgICBQbG90LmxpbmUodHJhaW5pbmdEYXRhLCB7eDogXCJ4XCIsIHk6IFwieVwiLCBzdHJva2U6IHRyYWluaW5nQ29sb3IsIHN0cm9rZVdpZHRoOiAyfSksXG4gICAgICBQbG90LnRleHQoW3t4OiAwLjg1LCB5OiAwLjk1fV0sIHt4OiBcInhcIiwgeTogXCJ5XCIsIHRleHQ6IFtcInRlc3RpbmdcIl0sIGZpbGw6IHRlc3RpbmdDb2xvciwgZm9udFdlaWdodDogXCJib2xkXCIsIGZvbnRTaXplOiAxMn0pLFxuICAgICAgUGxvdC50ZXh0KFt7eDogMC44NSwgeTogMC44OH1dLCB7eDogXCJ4XCIsIHk6IFwieVwiLCB0ZXh0OiBbXCJ0cmFpbmluZ1wiXSwgZmlsbDogdHJhaW5pbmdDb2xvciwgZm9udFdlaWdodDogXCJib2xkXCIsIGZvbnRTaXplOiAxMn0pXG4gICAgXVxuICB9KTtcbiAgXG4gIHJldHVybiBwbG90O1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCd0eXBlZCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdjaG9zZW4nKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnbGV2ZWxzJykifV19
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }

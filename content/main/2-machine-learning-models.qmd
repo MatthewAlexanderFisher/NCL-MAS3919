@@ -4,6 +4,10 @@ execute:
 jupyter: mas2901
 ---
 
+```{ojs}
+bodyFont = getComputedStyle(document.body).fontFamily
+```
+
 # Machine Learning Models {#sec-ml-models-in-detail}
 
 This section takes a deep dive into the two main classes of machine learning model, the <span class="xref-no-num">[linear model @sec-linear-model]</span> and <span class="xref-no-num">[neural networks @sec-nn]</span>
@@ -400,7 +404,7 @@ $$
 $$ {#eq-lp-norm}
 for some $1 \leq s \leq \infty$.
 
-Special cases include the sum norm $\|\bm{\theta}\|_1 = \sum_{i=1}^p |\theta_i|$, the Euclidean norm $\|\bm{\theta}\|_2$ and the *maximum* norm $\|\bm{\theta}\|_\infty = \max \{ |\theta_i| : 1 \leq i \leq p\}$, which each give rise to convex regularisers (\Cref{ex: prove convex}).
+Special cases include the sum norm $\|\bm{\theta}\|_1 = \sum_{i=1}^p |\theta_i|$, the Euclidean norm $\|\bm{\theta}\|_2$ and the *maximum* norm $\|\bm{\theta}\|_\infty = \max \{ |\theta_i| : 1 \leq i \leq p\}$, which each give rise to convex regularisers (@q-convex-regularisation).
 
 For $s < 1$ \eqref{eq: lp norm} does not define a valid norm, but in an unfortunate convention the notation $\|\cdot\|_s$ is still commonly used. The special $\|\bm{\theta}\|_0$ is interpreted as the number of non-zero entries in $\bm{\theta}$.
 
@@ -564,7 +568,7 @@ Beyond just reducing the computational burden of evaluating $f_{\bm{\theta}}(\cd
 Indeed, the non-zero entries of $\bm{\theta}$ determine which of the entries of $\mathbf{X}$ are considered to be most relevant in predicting the response $Y$.
 
 
-### Featurisation {#sec-featurisation}
+### Features {#sec-featurisation}
 
 Given covariates $\mathbf{x}$ we want to understand what *features* $\phi_i(\mathbf{x})$ to include in our model. 
 
@@ -582,8 +586,8 @@ The term *feature space* refers to the image of the *feature map* $\bm{\phi}(\ma
 :::
 
 Feature space is a $p$-dimensional space where each dimension corresponds to a specific feature $\phi_i$. 
-A datum $\mathbf{x}$ is represented in feature space as a vector $\bm{\phi}(\mathbf{x}) = [\phi_1(\mathbf{x}) , \dots , \phi_p(\mathbf{x})]$, so we can consider the feature space to be a subset of $\mathbb{R}^p$.
-(This is why it is called a *space* rather than a *set*; it inherits the mathematical structure of $\mathbb{R}^p$.)
+A datum $\mathbf{x}$ is represented in feature space as a vector $\bm{\phi}(\mathbf{x}) = [\phi_1(\mathbf{x}) , \dots , \phi_p(\mathbf{x})]$, so we can consider the feature space[^feature-space-note] to be a subset of $\mathbb{R}^p$.
+
 The position of $\bm{\phi}(\mathbf{x})$ in feature space is determined by the values of its features $\phi_i(\mathbf{x})$, and this representation can help to understand the relationships between different data points $\mathbf{x} \in \mathcal{X}$.
 
 Some features can be more useful than others for a given task; e.g. the price of a sandwich is usually more relevant to the task of choosing a sandwich for lunch compared to the colour of the packaging. 
@@ -665,13 +669,12 @@ $$
     \mathbf{D} = \left[ \begin{array}{ccc} x_{1,1} & \dots & x_{1,d} \\ \vdots & & \vdots \\ x_{n,1} & \dots & x_{n,d} \end{array} \right]
 \end{align*}
 $$
-so that the sample variance of $\{ \phi_1(\mathbf{x}_i) \}_{i=1}^n$ is
+so that the sample variance[^sample-var-note] of $\{ \phi_1(\mathbf{x}_i) \}_{i=1}^n$ is
 $$
 \begin{align*}
     \frac{1}{n} \sum_{i=1}^n \phi_1(\mathbf{x}_i)^2 = \frac{1}{n} \sum_{i=1}^n (\mathbf{D} \mathbf{a}_1)^\top (\mathbf{D} \mathbf{a}_1) = \frac{1}{n} \sum_{i=1}^n \mathbf{a}_1^\top \mathbf{D}^\top \mathbf{D} \mathbf{a}_1 = \mathbf{a}_1^\top \mathbf{S}_n \mathbf{a}_1 , \qquad \mathbf{S}_n = \frac{1}{n} \mathbf{D}^\top \mathbf{D} .
 \end{align*}
 $$
-(Notice that $\mathbf{S}_n$ is the sample covariance matrix of the data $\{\mathbf{x}_i\}_{i=1}^n$, and therefore $\mathbf{S}_n$ converges to the population covariance matrix $\mathrm{Var}(\mathbf{X})$ in the $n \rightarrow \infty$ limit.)
 
 Thus, we seek to maximise $\mathbf{a}_1^\top \mathbf{S}_n \mathbf{a}_1$ subject to $\|\mathbf{a}_1\| = 1$.
 
@@ -735,7 +738,7 @@ $$
 Intuitively, if most of the variability in $\mathbf{X}$ is retained in the featurised version $\bm{\phi}(\mathbf{X})$, then we say that most of the variance is "explained".
 
 Principal component analysis is based on linear features, but oftentimes *nonlinear* features are more informative for a given machine learning task.
-Nonlinear methods for dimensionality reduction is an interesting topic beyond the scope of this module; an example of one such method is shown in \Cref{fig: manifold hypothesis}.
+Nonlinear methods for dimensionality reduction is an interesting topic beyond the scope of this module; an example of one such method is shown in @fig-manifold-hypothesis.
 
 ```{ojs}
 //| fig-cap: Dimensionality reduction via principal component analysis. For illustration, in the left panel we extract principal components $\mathbf{a}_1$ and $\mathbf{a}_2$ from a two-dimensional dataset (filled circles), but dimensionality reduction techniques are intended for cases where $d \gg 1$. The corresponding feature space is shown in the right panel.
@@ -1051,11 +1054,10 @@ f_{\hat{\bm{\theta}}}(\mathbf{x}_\star) = \bm{\phi}(\mathbf{x}_\star) \hat{\bm{\
 $$
 are exactly the predictions @eq-kernel-interpolant when we express each term using the $k$ notation previously described.
 
-Thus we can consider @eq-kernel-interpolant to be the natural generalisation of ridge regression to the setting where the number of features $p$ is (possibly much) larger than the size $n$ of the training dataset.
-For self-explanatory reasons, @eq-kernel-interpolant is commonly called a *minimal norm interpolant*.
+Thus we can consider @eq-kernel-interpolant to be the natural generalisation of ridge regression to the setting where the number of features $p$ is (possibly much) larger than the size $n$ of the training dataset. For self-explanatory reasons, @eq-kernel-interpolant is commonly called a *minimal norm interpolant*.
 
-Now that we have seen how to make sense of linear models with a large or infinite number of features, it is natural to ask whether there are any examples beside \Cref{ex: gaussian kernel} where the feature map inner produce can be directly computed.
-While the Gaussian kernel is unusual in admitting an *explicit* feature map, there are plenty of examples where we can directly compute an *implicitly defined* feature map inner product.
+Now that we have seen how to make sense of linear models with a large or infinite number of features, it is natural to ask whether there are any examples beside @exr-gaussian-kernel where the feature map inner produce can be directly computed. While the Gaussian kernel is unusual in admitting an *explicit* feature map, there are plenty of examples where we can directly compute an *implicitly defined* feature map inner product.
+
 This is essentially the concept of a **kernel**:
 
 
@@ -1185,12 +1187,328 @@ So, although we do not know exactly what the feature space looks like for the in
 
 The moral here is that it is possible to create rich feature spaces and yet retain tractable computation by using an appropriate kernel.
 
-![Illustrating kernel methods. A kernel corresponds to a feature space that can be high- or even infinite-dimensional. The underlying structure of a dataset often becomes clearer when "lifted" into a higher-dimensional space; in this illustration the red and blue points are separated by a complicated curve, but after mapping into an appropriate feature space the red and blue points can be linearly separated. Source: @researchgate_kernel](figures/kernel_trick.png){#fig-kernel-methods width=70%}
+
+```{ojs}
+//| classes: flex-center
+//| fig-cap: "Illustrating kernel methods. A kernel corresponds to a feature space that can be high- or even infinite-dimensional. The underlying structure of a dataset often becomes clearer when 'lifted' into a higher-dimensional space; in this illustration the red and blue points are separated by a complicated curve, but after mapping into an appropriate feature space the red and blue points can be linearly separated."
+//| label: fig-kernel
+
+kernelFigure = {
+  const width = 800;
+  const height = 420;
+  
+  // Theme-aware colors
+  const bluePoint = "var(--brand-blue, #3b82f6)";
+  const redPoint = "var(--brand-red, #ef4444)";
+  const planeColor = "var(--brand-teal, #14b8a6)";
+  const lineColor = "var(--fg-muted, #6b7280)";
+  const arrowColor = "currentColor";
+  
+  const svg = d3.create("svg")
+    .attr("viewBox", [0, 0, width, height])
+    .attr("width", width)
+    .attr("height", height)
+    .style("background", "transparent")
+    .style("font-family", bodyFont);
+  
+  // Arrow marker
+  const defs = svg.append("defs");
+  defs.append("marker")
+    .attr("id", "arrow-phi")
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 8)
+    .attr("refY", 5)
+    .attr("markerWidth", 5)
+    .attr("markerHeight", 5)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M 0 0 L 10 5 L 0 10 z")
+    .attr("fill", arrowColor);
+  
+  // Shared 3D projection settings
+  const xAxis = {x: 1, y: 0.3};
+  const yAxis = {x: -0.7, y: 0.4};
+  const zAxis = {x: 0, y: -1};
+  
+  function to3DScreen(origin, p3) {
+    return {
+      x: origin.x + p3.x * xAxis.x + p3.y * yAxis.x + p3.z * zAxis.x,
+      y: origin.y + p3.x * xAxis.y + p3.y * yAxis.y + p3.z * zAxis.y
+    };
+  }
+  
+  // Function to draw a "flat" ellipse that lies on the z=0 plane
+  function drawFlatEllipse(g, origin, p, r, fillColor) {
+    const sp = to3DScreen(origin, {x: p.x, y: p.y, z: p.z || 0});
+    
+    const axisX = {x: xAxis.x * r, y: xAxis.y * r};
+    const axisY = {x: yAxis.x * r * 0.7, y: yAxis.y * r * 0.7};
+    
+    const numPoints = 24;
+    const ellipsePoints = [];
+    for (let i = 0; i < numPoints; i++) {
+      const angle = (i / numPoints) * 2 * Math.PI;
+      const ex = sp.x + axisX.x * Math.cos(angle) + axisY.x * Math.sin(angle);
+      const ey = sp.y + axisX.y * Math.cos(angle) + axisY.y * Math.sin(angle);
+      ellipsePoints.push([ex, ey]);
+    }
+    
+    g.append("path")
+      .attr("d", d3.line().curve(d3.curveCardinalClosed)(ellipsePoints))
+      .attr("fill", fillColor);
+    
+    return sp;
+  }
+  
+  // Function to draw a 3D sphere
+  function draw3DSphere(g, origin, p, r, fillColor) {
+    const sp = to3DScreen(origin, p);
+    g.append("circle")
+      .attr("cx", sp.x)
+      .attr("cy", sp.y)
+      .attr("r", r)
+      .attr("fill", fillColor);
+    return sp;
+  }
+  
+  // ===== LEFT PANEL: Input Space =====
+  const leftOrigin = {x: 100, y: 300};
+  const planeSize = 140;
+  
+  const leftPlaneCorners = [
+    {x: 0, y: 0, z: 0},
+    {x: planeSize, y: 0, z: 0},
+    {x: planeSize, y: planeSize, z: 0},
+    {x: 0, y: planeSize, z: 0}
+  ].map(p => to3DScreen(leftOrigin, p));
+  
+  svg.append("polygon")
+    .attr("points", leftPlaneCorners.map(p => `${p.x},${p.y}`).join(" "))
+    .attr("fill", "var(--bg-subtle, #f8fafc)")
+    .attr("fill-opacity", 0.5)
+    .attr("stroke", lineColor)
+    .attr("stroke-width", 1.5);
+  
+  const bluePointsInput = [
+    {x: 10, y: 20}, {x: 25, y: 8}, {x: 50, y: 5},
+    {x: 80, y: 10}, {x: 100, y: 25}, {x: 110, y: 50},
+    {x: 105, y: 80}, {x: 90, y: 105}, {x: 60, y: 115},
+    {x: 30, y: 108}, {x: 12, y: 85}, {x: 8, y: 55}
+  ];
+  
+  const redPointsInput = [
+    {x: 45, y: 45}, {x: 70, y: 40}, {x: 85, y: 55},
+    {x: 80, y: 75}, {x: 60, y: 85}, {x: 40, y: 78},
+    {x: 35, y: 58}, {x: 55, y: 60}, {x: 65, y: 65}
+  ];
+  
+  const center = {x: 60, y: 60};
+  const boundaryPoints = [];
+  for (let angle = 0; angle <= 2 * Math.PI + 0.1; angle += 0.15) {
+    const r = 35 + 5 * Math.sin(3 * angle);
+    boundaryPoints.push({
+      x: center.x + r * Math.cos(angle),
+      y: center.y + r * Math.sin(angle),
+      z: 0
+    });
+  }
+  
+  const screenBoundary = boundaryPoints.map(p => to3DScreen(leftOrigin, p));
+  svg.append("path")
+    .attr("d", d3.line().x(d => d.x).y(d => d.y).curve(d3.curveCardinalClosed)(screenBoundary))
+    .attr("fill", "none")
+    .attr("stroke", lineColor)
+    .attr("stroke-width", 2)
+    .attr("stroke-dasharray", "5,3");
+  
+  const leftPointsGroup = svg.append("g");
+  bluePointsInput.forEach(p => {
+    drawFlatEllipse(leftPointsGroup, leftOrigin, p, 7, bluePoint);
+  });
+  
+  const redScreenPositionsLeft = [];
+  redPointsInput.forEach((p, i) => {
+    const sp = drawFlatEllipse(leftPointsGroup, leftOrigin, p, 7, redPoint);
+    redScreenPositionsLeft.push({input: p, screen: sp, index: i});
+  });
+  
+  svg.append("text")
+    .attr("x", leftOrigin.x)
+    .attr("y", 150)
+    .attr("text-anchor", "middle")
+    .attr("fill", "currentColor")
+    .attr("font-weight", "600")
+    .attr("font-size", 14)
+    .text("a) Input Space");
+  
+  // ===== RIGHT PANEL: Feature Space (3D) =====
+  const rightOrigin = {x: 480, y: 320};
+  const boxSize = 140;
+  
+  const backEdges = [
+    [{x: 0, y: boxSize, z: 0}, {x: 0, y: boxSize, z: boxSize}],
+    [{x: boxSize, y: boxSize, z: 0}, {x: boxSize, y: boxSize, z: boxSize}],
+    [{x: 0, y: boxSize, z: 0}, {x: boxSize, y: boxSize, z: 0}],
+    [{x: 0, y: boxSize, z: boxSize}, {x: boxSize, y: boxSize, z: boxSize}],
+  ];
+  
+  backEdges.forEach(([p1, p2]) => {
+    const s1 = to3DScreen(rightOrigin, p1);
+    const s2 = to3DScreen(rightOrigin, p2);
+    svg.append("line")
+      .attr("x1", s1.x).attr("y1", s1.y)
+      .attr("x2", s2.x).attr("y2", s2.y)
+      .attr("stroke", lineColor)
+      .attr("stroke-width", 1)
+      .attr("stroke-opacity", 0.4)
+      .attr("stroke-dasharray", "3,3");
+  });
+  
+  const midEdges = [
+    [{x: 0, y: 0, z: boxSize}, {x: 0, y: boxSize, z: boxSize}],
+    [{x: boxSize, y: 0, z: boxSize}, {x: boxSize, y: boxSize, z: boxSize}],
+    [{x: 0, y: 0, z: boxSize}, {x: boxSize, y: 0, z: boxSize}],
+  ];
+  
+  midEdges.forEach(([p1, p2]) => {
+    const s1 = to3DScreen(rightOrigin, p1);
+    const s2 = to3DScreen(rightOrigin, p2);
+    svg.append("line")
+      .attr("x1", s1.x).attr("y1", s1.y)
+      .attr("x2", s2.x).attr("y2", s2.y)
+      .attr("stroke", lineColor)
+      .attr("stroke-width", 1)
+      .attr("stroke-opacity", 0.5)
+      .attr("stroke-dasharray", "3,3");
+  });
+  
+  function featureMap(p) {
+    const cx = 60, cy = 60;
+    const dx = p.x - cx, dy = p.y - cy;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const maxDist = 60;
+    const z = Math.max(0, (1 - dist/maxDist)) * 120 + 10;
+    return {
+      x: p.x * (boxSize / 120),
+      y: p.y * (boxSize / 120),
+      z: z
+    };
+  }
+  
+  const bluePoints3D = bluePointsInput.map(p => ({...featureMap(p), color: bluePoint, isRed: false, input: p}));
+  const redPoints3D = redPointsInput.map(p => ({...featureMap(p), color: redPoint, isRed: true, input: p}));
+  
+  bluePoints3D.sort((a, b) => (b.y - a.y));
+  redPoints3D.sort((a, b) => (b.y - a.y));
+  
+  // Separating plane corners
+  const planeZ = 70;
+  const planeTilt = 15;
+  const planeCorners3D = [
+    {x: 0, y: 0, z: planeZ - planeTilt},
+    {x: boxSize, y: 0, z: planeZ + planeTilt},
+    {x: boxSize, y: boxSize, z: planeZ + planeTilt + 10},
+    {x: 0, y: boxSize, z: planeZ - planeTilt + 10}
+  ];
+  const planeScreenCorners = planeCorners3D.map(p => to3DScreen(rightOrigin, p));
+  
+  // LAYER 1: Draw blue points (below the plane)
+  const rightPointsGroup = svg.append("g");
+  bluePoints3D.forEach(p3 => {
+    draw3DSphere(rightPointsGroup, rightOrigin, p3, 7, p3.color);
+  });
+  
+  // LAYER 2: Draw plane FILL only (semi-transparent, no stroke)
+  svg.append("polygon")
+    .attr("points", planeScreenCorners.map(p => `${p.x},${p.y}`).join(" "))
+    .attr("fill", planeColor)
+    .attr("fill-opacity", 0.35)
+    .attr("stroke", "none");
+  
+  // LAYER 3: Draw red points (above the plane)
+  const redScreenPositionsRight = [];
+  redPoints3D.forEach(p3 => {
+    const sp = draw3DSphere(rightPointsGroup, rightOrigin, p3, 7, p3.color);
+    redScreenPositionsRight.push({input: p3.input, p3d: p3, screen: sp});
+  });
+  
+  // LAYER 4: Draw plane STROKE only (on top of everything for clean edge)
+  svg.append("polygon")
+    .attr("points", planeScreenCorners.map(p => `${p.x},${p.y}`).join(" "))
+    .attr("fill", "none")
+    .attr("stroke", planeColor)
+    .attr("stroke-width", 1.5);
+  
+  // Front box edges
+  const frontEdges = [
+    [{x: 0, y: 0, z: 0}, {x: boxSize, y: 0, z: 0}],
+    [{x: 0, y: 0, z: 0}, {x: 0, y: boxSize, z: 0}],
+    [{x: 0, y: 0, z: 0}, {x: 0, y: 0, z: boxSize}],
+    [{x: boxSize, y: 0, z: 0}, {x: boxSize, y: boxSize, z: 0}],
+    [{x: boxSize, y: 0, z: 0}, {x: boxSize, y: 0, z: boxSize}],
+  ];
+  
+  frontEdges.forEach(([p1, p2]) => {
+    const s1 = to3DScreen(rightOrigin, p1);
+    const s2 = to3DScreen(rightOrigin, p2);
+    svg.append("line")
+      .attr("x1", s1.x).attr("y1", s1.y)
+      .attr("x2", s2.x).attr("y2", s2.y)
+      .attr("stroke", lineColor)
+      .attr("stroke-width", 1.5)
+      .attr("stroke-opacity", 0.8);
+  });
+  
+  svg.append("text")
+    .attr("x", rightOrigin.x)
+    .attr("y", 150)
+    .attr("text-anchor", "middle")
+    .attr("fill", "currentColor")
+    .attr("font-weight", "600")
+    .attr("font-size", 14)
+    .text("b) Feature Space");
+  
+  // ===== CURVED ARROW with φ =====
+  const chosenLeftPoint = redScreenPositionsLeft[7];
+  const chosenRightPoint = redScreenPositionsRight.find(
+    rp => rp.input.x === chosenLeftPoint.input.x && rp.input.y === chosenLeftPoint.input.y
+  );
+  
+  const arrowStart = chosenLeftPoint.screen;
+  const arrowEnd = chosenRightPoint.screen;
+  
+  const arrowControl1 = {x: arrowStart.x + 50, y: arrowStart.y - 60};
+  const arrowControl2 = {x: arrowEnd.x - 50, y: arrowEnd.y - 60};
+  
+  svg.append("path")
+    .attr("d", `M ${arrowStart.x} ${arrowStart.y} C ${arrowControl1.x} ${arrowControl1.y}, ${arrowControl2.x} ${arrowControl2.y}, ${arrowEnd.x} ${arrowEnd.y}`)
+    .attr("fill", "none")
+    .attr("stroke", arrowColor)
+    .attr("stroke-width", 2)
+    .attr("marker-end", "url(#arrow-phi)");
+  
+  // φ label at Bezier midpoint
+  const t = 0.5;
+  const bezierMidX = Math.pow(1-t,3)*arrowStart.x + 3*Math.pow(1-t,2)*t*arrowControl1.x + 3*(1-t)*t*t*arrowControl2.x + t*t*t*arrowEnd.x;
+  const bezierMidY = Math.pow(1-t,3)*arrowStart.y + 3*Math.pow(1-t,2)*t*arrowControl1.y + 3*(1-t)*t*t*arrowControl2.y + t*t*t*arrowEnd.y;
+  
+  svg.append("text")
+    .attr("x", bezierMidX)
+    .attr("y", bezierMidY - 10)
+    .attr("text-anchor", "middle")
+    .attr("fill", "currentColor")
+    .attr("font-size", 22)
+    .attr("font-style", "italic")
+    .text("φ");
+  
+  return svg.node();
+}
+```
 
 *Kernel methods* form a rich topic in machine learning, with textbook treatments including @berlinet2011reproducing and @paulsen2016introduction.
 
 Regression and classification are two examples of machine learning tasks where kernel methods are successfully used.
-These methods work because the intrinsic structure of the data can often be more easily understood in high-dimensional feature spaces; see @fig-kernel-methods
+These methods work because the intrinsic structure of the data can often be more easily understood in high-dimensional feature spaces; see @fig-kernel
 
 However, unlike in <span class="xref-no-num">[variable selection @sec-variable-selection]</span> and <span class="xref-no-num">[dimensionality reduction @sec-dim-reduction]</span>, the feature space associated to a kernel is fully determined by the kernel, *not* learned from the dataset.
 
@@ -1596,10 +1914,10 @@ Its transparent nature has led to many mathematical results attempting to explai
 In contrast to explicit regularisation, *implicit* regularisation refers to the phenomenon where certain properties of the training process inherently prevent overfitting, without explicitly changing the training objective or the architecture of the neural network:
 
 
-- **Imperfect optimisation.** Optimisation over a high-dimensional parameter space $\Theta$ is usually extremely difficult, and though we can easily write down training objectives (e.g. additively regularised empirical risk minimisation, as in \Cref{def: additive reg}) we cannot in general expect to find the global minimiser of such objectives.
+- **Imperfect optimisation.** Optimisation over a high-dimensional parameter space $\Theta$ is usually extremely difficult, and though we can easily write down training objectives (e.g. additively regularised empirical risk minimisation, as in @def-additive-reg) we cannot in general expect to find the global minimiser of such objectives.
   Instead, we can expect to find a *local* minimum of the training objective, and not all local minima are equally good when it comes to performance of the machine learning model. 
-  An important phenomenon often observed in training large machine learning models is that *wide* minima (i.e. where changing the parameters a little does not affect the model performance much) tend to be associated with better performance compared to *sharp* minima (i.e. where changing the parameters a little can lead to a huge change in performance of the machine learning model); see \Cref{fig: minima}.
-  The default class of numerical methods used to train machine learning models are based on *stochastic optimisation* (cf. \Cref{sec: stoch opt}), and their stochastic nature can have a regularising effect. 
+  An important phenomenon often observed in training large machine learning models is that *wide* minima (i.e. where changing the parameters a little does not affect the model performance much) tend to be associated with better performance compared to *sharp* minima (i.e. where changing the parameters a little can lead to a huge change in performance of the machine learning model); see @fig-minima.
+  The default class of numerical methods used to train machine learning models are based on *stochastic optimisation* (cf. @sec-stoch-opt), and their stochastic nature can have a regularising effect. 
   This noise in effect prevents the optimiser from settling into sharp minima that are often associated with overfitting. 
 - Counter-intuitively, **overparameterised networks**, i.e., networks with more parameters than training data points, often lead to better generalisation performance. This is attributed to the ability of large networks to explore different paths during optimisation, with the result that the optimiser is more likely to find shallow minima.
 - **Stopping the training process** (i.e. the optimisation; cf. @sec-stoch-opt) early, when performance on a validation set starts degrading, can be seen as implicit regularisation by preventing overfitting to the training dataset.
@@ -1610,7 +1928,7 @@ Compared to explicit regularisation, implicit regularisation is theoretically le
 
 ![Different types of local minima for risk. The solid black curve represents the empirical risk $\theta \mapsto \mathcal{R}_n(f_{\theta})$ and the dashed red curve represents the population risk $\theta \mapsto \mathcal{R}(f_{\theta})$. A *wide* minimum of the empirical risk (left vertical dashed) tends to be associated with a lower value of the population risk, compared to a *sharp* minimum (right vertical dashed).](figures/minima.png){#fig-minima width=70%}
 
-### Featurisation
+### Featurisation {#sec-data-featurisation}
 
 At the end of @sec-kernel-methods we bemoaned the difficulty in selecting an appropriate feature space and advertised neural networks as an attractive way to obtain a data-driven feature space. But what is this data-driven feature space?
 
@@ -1646,3 +1964,9 @@ Conceptually, at least, one can consider visualising a learned feature $\phi_i$ 
 
 [^stationary-kernel]:
     Such a kernel is called *translation invariant*.
+
+[^sample-var-note]:
+    Notice that $\mathbf{S}_n$ is the sample covariance matrix of the data $\{\mathbf{x}_i\}_{i=1}^n$, and therefore $\mathbf{S}_n$ converges to the population covariance matrix $\mathrm{Var}(\mathbf{X})$ in the $n \rightarrow \infty$ limit.
+  
+[^feature-space-note]:
+    This is why it is called a *space* rather than a *set*; it inherits the mathematical structure of $\mathbb{R}^p$.

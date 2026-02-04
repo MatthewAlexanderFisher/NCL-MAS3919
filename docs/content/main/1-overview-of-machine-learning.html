@@ -1948,7 +1948,7 @@ Figure&nbsp;1.5: A closer look at the input layer and the first hidden layer of 
 </div>
 <div class="callout-body-container">
 <div id="exm-sota-text-to-video" class="theorem example">
-<p><span class="theorem-title"><strong>Example 1.16 (State of the Art for Text-to-Video<span class="advanced" title="MAS8607 Content"><i class="fa-solid fa-star" aria-label="star"></i></span>)</strong></span> A well-known example of a machine learning model for text-to-video is <a href="https://openai.com/sora/">SORA</a> by OpenAI. The precise details of SORA are not public at the time of writing these notes, but some details are available in a <a href="https://openai.com/research/video-generation-models-as-world-simulators">technical report</a>. A possible model architecture is illustrated in <span class="quarto-unresolved-ref">?fig-SORA</span>. The model begins by analysing the provided text to understand its structure and content; this likely involves the use of a large language model (LLM), and we will discuss these in <span class="quarto-unresolved-ref">?sec-text-data</span>. Then the model proceeds to generate video content; generative modelling is a very active area of machine learning and we will learn more about it in <a href="6-beyond-supervised-learning.html#sec-generative-models" class="quarto-xref"><span>Section 6.3.1</span></a>.</p>
+<p><span class="theorem-title"><strong>Example 1.16 (State of the Art for Text-to-Video<span class="advanced" title="MAS8607 Content"><i class="fa-solid fa-star" aria-label="star"></i></span>)</strong></span> A well-known example of a machine learning model for text-to-video is <a href="https://openai.com/sora/">SORA</a> by OpenAI. The precise details of SORA are not public at the time of writing these notes, but some details are available in a <a href="https://openai.com/research/video-generation-models-as-world-simulators">technical report</a>. A possible model architecture is illustrated in <a href="#fig-SORA" class="quarto-xref">Figure&nbsp;<span>1.6</span></a>. The model begins by analysing the provided text to understand its structure and content; this likely involves the use of a large language model (LLM), and we will discuss these in <a href="../practicals/3-training-ml-models-in-pytorch.html" class="quarto-xref"><span>Chapter 10</span></a>. Then the model proceeds to generate video content; generative modelling is a very active area of machine learning and we will learn more about it in <a href="6-beyond-supervised-learning.html#sec-generative-models" class="quarto-xref"><span>Section 6.3.1</span></a>.</p>
 </div>
 </div>
 </div>
@@ -1963,6 +1963,16 @@ Figure&nbsp;1.5: A closer look at the input layer and the first hidden layer of 
 \tag{1.5}</span></span> is minimal.</p>
 <p>This is a rich area of methodological development, but in this module we restrict attention to two main techniques: 1. <span class="xref-no-num"><a href="#sec-erm" class="quarto-xref">Empirical Risk Minimisation&nbsp;<span>1.2.1</span></a></span> 2. <span class="xref-no-num"><a href="#sec-max-like" class="quarto-xref">Maximum Likelihood&nbsp;<span>1.2.2</span></a></span></p>
 <p>Actually, we will see that maximum likelihood can be considered as a special case of empirical risk minimisation.</p>
+<div id="fig-SORA" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-SORA-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/sora.png" class="img-fluid figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-SORA-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.6: Speculated architecture used in OpenAI’s SORA model.. [<a href="https://medium.com/@liltom.eth/techniques-behind-openai-sora-f1cd3acf9b3e">source</a>]
+</figcaption>
+</figure>
+</div>
 <section id="sec-erm" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="sec-erm"><span class="header-section-number">1.2.1</span> Empirical Risk Minimisation</h3>
 <p>The first method for training that we consider is also the simplest and most direct.</p>
@@ -2053,7 +2063,7 @@ f_n \in \argmin_{f \in \mathcal{F}} \mathcal{R}_n(f)
 <p>In the usual case where the machine learning model is parametrised, say <span class="math inline">\mathcal{F} = \{f_{\bm{\theta}}\}_{\bm{\theta} \in \Theta}</span>, then <a href="#eq-erm" class="quarto-xref">Equation&nbsp;<span>1.6</span></a> is equivalent to picking parameters <span class="math display">
 \hat{\bm{\theta}} \in \argmin_{\bm{\theta} \in \Theta} \mathcal{R}_n(f_{\bm{\theta}})
 </span> for which <span class="math inline">f_{\hat{\bm{\theta}}}</span> minimises the empirical risk.</p>
-<p>A discussion of how to solve such optimisation problems numerically is deferred to <span class="quarto-unresolved-ref">?def-adversarial-attacksec-stoch-opt</span>.</p>
+<p>A discussion of how to solve such optimisation problems numerically is deferred to @<a href="3-stochastic-optimisation.html" class="quarto-xref"><span>Chapter 3</span></a>.</p>
 <p>This is the simplest version of empirical risk minimisation, and in practice techniques such as <em>regularisation</em> are important to avoid issues such as <em>over-fitting</em>; we will return to these when we study specific machine learning models in detail in <a href="2-machine-learning-models.html" class="quarto-xref"><span>Chapter 2</span></a>.</p>
 </section>
 <section id="sec-max-like" class="level3" data-number="1.2.2">
@@ -2118,7 +2128,7 @@ f_n \in \argmin_{f \in \mathcal{F}} \mathcal{R}_n(f)
 <p>Is the trained model <span class="math inline">f_{\hat{\theta}}</span> any good?</p>
 <p>In principle a sufficiently flexible machine learning model may have the capacity to <em>exactly</em> reproduce the training dataset, meaning that <span class="math inline">\mathcal{R}_n(f_{\hat{\bm{\theta}}})</span> can be small or identically <span class="math inline">0</span>.</p>
 <p>But this is a statement only regarding the performance of the model applied to the specific data <span class="math inline">\{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^n</span> on which it was trained, not a statement about performance when applied to <em>new</em> samples <span class="math inline">(\mathbf{X},\mathbf{Y}) \sim P</span>.</p>
-<p>A trained model that has small empirical risk on the training data <span class="math inline">\mathcal{R}_n(f_{\hat{\bm{\theta}}})</span> but a large population risk <span class="math inline">\mathcal{R}(f_{\hat{\bm{\theta}}})</span> is said to be <em>over-fitted</em> to the training dataset; see the illustration in <a href="#fig-overfit" class="quarto-xref">Figure&nbsp;<span>1.6</span></a></p>
+<p>A trained model that has small empirical risk on the training data <span class="math inline">\mathcal{R}_n(f_{\hat{\bm{\theta}}})</span> but a large population risk <span class="math inline">\mathcal{R}(f_{\hat{\bm{\theta}}})</span> is said to be <em>over-fitted</em> to the training dataset; see the illustration in <a href="#fig-overfit" class="quarto-xref">Figure&nbsp;<span>1.7</span></a></p>
 <p>The error due to optimising <span class="math inline">\mathcal{R}_n(\cdot)</span> instead of <span class="math inline">\mathcal{R}(\cdot)</span> is known as the <em>generalisation error</em> and we will study this mathematically in <a href="4-generalisation-error.html" class="quarto-xref"><span>Chapter 4</span></a>.</p>
 <p>Techniques known as <em>regularisation</em> can be employed in conjunction with empirical risk minimisation to prevent over-fitting; we return to these in <a href="2-machine-learning-models.html" class="quarto-xref"><span>Chapter 2</span></a>.</p>
 <p>First we turn attention to practical techniques that aim to approximate the population risk <span class="math inline">\mathcal{R}</span> for the purpose of performance assessment.</p>
@@ -2128,7 +2138,7 @@ f_n \in \argmin_{f \in \mathcal{F}} \mathcal{R}_n(f)
 <img src="figures/overfit.png" class="img-fluid figure-img" style="width:70.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-overfit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1.6: Illustration of under/over-fitting to a footfall dataset. Left: The model lacks the capacity to reproduce the true nonlinear trend; we say the data are <em>under-fitted</em>. Centre: The empirical risk and the population risk of the fitted model are almost equal. The model is said to be <em>parsimonius</em> for the dataset. Right: The empirical risk of the model is <span class="math inline">0</span> (i.e.&nbsp;the training data are exactly interpolated), but the population risk is large, especially here when <span class="math inline">x</span> is small; we say the data are <em>over-fitted</em>.
+Figure&nbsp;1.7: Illustration of under/over-fitting to a footfall dataset. Left: The model lacks the capacity to reproduce the true nonlinear trend; we say the data are <em>under-fitted</em>. Centre: The empirical risk and the population risk of the fitted model are almost equal. The model is said to be <em>parsimonius</em> for the dataset. Right: The empirical risk of the model is <span class="math inline">0</span> (i.e.&nbsp;the training data are exactly interpolated), but the population risk is large, especially here when <span class="math inline">x</span> is small; we say the data are <em>over-fitted</em>.
 </figcaption>
 </figure>
 </div>

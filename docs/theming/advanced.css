@@ -5,3 +5,22 @@
   font-size: 0.85em;
   vertical-align: middle;
 }
+
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+/* Make Observable Plot grid lines theme-aware */
+.plot svg [aria-label="grid"] line {
+  stroke: var(--plot-grid, currentColor);
+  stroke-opacity: 0.2;
+}
+
+/* Axis lines */
+.plot svg [aria-label="x-axis"] line,
+.plot svg [aria-label="y-axis"] line {
+  stroke: currentColor;
+  stroke-opacity: 0.5;
+}

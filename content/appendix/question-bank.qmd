@@ -94,7 +94,7 @@ viewof typed = {
   // --- DOM
   const wrapper = html`<div class="token-autocomplete"></div>`;
   const labelEl = html`<label class="token-label">Filter by tags (type, space-separated):</label>`;
-  const input   = html`<input class="token-input" type="text" placeholder="e.g. bayes probability">`;
+  const input   = html`<input class="token-input" type="text" placeholder="e.g. risk loss-function">`;
   wrapper.append(labelEl, input);
 
   // --- PORTAL: suggestions list lives at document.body so it can overlay everything
@@ -305,8 +305,398 @@ viewof levels = Inputs.checkbox(
 
 :::
 
-::: {.callout-important .question appearance="minimal" data-tags="kernels" data-difficulty="1"}
-## Sums of kernels are kernels [{{< fa star >}}]{.advanced title="Advanced content for 4th year students"}
+
+::: {.callout-important .question appearance="minimal" data-tags="supervised-learning exercise-sheet-1" data-difficulty="1" #q-formulate-sl-task}
+## Formulating a supervised learning task
+
+The aim of this exercise is to practise formulating a well-defined supervised learning task in the sense of @def-supervised-learning-task. That is, for each of the following real-world tasks, identify suitable choices of $\mathcal{X}$, $\mathcal{Y}$, $\mathcal{Z}$ and $L$, and suggest suitable training data, in order to turn the real-world task into a supervised learning task.
+
+1. An unknown food ingredient can make me feel unwell, and I would like to find out what it is.
+
+2. I accidentally had my thumb in the way when taking a photo, so part of the image is obscured. I would like to digitally remove my thumb and fill the region that was obscured with realistic content.
+
+Formulating a well-defined task is often the main challenge in real-world applications of machine learning, together with acquiring a suitable training dataset.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+There is no unique solution here; the main goal is to think about what is required to define a well-posed supervised learning task.
+
+An example solution for the first problem is:
+
+- $\mathcal{X} = \{0,1\}^d$, where $\mathbf{x}_i$ is a binary vector indicating the presence or absence of $d$ different common allergens in the $i$th item of food that was consumed.
+
+- $\mathcal{Y} = \{0,1\}$, where $y_i$ indicates whether or not symptoms occurred after eating the $i$th item of food.
+
+- $\mathcal{Z} = \mathcal{P}(\{0,1\})$, so that the output $f(\mathbf{x})$ of a machine learning model is a probabilistic prediction for whether symptoms occur after consuming food with allergen profile $\mathbf{x}$.
+
+- $L(y,P) = -\log p(y)$, the cross-entropy loss associated with the predictive distribution $P$ (with probability mass function $p$) when the observed response is $y$ (recall how this loss function is used for classification tasks in @exm-classification).
+
+The training dataset then consists of pairs $(\mathbf{x}_i,y_i)$ of allergen profiles $\mathbf{x}_i$ and observed symptoms $y_i$.
+
+Of course, many refinements are possible. For example, one could measure the *amount* of each allergen in each food item, incorporate the time elapsed before symptoms occurred, or record a more detailed measure of symptom severity.
+
+An example solution for the second task is:
+
+- $\mathcal{X} = \mathbb{R}^d$, where $\mathbf{x}_i$ contains the RGB values of each unobscured pixel in the $i$th image.
+
+- $\mathcal{Y} = \mathbb{R}^p$, where $\mathbf{y}_i$ contains the RGB values of each obscured pixel in the $i$th image.
+
+- $\mathcal{Z} = \mathbb{R}^p$, so that the output $f(\mathbf{x})$ of a machine learning model represents a prediction for the values of the obscured pixels.
+
+- For example,
+  $$
+  L(\mathbf{y},\mathbf{z}) = \lVert \mathbf{y} - \mathbf{z} \rVert,
+  $$
+  as a simple measure of dissimilarity between the predicted and true hidden pixels.
+
+The training dataset can be obtained by taking real images and artificially obscuring parts of them, producing inputs $\mathbf{x}_i$, while retaining the true hidden pixels $\mathbf{y}_i$ as ground truth.
+
+The choice of loss function here is in fact not ideal, because the generated pixels $\mathbf{z}$ could look entirely realistic while still being very different from $\mathbf{y}$ in a pixel-wise sense.
+A better approach would be to measure how well a classifier can distinguish real from fake hidden regions, but this idea has not yet been introduced; see @sec-adversarial-training.
+
+</details>
+
+:::
+
+::: {.callout-important .question appearance="minimal" data-tags="risk loss-function exercise-sheet-1" data-difficulty="1" #q-cross-entropy-loss}
+## Cross-entropy loss
+
+Let $Y_1,\dots,Y_n \sim \mathrm{Bern}(\rho)$ be independent, for an unknown success parameter $\rho \in [0,1]$.
+Estimating $\rho$ can be cast as empirical risk minimisation with $\mathcal{X} = \emptyset$, $f(\mathcal{X}) = \rho$, and the cross-entropy loss
+$$
+L(y,\rho) = -\log p_\rho(y),
+$$
+where $p_\rho$ is the probability mass function of $\mathrm{Bern}(\rho)$.
+Compute the empirical risk minimiser $\hat{\rho}$.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+The empirical risk is
+$$
+\mathcal{R}_n(f)
+=
+\frac{1}{n}\sum_{i=1}^n L(Y_i,\rho)
+=
+- \frac{1}{n}\sum_{i=1}^n
+\big[
+Y_i \log \rho + (1-Y_i)\log(1-\rho)
+\big].
+$$
+
+Differentiating with respect to $\rho$ and setting the derivative equal to zero gives
+$$
+0
+=
+\partial_\rho \mathcal{R}_n(f)
+=
+- \frac{1}{n}\sum_{i=1}^n
+\left[
+\frac{Y_i}{\rho}
+-
+\frac{1-Y_i}{1-\rho}
+\right].
+$$
+
+Solving this equation yields
+$$
+\hat{\rho}
+=
+\frac{1}{n}\sum_{i=1}^n Y_i,
+$$
+the arithmetic mean of the data.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="classification risk loss-function exercise-sheet-1" data-difficulty="2" #q-zero-one-loss}
+## The 0–1 loss
+
+Let $P$ be a probability distribution on $\mathcal{X} \times \mathcal{Y}$ where
+$\mathcal{Y} = \mathcal{Z} = \{0,1\}$, and let
+$$
+L(y,z)
+=
+\begin{cases}
+0, & y = z,\\
+1, & y \neq z,
+\end{cases}
+$$
+be the *0–1 loss*.
+Let $p(\cdot \mid \mathbf{x})$ denote the probability mass function of
+$Y \mid \mathbf{X}=\mathbf{x}$.
+
+Show that the *Bayes predictor*
+$$
+f_\star(\mathbf{x})
+=
+\begin{cases}
+1, & p(1\mid\mathbf{x}) \ge \displaystyle \frac{1}{2},\\
+0, & \text{otherwise},
+\end{cases}
+$$
+is optimal, in the sense that no other function
+$f : \mathcal{X} \rightarrow \mathcal{Z}$ achieves a lower risk $\mathcal{R}(f)$.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+Using the tower property of conditional expectation, the risk for a general function
+$f : \mathcal{X} \rightarrow \mathcal{Z}$ is
+$$
+\begin{aligned}
+\mathcal{R}(f)
+&=
+\mathbb{E}_{(\mathbf{X},Y)\sim P}\!\left[ L\big(Y,f(\mathbf{X})\big) \right] \\
+&=
+\mathbb{E}\!\left[
+\mathbb{E}\!\left[ L\big(Y,f(\mathbf{X})\big)\mid \mathbf{X} \right]
+\right] \\
+&=
+\mathbb{E}\!\left[
+p(0\mid \mathbf{X})\, f(\mathbf{X})
++
+p(1\mid \mathbf{X})\,\big(1-f(\mathbf{X})\big)
+\right].
+\end{aligned}
+$$
+
+Since $f(\mathbf{x})$ can only take values in $\{0,1\}$, for each fixed
+$\mathbf{X}=\mathbf{x}$ the inner expression is minimised by choosing
+$f(\mathbf{x}) = f_\star(\mathbf{x})$.
+
+Because this choice can be made independently for each $\mathbf{x}$, it follows that
+$f_\star$ minimises the risk $\mathcal{R}(f)$.
+
+</details>
+
+:::
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-1 neural-networks" data-difficulty="1" #q-nn-linear-model}
+## Neural networks and linear models
+
+Show that the machine learning model
+$$
+\mathcal{F} = \{ f_{\boldsymbol{\theta}} \}_{\boldsymbol{\theta} \in \Theta},
+$$
+where $f_{\boldsymbol{\theta}} : \mathbb{R}^d \rightarrow \mathbb{R}$ is an $L$-layer fully connected neural network whose weights and bias parameters are collectively represented by $\boldsymbol{\theta} \in \Theta$, is identical to a linear model with features
+$$
+\phi_0(\mathbf{x}) = 1, \quad \phi_1(\mathbf{x}) = x_1, \dots, \phi_d(\mathbf{x}) = x_d
+$$
+when the identity activation function $\sigma(z)=z$ is used[^nn-cautionary-note].
+
+
+
+<details class="solution">
+  <summary>Solution</summary>
+
+An $L$-layer fully connected neural network with scalar output can be written (see @exm-neural-network) as
+$$
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\mathbf{w}^{(L)}
+\,
+\sigma\!\left(
+\mathbf{W}^{(L-1)}
+\sigma\!\left(
+\cdots
+\sigma\!\left(
+\mathbf{W}^{(1)}\mathbf{x}
++
+\mathbf{b}^{(1)}
+\right)
+\cdots
+\right)
++
+\mathbf{b}^{(L-1)}
+\right)
++
+b^{(L)},
+$$
+where $\mathbf{w}^{(L)}$ is a row vector and $b^{(L)}$ is a scalar.
+
+If we substitute $\sigma(\cdot)$ with the identity function, this becomes
+$$
+\begin{aligned}
+f_{\boldsymbol{\theta}}(\mathbf{x})
+&=
+\mathbf{w}^{(L)}
+\Big(
+\mathbf{W}^{(L-1)}
+(
+\cdots
+(
+\mathbf{W}^{(1)}\mathbf{x}
++
+\mathbf{b}^{(1)}
+)
+\cdots
+)
++
+\mathbf{b}^{(L-1)}
+\Big)
++
+b^{(L)} \\[4pt]
+&=
+\underbrace{
+\big(
+\mathbf{w}^{(L)}
+\mathbf{W}^{(L-1)}
+\cdots
+\mathbf{W}^{(1)}
+\big)
+}_{=(\vartheta_1,\dots,\vartheta_d)}
+\mathbf{x}
++
+\underbrace{
+\big(
+\mathbf{w}^{(L)}
+\mathbf{W}^{(L-1)}
+\cdots
+\mathbf{W}^{(2)}
+\big)
+\mathbf{b}^{(1)}
++
+\cdots
++
+b^{(L)}
+}_{=\vartheta_0}.
+\end{aligned}
+$$
+
+Writing the resulting coefficients as
+$\boldsymbol{\vartheta}=(\vartheta_0,\vartheta_1,\dots,\vartheta_d)$, we obtain
+$$
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\vartheta_0 \phi_0(\mathbf{x})
++
+\vartheta_1 \phi_1(\mathbf{x})
++
+\cdots
++
+\vartheta_d \phi_d(\mathbf{x}),
+$$
+which is precisely a linear model (cf. @exm-linear-regression).
+
+</details>
+
+:::
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-3 training overfitting" data-difficulty="1" #q-training-ml-model}
+## Training a machine learning model
+
+A biotech[^question-reference] start-up asks you to train a deep neural network to distinguish between benign skin lesions, such as freckles and moles, and harmful skin lesions, such as carcinoma and melanoma.  
+Your line manager is enthusiastic and supportive, but does not have a machine learning background.
+
+The data consist of a large number of images of skin lesions, together with the outcome of a biopsy to determine whether the lesion was benign or malignant.
+
+For the purposes of performance assessment, you plan to train the deep neural network on $90\%$ of the dataset, and to reserve $10\%$ as a test dataset.
+You instantiate a deep neural network in Torch and perform training via empirical risk minimisation, based on the cross-entropy loss and gradient descent.
+During training you monitor the empirical risk computed over the training dataset, and also the empirical risk computed over the test dataset.
+You observe something like the following:
+
+
+```{ojs}
+//| classes: flex-center
+// Empirical Risk vs Iterations Plot
+empiricalRiskPlot = {
+  const width = 640;
+  const height = 400;
+  const margin = {top: 20, right: 120, bottom: 50, left: 60};
+  
+  // Theme-aware colors
+  const textColor = "currentColor";
+  const gridColor = "var(--plot-grid, #e5e5e5)";
+  const testingColor = "var(--brand-red, #e41a1c)";
+  const trainingColor = "var(--brand-blue, #377eb8)";
+  
+  // Generate data points
+  const n = 200;
+  const data = Array.from({length: n}, (_, i) => {
+    const x = i / (n - 1);
+    return {
+      x: x,
+      testing: Math.exp(-2.6 * x) + 0.6 * x * x,
+      training: Math.exp(-2.6 * x)
+    };
+  });
+  
+  // Flatten for Plot
+  const testingData = data.map(d => ({x: d.x, y: d.testing, series: "testing"}));
+  const trainingData = data.map(d => ({x: d.x, y: d.training, series: "training"}));
+  
+  const plot = Plot.plot({
+    width,
+    height,
+    marginTop: margin.top,
+    marginRight: margin.right,
+    marginBottom: margin.bottom,
+    marginLeft: margin.left,
+    grid: true,
+    style: {
+      background: "transparent",
+      fontFamily: bodyFont,
+      color: textColor
+    },
+    x: {
+      domain: [0, 1],
+      label: "number of iterations × 10⁶",
+      ticks: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    },
+    y: {
+      domain: [0, 1],
+      label: "empirical risk",
+      ticks: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    },
+    marks: [
+      // Grid styling via frame
+      Plot.frame({stroke: gridColor, strokeOpacity: 0.3}),
+      Plot.line(testingData, {x: "x", y: "y", stroke: testingColor, strokeWidth: 2}),
+      Plot.line(trainingData, {x: "x", y: "y", stroke: trainingColor, strokeWidth: 2}),
+      Plot.text([{x: 0.85, y: 0.95}], {x: "x", y: "y", text: ["testing"], fill: testingColor, fontWeight: "bold", fontSize: 12}),
+      Plot.text([{x: 0.85, y: 0.88}], {x: "x", y: "y", text: ["training"], fill: trainingColor, fontWeight: "bold", fontSize: 12})
+    ]
+  });
+  
+  return plot;
+}
+```
+
+1. Explain what is happening in this figure, in terms that your line manager can understand.
+
+2. You recommend terminating the training after $0.5 \times 10^6$ iterations in order to minimise the testing risk, but your line manager does not like this idea (they are worried that this approach is influenced by the initial choice of which $10\%$ of the data were held out). Suggest alternative solutions that could stop the test risk from increasing again as more iterations are performed.
+
+
+<details class="solution">
+  <summary>Solution</summary>
+
+The test risk begins to increase because the model is *over-fitting* to the training dataset.
+The deep neural network is very flexible and can start to exploit small artefacts in individual images that are unrelated to the underlying skin lesion itself, in order to memorise whether a particular training image was labelled as benign or malignant.
+
+As training continues, the performance on the training set keeps improving, but the ability of the model to generalise to new, unseen images deteriorates.
+
+Stopping gradient descent early reduces the opportunity for the neural network to pick up on these spurious patterns.
+
+If early stopping is not desirable, then explicit regularisation strategies could be used instead, for example:
+
+- additive (weight) regularisation,
+- dropout,
+- or reducing the size and complexity of the neural network.
+
+All of these approaches aim to limit how closely the model can fit the training data and thereby improve generalisation.
+
+</details>
+
+:::
+
+
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-3 kernel" data-difficulty="1"}
+## Sums of kernels are kernels [{{< fa star >}}]{.advanced title="MAS8607 content"}
 
 Let $k_1 : \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}$ and $k_2 : \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}$ be kernels.
 Show that $k(\mathbf{x},\mathbf{x}') = k_1(\mathbf{x},\mathbf{x}') + k_2(\mathbf{x},\mathbf{x}')$ is also a kernel.
@@ -338,7 +728,7 @@ so the feature space of $k$ is the *Cartesian product* of the feature spaces of 
 :::
 
 
-::: {.callout-important .question appearance="minimal" data-tags="neural-networks" data-difficulty="0"}
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-3 neural-networks" data-difficulty="0"}
 ## Universal logic gates
 
 Construct a *NOR gate*, whose truth table is
@@ -367,7 +757,7 @@ This is a simple problem; $\sigma(1 - x_1 - x_2)$.
 :::
 
 
-::: {.callout-important .question appearance="minimal" data-tags="neural-networks" data-difficulty="1"}
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-3 neural-networks" data-difficulty="1"}
 ## Logic via deep neural networks
 
 Let $\mathbf{x} \in \{0,1\}^d$ where $d = 2^m$ for some $m \in \mathbb{N}$.
@@ -378,7 +768,7 @@ $$
 to perform a *parity check*, i.e. to return $1$ if the number of non-zero entries in $\mathbf{x}$ is odd, and otherwise to return $0$.
 State how many neurons and how many layers you used in your network as a function of $d$.
 
-[Hint: You may wish to make use of the XOR logic gate that we constructed in @sec-activation.]
+*Hint: You may wish to make use of the XOR logic gate that we constructed in @sec-activation.*
 
 <details class="solution">
   <summary>Solution</summary>
@@ -398,7 +788,7 @@ Incrementing $m$ adds an additional $2$ layers to the neural network (recall @se
 :::
 
 
-::: {.callout-important .question appearance="minimal" data-tags="neural-networks" data-difficulty="1"}
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-3 neural-networks" data-difficulty="1"}
 ## Universal approximation with neural networks
 
 Let $f : [0,1] \rightarrow \mathbb{R}$ be piecewise linear with a finite number of pieces $m$ (i.e. you can draw the graph of $f$ by "joining the dots").
@@ -428,7 +818,7 @@ Concatenating these individual neural networks $t_{a_i,b_i,c_i}$ into one wide n
 :::
 
 
-::: {.callout-important .question appearance="minimal" data-tags="optimisation" data-difficulty="1"}
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-3 optimisation gradient-descent" data-difficulty="1"}
 ## Gradient descent
 
 Explain why gradient descent, initialised at an arbitrary location $\theta_0$, and with fixed learning rate $\epsilon$, will not find the global minimum of $F(\theta) = |\theta|$.
@@ -455,10 +845,10 @@ Combining these two observations implies that $\theta_t \rightarrow 0$, as requi
 :::
 
 
-::: {.callout-important .question appearance="minimal" data-tags="optimisation" data-difficulty="0" #q-stoch-grad-unbiased}
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4 optimisation stochastic-gradient-descent" data-difficulty="1" #q-stoch-grad-unbiased}
 ## Stochastic gradient is unbiased 
 
-Let $\{i_j\}_{j=1}^m$ be a uniformly random subset of $\{1,\dots,n\}$, either with or without replacement.
+Let $\{i_j\}_{j=1}^m$ be a uniformly random subset of $\{1,\dots,n\}$, either with or without replacement[^sgd-question-note].
 Prove that 
 $$
 \hat{S} = \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j})
@@ -468,7 +858,6 @@ $$
 S = \frac{1}{n} \sum_{i=1}^n h(\mathbf{w}_i).
 $$
 
-(This result implies that the stochastic gradient (@eq-stoch-grad) is an unbiased estimator of the true gradient (@eq-erm-gradient), taking $\mathbf{w}_i = (\mathbf{x}_i,\mathbf{y}_i)$ and $h(\mathbf{w}_i) = \nabla_{\boldsymbol{\theta}} L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i))$.)
 
 <details class="solution">
   <summary>Solution</summary>
@@ -494,7 +883,7 @@ which shows that $\hat{S}$ is an unbiased estimator for $S$, as required.
 :::
 
 
-::: {.callout-important .question appearance="minimal" data-tags="optimisation gradient-descent" data-difficulty="1" #q-opt-learning-rate}
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4 optimisation gradient-descent" data-difficulty="1" #q-opt-learning-rate}
 ## Optimal learning rate for gradient descent 
 
 Obtain the optimal learning rate 
@@ -530,72 +919,7 @@ as required.
 :::
 
 
-::: {.callout-important .question appearance="minimal" data-tags="optimisation" data-difficulty="3" #q-minibatch-size}
-## Optimal minibatch size for stochastic gradient descent [{{< fa star >}}{{< fa star >}}]{.advanced title="Not examinable"} 
-
-(This question is intended only for students familiar with Lagrange multipliers.)
-
-Consider stochastic gradient descent as in @sec-sgd, where the stochastic gradients (@eq-stoch-grad) are based on minibatches of size $m$, so that the computational cost $c(m)$ of performing a fixed number of steps $T$ of stochastic gradient descent is $mT$ (measured in the number of calls to $\nabla_{\boldsymbol{\theta}}f_{\boldsymbol{\theta}}$, the gradient of the machine learning model, whose evaluation is the main computational bottleneck).
-
-Letting $B = B_0 m^{-1}$ for some fixed constant $B_0$, express the optimal learning rate 
-$$
-\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
-$$
-from (@eq-optimal-learning-rate) as a function of the minibatch size $m$.
-
-Hence, use Lagrange multipliers to show that the minibatch size $m$ which minimises the error bound in @thm-sgd subject to a fixed total computational cost $c(m) = C$ is $m \approx C / T$.
-
-Thus smaller minibatch sizes $m$ should be preferred when a larger number of steps $T$ of stochastic gradient descent are to be performed.
-
-<details class="solution">
-  <summary>Solution</summary>
-
-Substituting the optimal learning rate into the overall error bound for stochastic gradient descent from @thm-sgd, we get
-$$
-\frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T}  + \frac{\epsilon B^2}{2} = \frac{B \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T}}.
-$$
-
-Letting $B = B_0 m^{-1}$, this becomes
-$$
-\frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m \sqrt{T}}.
-$$
-
-Minimising the error subject to the cost constraint can be achieved using a Lagrangian
-$$
-\mathcal{L}(m,\lambda) = \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m\sqrt{T}} + \lambda ( m T - C )
-$$
-where $\lambda$ is a Lagrange multiplier.
-
-The stationary point equations are:
-$$
-\begin{aligned}
-0 = \nabla_m \mathcal{L} & = - \frac{B_0 \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{m^2\sqrt{T}} + \lambda T \\
-0 = \nabla_\lambda \mathcal{L} & = mT - C
-\end{aligned}
-$$
-
-Rearranging the first,
-$$
-m = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} }{ \lambda^{1/2} T^{3/4} }
-$$
-and substituting this into the second,
-$$
-\lambda^{1/2} = \frac{B_0^{1/2} \|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^{1/2} T^{1/4} }{C}.
-$$
-
-Putting this all together, 
-$$
-m = \frac{C}{T}.
-$$
-
-Since $m$ must be a positive integer, we conclude that $m \approx C / T$.
-
-</details>
-
-:::
-
-
-::: {.callout-important .question appearance="minimal" data-tags="empirical-risk-minimisation statistics" data-difficulty="2" #q-mean-est}
+::: {.callout-important .question appearance="minimal" data-tags="risk statistics exercise-sheet-4" data-difficulty="2" #q-mean-est}
 ## Mean estimation as empirical risk minimisation
 
 The aim of this exercise is to see how estimating the mean of a probability distribution can be cast within the empirical risk minimisation framework.
@@ -656,12 +980,12 @@ To ensure an expected generalisation error less than $\epsilon$ we therefore nee
 
 :::
 
-::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-2" data-difficulty="2" #q-phys-informed}
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-2 regularisation" data-difficulty="2" #q-phys-informed}
 ## Physics-informed machine learning
 
 This exercise considers the problem of predicting spring displacement based on the force applied, following @exm-phys-informed.
 
-A `pure' machine learning approach would just use data to learn a predictive model, while a `pure' physics approach would use Hooke's law of elasticity and attempt to learn the associated proportionality constant.
+A "pure" machine learning approach would just use data to learn a predictive model, while a "pure" physics approach would use Hooke's law of elasticity and attempt to learn the associated proportionality constant.
 
 A physics-informed machine learning approach uses both the data and Hooke's law, the latter entering as an additive regulariser on the empirical risk.
 
@@ -685,87 +1009,272 @@ Thus we have arrived at $f(x) = C x$, which is an exact proportionality relation
 
 :::
 
-::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4" data-difficulty="0"}
-## Stochastic gradient is unbiased
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-2 regularisation" data-difficulty="2" #q-convex-regularisation}
+## Convex regularisation
 
-Let $\{i_j\}_{j=1}^m$ be a uniformly random subset of $\{1,\dots,n\}$, either with or without replacement.
-Prove that 
-$$
-\hat{S} = \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j})
-$$
-is an unbiased estimator of 
-$$
-S = \frac{1}{n} \sum_{i=1}^n h(\mathbf{w}_i).
-$$
-
-(This result implies that the stochastic gradient (@eq-stoch-grad) is an unbiased estimator of the true gradient (@eq-erm-gradient), taking $\mathbf{w}_i = (\mathbf{x}_i,\mathbf{y}_i)$ and $h(\mathbf{w}_i) = \nabla_{\boldsymbol{\theta}} L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i))$.)
+Show that the regulariser $R(\boldsymbol{\theta}) = \lVert \boldsymbol{\theta} \rVert_s$ is convex for each $s \in \{1,2,\infty\}$.
+Conversely, show that $\lVert \boldsymbol{\theta} \rVert_0$ (i.e. the number of non-zero entries in $\boldsymbol{\theta}$) is neither a norm nor convex.
 
 <details class="solution">
   <summary>Solution</summary>
 
-From linearity of expectation,
+To show convexity of $R$, we need to verify that
 $$
-\mathbb{E}[\hat{S}] = \mathbb{E}\left[ \frac{1}{m} \sum_{j=1}^m h(\mathbf{w}_{i_j}) \right] = \frac{1}{m} \sum_{j=1}^m \mathbb{E}[ h(\mathbf{w}_{i_j}) ].
+R\big(\lambda \boldsymbol{\theta} + (1-\lambda)\boldsymbol{\vartheta}\big)
+\le
+\lambda R(\boldsymbol{\theta}) + (1-\lambda) R(\boldsymbol{\vartheta})
+$$
+for all $\boldsymbol{\theta},\boldsymbol{\vartheta}\in\mathbb{R}^p$ and all $\lambda \in [0,1]$.
+
+Now, for $s\in\{1,2,\infty\}$ we know (or can check directly) that $\lVert \cdot \rVert_s$ is a norm.
+Hence we may use the triangle inequality and homogeneity:
+$$
+\begin{aligned}
+\lVert \lambda \boldsymbol{\theta} + (1-\lambda)\boldsymbol{\vartheta} \rVert_s
+&\le
+\lVert \lambda \boldsymbol{\theta} \rVert_s
++
+\lVert (1-\lambda)\boldsymbol{\vartheta} \rVert_s \\
+&=
+\lambda \lVert \boldsymbol{\theta} \rVert_s
++
+(1-\lambda)\lVert \boldsymbol{\vartheta} \rVert_s,
+\end{aligned}
+$$
+which is exactly the desired convexity inequality.
+
+(The triangle inequality for general $1 \le s \le \infty$ is known as *Minkowski’s inequality*.)
+
+To see that $\lVert \cdot \rVert_0$ is neither convex nor a norm, fix $\lambda\in(0,1)$ and take $\boldsymbol{\theta}\neq \mathbf{0}$.
+Then
+$$
+\lVert \lambda \boldsymbol{\theta} + (1-\lambda)\mathbf{0} \rVert_0
+=
+\lVert \lambda \boldsymbol{\theta} \rVert_0
+=
+\lVert \boldsymbol{\theta} \rVert_0,
+$$
+whereas
+$$
+\lambda \lVert \boldsymbol{\theta} \rVert_0 + (1-\lambda)\lVert \mathbf{0} \rVert_0
+=
+\lambda \lVert \boldsymbol{\theta} \rVert_0.
+$$
+Since $\lVert \boldsymbol{\theta} \rVert_0 \nleq \lambda \lVert \boldsymbol{\theta} \rVert_0$ for $\lambda\in(0,1)$, the convexity inequality fails, so $\lVert \cdot \rVert_0$ is not convex.
+
+Moreover, this same calculation shows it cannot be a norm: norms must satisfy homogeneity,
+$\lVert \lambda \boldsymbol{\theta} \rVert = |\lambda| \lVert \boldsymbol{\theta} \rVert$,
+but $\lVert \lambda \boldsymbol{\theta} \rVert_0 = \lVert \boldsymbol{\theta} \rVert_0$ for all $\lambda\neq 0$.
+
+</details>
+
+:::
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-2 pca" data-difficulty="1" #q-pca}
+## Principal component analysis
+
+Find the first and second principal components for the following dataset:
+$$
+\mathbf{D}
+=
+\begin{bmatrix}
+0.28 & 0.05 \\
+1.58 & 1.43 \\
+-2.52 & -2.58 \\
+0.60 & 0.86 \\
+0.06 & 0.24
+\end{bmatrix}.
+$$
+How much of the variance is explained by the first principal component?
+Interpret your results in non-technical language.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+First note that the data are already centred: the column totals are $0$.
+
+The sample covariance matrix (using $1/n$) is therefore
+$$
+\frac{1}{n}\mathbf{D}^\top \mathbf{D}
+=
+\begin{bmatrix}
+1.86 & 1.86 \\
+1.86 & 1.90
+\end{bmatrix}.
 $$
 
-Now, since the $i_j$ are uniformly distributed in $\{1,\dots,n\}$, it follows that each $\mathbf{w}_{i_j}$ is uniformly distributed in $\{\mathbf{w}_1,\dots,\mathbf{w}_n\}$. Thus
+The eigendecomposition of this matrix is
 $$
-\mathbb{E}[ h(\mathbf{w}_{i_j}) ] = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k).
+\lambda_1 = 3.74,
+\qquad
+\mathbf{a}_1 =
+\begin{bmatrix}
+0.70 \\
+0.71
+\end{bmatrix},
+\qquad
+\lambda_2 = 0.02,
+\qquad
+\mathbf{a}_2 =
+\begin{bmatrix}
+-0.71 \\
+0.70
+\end{bmatrix}.
 $$
 
-Using this fact, we get
+The first principal component direction is $\mathbf{a}_1$ and the second is $\mathbf{a}_2$.
+
+The proportion of variance explained by the first principal component is
 $$
-\mathbb{E}[\hat{S}] = \frac{1}{m} \sum_{j=1}^m \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = \frac{1}{n} \sum_{k = 1}^n h(\mathbf{w}_k) = S,
+\frac{\lambda_1}{\lambda_1 + \lambda_2}
+=
+0.99.
 $$
-which shows that $\hat{S}$ is an unbiased estimator for $S$, as required.
+
+In non-technical language: almost all of the variation in the data can be described by movement along a single diagonal line — the points lie very tightly around the $x \approx y$ direction.
+
+</details>
+
+:::
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-2 kernel" data-difficulty="2" #q-quadratic-kernel}
+## Quadratic kernel [{{< fa star >}}]{.advanced title="MAS8607 content"}
+
+Express the quadratic kernel
+$$
+k(x,x') = (1 + x x')^2
+$$
+as a feature space inner product
+$$
+k(x,x') = \langle \boldsymbol{\phi}(x), \boldsymbol{\phi}(x') \rangle.
+$$
+
+<details class="solution">
+  <summary>Solution</summary>
+
+There is no unique solution, but there is a most natural one.
+Expanding the square gives
+$$
+k(x,x') = 1 + 2xx' + x^2(x')^2.
+$$
+
+We can realise this as an inner product by defining
+$$
+\boldsymbol{\phi}(x)
+=
+\begin{bmatrix}
+1 \\
+\sqrt{2}\,x \\
+x^2
+\end{bmatrix},
+\qquad
+\boldsymbol{\phi}(x')
+=
+\begin{bmatrix}
+1 \\
+\sqrt{2}\,x' \\
+(x')^2
+\end{bmatrix}.
+$$
+
+Then
+$$
+\langle \boldsymbol{\phi}(x), \boldsymbol{\phi}(x') \rangle
+=
+1\cdot 1
++
+(\sqrt{2}x)(\sqrt{2}x')
++
+x^2(x')^2
+=
+1 + 2xx' + x^2(x')^2
+=
+k(x,x').
+$$
+
+Other solutions correspond to re-ordering the features, or simple rescalings/splittings (e.g. replacing the feature $x^2$ with two copies of $\frac{1}{\sqrt{2}}x^2$).
+
+</details>
+
+:::
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-2 kernel" data-difficulty="3" #q-multivariate-gaussian-kernel}
+## Multivariate Gaussian kernel [{{< fa star >}}]{.advanced title="MAS8607 content"}
+
+Express the multivariate Gaussian kernel
+$$
+k(\mathbf{x},\mathbf{x}')
+=
+\exp\!\big(-\alpha \lVert \mathbf{x} - \mathbf{x}' \rVert^2\big)
+$$
+as a feature space inner product.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+From @exr-gaussian-kernel we know that, in one dimension,
+$$
+\exp\!\big(-\alpha(x-x')^2\big)
+=
+\sum_{l=0}^\infty \phi_l(x)\,\phi_l(x'),
+\qquad
+\phi_l(x)
+=
+\sqrt{\frac{(2\alpha)^l}{l!}}\,
+x^l \exp(-\alpha x^2).
+$$
+
+Now note that
+$$
+\lVert \mathbf{x} - \mathbf{x}' \rVert^2
+=
+\sum_{i=1}^d (x_i - x_i')^2,
+$$
+so we can factorise the multivariate kernel as
+$$
+k(\mathbf{x},\mathbf{x}')
+=
+\exp\!\left(-\alpha \sum_{i=1}^d (x_i-x_i')^2\right)
+=
+\prod_{i=1}^d \exp\!\big(-\alpha(x_i-x_i')^2\big).
+$$
+
+Substituting the 1D expansion into each factor gives
+$$
+\begin{aligned}
+k(\mathbf{x},\mathbf{x}')
+&=
+\prod_{i=1}^d \sum_{l=0}^\infty \phi_l(x_i)\,\phi_l(x_i') \\
+&=
+\sum_{\boldsymbol{\ell}=(\ell_1,\dots,\ell_d)\in\mathbb{N}_0^d}
+\underbrace{\big[\phi_{\ell_1}(x_1)\cdots \phi_{\ell_d}(x_d)\big]}_{\phi_{\boldsymbol{\ell}}(\mathbf{x})}
+\underbrace{\big[\phi_{\ell_1}(x_1')\cdots \phi_{\ell_d}(x_d')\big]}_{\phi_{\boldsymbol{\ell}}(\mathbf{x}')}.
+\end{aligned}
+$$
+
+This has the form
+$$
+k(\mathbf{x},\mathbf{x}')
+=
+\sum_{\boldsymbol{\ell}\in\mathbb{N}_0^d}
+\phi_{\boldsymbol{\ell}}(\mathbf{x})\,
+\phi_{\boldsymbol{\ell}}(\mathbf{x}'),
+$$
+which we can interpret as an (infinite-dimensional) feature-space inner product
+$\langle \boldsymbol{\phi}(\mathbf{x}), \boldsymbol{\phi}(\mathbf{x}') \rangle$, where the coordinates of $\boldsymbol{\phi}(\mathbf{x})$ are indexed by multi-indices $\boldsymbol{\ell}\in\mathbb{N}_0^d$ and given by $\phi_{\boldsymbol{\ell}}(\mathbf{x})$.
 
 </details>
 
 :::
 
 
-::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4" data-difficulty="0"}
-## Optimal learning rate for gradient descent
 
-Obtain the optimal learning rate 
-$$
-\epsilon = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|}{\sqrt{T} B}
-$$
-as claimed in (@eq-optimal-learning-rate), by finding the value of $\epsilon$ that minimises the bound from @thm-gd.
-
-<details class="solution">
-  <summary>Solution</summary>
-
-From @thm-gd we have the bound
-$$
-\frac{1}{T}\sum_{t=0}^{T-1} F(\boldsymbol{\theta}_t) - F(\boldsymbol{\theta}_\star) \leq \underbrace{ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2} }_{r(\epsilon)}
-$$
-and we wish to find the value of the learning rate $\epsilon$ that minimises the right hand side $r(\epsilon)$ of this bound.
-
-Differentiating with respect to $\epsilon$,
-$$
-\nabla r(\epsilon) = \nabla_{\epsilon} \left[ \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon T} + \frac{\epsilon B^2}{2} \right] = - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T} + \frac{B^2}{2}.
-$$
-
-Setting this expression equal to $0$ and rearranging, we obtain the claimed result.
-
-To confirm this is a minimiser we can differentiate a second time, to see that
-$$
-\nabla^2 r(\epsilon) = \nabla_{\epsilon} \left[ - \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{2\epsilon^2 T} + \frac{B^2}{2} \right] = \frac{\|\boldsymbol{\theta}_0 - \boldsymbol{\theta}_\star\|^2}{\epsilon^3 T} > 0,
-$$
-as required.
-
-</details>
-
-:::
-
-
-::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4" data-difficulty="2"}
-## Optimal minibatch size for stochastic gradient descent [{{< fa star >}}{{< fa star >}}]{.advanced title="Advanced content for 4th year students"}
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4 stochastic-gradient-descent" data-difficulty="2"}
+## Optimal minibatch size for stochastic gradient descent [{{< fa star >}}{{< fa star >}}]{.advanced title="Non-Examinable content."}
 
 (This question is intended only for students familiar with Lagrange multipliers.)
 
-Consider stochastic gradient descent as in @algo-sgd, where the stochastic gradients (@eq-stoch-grad) are based on minibatches of size $m$, so that the computational cost $c(m)$ of performing a fixed number of steps $T$ of stochastic gradient descent is $mT$ (measured in the number of calls to $\nabla_{\boldsymbol{\theta}}f_{\boldsymbol{\theta}}$, the gradient of the machine learning model, whose evaluation is the main computational bottleneck).
+Consider stochastic gradient descent as in @sec-sgd, where the stochastic gradients (@eq-stoch-grad) are based on minibatches of size $m$, so that the computational cost $c(m)$ of performing a fixed number of steps $T$ of stochastic gradient descent is $mT$ (measured in the number of calls to $\nabla_{\boldsymbol{\theta}}f_{\boldsymbol{\theta}}$, the gradient of the machine learning model, whose evaluation is the main computational bottleneck).
 
 Letting $B = B_0 m^{-1}$ for some fixed constant $B_0$, express the optimal learning rate 
 $$
@@ -825,63 +1334,329 @@ Since $m$ must be a positive integer, we conclude that $m \approx C / T$.
 :::
 
 
-::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4" data-difficulty="1"}
-## Mean estimation as empirical risk minimisation
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-5 learning-tasks" data-difficulty="0" #q-ml-tasks-2}
+## Machine learning tasks
 
-The aim of this exercise is to see how estimating the mean of a probability distribution can be cast within the empirical risk minimisation framework.
+For each of the following, state whether the task is *supervised learning*, *semi-supervised learning* or *unsupervised learning*, and whether it is *online learning* or *offline learning*.
 
-Let $Y \sim P$. Our aim is to estimate the mean of $P$ from $n$ independent observations of $Y$, which we denote $\{y_i\}_{i=1}^n$. To do so we introduce the squared error loss $L(y,y') = (y-y')^2$ and the "trivial" machine learning model $\mathcal{F} = \mathbb{R}$.
+1. Predicting house prices using a dataset of past homes with sale prices provided.
 
-a. Show that the (population) risk $\mathcal{R}(\cdot)$ is minimised at $f_\star = \mathbb{E}_{Y \sim P}[Y]$, the mean of $P$.
-b. Compute the empirical risk minimiser $f_n \in \mathcal{F}$.
-c. What is the generalisation error of $f_n$?
-d. Show that the expected generalisation error is $\frac{1}{n} \mathbb{V}[Y]$ where $\mathbb{V}[Y]$ is the variance of $P$.
-e. How many samples $n$ are needed to guarantee an expected generalisation error smaller than $\epsilon$? (Recall this is the *sample complexity* of the empirical risk minimiser, telling us how much data we need to achieve a certain level of generalisation performance.)
+2. Grouping news articles into topics when no labels are given.
+
+3. A spam filter that is initially trained on a small set of labelled emails but then improves as it receives many more unlabelled emails.
+
+4. Clustering customer purchasing behaviour to find market segments.
+
+5. A real-time recommendation system that updates its model with every new user click event.
+
+6. Training a text sentiment classifier using a small labelled dataset plus a large unlabelled corpus.
+
+7. A financial model that updates its predictions as each new tick of stock-price data arrives.
 
 <details class="solution">
   <summary>Solution</summary>
 
-The (population) risk is
-$$
-\mathcal{R}(f) = \mathbb{E}_{Y \sim P} [L(Y,f)] = \mathbb{E}_{Y \sim P} [ (Y-f)^2 ] = \mathbb{E}_{Y \sim P}[Y^2] - 2 f \mathbb{E}_{Y \sim P}[Y] + f^2,
-$$
-and this quadratic (in $f$) is minimised at $f_\star = \mathbb{E}_{Y \sim P}[Y]$.
+1. Supervised learning, offline learning.
 
-The empirical risk is
-$$
-\mathcal{R}_n(f) = \frac{1}{n} \sum_{i=1}^n L(y_i,f) = \frac{1}{n} \sum_{i=1}^n (y_i - f)^2 = \left( \frac{1}{n} \sum_{i=1}^n y_i^2 \right) - 2 f \left( \frac{1}{n} \sum_{i=1}^n y_i \right) + f^2
-$$
-and this quadratic (in $f$) is minimised at 
-$$
-f_n = \frac{1}{n} \sum_{i=1}^n y_i,
-$$
-the arithmetic mean of the dataset.
+2. Unsupervised learning, offline learning.
 
-The generalisation error is
-$$
-\begin{aligned}
-\mathcal{R}(f_n) - \mathcal{R}(f_\star) & = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n \mathbb{E}_{Y \sim P}[Y] + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_\star \mathbb{E}_{Y \sim P}[Y] + f_\star^2 \} \\
-& = \{ \mathbb{E}_{Y \sim P}[Y^2] - 2 f_n f_\star + f_n^2 \} - \{ \mathbb{E}_{Y \sim P}[Y^2] - f_\star^2 \} \\
-& = f_\star^2 - 2 f_n f_\star + f_n^2 \\
-& = (f_\star - f_n)^2.
-\end{aligned}
-$$
+3. Semi-supervised learning, online learning.
 
-Let $Y_i$ be a random variable representing the $i$th element of the dataset. The expected generalisation error is thus
-$$
-\begin{aligned}
-\mathbb{E}[ \mathcal{R}(f_n) - \mathcal{R}(f_\star) ]
-& = \mathbb{E}[ (f_\star - f_n)^2 ] \\
-& = \mathbb{E}\left[ \left( \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y] \right)^2 \right] \\
-& = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i - \mathbb{E}_{Y \sim P}[Y] \right] \\
-& = \mathbb{V}\left[ \frac{1}{n} \sum_{i=1}^n Y_i \right] \\
-& = \frac{1}{n} \mathbb{V}[Y]
-\end{aligned}
-$$
-where the final line follows from the properties $\mathbb{V}[cY] = c^2 \mathbb{V}[Y]$ and $\mathbb{V}[Y_i + Y_j] = \mathbb{V}[Y_i] + \mathbb{V}[Y_j]$ whenever $i \neq j$, since then $Y_i$ and $Y_j$ are independent.
+4. Unsupervised learning, offline learning.
 
-To ensure an expected generalisation error less than $\epsilon$ we therefore need $n > \mathbb{V}[Y] / \epsilon$ number of independent samples in the dataset.
+5. Supervised learning, online learning.
+
+6. Semi-supervised learning, offline learning.
+
+7. Supervised learning, online learning.
+
+Of course, there is scope for interpretation in a question like this, and other categorisations may also be valid.
+The important point is to understand the meaning of the terms involved.
 
 </details>
 
 :::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-5 bandits reinforcement-learning" data-difficulty="2" #q-epsilon-greedy-bandits}
+## $\epsilon$-greedy bandits
+
+Consider a 4-armed bandit, with arms labelled $\{1,2,3,4\}$.
+Your friend is playing the $\epsilon$-greedy strategy, meaning that at time $t$, with probability $1-\epsilon$ they play the bandit from which they have so far received the highest average reward, and with probability $\epsilon$ they play a bandit chosen uniformly at random instead.
+
+The bandit they choose to play is denoted $B_t$ and the reward they receive is denoted $R_t$.
+
+Your friend has no knowledge about which bandit is best at the outset and therefore assumes each bandit returns zero reward on average, until it has been tried.
+
+Here is what happens next:
+
+| $t$ | $B_t$ | $R_t$ |
+|:---:|:-----:|:-----:|
+| 1 | 1 | $-1$ |
+| 2 | 2 | $1$ |
+| 3 | 2 | $-2$ |
+| 4 | 2 | $2$ |
+| 5 | 3 | $0$ |
+
+
+
+On some of these time steps the $\epsilon$ case may have occurred, causing your friend to select a random bandit.
+
+- At which times $t$ did this *definitely* happen?
+- At which times $t$ did this *definitely not* happen?
+
+<details class="solution">
+  <summary>Solution</summary>
+
+The final part of this question is a trick: we can never rule out the possibility of the $\epsilon$ case, because your friend could have selected the greedy bandit purely by chance.
+
+To infer which time steps must have been $\epsilon$ steps, suppose instead that we ourselves follow a purely greedy strategy and compare this behaviour with what actually happened.
+
+After the first iteration, we have evidence that bandit $1$ performs worse than expected, since $B_1=1$ and $R_1=-1$.
+We would therefore select one of the remaining bandits next, and we may take $B_2=2$.
+
+The reward $R_2=1$ is encouraging, so we now believe that bandit $2$ is best.
+A greedy strategy therefore plays bandit $2$ again, giving $B_3=2$.
+The reward is now $R_3=-2$, so the empirical mean reward of bandit $2$ becomes
+$$
+\frac{1}{2}(1-2)=-\frac{1}{2}.
+$$
+
+At this point, a greedy strategy would switch to one of bandits $3$ or $4$.
+However, your friend instead played $B_4=2$.
+We therefore infer that time $t=4$ must have been an $\epsilon$ step.
+
+The reward is $R_4=2$, and the empirical mean reward of bandit $2$ becomes
+$$
+\frac{1}{3}(1-2+2)=\frac{1}{3},
+$$
+which is now the best option available.
+
+A greedy strategy would therefore play bandit $2$ again at the next step.
+Instead, your friend chose $B_5=3$, so time $t=5$ must also have been an $\epsilon$ step.
+
+In summary, the $\epsilon$ case definitely occurred at iterations $t=4$ and $t=5$.
+At no iteration can we be certain that the $\epsilon$ case did not occur.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-5 clustering" data-difficulty="1" #q-kmeans}
+## $k$-means
+
+Cluster the data $\{1,2,\dots,10\}$ into $k=2$ clusters by performing $k$-means by hand, with the centroids initialised at $c_1=1$ and $c_2=2$.
+What is the fewest number of iterations needed for convergence of the cluster assignment?
+
+<details class="solution">
+  <summary>Solution</summary>
+
+**Iteration 1.**  
+Each data point is assigned to the nearest centroid, so $\{1\}$ is assigned to $c_1$ and $\{2,3,\dots,10\}$ are assigned to $c_2$.
+The centroids are updated to
+$c_1=1$ and $c_2=6$.
+
+**Iteration 2.**  
+Now $\{1,2,3\}$ are assigned to $c_1$ and $\{4,5,6,7,8,9,10\}$ to $c_2$.
+The centroids become
+$c_1=2$ and $c_2=7$.
+
+**Iteration 3.**  
+We assign $\{1,2,3,4\}$ to $c_1$ and $\{5,6,7,8,9,10\}$ to $c_2$.
+The centroids update to
+$c_1=2.5$ and $c_2=7.5$.
+
+**Iteration 4.**  
+The datum $5$ lies exactly half way between $c_1$ and $c_2$, and may therefore be assigned to either cluster.
+Since we are interested in the *fewest* number of iterations needed for convergence, we assign it to the first cluster.
+
+This yields the assignments
+$\{1,2,3,4,5\}$ and $\{6,7,8,9,10\}$, with updated centroids
+$c_1=3$ and $c_2=8$.
+
+After 4 iterations, the $k$-means algorithm has converged: neither the cluster assignments nor the centroids change under further iterations.
+
+</details>
+
+:::
+
+
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-5 energy-based-models estimation" data-difficulty="3" #q-score-matching-ml}
+## Score matching and maximum likelihood [{{< fa star >}}]{.advanced title="MAS8607 content"}
+
+Let $P_{\boldsymbol{\theta}}=\mathcal{N}(\boldsymbol{\mu},\boldsymbol{\Sigma})$ be a generative model for the dataset
+$\{\mathbf{x}_i\}_{i=1}^n$, where the parameters $\boldsymbol{\theta}$ include the mean vector $\boldsymbol{\mu}$ and the covariance matrix $\boldsymbol{\Sigma}$.
+
+Recall that the maximum likelihood estimator for $\boldsymbol{\mu}$ is the sample mean of the data and that the maximum likelihood estimator for $\boldsymbol{\Sigma}$ is the sample covariance.
+
+Show that, for this model, the score-matching estimator and the maximum likelihood estimator coincide.
+
+*Hint.*  
+It may be easier to work with the *precision matrix* $\boldsymbol{\Omega}=\boldsymbol{\Sigma}^{-1}$.
+Useful identities include
+$$
+\partial_{\boldsymbol{\mu}}
+(\mathbf{x}-\boldsymbol{\mu})^\top
+\boldsymbol{\Omega}^2
+(\mathbf{x}-\boldsymbol{\mu})
+=
+-2\boldsymbol{\Omega}^2(\mathbf{x}-\boldsymbol{\mu}),
+$$
+$$
+\partial_{\boldsymbol{\Omega}}\operatorname{tr}(\boldsymbol{\Omega})=\mathbf{I},
+\qquad
+\partial_{\boldsymbol{\Omega}}
+\mathbf{a}^\top\boldsymbol{\Omega}^2\mathbf{b}
+=
+2\boldsymbol{\Omega}\mathbf{b}\mathbf{a}^\top .
+$$
+
+<details class="solution">
+  <summary>Solution</summary>
+
+Using the multivariate normal log-density (see @exr-mvn),
+$$
+\log p_{\boldsymbol{\theta}}(\mathbf{x})
+=
+-\tfrac12(\mathbf{x}-\boldsymbol{\mu})^\top
+\boldsymbol{\Sigma}^{-1}
+(\mathbf{x}-\boldsymbol{\mu})
++
+C_{\boldsymbol{\theta}},
+$$
+where $C_{\boldsymbol{\theta}}$ does not depend on $\mathbf{x}$, we obtain
+$$
+(\nabla_{\mathbf{x}}\log p_{\boldsymbol{\theta}})(\mathbf{x})
+=
+-\boldsymbol{\Sigma}^{-1}(\mathbf{x}-\boldsymbol{\mu}),
+\qquad
+(\Delta_{\mathbf{x}}\log p_{\boldsymbol{\theta}})(\mathbf{x})
+=
+-\operatorname{tr}(\boldsymbol{\Sigma}^{-1}).
+$$
+
+The score-matching objective is therefore
+$$
+\arg\min_{\boldsymbol{\theta}}
+\;
+\frac{1}{n}\sum_{i=1}^n
+\lVert
+\boldsymbol{\Sigma}^{-1}(\mathbf{x}_i-\boldsymbol{\mu})
+\rVert^2
+-
+2\,\operatorname{tr}(\boldsymbol{\Sigma}^{-1}).
+$$
+
+Writing $\boldsymbol{\Omega}=\boldsymbol{\Sigma}^{-1}$, this can be expressed as
+$$
+\arg\min_{\boldsymbol{\mu},\boldsymbol{\Omega}}
+\;
+J(\boldsymbol{\mu},\boldsymbol{\Omega})
+=
+\frac{1}{n}\sum_{i=1}^n
+\lVert
+\boldsymbol{\Omega}(\mathbf{x}_i-\boldsymbol{\mu})
+\rVert^2
+-
+2\,\operatorname{tr}(\boldsymbol{\Omega}).
+$$
+
+Differentiating and setting the gradients to zero gives
+$$
+\mathbf{0}
+=
+\nabla_{\boldsymbol{\mu}}J
+=
+-\frac{2}{n}\sum_{i=1}^n
+\boldsymbol{\Omega}^2(\mathbf{x}_i-\boldsymbol{\mu}),
+$$
+and
+$$
+\mathbf{0}
+=
+\nabla_{\boldsymbol{\Omega}}J
+=
+\frac{2}{n}\sum_{i=1}^n
+\boldsymbol{\Omega}(\mathbf{x}_i-\boldsymbol{\mu})
+(\mathbf{x}_i-\boldsymbol{\mu})^\top
+-
+2\mathbf{I}.
+$$
+
+Rearranging yields
+$$
+\boldsymbol{\mu}
+=
+\frac{1}{n}\sum_{i=1}^n\mathbf{x}_i,
+\qquad
+\boldsymbol{\Sigma}
+=
+\boldsymbol{\Omega}^{-1}
+=
+\frac{1}{n}\sum_{i=1}^n
+(\mathbf{x}_i-\boldsymbol{\mu})
+(\mathbf{x}_i-\boldsymbol{\mu})^\top .
+$$
+
+These are exactly the sample mean and sample covariance.
+Hence, for a multivariate Gaussian model, the score-matching estimator coincides with the maximum likelihood estimator.
+
+</details>
+
+:::
+
+
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-5 ethics" data-difficulty="1" #q-ethical-considerations}
+## Ethical considerations
+
+After graduating from Newcastle University you join a tech start-up that wants you to develop a machine learning model capable of automatically ranking candidates for a given job advert.
+Only the top-$k$ ranked candidates will be interviewed.
+The ranking should be determined solely from the content of the job advert and the content of candidates’ LinkedIn profiles.
+
+Describe some of the ethical issues that might arise in this context.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+Some relevant considerations include:
+
+- **Training data and consent.**  
+  Historical recruitment data (for example, previous short-listing decisions) would be required for training and should only be used with appropriate consent.
+
+- **Fairness.**  
+  The training data may not be representative of the population of future applicants.
+  If this is the case, the resulting model may perpetuate or amplify existing biases.
+
+- **Responsibility.**  
+  What safeguards will prevent the system from recommending inappropriate rankings?
+  Should a human decision-maker always review the output?
+
+- **Transparency.**  
+  Will candidates be informed about how interview decisions were made, and can meaningful explanations be provided?
+
+- **Inequality.**  
+  Is it fair to base decisions solely on LinkedIn profiles?
+  Could this disadvantage particular groups of candidates?
+
+- **Veracity.**  
+  Information on LinkedIn may be incomplete, outdated or inaccurate.
+
+These points are not exhaustive, but they highlight some of the key issues that arise when deploying machine learning systems in hiring.
+
+</details>
+
+:::
+
+
+
+[^nn-cautionary-note]:
+    @q-nn-linear-model serves as a cautionary tale against the use of the identity activation function: there would be no need to use such a neural network when we can simply use a linear model.
+
+[^question-reference]:
+    This question is based on a real machine learning task, and machine learning classifiers for skin lesions have been [approved for clinical use](https://www.dermasensor.com) in the USA.
+
+[^sgd-question-note]:
+    This result implies that the stochastic gradient (@eq-stoch-grad) is an unbiased estimator of the true gradient (@eq-erm-gradient), taking $\mathbf{w}_i = (\mathbf{x}_i,\mathbf{y}_i)$ and $h(\mathbf{w}_i) = \nabla_{\boldsymbol{\theta}} L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i))$.

@@ -718,10 +718,10 @@ L \equiv L(\{\mathbf{c}_i\}_{i=1}^k , \{y_j\}_{j=1}^n) = \sum_{j=1}^n \| \mathbf
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-flower-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-layout-cell" style="flex-basis: 58.8%;justify-content: center;">
 <p><img src="figures/flower.png" class="img-fluid figure-img"></p>
 </div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-layout-cell" style="flex-basis: 41.2%;justify-content: center;">
 <p><img src="figures/quantisation.png" class="img-fluid figure-img"></p>
 </div>
 </div>
@@ -731,6 +731,8 @@ Figure&nbsp;6.1: An application of <span class="math inline">k</span>-means clus
 </figcaption>
 </figure>
 </div>
+<p>It is worth emphasising that <span class="math inline">k</span>-means clustering is not guaranteed to solve <a href="#eq-kmeans" class="quarto-xref">Equation&nbsp;<span>6.1</span></a>; it is sensitive to the initial placement of centroids and may result in different clusters for different initialisations. Therefore, it is often run multiple times with different initial seeds to find a stable solution.</p>
+<p>Additionally, the value of <span class="math inline">k</span> (the number of clusters) should be chosen carefully, and several heuristics have been developed. This module will not discuss selecting <span class="math inline">k</span>, but you can read about different strategies on <a href="https://en.wikipedia.org/wiki/Determining_the_number_of_clusters_in_a_data_set">Wikipedia</a> if you are interested.</p>
 </div>
 </div>
 </div>
@@ -740,30 +742,205 @@ Figure&nbsp;6.1: An application of <span class="math inline">k</span>-means clus
 <h2 data-number="6.2" class="anchored" data-anchor-id="sec-semi-supervised-learning"><span class="header-section-number">6.2</span> Semi-supervised Learning</h2>
 <p>Suppose that we wish to undertake a supervised learning task (cf. <a href="1-overview-of-machine-learning.html#def-supervised-learning-task" class="quarto-xref">Definition&nbsp;<span>1.1</span></a>) but unfortunately only a small number of the labels <span class="math inline">\mathbf{y}_i</span> have been recorded in the training dataset.</p>
 <p>This is called a <strong>semi-supervised</strong> learning task. In an extreme case, suppose we with to perform binary classification (i.e.&nbsp;into two classes) of data based on their covariates <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d</span>, but only <em>two</em> data have their true labels recorded.</p>
+<blockquote class="blockquote">
 <p>Can anything at all be achieved?</p>
-<p>Surprisingly, the answer is sometimes `yes’, and the key idea here is called the <strong>manifold hypothesis</strong>:</p>
+</blockquote>
+<p>Surprisingly, the answer is sometimes “yes”, and the key idea here is called the <strong>manifold hypothesis</strong>:</p>
 <div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-body-container">
-<div id="def-manifold-hyp" class="definition theorem">
-<p><span class="theorem-title"><strong>Definition 6.1 (Manifold hypothesis)</strong></span> The <strong>manifold hypothesis</strong> suggests that possibly high-dimensional data <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d</span> can be effectively represented in a lower-dimensional space, most often a embedded in <span class="math inline">\mathbb{R}^d</span>.</p>
+<div id="def-manifold-hyp" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 6.1 (Manifold hypothesis)</strong></span> The <strong>manifold hypothesis</strong> suggests that possibly high-dimensional data <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d</span> can be effectively represented in a lower-dimensional space, most often a <strong>smooth manifold</strong> embedded in <span class="math inline">\mathbb{R}^d</span>.</p>
 </div>
 </div>
 </div>
 </div>
+<div class="callout callout-style-simple callout-caution no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="exm-manifold-hypothesis-images" class="theorem example">
+<p><span class="theorem-title"><strong>Example 6.2 (Manifold hypothesis for image data)</strong></span> For example, images of handwritten digits (see <a href="2-machine-learning-models.html#fig-mnist" class="quarto-xref">Figure&nbsp;<span>2.11</span></a>) may lie close to a low-dimensional manifold that captures most of the variations of those digits, despite their high-dimensional pixel representation; see <a href="#fig-manifold-hypothesis" class="quarto-xref">Figure&nbsp;<span>6.2</span></a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="fig-manifold-hypothesis" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-manifold-hypothesis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<img src="figures/manifold.png" class="img-fluid figure-img" style="width:70.0%">
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-manifold-hypothesis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.2: An illustration of how images of hand-drawn digits can be mapped onto a lower-dimensional manifold without significant loss of information content.<br>
+[<a href="https://scikit-learn.org/stable/auto_examples/manifold/plot_lle_digits.html">source</a>]
+</figcaption>
+</figure>
+</div>
+<p>The unlabelled data are therefore <em>not</em> useless in cases where the manifold hypothesis holds; they can be leveraged to learn the manifold, reducing the dimension (and therefore the difficulty) of the learning task. This is closely related to the concept of featurisation, discussed in <a href="2-machine-learning-models.html#sec-data-featurisation" class="quarto-xref"><span>Section 2.2.4</span></a>.</p>
+<div class="callout callout-style-simple callout-caution no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="exm-label-propagation" class="theorem example">
+<p><span class="theorem-title"><strong>Example 6.3 (Label propagation for a binary classification task)</strong></span> <a href="#fig-spirals" class="quarto-xref">Figure&nbsp;<span>6.3</span></a> illustrates a setting in which we can perform binary classification when only a handful of labels are recorded in the training dataset. The term <em>label propagation</em> is sometimes used to capture the idea that information from labelled data spreads to unlabelled data based on their proximity on the manifold.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="fig-spirals" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-spirals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/semisup.png" class="img-fluid figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spirals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.3: Illustrating supervised, semi-supervised, and unsupervised learning.<br>
+[<a href="https://teksands.ai/blog/semi-supervised-learning">source</a>]
+</figcaption>
+</figure>
+</div>
+<p>It is common to <em>assume</em> that the manifold hypothesis holds in tasks such as image classification, natural language processing and medical diagnosis, where data are typically high-dimensional. In many real-world problems, data have a much lower <em>effective dimension</em> than their <em>notional dimension</em> (cf. <a href="2-machine-learning-models.html#sec-dim-reduction" class="quarto-xref"><span>Section 2.1.2.2</span></a>), and modern machine learning models are often designed to discover and exploit this underlying low-dimensional manifold.</p>
 </section>
 <section id="sec-generative-modelling" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="sec-generative-modelling"><span class="header-section-number">6.3</span> Generative Modelling</h2>
+<p>One of the most important tasks in unsupervised learning is <strong>generative modelling</strong>; given a dataset <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n \subset \mathbb{R}^d</span> we seek a probability distribution <span class="math inline">P \in \mathcal{P}(\mathbb{R}^d)</span> for which (a) the <span class="math inline">\mathbf{x}_i</span> “look like typical samples” from <span class="math inline">P</span>, and (b) further “new” samples can be generated from <span class="math inline">P</span>, which are distinct from those <span class="math inline">\mathbf{x}_i</span> in the dataset. Of course, you have seen this task already in MAS2901 or MAS8601 when you used a method like maximum likelihood to fit a statistical model (e.g.&nbsp;a normal distribution) to a given dataset.</p>
+<p>The main distinction between classical statistical modelling and generative modelling in machine learning is the complexity of the dataset; for example, each <span class="math inline">\mathbf{x}_i</span> could represent the image of a cat, and we want to learn a probability distribution <span class="math inline">P</span> for which “typical” samples from <span class="math inline">P</span> look like cats; a normal distribution is clearly going to be inadequate for this task. This poses two main challenges to “traditional” statistical modelling; we cannot expect to write down a suitable statistical model by hand, and even if we could then it may not make sense to train such a model using maximum likelihood:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Remark (Failure of maximum likelihood under the manifold hypothesis <span class="advanced" title="MAS8607 Content"><i class="fa-solid fa-star" aria-label="star"></i></span>)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="rem-fail-ml" class="proof remark">
+<p><span class="proof-title"><em>Remark 6.1</em> (Failure of maximum likelihood under the manifold hypothesis <span class="advanced" title="MAS8607 Content"><i class="fa-solid fa-star" aria-label="star"></i></span>). </span>Suppose we are in a setting where data <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n</span> lie on a lower-dimensional manifold <span class="math inline">M \subset \mathbb{R}^d</span> (for example, <span class="math inline">M</span> is the manifold of images of cats, a subspace of the space of all images; see <a href="#def-manifold-hyp" class="quarto-xref">Definition&nbsp;<span>6.1</span></a>). Suppose further that we have a “good” parametric statistical model <span class="math inline">P_{\boldsymbol{\theta}}</span> that is aware of the manifold; that is, the density <span class="math inline">p_{\boldsymbol{\theta}}(\mathbf{x})</span> is zero for <span class="math inline">\mathbf{x} \in \mathbb{R}^d \setminus M</span> (we say that <span class="math inline">P_{\boldsymbol{\theta}}</span> is <em>supported</em> on <span class="math inline">M</span>). Then the density <span class="math inline">p_{\boldsymbol{\theta}}(\cdot)</span> must necessarily take the value <span class="math inline">\infty</span> on <span class="math inline">M</span>, meaning that the maximum likelihood estimator is not well defined<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+</div>
+</div>
+</div>
+</div>
+<p>Despite the apparent challenges of generative modelling, we now have machine learning models and ways to train them that can perform astonishingly well at this task; see <a href="#fig-gan" class="quarto-xref">Figure&nbsp;<span>6.4</span></a>. In this section we are going to learn more about modern generative models (<a href="#sec-generative-models" class="quarto-xref"><span>Section 6.3.1</span></a>) and how they are trained (<a href="#sec-training-generative-models" class="quarto-xref"><span>Section 6.3.2</span></a>).</p>
+<div id="fig-gan" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gan-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/GAN.jpg" class="img-fluid figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gan-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.4: Illustrating a generative model. [<a href="https://arxiv.org/abs/2103.09742">source</a>]
+</figcaption>
+</figure>
+</div>
 <section id="sec-generative-models" class="level3" data-number="6.3.1">
 <h3 data-number="6.3.1" class="anchored" data-anchor-id="sec-generative-models"><span class="header-section-number">6.3.1</span> Generative Models</h3>
+<p>A natural first question is:</p>
+<blockquote class="blockquote">
+<p>What sort of model could we write down that has the capacity to generate realistic samples?</p>
+</blockquote>
+<p>One can keep in mind image data as motivation, but the concept of a generative model is general. As such, we distinguish at a high level between the two main approaches:</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="def-simulation-based-models" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 6.2 (Simulation-based models)</strong></span> Recall that sometimes it is easier to reason with random variables than with probability distributions (cf. <a href="1-overview-of-machine-learning.html#recap-probabilistic-calculus" class="callout-ref" data-callout-label="Recap" data-callout-number="1.6" data-callout-title="Probabilistic calculus" data-callout-preview="Which of the following equivalent statements do you think is most natural?">Recap&nbsp;1.6</a>). To this end, let <span class="math inline">f_{\boldsymbol{\theta}} : \mathbb{R}^c \rightarrow \mathbb{R}^d</span> be a parametric function and define a random variable by <span class="math display">
+\mathbf{X} = f_{\boldsymbol{\theta}}(\mathbf{Z}),
+</span> where <span class="math inline">\mathbf{Z}</span> is a simple random variable that can be easily sampled, such as <span class="math display">
+\mathbf{Z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I}).
+</span> The distribution of <span class="math inline">\mathbf{X}</span> then defines a generative model <span class="math inline">P_{\boldsymbol{\theta}}</span>, parametrised by <span class="math inline">\boldsymbol{\theta}</span>. For obvious reasons, such a generative model is called <em>simulation-based</em>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="def-energy-based-models" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 6.3 (Energy-based models)</strong></span> Alternatively, we may proceed based on densities and define the density of our generative model <span class="math inline">P_{\boldsymbol{\theta}}</span> as <span class="math display">
+p_{\boldsymbol{\theta}}(\mathbf{x})
+\propto
+\exp\!\big(- f_{\boldsymbol{\theta}}(\mathbf{x})\big),
+</span> for some function <span class="math inline">f_{\boldsymbol{\theta}} : \mathbb{R}^d \rightarrow \mathbb{R}</span>, which again could be a neural network. Such a generative model is called <em>energy-based</em> because of an analogy from physics, in which <span class="math inline">P_{\boldsymbol{\theta}}</span> is viewed as a <em>Gibbs measure</em> and <span class="math inline">f_{\boldsymbol{\theta}}(\mathbf{x})</span> corresponds to the <em>energy</em> of the configuration <span class="math inline">\mathbf{x} \in \mathbb{R}^d</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<p>Simulation-based models are easy to sample from by design, but depending on <span class="math inline">f_{\bm{\theta}}</span> it can be hard to compute quantities relating to the density function of the model, for example as you would need for maximum likelihood. On the other hand, energy-based models provide direct access to the density function by design (up to a normalisation constant), but it can require complicated numerical methods to sample from the model (such as Markov chain Monte Carlo, which you may have met in MAS3929 or MAS8600).</p>
+<p>In either case, the expressive capacity of the generative model depends on the expressive capacity of the function <span class="math inline">f_{\bm{\theta}}</span>; for challenging applications <span class="math inline">f_{\bm{\theta}}</span> may need to be extremely flexible, for the example in <a href="#fig-gan" class="quarto-xref">Figure&nbsp;<span>6.4</span></a> the function <span class="math inline">f_{\bm{\theta}}</span> was a deep neural network.</p>
 </section>
 <section id="sec-training-generative-models" class="level3" data-number="6.3.2">
 <h3 data-number="6.3.2" class="anchored" data-anchor-id="sec-training-generative-models"><span class="header-section-number">6.3.2</span> Training Generative Models</h3>
-<section id="adversarial-training" class="level4" data-number="6.3.2.1">
-<h4 data-number="6.3.2.1" class="anchored" data-anchor-id="adversarial-training"><span class="header-section-number">6.3.2.1</span> Adversarial Training</h4>
+<section id="sec-adversarial-training" class="level4" data-number="6.3.2.1">
+<h4 data-number="6.3.2.1" class="anchored" data-anchor-id="sec-adversarial-training"><span class="header-section-number">6.3.2.1</span> Adversarial Training</h4>
+<p>Simulation-based models are conveniently designed for generating samples, but do not provide explicit access to the density function <span class="math inline">p_{\boldsymbol{\theta}}</span> (or derived quantities, such as its gradient). As such, ideas such as maximum likelihood cannot easily be implemented, irrespective of how well these methods for training may work (cf. <a href="#rem-fail-ml" class="quarto-xref">Remark&nbsp;<span>6.1</span></a>). Instead, to guide the selection of the model parameters <span class="math inline">\boldsymbol{\theta}</span>, we need another way to judge whether samples <span class="math inline">\mathbf{X}</span> from the model <span class="math inline">P_{\boldsymbol{\theta}}</span> are “similar” or not to those of the training dataset <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n</span>. How are we going to achieve this?</p>
+<p>Taking image data as an example, it does not make sense to compare <span class="math inline">\mathbf{X}</span> and <span class="math inline">\mathbf{x}_i</span> through Euclidean distance <span class="math inline">\lVert \mathbf{X} - \mathbf{x}_i \rVert</span> because we do not expect our artificially generated image <span class="math inline">\mathbf{X}</span> to be similar pixel-by-pixel to an image <span class="math inline">\mathbf{x}_i</span> in the training dataset. (If it were, we would have simply <em>memorised</em> the training dataset, which is not in the spirit of fitting a generative model.) What makes a cat picture a cat picture is not the pixel-by-pixel information content; it is the appearance of fur, whiskers, and the general air of disdain. How can we capture these aspects of <span class="math inline">\mathbf{X}</span>?</p>
+<p>The solution is to recall the concept of <em>featurisation</em>. Consider a feature map (cf. <a href="2-machine-learning-models.html#def-feature-space" class="quarto-xref">Definition&nbsp;<span>2.4</span></a>) <span class="math display">
+\boldsymbol{\phi}(\mathbf{x})
+=
+\begin{bmatrix}
+\phi_1(\mathbf{x}) \\
+\vdots \\
+\phi_p(\mathbf{x})
+\end{bmatrix}
+</span> and the associated <em>discrepancy</em> <span id="eq-discrepancy"><span class="math display">
+D_{\boldsymbol{\phi}}(P_{\boldsymbol{\theta}})
+=
+\left\|
+\int
+\boldsymbol{\phi}(\mathbf{x})\, p_{\boldsymbol{\theta}}(\mathbf{x}) \, \mathrm{d}\mathbf{x}
+-
+\frac{1}{n}\sum_{i=1}^n \boldsymbol{\phi}(\mathbf{x}_i)
+\right\|.
+\tag{6.2}</span></span></p>
+<p>If we were able to find features <span class="math inline">\phi_1, \dots, \phi_p</span> that codify the “essence” of cats, then we could seek the parameter values <span class="math inline">\boldsymbol{\theta}</span> for which the discrepancy <span class="math inline">D_{\boldsymbol{\phi}}(P_{\boldsymbol{\theta}})</span> is minimised. That is, we could ensure that the samples <span class="math inline">\mathbf{X}</span> from our generative model <span class="math inline">P_{\boldsymbol{\theta}}</span> most closely resemble the dataset in the respects that count.</p>
+<p>For example, if <span class="math inline">\phi_1(\mathbf{x})</span> is whisker length and <span class="math inline">\phi_2(\mathbf{x})</span> is squared whisker length, then minimising <span class="math inline">D_{\boldsymbol{\phi}}(P_{\boldsymbol{\theta}})</span> would amount to matching the first and second moment (equivalently, mean and variance) of whisker length between our generative model and the dataset. But how could we hope to find features that are so specifically engineered to capture the relevant aspects of the dataset?</p>
+<p>The key, as we have already seen (cf. <a href="2-machine-learning-models.html#sec-featurisation" class="quarto-xref"><span>Section 2.1.2</span></a>), is to use <em>data-driven</em> features, and one way to do this is to select features <em>adversarially</em>: <span id="eq-gan"><span class="math display">
+D_{\Phi}(P_{\boldsymbol{\theta}})
+=
+\sup_{\boldsymbol{\phi} \in \Phi}
+D_{\boldsymbol{\phi}}(P_{\boldsymbol{\theta}}).
+\tag{6.3}</span></span></p>
+<p>Here the supremum is taken over some appropriate set <span class="math inline">\Phi</span> of possible feature functions <span class="math inline">\boldsymbol{\phi}</span>.</p>
+<p>We can interpret <a href="#eq-gan" class="quarto-xref">Equation&nbsp;<span>6.3</span></a> as a two-player game:</p>
+<p>Player 1 simulates artificial samples from their model <span class="math inline">P_{\boldsymbol{\theta}}</span>, and Player 2 has to pick features <span class="math inline">\boldsymbol{\phi}</span> that will help them to detect which samples are artificial and which are real. Typically we do not want to employ a human to act as Player 2, so a natural idea is to replace Player 2 by a classifier whose feature map <span class="math inline">\boldsymbol{\phi}</span> can be trained to maximally distinguish between the artificial and real samples; for example, <span class="math inline">\boldsymbol{\phi}</span> can be a deep neural network<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
+<p>The resulting framework for training simulation-based models is called a <em>generative adversarial network</em> (or <strong>GAN</strong>). Until around 2020, generative adversarial networks were among the state of the art for generating realistic images; the example in <a href="#fig-gan" class="quarto-xref">Figure&nbsp;<span>6.4</span></a> was produced in this way in 2021. However, a step change in generative model performance occurred around 2020, and the state of the art are now (extensions of) energy-based models, as we will discuss next.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Remark (The power of adversarial training)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="rem-adversarial-power" class="proof remark">
+<p><span class="proof-title"><em>Remark 6.2</em> (The power of adversarial training). </span>Adversarial training of a machine learning model is a powerful idea that enables simpler or pre-trained machine learning models to assist with the training of more sophisticated machine learning models.</p>
+<p>For example, although <span class="xref-no-num"><a href="5-online-supervised-learning.html#exm-alphago" class="quarto-xref">AlphaGo&nbsp;<span>5.1</span></a></span> was initially trained on historical game data, it was honed and refined by playing millions of games against itself.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="sec-score-matching" class="level4" data-number="6.3.2.2">
 <h4 data-number="6.3.2.2" class="anchored" data-anchor-id="sec-score-matching"><span class="header-section-number">6.3.2.2</span> Score Matching<span class="advanced" title="MAS8607 Content"><i class="fa-solid fa-star" aria-label="star"></i></span></h4>
@@ -781,7 +958,7 @@ Figure&nbsp;6.1: An application of <span class="math inline">k</span>-means clus
 </div>
 <div class="callout-body-container">
 <div id="def-stein-score" class="definition theorem">
-<p><span class="theorem-title"><strong>Definition 6.2 (Stein score)</strong></span> Let <span class="math inline">P</span> be a probability distribution with density <span class="math inline">p</span> on <span class="math inline">\mathbb{R}^d</span>. The <strong>Stein score</strong> of <span class="math inline">P</span> is <span class="math display">
+<p><span class="theorem-title"><strong>Definition 6.4 (Stein score)</strong></span> Let <span class="math inline">P</span> be a probability distribution with density <span class="math inline">p</span> on <span class="math inline">\mathbb{R}^d</span>. The <strong>Stein score</strong> of <span class="math inline">P</span> is <span class="math display">
 s_P(\mathbf{x}) = (\nabla \log p)(\mathbf{x})
 </span> where here <span class="math inline">\nabla</span> denotes the gradient with respect to the <span class="math inline">\mathbf{x}</span> argument.</p>
 </div>
@@ -790,7 +967,7 @@ s_P(\mathbf{x}) = (\nabla \log p)(\mathbf{x})
 </div>
 <p>The Stein score is names after Charles Stein (1920-2016), who popularised the use of the Stein score as a theoretical tool (initially for proving central limit theorems) in the 1970s; computational and machine learning applications of the Stein score are a more recent development. For an energy-based model <span class="math inline">P_{\bm{\theta}}</span> the Stein score is <span id="eq-energy-stein-score"><span class="math display">
 s_{P_{\bm{\theta}}}(\mathbf{x}) =  (\nabla \log p)(\mathbf{x}) = \nabla_{\mathbf{x}} \{ - f_{\bm{\theta}}(\mathbf{x}) - \log Z_{\bm{\theta}} \} = - \nabla_{\mathbf{x}} f_{\bm{\theta}}(\mathbf{x})   
-\tag{6.2}</span></span> which can be computed without access to the intractable normalising constant <span class="math inline">Z_{\bm{\theta}}</span>. Critically, a Stein score <span class="math inline">s_P</span> fully characterises the associated distribution <span class="math inline">P</span>:</p>
+\tag{6.4}</span></span> which can be computed without access to the intractable normalising constant <span class="math inline">Z_{\bm{\theta}}</span>. Critically, a Stein score <span class="math inline">s_P</span> fully characterises the associated distribution <span class="math inline">P</span>:</p>
 <div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -804,7 +981,7 @@ s_{P_{\bm{\theta}}}(\mathbf{x}) =  (\nabla \log p)(\mathbf{x}) = \nabla_{\mathbf
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -813,7 +990,7 @@ s_{P_{\bm{\theta}}}(\mathbf{x}) =  (\nabla \log p)(\mathbf{x}) = \nabla_{\mathbf
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div id="prf-pc" class="proof">
 <p><span class="proof-title"><em>Proof 6.1</em> (Not Examinable). </span>The equality of Stein scores is equivalent to the constancy of the ratio of the densities <span class="math inline">p</span> and <span class="math inline">q</span> for <span class="math inline">P</span> and <span class="math inline">Q</span>, since <span class="math display">
@@ -827,7 +1004,7 @@ s_P(\mathbf{x}) - s_Q(\mathbf{x}) = \nabla_{\mathbf{x}} \log \left( \frac{p(\mat
 <blockquote class="blockquote">
 <p>How then can we proceed?</p>
 </blockquote>
-<p>The solution is essentially a clever application of integration-by-parts<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, due to <span class="citation" data-cites="hyvarinen2005estimation">Hyvärinen (<a href="#ref-hyvarinen2005estimation" role="doc-biblioref">2005</a>)</span>.</p>
+<p>The solution is essentially a clever application of integration-by-parts<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, due to <span class="citation" data-cites="hyvarinen2005estimation">Hyvärinen (<a href="#ref-hyvarinen2005estimation" role="doc-biblioref">2005</a>)</span>.</p>
 <div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -837,13 +1014,13 @@ s_P(\mathbf{x}) - s_Q(\mathbf{x}) = \nabla_{\mathbf{x}} \log \left( \frac{p(\mat
 <div id="prp-manip-stein-score" class="theorem proposition">
 <p><span class="theorem-title"><strong>Proposition 6.2 (Manipulating the Stein score<span class="advanced" title="Non-Examinable content"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>)</strong></span> Let <span class="math inline">P</span> and <span class="math inline">Q</span> be distributions on <span class="math inline">\mathbb{R}^d</span> with densities <span class="math inline">p</span> and <span class="math inline">q</span>, respectively. Assuming <span class="math inline">q(\mathbf{x}) (\nabla \log p)(\mathbf{x})</span> vanishes (uniformly) as <span class="math inline">\|\mathbf{x}\| \rightarrow \infty</span>, <span id="eq-hyvarinen"><span class="math display">
 \int \| s_P(\mathbf{x}) - s_Q(\mathbf{x}) \|^2 \mathrm{d}Q(\mathbf{x}) = \int \|(\nabla \log p)(\mathbf{x})\|^2 + 2 (\Delta \log p)(\mathbf{x}) \; \mathrm{d}Q(\mathbf{x}) + C_Q   
-\tag{6.3}</span></span> where <span class="math inline">C_Q</span> depends on <span class="math inline">Q</span> but not on <span class="math inline">P</span>.</p>
+\tag{6.5}</span></span> where <span class="math inline">C_Q</span> depends on <span class="math inline">Q</span> but not on <span class="math inline">P</span>.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -852,7 +1029,7 @@ s_P(\mathbf{x}) - s_Q(\mathbf{x}) = \nabla_{\mathbf{x}} \log \left( \frac{p(\mat
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div id="prf-manip-stein-score" class="proof">
 <p><span class="proof-title"><em>Proof 6.2</em> (Not Examinable). </span>From the <em>divergence theorem</em> (i.e.&nbsp;multivariate integration-by-parts; see e.g.&nbsp;MSP2801), <span class="math display">
@@ -872,7 +1049,7 @@ s_P(\mathbf{x}) - s_Q(\mathbf{x}) = \nabla_{\mathbf{x}} \log \left( \frac{p(\mat
 </div>
 </div>
 </div>
-<p>That is, we <em>can</em> indeed train our energy-based model by matching Stein scores, and we do this by minimising the right hand side of <a href="#eq-hyvarinen" class="quarto-xref">Equation&nbsp;<span>6.3</span></a> from <a href="#prp-manip-stein-score" class="quarto-xref">Proposition&nbsp;<span>6.2</span></a> where <span class="math inline">P</span> is <span class="math inline">P_{\bm{\theta}}</span> and where <span class="math inline">Q</span> is replaced by the empirical distribution of the dataset:</p>
+<p>That is, we <em>can</em> indeed train our energy-based model by matching Stein scores, and we do this by minimising the right hand side of <a href="#eq-hyvarinen" class="quarto-xref">Equation&nbsp;<span>6.5</span></a> from <a href="#prp-manip-stein-score" class="quarto-xref">Proposition&nbsp;<span>6.2</span></a> where <span class="math inline">P</span> is <span class="math inline">P_{\bm{\theta}}</span> and where <span class="math inline">Q</span> is replaced by the empirical distribution of the dataset:</p>
 <div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -880,16 +1057,16 @@ s_P(\mathbf{x}) - s_Q(\mathbf{x}) = \nabla_{\mathbf{x}} \log \left( \frac{p(\mat
 </div>
 <div class="callout-body-container">
 <div id="def-score-matching" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 6.3 (Score matching)</strong></span> Given a dataset <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n</span> and a generative model <span class="math inline">P_{\bm{\theta}}</span>, the <em>score matching</em> estimator is <span id="eq-score-matching-obj"><span class="math display">
+<p><span class="theorem-title"><strong>Definition 6.5 (Score matching)</strong></span> Given a dataset <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n</span> and a generative model <span class="math inline">P_{\bm{\theta}}</span>, the <em>score matching</em> estimator is <span id="eq-score-matching-obj"><span class="math display">
 \argmin_{\bm{\theta} \in \Theta} \quad \frac{1}{n} \sum_{i=1}^n \|(\nabla \log p_{\bm{\theta}})(\mathbf{x}_i)\|^2 + 2 (\Delta \log p_{\bm{\theta}})(\mathbf{x}_i)   
-\tag{6.4}</span></span></p>
+\tag{6.6}</span></span></p>
 </div>
 </div>
 </div>
 </div>
-<p>The quantities appearing in <a href="#def-score-matching" class="quarto-xref">Definition&nbsp;<span>6.3</span></a> can indeed be calculated for energy-based models, due to <a href="#eq-energy-stein-score" class="quarto-xref">Equation&nbsp;<span>6.2</span></a>. Score matching and maximum likelihood estimation happen to yield the same result when training a normal generative model (), but in general these objectives can be different.</p>
+<p>The quantities appearing in <a href="#def-score-matching" class="quarto-xref">Definition&nbsp;<span>6.5</span></a> can indeed be calculated for energy-based models, due to <a href="#eq-energy-stein-score" class="quarto-xref">Equation&nbsp;<span>6.4</span></a>. Score matching and maximum likelihood estimation happen to yield the same result when training a normal generative model (cf. <a href="../appendix/question-bank.html#q-score-matching-ml" class="quarto-xref">Question&nbsp;<span>17</span></a>), but in general these objectives can be different.</p>
 <p>Score matching has been around since at least <span class="citation" data-cites="hyvarinen2005estimation">Hyvärinen (<a href="#ref-hyvarinen2005estimation" role="doc-biblioref">2005</a>)</span>, and has been widely used in statistics to circumvent intractable normalisation constants <span class="math inline">Z_{\bm{\theta}}</span>.</p>
-<p>However, the optimisation landscape for score matching in <a href="#eq-score-matching-obj" class="quarto-xref">Equation&nbsp;<span>6.4</span></a> can be difficult to navigate, and this limited its potential.</p>
+<p>However, the optimisation landscape for score matching in <a href="#eq-score-matching-obj" class="quarto-xref">Equation&nbsp;<span>6.6</span></a> can be difficult to navigate, and this limited its potential.</p>
 <p>A breakthrough occurred around 2020, when <span class="citation" data-cites="ho2020denoising">Ho, Jain, and Abbeel (<a href="#ref-ho2020denoising" role="doc-biblioref">2020</a>)</span> and <span class="citation" data-cites="songdenoising">Song, Meng, and Ermon (<a href="#ref-songdenoising" role="doc-biblioref">n.d.</a>)</span> had the idea of constructing a sequence of relaxed optimisation problems, where one first solves an easier problem and leverages the solution to inform the next problem in the sequence, eventually enabling the original problem to be solved:</p>
 <div class="callout callout-style-simple callout-caution no-icon">
 <div class="callout-body d-flex">
@@ -898,7 +1075,7 @@ s_P(\mathbf{x}) - s_Q(\mathbf{x}) = \nabla_{\mathbf{x}} \log \left( \frac{p(\mat
 </div>
 <div class="callout-body-container">
 <div id="exm-denoising-diffusions" class="theorem example">
-<p><span class="theorem-title"><strong>Example 6.2 (Denoising diffusions<span class="advanced" title="Non-Examinable content"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>)</strong></span> Let <span class="math inline">P_0</span> be the distribution from which the dataset <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n</span> are considered to have been sampled. Construct a sequence <span class="math inline">(P_t)_{t &gt; 0}</span> of probability distributions, such that if <span class="math inline">\mathbf{X}_t \sim P_t</span> and <span class="math inline">\mathbf{Z} \sim \mathcal{N}(\mathbf{0},\mathbf{I})</span>, then <span class="math inline">\mathbf{X}_t + (s-t) \mathbf{Z} \sim P_s</span> for all <span class="math inline">s \geq t</span> (one can interpret such a construction as a <em>diffusion process</em>, but we do not need this detail). Each <span class="math inline">P_t</span> can be regarded as a <em>noisy</em> version of the data-generating distribution, where we have taken the original data points <span class="math inline">\mathbf{x}_i</span> and added independent Gaussian noise; see <a href="#fig-denosing-diffusion" class="quarto-xref">Figure&nbsp;<span>6.2</span></a>.</p>
+<p><span class="theorem-title"><strong>Example 6.4 (Denoising diffusions<span class="advanced" title="Non-Examinable content"><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>)</strong></span> Let <span class="math inline">P_0</span> be the distribution from which the dataset <span class="math inline">\{\mathbf{x}_i\}_{i=1}^n</span> are considered to have been sampled. Construct a sequence <span class="math inline">(P_t)_{t &gt; 0}</span> of probability distributions, such that if <span class="math inline">\mathbf{X}_t \sim P_t</span> and <span class="math inline">\mathbf{Z} \sim \mathcal{N}(\mathbf{0},\mathbf{I})</span>, then <span class="math inline">\mathbf{X}_t + (s-t) \mathbf{Z} \sim P_s</span> for all <span class="math inline">s \geq t</span> (one can interpret such a construction as a <em>diffusion process</em>, but we do not need this detail). Each <span class="math inline">P_t</span> can be regarded as a <em>noisy</em> version of the data-generating distribution, where we have taken the original data points <span class="math inline">\mathbf{x}_i</span> and added independent Gaussian noise; see <a href="#fig-denosing-diffusion" class="quarto-xref">Figure&nbsp;<span>6.5</span></a>.</p>
 <p>For large <span class="math inline">t</span>, say <span class="math inline">t = T</span>, the distribution <span class="math inline">P_T</span> will be approximately equal to <span class="math inline">\mathcal{N}(\mathbf{0},T\mathbf{I})</span> and the associated Stein score will be approximately <span class="math inline">- \mathbf{x} / T</span>, which can be easily matched using e.g.&nbsp;a linear model. The crucial observation is that the Stein score function of <span class="math inline">P_s</span> is easier to match compared to the Stein score function of <span class="math inline">P_t</span> whenever <span class="math inline">s \geq t</span>. Thus we can start by matching the Stein score for <span class="math inline">P_T</span> and gradually work backward until we have an accurate approximation to the Stein score of <span class="math inline">P_0</span>. This idea has become known as <em>denoising</em>, referring to working backward from the noisy <span class="math inline">P_T</span> to the noiseless <span class="math inline">P_0</span>. Using this approach, score matching can achieve state-of-the-art performance in complex generative modelling tasks. A prominent example of denoising diffusions is <em>Stable Diffusion</em>, which attracted much attention when it was publicly released by Stability AI in 2022.</p>
 </div>
 </div>
@@ -907,10 +1084,10 @@ s_P(\mathbf{x}) - s_Q(\mathbf{x}) = \nabla_{\mathbf{x}} \log \left( \frac{p(\mat
 <div id="fig-denosing-diffusion" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-denosing-diffusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="figures/kernel_trick.png" class="img-fluid figure-img" style="width:70.0%">
+<img src="figures/diffusion.png" class="img-fluid figure-img" style="width:70.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-denosing-diffusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.2: Illustrating the denoising diffusion generative model. [<a href="https://cvpr2023-tutorial-diffusion-models.github.io%7D">source</a>]
+Figure&nbsp;6.5: Illustrating the denoising diffusion generative model. [<a href="https://cvpr2023-tutorial-diffusion-models.github.io%7D">source</a>]
 </figcaption>
 </figure>
 </div>
@@ -938,7 +1115,9 @@ Song, Jiaming, Chenlin Meng, and Stefano Ermon. n.d. <span>“Denoising Diffusio
 <ol>
 <li id="fn1"><p>If data are not real vector-valued, we can proceed by first <em>embedding</em> the data into <span class="math inline">\mathbb{R}^d</span> using an appropriate transformation <span class="math inline">\phi(\mathbf{x}_i) \in \mathbb{R}^d</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>To avoid a trivial solution in <a href="#eq-kmeans" class="quarto-xref">Equation&nbsp;<span>6.1</span></a> we would need to insist on having at least one data point in each cluster.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>Recall that <span class="math inline">\Delta = \nabla \cdot \nabla</span> denotes the Laplacian <a href="2-machine-learning-models.html#rem-calculus-notation" class="quarto-xref">Remark&nbsp;<span>2.1</span></a>. Recall also that <span class="math inline">\int \cdots \mathrm{d}Q</span> denotes expectation with respect to <span class="math inline">Q</span>; <a href="1-overview-of-machine-learning.html#recap-notation-expectation" class="callout-ref" data-callout-label="Recap" data-callout-number="1.11" data-callout-title="Notation for Expectations" data-callout-preview="Let P be a probability distribution on a set \mathcal{X} and let f : \mathcal{X} \rightarrow \mathbb{R} be a function whose average value, or expectation, is of interest.">Recap&nbsp;1.11</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>The mathematical explanation for this requires measure theory, but intuitively <span class="math inline">M</span> has “size” zero in <span class="math inline">\mathbb{R}^d</span>, and so the only way for the statistical model to assign unit probability mass is for <span class="math inline">p_{\boldsymbol{\theta}}</span> to take infinite values on <span class="math inline">M</span>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>We can also replace the discrepancy in <a href="#eq-discrepancy" class="quarto-xref">Equation&nbsp;<span>6.2</span></a> with a measure of classification error and directly optimise that.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Recall that <span class="math inline">\Delta = \nabla \cdot \nabla</span> denotes the Laplacian <a href="2-machine-learning-models.html#rem-calculus-notation" class="quarto-xref">Remark&nbsp;<span>2.1</span></a>. Recall also that <span class="math inline">\int \cdots \mathrm{d}Q</span> denotes expectation with respect to <span class="math inline">Q</span>; <a href="1-overview-of-machine-learning.html#recap-notation-expectation" class="callout-ref" data-callout-label="Recap" data-callout-number="1.11" data-callout-title="Notation for Expectations" data-callout-preview="Let P be a probability distribution on a set \mathcal{X} and let f : \mathcal{X} \rightarrow \mathbb{R} be a function whose average value, or expectation, is of interest.">Recap&nbsp;1.11</a>.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

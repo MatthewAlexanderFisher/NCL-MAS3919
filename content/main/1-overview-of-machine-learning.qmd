@@ -1094,7 +1094,7 @@ So-called *deep* neural networks, where $L \gg 1$, are commonly used in tasks in
 A well-known example of a machine learning model for text-to-video is [SORA](https://openai.com/sora/) by OpenAI.
 The precise details of SORA are not public at the time of writing these notes, but some details are available in a [technical report](https://openai.com/research/video-generation-models-as-world-simulators).
 A possible model architecture is illustrated in @fig-SORA. 
-The model begins by analysing the provided text to understand its structure and content; this likely involves the use of a large language model (LLM), and we will discuss these in @sec-text-data.
+The model begins by analysing the provided text to understand its structure and content; this likely involves the use of a large language model (LLM), and we will discuss these in @sec-practical-pytorch-training.
 Then the model proceeds to generate video content; generative modelling is a very active area of machine learning and we will learn more about it in @sec-generative-models.
 
 :::
@@ -1117,6 +1117,8 @@ This is a rich area of methodological development, but in this module we restric
 2. <span class="xref-no-num">[Maximum Likelihood @sec-max-like]</span>
 
 Actually, we will see that maximum likelihood can be considered as a special case of empirical risk minimisation.
+
+![Speculated architecture used in OpenAI's SORA model.. [[source](https://medium.com/@liltom.eth/techniques-behind-openai-sora-f1cd3acf9b3e)]](figures/sora.png){#fig-SORA width=70%}
 
 ### Empirical Risk Minimisation {#sec-erm}
 
@@ -1177,7 +1179,7 @@ $$
 $$
 for which $f_{\hat{\bm{\theta}}}$ minimises the empirical risk.
 
-A discussion of how to solve such optimisation problems numerically is deferred to @def-adversarial-attacksec-stoch-opt.
+A discussion of how to solve such optimisation problems numerically is deferred to @@sec-stoch-opt.
 
 This is the simplest version of empirical risk minimisation, and in practice techniques such as *regularisation* are important to avoid issues such as *over-fitting*; we will return to these when we study specific machine learning models in detail in @sec-ml-models-in-detail.
 

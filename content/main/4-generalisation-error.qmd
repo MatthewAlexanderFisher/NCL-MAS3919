@@ -39,7 +39,7 @@ This is admittedly a bit artificial, but this setting does occur in practice, e.
 
 :::{#thm-generalisation-error}
 ### Generalisation error for empirical risk minimisation
-Consider the setting of @def-def-supervised-learning-task and let $|\mathcal{F}| < \infty$, $n \in \mathbb{N}$, and $\delta \in (0,1)$ be fixed.
+Consider the setting of @def-supervised-learning-task and let $|\mathcal{F}| < \infty$, $n \in \mathbb{N}$, and $\delta \in (0,1)$ be fixed.
 Let the loss function $L$ take values in $[0,1]$.
 Then, with probability at least $1 - \delta$, 
 $$
@@ -71,7 +71,7 @@ To polish the presentation, take $\delta =  2 |\mathcal{F}|  \exp( - 2 n t^2  )$
 $$
 t = \sqrt{ \frac{1}{2n} \log \left( \frac{2|\mathcal{F}|}{\delta} \right) } .
 $$
-Finally, letting $f_\star \in \argmin_{f \in \mathcal{F}} \mathcal{R}(f)$ minimise the (population) risk $\mathcal{R}(\cdot)$, and recalling that the empirical risk is denoted $\mathcal{R}_n(\cdot)$ (cf. \Cref{def: empirical risk}), we have that with probability at least $1 - \delta$,
+Finally, letting $f_\star \in \argmin_{f \in \mathcal{F}} \mathcal{R}(f)$ minimise the (population) risk $\mathcal{R}(\cdot)$, and recalling that the empirical risk is denoted $\mathcal{R}_n(\cdot)$ (cf. @def-empirical-risk), we have that with probability at least $1 - \delta$,
 $$
 \begin{align*}
 \mathcal{R}(f_n) & \leq \mathcal{R}_n(f_n) + t \qquad \text{(uniform convergence)} \\
@@ -89,7 +89,7 @@ Generalisation error bounds are useful because they tell us how much data are re
 
 ::: {.remark #rem-sample-complexity}
 ### Sample Complexity
-In the context of \Cref{thm: generalisation error}, to get to within $\epsilon > 0$ of the best possible risk, with probability at least $1 - \delta$, we need
+In the context of @thm-generalisation-error, to get to within $\epsilon > 0$ of the best possible risk, with probability at least $1 - \delta$, we need
 $$
 n \geq \frac{2}{\epsilon^2} \log \left( \frac{2 |\mathcal{F}| }{\delta} \right)
 $$
