@@ -1113,6 +1113,7 @@ $${#eq-pre-risk}
 is minimal.
 
 This is a rich area of methodological development, but in this module we restrict attention to two main techniques: 
+
 1. <span class="xref-no-num">[Empirical Risk Minimisation @sec-erm]</span>
 2. <span class="xref-no-num">[Maximum Likelihood @sec-max-like]</span>
 

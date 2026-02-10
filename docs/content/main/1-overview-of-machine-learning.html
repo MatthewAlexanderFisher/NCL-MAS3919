@@ -1961,7 +1961,11 @@ Figure&nbsp;1.5: A closer look at the input layer and the first hidden layer of 
 <p>At this point we have seen several examples of machine learning tasks and at least one type of machine learning model that could be considered in the context of each task. Our attention now turns to the key issue of how a machine learning model is <em>trained</em>, meaning the process of using the training dataset <span class="math inline">\{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^n</span> to try to identify an element <span class="math inline">f</span> from the machine learning model <span class="math inline">\mathcal{F}</span> for which <span id="eq-pre-risk"><span class="math display">
 \mathbb{E}_{(\mathbf{X},\mathbf{Y}) \sim P} [ L(\mathbf{Y},f(\mathbf{X})) ]
 \tag{1.5}</span></span> is minimal.</p>
-<p>This is a rich area of methodological development, but in this module we restrict attention to two main techniques: 1. <span class="xref-no-num"><a href="#sec-erm" class="quarto-xref">Empirical Risk Minimisation&nbsp;<span>1.2.1</span></a></span> 2. <span class="xref-no-num"><a href="#sec-max-like" class="quarto-xref">Maximum Likelihood&nbsp;<span>1.2.2</span></a></span></p>
+<p>This is a rich area of methodological development, but in this module we restrict attention to two main techniques:</p>
+<ol type="1">
+<li><span class="xref-no-num"><a href="#sec-erm" class="quarto-xref">Empirical Risk Minimisation&nbsp;<span>1.2.1</span></a></span></li>
+<li><span class="xref-no-num"><a href="#sec-max-like" class="quarto-xref">Maximum Likelihood&nbsp;<span>1.2.2</span></a></span></li>
+</ol>
 <p>Actually, we will see that maximum likelihood can be considered as a special case of empirical risk minimisation.</p>
 <div id="fig-SORA" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">

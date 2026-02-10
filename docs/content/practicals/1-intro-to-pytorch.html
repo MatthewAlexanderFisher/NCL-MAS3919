@@ -236,6 +236,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </style>
     
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../theming/math-scroll.css">
 <link rel="stylesheet" href="../../theming/practice-details.css">
@@ -615,12 +658,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#getting-started-with-colab" id="toc-getting-started-with-colab" class="nav-link" data-scroll-target="#getting-started-with-colab"><span class="header-section-number">8.1.3</span> Getting started with Colab</a></li>
   <li><a href="#colab-basics" id="toc-colab-basics" class="nav-link" data-scroll-target="#colab-basics"><span class="header-section-number">8.1.4</span> Colab basics</a></li>
   <li><a href="#installing-additional-packages" id="toc-installing-additional-packages" class="nav-link" data-scroll-target="#installing-additional-packages"><span class="header-section-number">8.1.5</span> Installing additional packages</a></li>
+  <li><a href="#persistence" id="toc-persistence" class="nav-link" data-scroll-target="#persistence"><span class="header-section-number">8.1.6</span> Persistence</a></li>
+  <li><a href="#enabling-gpu-acceleration" id="toc-enabling-gpu-acceleration" class="nav-link" data-scroll-target="#enabling-gpu-acceleration"><span class="header-section-number">8.1.7</span> Enabling GPU acceleration</a></li>
   </ul></li>
   <li><a href="#introduction-to-pytorch" id="toc-introduction-to-pytorch" class="nav-link" data-scroll-target="#introduction-to-pytorch"><span class="header-section-number">8.2</span> Introduction to PyTorch</a>
   <ul class="collapse">
   <li><a href="#why-pytorch" id="toc-why-pytorch" class="nav-link" data-scroll-target="#why-pytorch"><span class="header-section-number">8.2.1</span> Why PyTorch?</a></li>
-  <li><a href="#tensors" id="toc-tensors" class="nav-link" data-scroll-target="#tensors"><span class="header-section-number">8.2.2</span> Tensors</a></li>
-  <li><a href="#automatic-differentiation" id="toc-automatic-differentiation" class="nav-link" data-scroll-target="#automatic-differentiation"><span class="header-section-number">8.2.3</span> Automatic differentiation</a></li>
+  <li><a href="#translating-mathematics-to-code" id="toc-translating-mathematics-to-code" class="nav-link" data-scroll-target="#translating-mathematics-to-code"><span class="header-section-number">8.2.2</span> Translating mathematics to code</a></li>
+  <li><a href="#python-essentials" id="toc-python-essentials" class="nav-link" data-scroll-target="#python-essentials"><span class="header-section-number">8.2.3</span> Python Essentials</a></li>
+  <li><a href="#tensors" id="toc-tensors" class="nav-link" data-scroll-target="#tensors"><span class="header-section-number">8.2.4</span> Tensors</a></li>
+  </ul></li>
+  <li><a href="#implementing-a-linear-model-in-pytorch" id="toc-implementing-a-linear-model-in-pytorch" class="nav-link" data-scroll-target="#implementing-a-linear-model-in-pytorch"><span class="header-section-number">8.3</span> Implementing a Linear Model in <code>PyTorch</code></a>
+  <ul class="collapse">
+  <li><a href="#defining-the-model" id="toc-defining-the-model" class="nav-link" data-scroll-target="#defining-the-model"><span class="header-section-number">8.3.1</span> Defining the Model</a></li>
+  <li><a href="#what-forward-is-doing-math-to-code" id="toc-what-forward-is-doing-math-to-code" class="nav-link" data-scroll-target="#what-forward-is-doing-math-to-code"><span class="header-section-number">8.3.2</span> What <code>forward</code> is doing (math to code)</a></li>
+  <li><a href="#training-on-synthetic-data-will-go-into-more-detail-next-time" id="toc-training-on-synthetic-data-will-go-into-more-detail-next-time" class="nav-link" data-scroll-target="#training-on-synthetic-data-will-go-into-more-detail-next-time"><span class="header-section-number">8.3.3</span> Training on Synthetic Data (will go into more detail next time)</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -648,12 +700,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://colab.research.google.com/github/USERNAME/REPO/blob/main/notebooks/1-intro-to-pytorch.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img"></a></p>
-<figcaption>Open In Colab</figcaption>
-</figure>
-</div>
+<p><a href="https://colab.research.google.com/github/MatthewAlexanderFisher/NCL-MAS3919/blob/main/content/practicals/1-intro-to-pytorch.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <section id="introduction-to-python" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="introduction-to-python"><span class="header-section-number">8.1</span> Introduction to Python</h2>
 <p>Python is a high-level, general-purpose programming language that has become the <em>de facto</em> standard for machine learning and data science. Its popularity stems from its readable syntax, extensive ecosystem of libraries, and strong community support.</p>
@@ -662,6 +709,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>NumPy</strong> for numerical computing and array operations</li>
 <li><strong>Matplotlib</strong> for data visualisation</li>
 <li><strong>PyTorch</strong> for building and training neural networks</li>
+<li><strong>Pandas</strong> for data manipulation</li>
 </ul>
 <section id="running-python" class="level3" data-number="8.1.1">
 <h3 data-number="8.1.1" class="anchored" data-anchor-id="running-python"><span class="header-section-number">8.1.1</span> Running Python</h3>
@@ -692,27 +740,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The notebook will open in a new tab, ready to run</li>
 </ol>
 <p>Alternatively, you can upload any <code>.ipynb</code> file directly to Colab via <strong>File → Upload notebook</strong>.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Enabling GPU acceleration
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>For notebooks involving neural network training, enable GPU support:</p>
-<ol type="1">
-<li>Go to <strong>Runtime → Change runtime type</strong></li>
-<li>Under “Hardware accelerator”, select <strong>GPU</strong> (T4 is typically available for free)</li>
-<li>Click <strong>Save</strong></li>
-</ol>
-<p>You can verify GPU access by running:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.cuda.is_available())  <span class="co"># Should print True</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
 </section>
 <section id="colab-basics" class="level3" data-number="8.1.4">
 <h3 data-number="8.1.4" class="anchored" data-anchor-id="colab-basics"><span class="header-section-number">8.1.4</span> Colab basics</h3>
@@ -756,38 +783,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="installing-additional-packages" class="level3" data-number="8.1.5">
 <h3 data-number="8.1.5" class="anchored" data-anchor-id="installing-additional-packages"><span class="header-section-number">8.1.5</span> Installing additional packages</h3>
 <p>Most packages you need are pre-installed, but if you require something else, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install package<span class="op">-</span>name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install package<span class="op">-</span>name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>!</code> prefix runs shell commands from within a notebook.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Persistence
-</div>
-</div>
-<div class="callout-body-container callout-body">
+</section>
+<section id="persistence" class="level3" data-number="8.1.6">
+<h3 data-number="8.1.6" class="anchored" data-anchor-id="persistence"><span class="header-section-number">8.1.6</span> Persistence</h3>
 <p>Colab sessions are temporary. If your runtime disconnects (after ~90 minutes of inactivity, or ~12 hours maximum), you will need to re-run your cells. Any installed packages or uploaded files will need to be reinstalled/re-uploaded.</p>
 <p>To save your work permanently, either:</p>
 <ul>
 <li><strong>Save to Google Drive</strong> — File → Save a copy in Drive</li>
 <li><strong>Download the notebook</strong> — File → Download → Download .ipynb</li>
 </ul>
-</div>
-</div>
+</section>
+<section id="enabling-gpu-acceleration" class="level3" data-number="8.1.7">
+<h3 data-number="8.1.7" class="anchored" data-anchor-id="enabling-gpu-acceleration"><span class="header-section-number">8.1.7</span> Enabling GPU acceleration</h3>
+<p>For notebooks involving neural network training, enable GPU support:</p>
+<ol type="1">
+<li>Go to <strong>Runtime → Change runtime type</strong></li>
+<li>Under “Hardware accelerator”, select <strong>GPU</strong> (T4 is typically available for free)</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<p>You can verify GPU access by running:</p>
 </section>
 </section>
 <section id="introduction-to-pytorch" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="introduction-to-pytorch"><span class="header-section-number">8.2</span> Introduction to PyTorch</h2>
-<p>PyTorch is an open-source machine learning library developed by Meta AI. It provides two core features:</p>
+<p><code>PyTorch</code> is an open-source machine learning library developed by Meta AI. It provides two core features:</p>
 <ol type="1">
 <li><strong>Tensor computation</strong> with GPU acceleration</li>
 <li><strong>Automatic differentiation</strong> for building and training neural networks</li>
 </ol>
 <section id="why-pytorch" class="level3" data-number="8.2.1">
 <h3 data-number="8.2.1" class="anchored" data-anchor-id="why-pytorch"><span class="header-section-number">8.2.1</span> Why PyTorch?</h3>
-<p>PyTorch has become the dominant framework in machine learning research due to its:</p>
+<p><code>PyTorch</code> has become the dominant framework in machine learning research due to its:</p>
 <ul>
 <li><strong>Pythonic design</strong> — feels natural to Python programmers</li>
 <li><strong>Dynamic computation graphs</strong> — build and modify models on-the-fly</li>
@@ -795,41 +823,330 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Strong community</strong> — widely used in academia and industry</li>
 </ul>
 </section>
-<section id="tensors" class="level3" data-number="8.2.2">
-<h3 data-number="8.2.2" class="anchored" data-anchor-id="tensors"><span class="header-section-number">8.2.2</span> Tensors</h3>
-<p>The fundamental data structure in PyTorch is the <strong>tensor</strong> — a multi-dimensional array similar to a NumPy array but with GPU support and automatic differentiation capabilities.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create tensors</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])              <span class="co"># from a list</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.zeros(<span class="dv">3</span>, <span class="dv">4</span>)                     <span class="co"># 3×4 matrix of zeros</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">3</span>)                     <span class="co"># 2×3 matrix of random normals</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Check shape</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z.shape)  <span class="co"># torch.Size([2, 3])</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Move to GPU (if available)</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> torch.cuda.is_available():</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> z.cuda()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="translating-mathematics-to-code" class="level3" data-number="8.2.2">
+<h3 data-number="8.2.2" class="anchored" data-anchor-id="translating-mathematics-to-code"><span class="header-section-number">8.2.2</span> Translating mathematics to code</h3>
+<p>In the notation used in this course, a parameterised model is a family of functions</p>
+<p><span class="math display">
+\mathcal{F} = \{ f_{\boldsymbol{\theta}} \}_{\boldsymbol{\theta}} .
+</span></p>
+<p>Given a loss function</p>
+<p><span class="math display">
+L\bigl(y, f_{\boldsymbol{\theta}}(\boldsymbol{x})\bigr),
+</span></p>
+<p>and a dataset <span class="math inline">\{(\boldsymbol{x}_i, y_i)\}_{i=1}^n</span>, we aim to learn parameters <span class="math inline">\boldsymbol{\theta}</span> that minimise the empirical risk</p>
+<p><span class="math display">
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
+= \frac{1}{n} \sum_{i=1}^{n}
+L\bigl(y_i, f_{\boldsymbol{\theta}}(\boldsymbol{x}_i)\bigr).
+</span></p>
+<p>In practice, this optimisation problem almost never admits a closed-form solution and must be solved numerically using an iterative optimisation algorithm.</p>
+<p><code>PyTorch</code> provides direct support for each part of this pipeline:</p>
+<ul>
+<li>we define the model <span class="math inline">f_{\boldsymbol{\theta}}</span> as a Python class</li>
+<li>we define the loss function <span class="math inline">L</span> as a Python function (or a predefined PyTorch loss)</li>
+<li>we represent the data and parameters using tensors</li>
+<li>we use <strong>automatic differentiation</strong> to compute <span class="math inline">\nabla_{\boldsymbol{\theta}} \mathcal{R}_n(f_{\boldsymbol{\theta}})</span></li>
+<li>we update the parameters using an optimisation algorithm (e.g.&nbsp;stochastic gradient descent)</li>
+</ul>
+<p>Conceptually, the correspondence is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mathematical object</th>
+<th>PyTorch concept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>parameters <span class="math inline">\boldsymbol{\theta}</span></td>
+<td>tensors with <code>requires_grad=True</code></td>
+</tr>
+<tr class="even">
+<td>model <span class="math inline">f_{\boldsymbol{\theta}}</span></td>
+<td><code>nn.Module</code> with a <code>forward</code> method</td>
+</tr>
+<tr class="odd">
+<td>loss <span class="math inline">L</span></td>
+<td>loss function</td>
+</tr>
+<tr class="even">
+<td>gradient <span class="math inline">\nabla_{\boldsymbol{\theta}}</span></td>
+<td>computed automatically by autograd</td>
+</tr>
+<tr class="odd">
+<td>optimiser</td>
+<td>object from <code>torch.optim</code></td>
+</tr>
+</tbody>
+</table>
+<p>A typical training step in <code>PyTorch</code> therefore mirrors the mathematical objective:</p>
+<ol type="1">
+<li>evaluate the model <span class="math inline">f_{\boldsymbol{\theta}}(\boldsymbol{x})</span></li>
+<li>compute the loss <span class="math inline">L\bigl(y, f_{\boldsymbol{\theta}}(\boldsymbol{x})\bigr)</span></li>
+<li>compute gradients using automatic differentiation</li>
+<li>update <span class="math inline">\boldsymbol{\theta}</span> using an optimiser</li>
+</ol>
+<p>This tutorial will show how each of these mathematical components is implemented using <code>PyTorch</code>.</p>
 </section>
-<section id="automatic-differentiation" class="level3" data-number="8.2.3">
-<h3 data-number="8.2.3" class="anchored" data-anchor-id="automatic-differentiation"><span class="header-section-number">8.2.3</span> Automatic differentiation</h3>
-<p>PyTorch’s <code>autograd</code> system automatically computes gradients, which is essential for training neural networks via gradient descent.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a tensor with gradient tracking</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">2.0</span>, <span class="fl">3.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform operations</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> y.<span class="bu">sum</span>()</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute gradients</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>z.backward()</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Access gradients: dz/dx = 2x</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad)  <span class="co"># tensor([4., 6.])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>We will explore tensors and automatic differentiation in much greater depth in the practical notebooks.</p>
+<section id="python-essentials" class="level3" data-number="8.2.3">
+<h3 data-number="8.2.3" class="anchored" data-anchor-id="python-essentials"><span class="header-section-number">8.2.3</span> Python Essentials</h3>
+<section id="data-types" class="level4" data-number="8.2.3.1">
+<h4 data-number="8.2.3.1" class="anchored" data-anchor-id="data-types"><span class="header-section-number">8.2.3.1</span> Data Types</h4>
+<p>In PyTorch work you mainly use:</p>
+</section>
+<section id="packages" class="level4" data-number="8.2.3.2">
+<h4 data-number="8.2.3.2" class="anchored" data-anchor-id="packages"><span class="header-section-number">8.2.3.2</span> Packages</h4>
+<p>Colab always uses imports.</p>
+<p>Alias style is standard:</p>
+<p>Accessing a package:</p>
+</section>
+<section id="function-syntax" class="level4" data-number="8.2.3.3">
+<h4 data-number="8.2.3.3" class="anchored" data-anchor-id="function-syntax"><span class="header-section-number">8.2.3.3</span> Function Syntax</h4>
+<p>In <code>PyTorch</code>, functions are mainly used to:</p>
+<ul>
+<li><p>define the forward computation of a model</p></li>
+<li><p>define loss functions or evaluation metrics</p></li>
+<li><p>wrap parts of the training logic</p></li>
+</ul>
+<p>The most important example is a model’s <strong>forward</strong> function:</p>
+</section>
+<section id="loops" class="level4" data-number="8.2.3.4">
+<h4 data-number="8.2.3.4" class="anchored" data-anchor-id="loops"><span class="header-section-number">8.2.3.4</span> Loops</h4>
+<p>In PyTorch, loops are mainly used to iterate over data and training steps.</p>
+<p><strong>for-loop</strong></p>
+<p>In this module, we typically perform a for-loop over training data. E.g.</p>
+<p><strong>while-loop</strong></p>
+<p>This is much rarer in <code>PyTorch</code> tutorials, but can be used when training is driven by a convergence or stopping criterion rather than a fixed number of epochs, for example:</p>
+</section>
+<section id="classes" class="level4" data-number="8.2.3.5">
+<h4 data-number="8.2.3.5" class="anchored" data-anchor-id="classes"><span class="header-section-number">8.2.3.5</span> Classes</h4>
+<p>In Python, a class is used to bundle data and behaviour into a single object.</p>
+<p>In other words, a class defines:</p>
+<ul>
+<li><p>what data an object stores</p></li>
+<li><p>what operations (methods) can be applied to it</p></li>
+</ul>
+<p>Minimal example:</p>
+<p>Minimal usage:</p>
+<p>Essential ideas:</p>
+<ul>
+<li><p><code>__init__</code> is called when the object is created</p></li>
+<li><p><code>self</code> refers to the current object</p></li>
+<li><p>attributes are created as <code>self.something</code></p></li>
+<li><p>methods are just functions that belong to the class</p></li>
+</ul>
+<p>In <code>PyTorch</code>, a <strong>model</strong> is implemented as a class:</p>
+<ul>
+<li><p>parameters (layers, tensors) are stored as attributes</p></li>
+<li><p>the forward computation is defined as a method</p></li>
+</ul>
+<p>A model is a Python class that inherits from <code>nn.Module</code>.</p>
+<p>Usage:</p>
+<p>If a layer or parameter is not assigned to <code>self</code>, <code>PyTorch</code> will not register it and it will not be trained.</p>
+</section>
+</section>
+<section id="tensors" class="level3" data-number="8.2.4">
+<h3 data-number="8.2.4" class="anchored" data-anchor-id="tensors"><span class="header-section-number">8.2.4</span> Tensors</h3>
+<p>The fundamental data structure in PyTorch is the <strong>tensor</strong> — a multi-dimensional array, analogous to a NumPy array, but with built-in support for GPU acceleration and automatic differentiation.</p>
+<p>In practice, you should think of a PyTorch tensor in exactly the same way as a NumPy array.</p>
+<section id="creating-tensors" class="level4" data-number="8.2.4.1">
+<h4 data-number="8.2.4.1" class="anchored" data-anchor-id="creating-tensors"><span class="header-section-number">8.2.4.1</span> Creating tensors</h4>
+<p>From Python lists:</p>
+<p>From nested lists (matrices):</p>
+<p>Common initialisation routines (identical in spirit to <code>NumPy</code>):</p>
+<p>From a <code>NumPy</code> array:</p>
+<p>Like NumPy, tensors have a shape and a dtype:</p>
+</section>
+<section id="basic-operations" class="level4" data-number="8.2.4.2">
+<h4 data-number="8.2.4.2" class="anchored" data-anchor-id="basic-operations"><span class="header-section-number">8.2.4.2</span> Basic operations</h4>
+<p>Just like in <code>NumPy</code>, or <code>R</code>, operations on <code>PyTorch</code> tensors are vectorised:</p>
+<p>Scalar operations:</p>
+</section>
+<section id="matrix-and-vector-operations" class="level4" data-number="8.2.4.3">
+<h4 data-number="8.2.4.3" class="anchored" data-anchor-id="matrix-and-vector-operations"><span class="header-section-number">8.2.4.3</span> Matrix and vector operations</h4>
+<p>Matrix multiplication uses standard syntax conventions:</p>
+<p>Alternatively, a <code>PyTorch</code> specific way:</p>
+</section>
+<section id="indexing-and-slicing" class="level4" data-number="8.2.4.4">
+<h4 data-number="8.2.4.4" class="anchored" data-anchor-id="indexing-and-slicing"><span class="header-section-number">8.2.4.4</span> Indexing and slicing</h4>
+<p>Indexing is identical to <code>NumPy</code>:</p>
+<p>For matrices:</p>
+</section>
+<section id="reshaping" class="level4" data-number="8.2.4.5">
+<h4 data-number="8.2.4.5" class="anchored" data-anchor-id="reshaping"><span class="header-section-number">8.2.4.5</span> Reshaping</h4>
+<p>As in <code>NumPy</code>, reshaping does not copy data when possible:</p>
+<p>Flattening:</p>
+</section>
+<section id="reductions-along-a-dimension" class="level4" data-number="8.2.4.6">
+<h4 data-number="8.2.4.6" class="anchored" data-anchor-id="reductions-along-a-dimension"><span class="header-section-number">8.2.4.6</span> Reductions along a dimension</h4>
+<p>These reduction operations may also <em>reduce</em> a tensor by collapsing one dimension.</p>
+<p>The most common examples are <code>sum</code>, <code>mean</code>, <code>max</code>, etc.</p>
+<p>In <code>PyTorch</code>, the argument</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dim <span class="op">=</span> k</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>means reduce along axis <code>k</code> (collapse that axis).</p>
+<p><strong>Example: a 2-D tensor</strong></p>
+<p>Its shape is</p>
+<p>Think of the dimensions as:</p>
+<ul>
+<li>dimension 0 → rows</li>
+<li>dimension 1 → columns</li>
+</ul>
+<p>There are three options of reducing here:</p>
+<p><strong>No dimension specified</strong></p>
+<p>All entries are summed and a single scalar is returned.</p>
+<hr>
+<p><strong>Reducing along <code>dim=0</code></strong></p>
+<p>Here:</p>
+<ul>
+<li><p>we collapse dimension 0 (the rows)</p></li>
+<li><p>we keep dimension 1 (the columns)</p></li>
+</ul>
+<p>So each output entry is the sum <em>down the rows</em>:</p>
+<p><span class="math display">
+\begin{bmatrix}
+1 &amp; 2 &amp; 3 \\
+4 &amp; 5 &amp; 6
+\end{bmatrix}
+\xrightarrow{\text{sum over dim 1}}
+\begin{bmatrix}
+1+4, 2+5, 3+6
+\end{bmatrix}
+</span></p>
+<p>The output shape is:</p>
+<p><strong>Reducing along <code>dim=1</code></strong></p>
+<p>Here:</p>
+<ul>
+<li>we collapse dimension 1 (the columns)</li>
+<li>we keep dimension 0 (the rows)</li>
+</ul>
+<p>So each output entry is the sum across each row:</p>
+<p><span class="math display">
+\begin{bmatrix}
+1 &amp; 2 &amp; 3 \\
+4 &amp; 5 &amp; 6
+\end{bmatrix}
+\xrightarrow{\text{sum over dim 1}}
+\begin{bmatrix}
+1+2+3,4+5+6
+\end{bmatrix}
+</span></p>
+</section>
+<section id="automatic-differentiation" class="level4" data-number="8.2.4.7">
+<h4 data-number="8.2.4.7" class="anchored" data-anchor-id="automatic-differentiation"><span class="header-section-number">8.2.4.7</span> Automatic Differentiation</h4>
+<p>The key element that is <strong>new to <code>PyTorch</code></strong>, and that you are unlikely to have seen before, is <strong>automatic differentiation</strong>.</p>
+<p>In essence, we are allowed to treat complicated numerical code as a <em>differentiable mathematical function</em> and ask <code>PyTorch</code> to compute its derivatives for us automatically.</p>
+<p>More precisely, suppose we define a scalar-valued function</p>
+<p><span class="math display">
+F(\boldsymbol{\theta}) \in \mathbb{R}
+</span></p>
+<p>using <code>PyTorch</code> tensor operations.</p>
+<p>If the tensor <span class="math inline">\boldsymbol{\theta}</span> is marked as requiring gradients, <code>PyTorch</code> can compute</p>
+<p><span class="math display">
+\nabla_{\boldsymbol{\theta}} f(\boldsymbol{\theta})
+</span></p>
+<p>exactly (up to floating-point error), using the chain rule.</p>
+<hr>
+<section id="a-simple-example" class="level5" data-number="8.2.4.7.1">
+<h5 data-number="8.2.4.7.1" class="anchored" data-anchor-id="a-simple-example"><span class="header-section-number">8.2.4.7.1</span> A simple example</h5>
+<p>Consider the function</p>
+<p><span class="math display">
+f(x) = x^2 + 3x.
+</span></p>
+<p>We can implement this directly in <code>PyTorch</code>:</p>
+<p>To compute the derivative, we call:</p>
+<p>The gradient is stored in:</p>
+<p>which gives <span class="math display">
+\frac{df}{dx} = 2x + 3 = 2 \times 2 + 3 = 7
+</span></p>
+</section>
+<section id="a-slightly-more-realistic-example" class="level5" data-number="8.2.4.7.2">
+<h5 data-number="8.2.4.7.2" class="anchored" data-anchor-id="a-slightly-more-realistic-example"><span class="header-section-number">8.2.4.7.2</span> A slightly more realistic example</h5>
+<p>Let us define a small function using several operations:</p>
+<p>Now evaluate it at a vector:</p>
+<p>Since <code>loss</code> is a scalar, we can compute its gradient with respect to <code>theta</code>:</p>
+<p>The result is:</p>
+<p>which contains <span class="math display">
+\nabla_{\bm{\theta}} f(\bm{\theta}).
+</span></p>
+</section>
+<section id="why-the-output-must-be-a-scalar" class="level5" data-number="8.2.4.7.3">
+<h5 data-number="8.2.4.7.3" class="anchored" data-anchor-id="why-the-output-must-be-a-scalar"><span class="header-section-number">8.2.4.7.3</span> Why the output must be a scalar</h5>
+<p><code>PyTorch</code>’s automatic differentiation computes gradients of scalar outputs with respect to tensors.</p>
+<p>In machine learning, this scalar is typically the empirical risk: <span class="math display">
+\mathcal{R}_n(f_{\bm{\theta}}),
+</span> where we wish to compute <span class="math inline">\nabla_{\bm{\theta}} \mathcal{R}_n(f_{\bm{\theta}})</span>.</p>
+</section>
+<section id="key-syntax" class="level5" data-number="8.2.4.7.4">
+<h5 data-number="8.2.4.7.4" class="anchored" data-anchor-id="key-syntax"><span class="header-section-number">8.2.4.7.4</span> Key Syntax</h5>
+<p>In order to use <code>PyTorch</code>’s automatic differentiation abilities, you must specify the tensor as <code>requires_grad=True</code></p>
+<p>That is, the following code will work:</p>
+<p>The following will not:</p>
+</section>
+</section>
+</section>
+</section>
+<section id="implementing-a-linear-model-in-pytorch" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="implementing-a-linear-model-in-pytorch"><span class="header-section-number">8.3</span> Implementing a Linear Model in <code>PyTorch</code></h2>
+<section id="defining-the-model" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="defining-the-model"><span class="header-section-number">8.3.1</span> Defining the Model</h3>
+<p>We will use the polynomial regression model</p>
+<p><span class="math display">
+f_{\boldsymbol{\theta}}(x)
+= \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3 + \theta_4 x^4,
+</span></p>
+<p>where <span class="math inline">\boldsymbol{\theta} = (\theta_0,\theta_1,\theta_2,\theta_3,\theta_4)</span> are the learnable parameters.</p>
+<p>In <code>PyTorch</code>, models are implemented as classes that inherit from <code>nn.Module</code>.</p>
+<p>The key method is <code>forward</code>, which defines <strong>how inputs are mapped to outputs</strong>, i.e.&nbsp;it implements the function <span class="math inline">f_{\boldsymbol{\theta}}</span>.</p>
+<p>When you write</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>PyTorch</code> automatically calls</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.forward(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>(plus some internal bookkeeping). This is why we always implement forward rather than calling it directly.</p>
+<section id="model-code" class="level4" data-number="8.3.1.1">
+<h4 data-number="8.3.1.1" class="anchored" data-anchor-id="model-code"><span class="header-section-number">8.3.1.1</span> Model code</h4>
+<p>A convenient way to implement this model is to store the coefficients as learnable parameters and build the polynomial features inside forward.</p>
+<p>A quick sanity check:</p>
+</section>
+</section>
+<section id="what-forward-is-doing-math-to-code" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="what-forward-is-doing-math-to-code"><span class="header-section-number">8.3.2</span> What <code>forward</code> is doing (math to code)</h3>
+<p>For input values <span class="math inline">x_1,\dots,x_n</span>, define the design matrix</p>
+<p><span class="math display">
+X =
+\begin{bmatrix}
+1 &amp; x_1 &amp; x_1^2 &amp; x_1^3 &amp; x_1^4 \\
+1 &amp; x_2 &amp; x_2^2 &amp; x_2^3 &amp; x_2^4 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+1 &amp; x_n &amp; x_n^2 &amp; x_n^3 &amp; x_n^4
+\end{bmatrix}
+\in \mathbb{R}^{n \times 5}.
+</span></p>
+<p>Then the model predictions are</p>
+<p><span class="math display">
+\hat{\boldsymbol{y}} = X \boldsymbol{\theta}.
+</span></p>
+<p>That is exactly what this line computes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> X <span class="op">@</span> <span class="va">self</span>.theta</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="training-on-synthetic-data-will-go-into-more-detail-next-time" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="training-on-synthetic-data-will-go-into-more-detail-next-time"><span class="header-section-number">8.3.3</span> Training on Synthetic Data (will go into more detail next time)</h3>
+<p>We now generate a small synthetic dataset from a known polynomial and fit the model defined above.<br>
+We will <em>not</em> discuss the optimisation details yet – this is only to show the full pipeline working end-to-end.</p>
+<section id="generate-synthetic-data" class="level4" data-number="8.3.3.1">
+<h4 data-number="8.3.3.1" class="anchored" data-anchor-id="generate-synthetic-data"><span class="header-section-number">8.3.3.1</span> Generate synthetic data</h4>
+</section>
+<section id="train-the-model" class="level4" data-number="8.3.3.2">
+<h4 data-number="8.3.3.2" class="anchored" data-anchor-id="train-the-model"><span class="header-section-number">8.3.3.2</span> Train the model</h4>
+</section>
+<section id="plot-the-fitted-curve" class="level4" data-number="8.3.3.3">
+<h4 data-number="8.3.3.3" class="anchored" data-anchor-id="plot-the-fitted-curve"><span class="header-section-number">8.3.3.3</span> Plot the fitted curve</h4>
 
 
+</section>
 </section>
 </section>
 
