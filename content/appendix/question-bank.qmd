@@ -1651,6 +1651,318 @@ These points are not exhaustive, but they highlight some of the key issues that 
 :::
 
 
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-2 pytorch" data-difficulty="0" #q-pytorch-tensor0}
+## PyTorch tensors: vectors and matrices I
+
+In machine learning, data are typically represented using **vectors** and **matrices**.
+
+Consider the vector
+
+$$
+\bm{x}
+=
+\begin{pmatrix}
+1 \\
+2 \\
+3
+\end{pmatrix}
+$$
+
+and the matrices
+
+$$
+A
+=
+\begin{pmatrix}
+1 & 2 & 0 \\
+0 & 1 & 3 \\
+2 & 0 & 1
+\end{pmatrix},
+\qquad
+B
+=
+\begin{pmatrix}
+1 & 0 & 2 \\
+3 & 1 & 0 \\
+0 & 2 & 1
+\end{pmatrix}.
+$$
+  
+**Questions**
+
+1. Using PyTorch, create the vector `x` and the matrices `A` and `B`. Use dtype `torch.float32`.
+
+2. Using PyTorch operations (no loops), compute:
+
+   (a) the sum of each **row** of `A`
+
+   (b) the sum of each **column** of `A`
+
+   (c) the matrix product $AB$
+
+   (d) the matrix-vector product $Ax$
+
+   (e) the scalar value $x^\top A x$
+
+<details class="solution">
+  <summary>Solution</summary>
+
+One possible implementation in PyTorch is given below:
+
+```{python}
+#| echo: true
+
+import torch
+
+# Part 1: create vector and matrices
+
+x = torch.tensor(
+    [1, 2, 3],
+    dtype=torch.float32
+)
+
+A = torch.tensor(
+    [
+        [1, 2, 0],
+        [0, 1, 3],
+        [2, 0, 1],
+    ],
+    dtype=torch.float32
+)
+
+B = torch.tensor(
+    [
+        [1, 0, 2],
+        [3, 1, 0],
+        [0, 2, 1],
+    ],
+    dtype=torch.float32
+)
+
+print("x shape:", x.shape)
+print("A shape:", A.shape)
+print("B shape:", B.shape)
+
+# Part 2(a): row sums
+row_sums = A.sum(dim=1)
+print("\nRow sums of A:")
+print(row_sums)
+
+# Part 2(b): column sums
+col_sums = A.sum(dim=0)
+print("\nColumn sums of A:")
+print(col_sums)
+
+# Part 2(c): matrix product AB
+AB = A @ B
+print("\nAB:")
+print(AB)
+
+# Part 2(d): matrix-vector product Ax
+Ax = A @ x
+print("\nAx:")
+print(Ax)
+
+# Part 2(e): scalar x^T A x
+xTAx = x @ A @ x
+print("\nx^T A x:")
+print(xTAx)
+```
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-2 pytorch" data-difficulty="2" #q-pytorch-tensor1}
+## PyTorch tensors: vectors and matrices II
+
+In PyTorch, it is common to work with a **batch of matrices**, where several matrices are stored together in a single tensor.
+
+For example, the following code defines a batch of three $2 \times 2$ matrices and a vector of length $2$, and computes a matrix–vector product.
+
+```{python}
+#| echo: true
+
+import torch
+
+A = torch.tensor(
+    [
+        [[1, 2],
+         [3, 4]],
+
+        [[0, 1],
+         [1, 0]],
+
+        [[2, 0],
+         [0, 2]],
+    ],
+    dtype=torch.float32
+)
+
+x = torch.tensor(
+    [1, 2],
+    dtype=torch.float32
+)
+
+y = A @ x
+
+```
+
+**Questions**
+
+1. State the shape of `A`, `x`, and `y`.
+
+2. How many matrix–vector multiplications are being performed?
+
+3. Compute the value of `y` **by hand**.
+
+4. Explain in words why PyTorch is able to perform this computation, even though `A` is not a single matrix.
+
+5. Suppose that, without changing `A`, instead we define `x` as in the following code. State the shape of `A @ x`.
+
+```{python}
+#| echo: true
+
+x = torch.tensor(
+    [
+        [1, 2],
+        [3, 4],
+        [5, 6],
+    ],
+    dtype=torch.float32
+)
+```
+
+
+<details class="solution">
+  <summary>Solution</summary>
+
+We answer each part in turn.
+
+1. *Shapes.*
+  $$
+  A \text{ shape} = (3, 2, 2), \qquad x \text{ shape} = (2), \qquad y \text{ shape} = (3, 2)
+  $$
+1. *Number of multiplications.* Three matrix–vector multiplications are performed — one for each matrix in the batch.
+2. *Compute by hand.*
+  First matrix:
+  $$
+  \begin{pmatrix}
+  1 & 2 \\
+  3 & 4
+  \end{pmatrix}
+  \begin{pmatrix}
+  1 \\
+  2
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+  5 \\
+  11
+  \end{pmatrix}
+  $$
+  Second matrix:
+  $$
+  \begin{pmatrix}
+  0 & 1 \\
+  1 & 0
+  \end{pmatrix}
+  \begin{pmatrix}
+  1 \\
+  2
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+  2 \\
+  1
+  \end{pmatrix}
+  $$
+  Third matrix:
+  $$
+  \begin{pmatrix}
+  2 & 0 \\
+  0 & 2
+  \end{pmatrix}
+  \begin{pmatrix}
+  1 \\
+  2
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+  2 \\
+  4
+  \end{pmatrix}
+  $$
+  So
+  $$
+  y =
+  \begin{pmatrix}
+  5 & 11 \\
+  2 & 1 \\
+  2 & 4
+  \end{pmatrix}
+  $$
+1. *Explanation.* PyTorch treats the first dimension as a **batch dimension**. It performs the matrix multiplication separately for each matrix, and stacks the results into a single tensor.
+2. *New shape.* Now
+  $$
+  A \text{ shape} = (3,2,2), \qquad x \text{ shape} = (3,2)
+  $$
+  so each batch element multiplies its corresponding vector. The result has shape $(3,2)$.
+
+</details>
+
+:::
+
+
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-2 pytorch" data-difficulty="2" #q-pytorch-tensor2}
+## PyTorch tensors: vectors and matrices III
+
+In deep learning, tensors often contain **batches of matrices**, and it is important to understand the shapes of the outputs of matrix multiplication.
+
+Consider the following PyTorch code.
+
+```{python}
+#| eval: false
+#| echo: true
+
+import torch
+
+A = torch.zeros((5, 2, 3))
+B = torch.zeros((3, 4))
+C = torch.zeros((5, 3, 4))
+D = torch.zeros((2, 3))
+```
+
+For each of the following operations, state the **shape of the result**, or state that the operation is **not valid**.
+
+Do not execute the code.
+
+1. `A @ B`
+2. `A @ C`
+3. `D @ B`
+4. `B @ C`
+5. Explain briefly, in words, the general rule that PyTorch uses when performing matrix multiplication with batched tensors.
+
+<details class="solution">
+  <summary>Solution</summary>
+
+We answer each part in turn.
+
+1. Operation is valid with shape: $(5,2,4)$
+2. Operation is valid with shape: $(5,2,4)$
+3. Operation is valid with shape: $(2,4)$
+4. Operation is not valid. The inner matrix dimensions do not match.
+5. General rule:
+   * The last two dimensions are matrix dimensions.
+   * Any earlier dimensions are batch dimensions.
+   * Matrix multiplication is performed separately for each batch.
+   * If a tensor `A` has shape $(\dots, m, n)$ and another `B` has shape $(\dots, n, p)$, then the matrix multiplication `A @ B` is valid and the result has shape $(\dots, m, p)$.
+
+</details>
+
+:::
+
 
 [^nn-cautionary-note]:
     @q-nn-linear-model serves as a cautionary tale against the use of the identity activation function: there would be no need to use such a neural network when we can simply use a linear model.

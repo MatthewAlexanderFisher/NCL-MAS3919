@@ -2179,6 +2179,316 @@ Information on LinkedIn may be incomplete, outdated or inaccurate.</p></li>
 </details>
 </div>
 </div>
+<div id="q-pytorch-tensor0" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-2 pytorch" data-difficulty="0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;19: PyTorch tensors: vectors and matrices I
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In machine learning, data are typically represented using <strong>vectors</strong> and <strong>matrices</strong>.</p>
+<p>Consider the vector</p>
+<p><span class="math display">
+\bm{x}
+=
+\begin{pmatrix}
+1 \\
+2 \\
+3
+\end{pmatrix}
+</span></p>
+<p>and the matrices</p>
+<p><span class="math display">
+A
+=
+\begin{pmatrix}
+1 &amp; 2 &amp; 0 \\
+0 &amp; 1 &amp; 3 \\
+2 &amp; 0 &amp; 1
+\end{pmatrix},
+\qquad
+B
+=
+\begin{pmatrix}
+1 &amp; 0 &amp; 2 \\
+3 &amp; 1 &amp; 0 \\
+0 &amp; 2 &amp; 1
+\end{pmatrix}.
+</span></p>
+<p><strong>Questions</strong></p>
+<ol type="1">
+<li><p>Using PyTorch, create the vector <code>x</code> and the matrices <code>A</code> and <code>B</code>. Use dtype <code>torch.float32</code>.</p></li>
+<li><p>Using PyTorch operations (no loops), compute:</p>
+<ol type="a">
+<li><p>the sum of each <strong>row</strong> of <code>A</code></p></li>
+<li><p>the sum of each <strong>column</strong> of <code>A</code></p></li>
+<li><p>the matrix product <span class="math inline">AB</span></p></li>
+<li><p>the matrix-vector product <span class="math inline">Ax</span></p></li>
+<li><p>the scalar value <span class="math inline">x^\top A x</span></p></li>
+</ol></li>
+</ol>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>One possible implementation in PyTorch is given below:</p>
+<div id="c94c6c1d" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Part 1: create vector and matrices</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>],</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span>torch.float32</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.tensor(</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>],</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>],</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>],</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span>torch.float32</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> torch.tensor(</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">2</span>],</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>],</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">1</span>],</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span>torch.float32</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"x shape:"</span>, x.shape)</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A shape:"</span>, A.shape)</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"B shape:"</span>, B.shape)</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Part 2(a): row sums</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>row_sums <span class="op">=</span> A.<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Row sums of A:"</span>)</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(row_sums)</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Part 2(b): column sums</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>col_sums <span class="op">=</span> A.<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Column sums of A:"</span>)</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(col_sums)</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Part 2(c): matrix product AB</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>AB <span class="op">=</span> A <span class="op">@</span> B</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">AB:"</span>)</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(AB)</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Part 2(d): matrix-vector product Ax</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>Ax <span class="op">=</span> A <span class="op">@</span> x</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Ax:"</span>)</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Ax)</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Part 2(e): scalar x^T A x</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>xTAx <span class="op">=</span> x <span class="op">@</span> A <span class="op">@</span> x</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">x^T A x:"</span>)</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xTAx)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>x shape: torch.Size([3])
+A shape: torch.Size([3, 3])
+B shape: torch.Size([3, 3])
+
+Row sums of A:
+tensor([3., 4., 3.])
+
+Column sums of A:
+tensor([3., 3., 4.])
+
+AB:
+tensor([[7., 2., 2.],
+        [3., 7., 3.],
+        [2., 2., 5.]])
+
+Ax:
+tensor([ 5., 11.,  5.])
+
+x^T A x:
+tensor(42.)</code></pre>
+</div>
+</div>
+</details>
+</div>
+</div>
+<div id="q-pytorch-tensor1" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-2 pytorch" data-difficulty="2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;20: PyTorch tensors: vectors and matrices II
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In PyTorch, it is common to work with a <strong>batch of matrices</strong>, where several matrices are stored together in a single tensor.</p>
+<p>For example, the following code defines a batch of three <span class="math inline">2 \times 2</span> matrices and a vector of length <span class="math inline">2</span>, and computes a matrix–vector product.</p>
+<div id="c6894405" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.tensor(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        [[<span class="dv">1</span>, <span class="dv">2</span>],</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>         [<span class="dv">3</span>, <span class="dv">4</span>]],</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        [[<span class="dv">0</span>, <span class="dv">1</span>],</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>         [<span class="dv">1</span>, <span class="dv">0</span>]],</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        [[<span class="dv">2</span>, <span class="dv">0</span>],</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>         [<span class="dv">0</span>, <span class="dv">2</span>]],</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span>torch.float32</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>, <span class="dv">2</span>],</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span>torch.float32</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> A <span class="op">@</span> x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Questions</strong></p>
+<ol type="1">
+<li><p>State the shape of <code>A</code>, <code>x</code>, and <code>y</code>.</p></li>
+<li><p>How many matrix–vector multiplications are being performed?</p></li>
+<li><p>Compute the value of <code>y</code> <strong>by hand</strong>.</p></li>
+<li><p>Explain in words why PyTorch is able to perform this computation, even though <code>A</code> is not a single matrix.</p></li>
+<li><p>Suppose that, without changing <code>A</code>, instead we define <code>x</code> as in the following code. State the shape of <code>A @ x</code>.</p></li>
+</ol>
+<div id="3422a1e7" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">1</span>, <span class="dv">2</span>],</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">3</span>, <span class="dv">4</span>],</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">5</span>, <span class="dv">6</span>],</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span>torch.float32</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>We answer each part in turn.</p>
+<ol type="1">
+<li><em>Shapes.</em> <span class="math display">
+  A \text{ shape} = (3, 2, 2), \qquad x \text{ shape} = (2), \qquad y \text{ shape} = (3, 2)
+  </span></li>
+<li><em>Number of multiplications.</em> Three matrix–vector multiplications are performed — one for each matrix in the batch.</li>
+<li><em>Compute by hand.</em> First matrix: <span class="math display">
+  \begin{pmatrix}
+  1 &amp; 2 \\
+  3 &amp; 4
+  \end{pmatrix}
+  \begin{pmatrix}
+  1 \\
+  2
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+  5 \\
+  11
+  \end{pmatrix}
+  </span> Second matrix: <span class="math display">
+  \begin{pmatrix}
+  0 &amp; 1 \\
+  1 &amp; 0
+  \end{pmatrix}
+  \begin{pmatrix}
+  1 \\
+  2
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+  2 \\
+  1
+  \end{pmatrix}
+  </span> Third matrix: <span class="math display">
+  \begin{pmatrix}
+  2 &amp; 0 \\
+  0 &amp; 2
+  \end{pmatrix}
+  \begin{pmatrix}
+  1 \\
+  2
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+  2 \\
+  4
+  \end{pmatrix}
+  </span> So <span class="math display">
+  y =
+  \begin{pmatrix}
+  5 &amp; 11 \\
+  2 &amp; 1 \\
+  2 &amp; 4
+  \end{pmatrix}
+  </span></li>
+<li><em>Explanation.</em> PyTorch treats the first dimension as a <strong>batch dimension</strong>. It performs the matrix multiplication separately for each matrix, and stacks the results into a single tensor.</li>
+<li><em>New shape.</em> Now <span class="math display">
+  A \text{ shape} = (3,2,2), \qquad x \text{ shape} = (3,2)
+  </span> so each batch element multiplies its corresponding vector. The result has shape <span class="math inline">(3,2)</span>.</li>
+</ol>
+</details>
+</div>
+</div>
+<div id="q-pytorch-tensor2" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-2 pytorch" data-difficulty="2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important&nbsp;21: PyTorch tensors: vectors and matrices III
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In deep learning, tensors often contain <strong>batches of matrices</strong>, and it is important to understand the shapes of the outputs of matrix multiplication.</p>
+<p>Consider the following PyTorch code.</p>
+<div id="d5ad4b54" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.zeros((<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> torch.zeros((<span class="dv">3</span>, <span class="dv">4</span>))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> torch.zeros((<span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">4</span>))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>D <span class="op">=</span> torch.zeros((<span class="dv">2</span>, <span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For each of the following operations, state the <strong>shape of the result</strong>, or state that the operation is <strong>not valid</strong>.</p>
+<p>Do not execute the code.</p>
+<ol type="1">
+<li><code>A @ B</code></li>
+<li><code>A @ C</code></li>
+<li><code>D @ B</code></li>
+<li><code>B @ C</code></li>
+<li>Explain briefly, in words, the general rule that PyTorch uses when performing matrix multiplication with batched tensors.</li>
+</ol>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>We answer each part in turn.</p>
+<ol type="1">
+<li>Operation is valid with shape: <span class="math inline">(5,2,4)</span></li>
+<li>Operation is valid with shape: <span class="math inline">(5,2,4)</span></li>
+<li>Operation is valid with shape: <span class="math inline">(2,4)</span></li>
+<li>Operation is not valid. The inner matrix dimensions do not match.</li>
+<li>General rule:
+<ul>
+<li>The last two dimensions are matrix dimensions.</li>
+<li>Any earlier dimensions are batch dimensions.</li>
+<li>Matrix multiplication is performed separately for each batch.</li>
+<li>If a tensor <code>A</code> has shape <span class="math inline">(\dots, m, n)</span> and another <code>B</code> has shape <span class="math inline">(\dots, n, p)</span>, then the matrix multiplication <code>A @ B</code> is valid and the result has shape <span class="math inline">(\dots, m, p)</span>.</li>
+</ul></li>
+</ol>
+</details>
+</div>
+</div>
 
 
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">

@@ -374,7 +374,7 @@ Since varying $\lambda_n$ spans a spectrum of models from most complex ($\lambda
 
 See @fig-ridge-coeff and @sec-practical-pytorch-models.
 
-![Top:  The parameters $\bm{\theta}$ learned by (a) ridge regression, and (b) the LASSO, each as a function of the regularisation strength $\lambda$. Bottom:  The fitted models for varying $\lambda$.](figures/walking_data.png){#fig-ridge-coeff width=70%}
+![Top:  The parameters $\bm{\theta}$ learned by (a) ridge regression, and (b) the LASSO, each as a function of the regularisation strength $\lambda$. Bottom:  The fitted models for varying $\lambda$.](figures/ridge_lasso_results.png){#fig-ridge-coeff width=70%}
 
 On the other hand, a Bayesian would posit a prior distribution without reference to any $\lambda_n$; this might be sub-optimal in general (e.g. if the subjective belief encoded in the prior is incorrect or unhelpful) but at least asymptotically (in $n$) this approach can be valid:
 
