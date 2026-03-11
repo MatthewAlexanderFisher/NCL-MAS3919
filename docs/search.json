@@ -517,12 +517,12 @@
   {
     "objectID": "content/practicals/assignment-setup.html",
     "href": "content/practicals/assignment-setup.html",
-    "title": "11  Assignment Setup",
+    "title": "Assignment Setup",
     "section": "",
     "text": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\n\ndata = load_breast_cancer()\n\nX = data.data\ny = data.target",
     "crumbs": [
       "Additional Material",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Assignment Setup</span>"
+      "Assignment Setup"
     ]
   }
 ]
