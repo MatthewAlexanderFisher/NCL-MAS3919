@@ -65,8 +65,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../content/ide/python-ide.html" rel="next">
-<link href="../../content/appendix/distribution-explorer.html" rel="prev">
+<link href="../../content/practicals/assignment-setup.html" rel="next">
+<link href="../../content/appendix/revision-sheet.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -627,20 +627,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/appendix/distribution-explorer.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Distribution Explorer</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../content/appendix/question-bank.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Question Bank</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/ide/python-ide.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python IDE</span></a>
+  <a href="../../content/practicals/assignment-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Assignment Setup</span></span></a>
   </div>
 </li>
       </ul>
@@ -2235,7 +2229,7 @@ B
 Solution
 </summary>
 <p>One possible implementation in PyTorch is given below:</p>
-<div id="c94c6c1d" class="cell" data-execution_count="2">
+<div id="421d2343" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Part 1: create vector and matrices</span></span>
@@ -2329,7 +2323,7 @@ Important&nbsp;20: PyTorch tensors: vectors and matrices II
 <div class="callout-body-container callout-body">
 <p>In PyTorch, it is common to work with a <strong>batch of matrices</strong>, where several matrices are stored together in a single tensor.</p>
 <p>For example, the following code defines a batch of three <span class="math inline">2 \times 2</span> matrices and a vector of length <span class="math inline">2</span>, and computes a matrix–vector product.</p>
-<div id="c6894405" class="cell" data-execution_count="3">
+<div id="ccfad5fa" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.tensor(</span>
@@ -2361,7 +2355,7 @@ Important&nbsp;20: PyTorch tensors: vectors and matrices II
 <li><p>Explain in words why PyTorch is able to perform this computation, even though <code>A</code> is not a single matrix.</p></li>
 <li><p>Suppose that, without changing <code>A</code>, instead we define <code>x</code> as in the following code. State the shape of <code>A @ x</code>.</p></li>
 </ol>
-<div id="3422a1e7" class="cell" data-execution_count="4">
+<div id="386f5c61" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    [</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">1</span>, <span class="dv">2</span>],</span>
@@ -2451,7 +2445,7 @@ Important&nbsp;21: PyTorch tensors: vectors and matrices III
 <div class="callout-body-container callout-body">
 <p>In deep learning, tensors often contain <strong>batches of matrices</strong>, and it is important to understand the shapes of the outputs of matrix multiplication.</p>
 <p>Consider the following PyTorch code.</p>
-<div id="d5ad4b54" class="cell" data-execution_count="5">
+<div id="b6af2418" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.zeros((<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span>
@@ -6281,13 +6275,13 @@ window._ojs.runtime.interpretFromScriptTags();
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/appendix/distribution-explorer.html" class="pagination-link" aria-label="Distribution Explorer">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Distribution Explorer</span>
+      <a href="../../content/appendix/revision-sheet.html" class="pagination-link" aria-label="Revision Sheet">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Revision Sheet</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/ide/python-ide.html" class="pagination-link" aria-label="Python IDE">
-        <span class="nav-page-text">Python IDE</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/practicals/assignment-setup.html" class="pagination-link" aria-label="Assignment Setup">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Assignment Setup</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

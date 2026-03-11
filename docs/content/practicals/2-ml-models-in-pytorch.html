@@ -623,20 +623,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/appendix/distribution-explorer.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Distribution Explorer</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../content/appendix/question-bank.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Question Bank</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/ide/python-ide.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python IDE</span></a>
+  <a href="../../content/practicals/assignment-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Assignment Setup</span></span></a>
   </div>
 </li>
       </ul>
@@ -675,11 +669,16 @@ window.Quarto = {
   </ul></li>
   <li><a href="#regularisation-ridge-and-lasso" id="toc-regularisation-ridge-and-lasso" class="nav-link" data-scroll-target="#regularisation-ridge-and-lasso"><span class="header-section-number">9.5</span> Regularisation (Ridge and LASSO)</a>
   <ul class="collapse">
-  <li><a href="#generating-synthetic-data" id="toc-generating-synthetic-data" class="nav-link" data-scroll-target="#generating-synthetic-data"><span class="header-section-number">9.5.1</span> Generating synthetic data</a></li>
-  <li><a href="#defining-the-model" id="toc-defining-the-model" class="nav-link" data-scroll-target="#defining-the-model"><span class="header-section-number">9.5.2</span> Defining the model</a></li>
-  <li><a href="#defining-the-regularised-empirical-risk-functions" id="toc-defining-the-regularised-empirical-risk-functions" class="nav-link" data-scroll-target="#defining-the-regularised-empirical-risk-functions"><span class="header-section-number">9.5.3</span> Defining the regularised empirical risk functions</a></li>
-  <li><a href="#sweep-over-lambda" id="toc-sweep-over-lambda" class="nav-link" data-scroll-target="#sweep-over-lambda"><span class="header-section-number">9.5.4</span> Sweep over <span class="math inline">\lambda</span></a></li>
-  <li><a href="#plotting" id="toc-plotting" class="nav-link" data-scroll-target="#plotting"><span class="header-section-number">9.5.5</span> Plotting</a></li>
+  <li><a href="#using-the-design-matrix" id="toc-using-the-design-matrix" class="nav-link" data-scroll-target="#using-the-design-matrix"><span class="header-section-number">9.5.1</span> Using the design matrix</a></li>
+  <li><a href="#empirical-risk" id="toc-empirical-risk" class="nav-link" data-scroll-target="#empirical-risk"><span class="header-section-number">9.5.2</span> Empirical Risk</a></li>
+  <li><a href="#ridge-regression-ℓ₂-regularisation" id="toc-ridge-regression-ℓ₂-regularisation" class="nav-link" data-scroll-target="#ridge-regression-ℓ₂-regularisation"><span class="header-section-number">9.5.3</span> Ridge Regression (ℓ₂ Regularisation)</a></li>
+  <li><a href="#lasso-ℓ₁-regularisation" id="toc-lasso-ℓ₁-regularisation" class="nav-link" data-scroll-target="#lasso-ℓ₁-regularisation"><span class="header-section-number">9.5.4</span> LASSO (ℓ₁ Regularisation)</a></li>
+  <li><a href="#generating-synthetic-data" id="toc-generating-synthetic-data" class="nav-link" data-scroll-target="#generating-synthetic-data"><span class="header-section-number">9.5.5</span> Generating synthetic data</a></li>
+  <li><a href="#defining-the-polynomial-features" id="toc-defining-the-polynomial-features" class="nav-link" data-scroll-target="#defining-the-polynomial-features"><span class="header-section-number">9.5.6</span> Defining the polynomial features</a></li>
+  <li><a href="#defining-the-model" id="toc-defining-the-model" class="nav-link" data-scroll-target="#defining-the-model"><span class="header-section-number">9.5.7</span> Defining the model</a></li>
+  <li><a href="#defining-the-regularised-empirical-risk-functions" id="toc-defining-the-regularised-empirical-risk-functions" class="nav-link" data-scroll-target="#defining-the-regularised-empirical-risk-functions"><span class="header-section-number">9.5.8</span> Defining the regularised empirical risk functions</a></li>
+  <li><a href="#sweep-over-lambda" id="toc-sweep-over-lambda" class="nav-link" data-scroll-target="#sweep-over-lambda"><span class="header-section-number">9.5.9</span> Sweep over <span class="math inline">\lambda</span></a></li>
+  <li><a href="#plotting" id="toc-plotting" class="nav-link" data-scroll-target="#plotting"><span class="header-section-number">9.5.10</span> Plotting</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -728,6 +727,29 @@ window.Quarto = {
 <section id="key-syntax" class="level3" data-number="9.1.1">
 <h3 data-number="9.1.1" class="anchored" data-anchor-id="key-syntax"><span class="header-section-number">9.1.1</span> Key Syntax</h3>
 <div id="3c9c5c4e" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch              <span class="co"># Import the main PyTorch library</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn    <span class="co"># Import PyTorch's neural network module</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining a tensor</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">3.0</span>], dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"x:"</span>, x)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating random tensors with different shapes</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">3</span>)   <span class="co"># 2 × 3 matrix</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> torch.randn(<span class="dv">3</span>, <span class="dv">4</span>)   <span class="co"># 3 × 4 matrix</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> torch.randn(<span class="dv">4</span>, <span class="dv">5</span>)   <span class="co"># 4 × 5 matrix</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>D <span class="op">=</span> torch.randn(<span class="dv">5</span>, <span class="dv">6</span>)   <span class="co"># 5 × 6 matrix</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Print shapes</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A shape:"</span>, A.shape)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"B shape:"</span>, B.shape)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"C shape:"</span>, C.shape)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"D shape:"</span>, D.shape)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Common operation: matrix multiplication</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> A <span class="op">@</span> B</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Result shape:"</span>, result.shape)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>x: tensor([1., 2., 3.])
 A shape: torch.Size([2, 3])
@@ -879,21 +901,21 @@ f_{\boldsymbol{\theta}}(\boldsymbol{x})
 <p>In PyTorch, a model is a subclass of <code>nn.Module</code><br>
 (<code>nn</code> stands for <em>neural network</em>).</p>
 <p>The general pattern is:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Model(nn.Module):</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()   <span class="co"># initialise the parent class</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Define parameters here</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Example:</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.theta <span class="op">=</span> nn.Parameter(torch.randn(<span class="dv">1</span>))</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Define the function f_theta(x) here</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.theta <span class="op">*</span> x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Model(nn.Module):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()   <span class="co"># initialise the parent class</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Define parameters here</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Example:</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.theta <span class="op">=</span> nn.Parameter(torch.randn(<span class="dv">1</span>))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Define the function f_theta(x) here</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.theta <span class="op">*</span> x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="structure-of-a-pytorch-model" class="level3" data-number="9.4.1">
 <h3 data-number="9.4.1" class="anchored" data-anchor-id="structure-of-a-pytorch-model"><span class="header-section-number">9.4.1</span> Structure of a PyTorch model</h3>
 <p>A <strong>PyTorch model</strong> has the following structure:</p>
@@ -907,7 +929,7 @@ f_{\boldsymbol{\theta}}(\boldsymbol{x})
 <section id="why-nn.parameter" class="level3" data-number="9.4.2">
 <h3 data-number="9.4.2" class="anchored" data-anchor-id="why-nn.parameter"><span class="header-section-number">9.4.2</span> Why <code>nn.Parameter</code>?</h3>
 <p>When we write</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">self</span>.theta <span class="op">=</span> nn.Parameter(...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">self</span>.theta <span class="op">=</span> nn.Parameter(...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>we are telling PyTorch:</p>
 <blockquote class="blockquote">
 <p>“This tensor is a learnable parameter”</p>
@@ -935,16 +957,42 @@ f_{\boldsymbol{\theta}}(x)
 <li><span class="math inline">\boldsymbol{\theta} = (\theta_0, \theta_1)</span></li>
 </ul>
 <p>We can implement this model directly in PyTorch:</p>
+<div id="33110460" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SimpleLinear(nn.Module):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Learnable parameters (randomly initialised)</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.theta_0 <span class="op">=</span> nn.Parameter(torch.randn(<span class="dv">1</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.theta_1 <span class="op">=</span> nn.Parameter(torch.randn(<span class="dv">1</span>))</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.theta_0 <span class="op">+</span> <span class="va">self</span>.theta_1 <span class="op">*</span> x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <section id="using-the-model" class="level4" data-number="9.4.3.1">
 <h4 data-number="9.4.3.1" class="anchored" data-anchor-id="using-the-model"><span class="header-section-number">9.4.3.1</span> Using the model</h4>
 <p>We instantiate the model:</p>
 <div id="6bc4abc4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>simple_model <span class="op">=</span> SimpleLinear()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Initial parameters:"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      simple_model.theta_0.item(),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      simple_model.theta_1.item())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Initial parameters: 0.0657920092344284 -1.25115966796875</code></pre>
 </div>
 </div>
 <p>To make predictions, we simply call the model:</p>
 <div id="3b228fc5" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">3.0</span>], dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> simple_model(x)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Predicted values:"</span>, y_pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Predicted values: tensor([-1.1854, -2.4365, -3.6877], grad_fn=&lt;AddBackward0&gt;)</code></pre>
 </div>
@@ -955,7 +1003,7 @@ f_{\boldsymbol{\theta}}(x)
 <section id="important-observation" class="level4" data-number="9.4.3.2">
 <h4 data-number="9.4.3.2" class="anchored" data-anchor-id="important-observation"><span class="header-section-number">9.4.3.2</span> Important Observation</h4>
 <p>When we printed <code>y_pred</code>, we obtained output like</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tensor([...], grad_fn<span class="op">=&lt;</span>AddBackward0<span class="op">&gt;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>tensor([...], grad_fn<span class="op">=&lt;</span>AddBackward0<span class="op">&gt;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The presence of <code>grad_fn</code> means:</p>
 <ul>
 <li>The output depends on learnable parameters</li>
@@ -976,6 +1024,15 @@ f_{\boldsymbol{\theta}}(x)
 <h4 data-number="9.4.3.4" class="anchored" data-anchor-id="plotting-model-predictions"><span class="header-section-number">9.4.3.4</span> Plotting model predictions</h4>
 <p>We can plot the model with the initialised parameters as follows:</p>
 <div id="7e6c80e1" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>x_grid <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">100</span>) <span class="co"># 100 evenly spaced points between -5 and 5</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>y_grid <span class="op">=</span> simple_model(x_grid)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Predicted line from SimpleLinear model"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x_grid, y_grid.detach(), label<span class="op">=</span><span class="st">"Predicted line"</span>, color<span class="op">=</span><span class="st">"red"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -985,7 +1042,7 @@ f_{\boldsymbol{\theta}}(x)
 </div>
 </div>
 <p><strong>Note:</strong> In order to plot the predictions, we needed to call the <code>detach()</code> method on <code>y_pred</code> in</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x_grid, y_grid.detach(), label<span class="op">=</span><span class="st">"Predicted line"</span>, color<span class="op">=</span><span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x_grid, y_grid.detach(), label<span class="op">=</span><span class="st">"Predicted line"</span>, color<span class="op">=</span><span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is because:</p>
 <ul>
 <li><code>y_pred</code> is part of a computation graph.</li>
@@ -1028,10 +1085,33 @@ f_{\boldsymbol{\theta}}(\boldsymbol{x})
 \theta_0 + \boldsymbol{\theta}^\top \boldsymbol{x}.
 </span></p>
 <p>We can implement this model manually:</p>
+<div id="a83baba4" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultipleLinear(nn.Module):</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim):</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Intercept</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.theta_0 <span class="op">=</span> nn.Parameter(torch.randn(<span class="dv">1</span>))</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Coefficient vector</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.theta <span class="op">=</span> nn.Parameter(torch.randn(input_dim))</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># x is assumed to have shape (batch_size, input_dim)</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.theta_0 <span class="op">+</span> x <span class="op">@</span> <span class="va">self</span>.theta</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <section id="using-the-model-1" class="level4" data-number="9.4.4.1">
 <h4 data-number="9.4.4.1" class="anchored" data-anchor-id="using-the-model-1"><span class="header-section-number">9.4.4.1</span> Using the model</h4>
 <p>As before, we instantiate the model as follows:</p>
 <div id="7b0f8b2c" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>multiple_model <span class="op">=</span> MultipleLinear(input_dim<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Initial parameters: </span><span class="ch">\n</span><span class="st">"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>      multiple_model.theta_0, <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>      multiple_model.theta)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Initial parameters: 
  Parameter containing:
@@ -1042,6 +1122,10 @@ tensor([ 0.6056, -0.8906,  1.2317], requires_grad=True)</code></pre>
 </div>
 <p>We can call the model as follows:</p>
 <div id="0b3155df" class="cell" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([[<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">3.0</span>], [<span class="fl">4.0</span>, <span class="fl">5.0</span>, <span class="fl">6.0</span>]], dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> multiple_model(x)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Predicted values:"</span>, y_pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Predicted values: tensor([0.6097, 3.4501], grad_fn=&lt;AddBackward0&gt;)</code></pre>
 </div>
@@ -1052,6 +1136,17 @@ tensor([ 0.6056, -0.8906,  1.2317], requires_grad=True)</code></pre>
 <p>PyTorch provides built-in modules that automatically manage parameters for us.<br>
 Of particular importance is <code>nn.Linear</code>.</p>
 <p>Instead of manually defining <span class="math inline">\boldsymbol{\theta}</span> and <span class="math inline">\theta_0</span>, we can write:</p>
+<div id="f96f57df" class="cell" data-execution_count="30">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultipleLinear_new(nn.Module):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim):</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.linear <span class="op">=</span> nn.Linear(input_dim, <span class="dv">1</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.linear(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>The module <code>nn.Linear(input_dim, 1)</code> implements the function</p>
 <p><span class="math display">
 f_{\boldsymbol{\theta}}(\boldsymbol{x}) = W \boldsymbol{x} + b
@@ -1068,6 +1163,10 @@ f_{\boldsymbol{\theta}}(\boldsymbol{x}) = W \boldsymbol{x} + b
 <h4 data-number="9.4.4.3" class="anchored" data-anchor-id="what-does-nn.linear-actually-store"><span class="header-section-number">9.4.4.3</span> What does <code>nn.Linear</code> actually store?</h4>
 <p>Internally, the layer contains two learnable tensors:</p>
 <div id="3d76bc60" class="cell" data-execution_count="34">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>multiple_model <span class="op">=</span> MultipleLinear_new(input_dim<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Initial parameters: </span><span class="ch">\n</span><span class="st"> Weights,"</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>      multiple_model.linear.weight, <span class="st">"</span><span class="ch">\n</span><span class="st"> Bias,"</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>      multiple_model.linear.bias)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Initial parameters: 
  Weights, Parameter containing:
@@ -1121,35 +1220,44 @@ W_2 \, \sigma\!\left( W_1 \boldsymbol{x} + \boldsymbol{b}_1 \right)
 \{ W_1, \boldsymbol{b}_1, W_2, \boldsymbol{b}_2 \}.
 </span></p>
 <p>We can implement this model using PyTorch’s built-in layers:</p>
+<div id="889bac87" class="cell" data-execution_count="35">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FeedforwardNN(nn.Module):</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim, hidden_dim, output_dim):</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.layer1 <span class="op">=</span> nn.Linear(input_dim, hidden_dim)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.activation <span class="op">=</span> nn.ReLU()</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.layer2 <span class="op">=</span> nn.Linear(hidden_dim, output_dim)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.layer1(x)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.activation(h)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> <span class="va">self</span>.layer2(h)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <section id="mathematical-correspondence" class="level4" data-number="9.4.5.1">
 <h4 data-number="9.4.5.1" class="anchored" data-anchor-id="mathematical-correspondence"><span class="header-section-number">9.4.5.1</span> Mathematical correspondence</h4>
 <p>The forward pass corresponds exactly to:</p>
 <ol type="1">
-<li><strong>First linear transformation:</strong> <span class="math display">
-\boldsymbol{h}
-=
-W_1 \boldsymbol{x}
-+
-\boldsymbol{b}_1
-</span></li>
-<li><strong>Nonlinear activation:</strong> <span class="math display">
-\boldsymbol{h}
-=
-\sigma(\boldsymbol{h})
-</span></li>
-<li><strong>Second linear transformation:</strong> <span class="math display">
-f_{\boldsymbol{\theta}}(\boldsymbol{x})
-=
-W_2 \boldsymbol{h}
-+
-\boldsymbol{b}_2
-</span></li>
+<li><strong>First linear transformation:</strong> <span class="math inline">\boldsymbol{h} = W_1 \boldsymbol{x} + \boldsymbol{b}_1</span></li>
+<li><strong>Nonlinear activation:</strong> <span class="math inline">\boldsymbol{h} = \sigma(\boldsymbol{h})</span></li>
+<li><strong>Second linear transformation:</strong> <span class="math inline">f_{\boldsymbol{\theta}}(\boldsymbol{x}) = W_2 \boldsymbol{h} + \boldsymbol{b}_2</span></li>
 </ol>
 </section>
 <section id="using-the-model-2" class="level4" data-number="9.4.5.2">
 <h4 data-number="9.4.5.2" class="anchored" data-anchor-id="using-the-model-2"><span class="header-section-number">9.4.5.2</span> Using the model</h4>
 <p>Exactly as before, we can use the model by instantiating. For plotting purposes, we set <code>input_dim = output_dim = 1</code>.</p>
 <div id="2df2fad3" class="cell" data-execution_count="36">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ffn_model <span class="op">=</span> FeedforwardNN(input_dim<span class="op">=</span><span class="dv">1</span>, hidden_dim<span class="op">=</span><span class="dv">5</span>, output_dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Initial parameters: </span><span class="ch">\n</span><span class="st"> Layer 1 weights,"</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>      ffn_model.layer1.weight, <span class="st">"</span><span class="ch">\n</span><span class="st"> Layer 1 bias,"</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>      ffn_model.layer1.bias, <span class="st">"</span><span class="ch">\n</span><span class="st"> Layer 2 weights,"</span>,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>      ffn_model.layer2.weight, <span class="st">"</span><span class="ch">\n</span><span class="st"> Layer 2 bias,"</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>      ffn_model.layer2.bias)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Initial parameters: 
  Layer 1 weights, Parameter containing:
@@ -1168,6 +1276,15 @@ tensor([-0.1049], requires_grad=True)</code></pre>
 </div>
 <p>We can plot the initialised model as follows:</p>
 <div id="9194fe1e" class="cell" data-execution_count="38">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>x_grid <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">100</span>).unsqueeze(<span class="dv">1</span>) <span class="co"># 100 evenly spaced points between -5 and 5</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>y_grid <span class="op">=</span> ffn_model(x_grid)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Predicted line from FeedforwardNN model"</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x_grid, y_grid.detach(), label<span class="op">=</span><span class="st">"Predicted line"</span>, color<span class="op">=</span><span class="st">"red"</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1190,6 +1307,41 @@ tensor([-0.1049], requires_grad=True)</code></pre>
 <p>where <span class="math inline">\sigma</span> acts elementwise on the vector.</p>
 <p>PyTorch provides many built-in <a href="https://docs.pytorch.org/docs/stable/nn.html#non-linear-activations-weighted-sum-nonlinearity">activation functions</a>. Here are a few of the most common ones plotted:</p>
 <div id="9bd906f2" class="cell" data-execution_count="40">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create input values</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">400</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Define activation functions</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>activations <span class="op">=</span> {</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ReLU"</span>: nn.ReLU(),</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Sigmoid"</span>: nn.Sigmoid(),</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Tanh"</span>: nn.Tanh(),</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Leaky ReLU"</span>: nn.LeakyReLU(),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ELU"</span>: nn.ELU()</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Create subplot grid</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(rows, cols, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>axes <span class="op">=</span> axes.flatten()</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot each activation</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (name, activation) <span class="kw">in</span> <span class="bu">zip</span>(axes, activations.items()):</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> activation(x)</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>    ax.plot(x.detach(), y.detach())</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>    ax.set_title(name)</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>)</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(activations), <span class="bu">len</span>(axes)):</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>    fig.delaxes(axes[i])</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1228,29 +1380,366 @@ tensor([-0.1049], requires_grad=True)</code></pre>
 </section>
 <section id="regularisation-ridge-and-lasso" class="level2" data-number="9.5">
 <h2 data-number="9.5" class="anchored" data-anchor-id="regularisation-ridge-and-lasso"><span class="header-section-number">9.5</span> Regularisation (Ridge and LASSO)</h2>
-<section id="generating-synthetic-data" class="level3" data-number="9.5.1">
-<h3 data-number="9.5.1" class="anchored" data-anchor-id="generating-synthetic-data"><span class="header-section-number">9.5.1</span> Generating synthetic data</h3>
+<p>In this final example, we consider the polynomial regression model</p>
+<p><span class="math display">
+f_{\boldsymbol{\theta}}(x)
+=
+\theta_0 + \theta_1 x + \theta_2 x^2 + \ldots + \theta_p x^p,
+</span></p>
+<p>where the parameter vector is</p>
+<p><span class="math display">
+\boldsymbol{\theta}
+=
+(\theta_0, \theta_1, \ldots, \theta_p)^\top
+\in \mathbb{R}^{p+1}.
+</span></p>
+<section id="using-the-design-matrix" class="level3" data-number="9.5.1">
+<h3 data-number="9.5.1" class="anchored" data-anchor-id="using-the-design-matrix"><span class="header-section-number">9.5.1</span> Using the design matrix</h3>
+<p>Given data <span class="math inline">\{(x_i, y_i)\}_{i=1}^n</span>, define the <strong>polynomial feature map</strong></p>
+<p><span class="math display">
+\Phi(x)
+=
+(1, x, x^2, \ldots, x^p)^\top.
+</span></p>
+<p>The corresponding <strong>design matrix</strong> is</p>
+<p><span class="math display">
+\boldsymbol{\Phi}
+=
+\begin{pmatrix}
+1 &amp; x_1 &amp; x_1^2 &amp; \ldots &amp; x_1^p \\
+1 &amp; x_2 &amp; x_2^2 &amp; \ldots &amp; x_2^p \\
+\vdots &amp; \vdots &amp; \vdots &amp; &amp; \vdots \\
+1 &amp; x_n &amp; x_n^2 &amp; \ldots &amp; x_n^p
+\end{pmatrix}
+\in \mathbb{R}^{n \times (p+1)}.
+</span></p>
+<p>The vector of predictions can then be written compactly as</p>
+<p><span class="math display">
+\hat{\boldsymbol{y}}
+=
+\boldsymbol{\Phi} \boldsymbol{\theta}.
+</span></p>
 </section>
-<section id="defining-the-model" class="level3" data-number="9.5.2">
-<h3 data-number="9.5.2" class="anchored" data-anchor-id="defining-the-model"><span class="header-section-number">9.5.2</span> Defining the model</h3>
+<section id="empirical-risk" class="level3" data-number="9.5.2">
+<h3 data-number="9.5.2" class="anchored" data-anchor-id="empirical-risk"><span class="header-section-number">9.5.2</span> Empirical Risk</h3>
+<p>The empirical risk (mean squared error) is</p>
+<p><span class="math display">
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
+=
+\frac{1}{n}
+\|
+\boldsymbol{y}
+-
+\boldsymbol{\Phi}\boldsymbol{\theta}
+\|_2^2.
+</span></p>
+<p>Minimising this without regularisation yields the ordinary least squares solution. However, when <span class="math inline">p</span> is large relative to <span class="math inline">n</span>, the problem can become ill-posed or highly unstable.</p>
+<p>This motivates <strong>regularisation</strong>.</p>
 </section>
-<section id="defining-the-regularised-empirical-risk-functions" class="level3" data-number="9.5.3">
-<h3 data-number="9.5.3" class="anchored" data-anchor-id="defining-the-regularised-empirical-risk-functions"><span class="header-section-number">9.5.3</span> Defining the regularised empirical risk functions</h3>
-<section id="training-function" class="level4" data-number="9.5.3.1">
-<h4 data-number="9.5.3.1" class="anchored" data-anchor-id="training-function"><span class="header-section-number">9.5.3.1</span> Training function</h4>
+<section id="ridge-regression-ℓ₂-regularisation" class="level3" data-number="9.5.3">
+<h3 data-number="9.5.3" class="anchored" data-anchor-id="ridge-regression-ℓ₂-regularisation"><span class="header-section-number">9.5.3</span> Ridge Regression (ℓ₂ Regularisation)</h3>
+<p>The ridge-regularised objective is</p>
+<p><span class="math display">
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
++
+\lambda
+\|\boldsymbol{\theta}_{1:}\|_2^2,
+</span></p>
+<p>where</p>
+<p><span class="math display">
+\|\boldsymbol{\theta}_{1:}\|_2^2
+=
+\sum_{j=1}^p \theta_j^2.
+</span></p>
+<p>Importantly, we do <strong>not</strong> penalise the intercept <span class="math inline">\theta_0</span>. Thus ridge regression solves</p>
+<p><span class="math display">
+\min_{\boldsymbol{\theta}}
+\frac{1}{n}
+\|
+\boldsymbol{y}
+-
+\boldsymbol{\Phi}\boldsymbol{\theta}
+\|_2^2
++
+\lambda
+\|\boldsymbol{\theta}_{1:}\|_2^2.
+</span></p>
+<p><strong>Effect:</strong><br>
+- Coefficients are shrunk continuously toward zero. - The solution is always unique. - The optimisation problem remains smooth and convex.</p>
+</section>
+<section id="lasso-ℓ₁-regularisation" class="level3" data-number="9.5.4">
+<h3 data-number="9.5.4" class="anchored" data-anchor-id="lasso-ℓ₁-regularisation"><span class="header-section-number">9.5.4</span> LASSO (ℓ₁ Regularisation)</h3>
+<p>The LASSO-regularised objective is</p>
+<p><span class="math display">
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
++
+\lambda
+\|\boldsymbol{\theta}_{1:}\|_1,
+</span></p>
+<p>where</p>
+<p><span class="math display">
+\|\boldsymbol{\theta}_{1:}\|_1
+=
+\sum_{j=1}^p |\theta_j|.
+</span></p>
+<p>Thus LASSO solves</p>
+<p><span class="math display">
+\min_{\boldsymbol{\theta}}
+\frac{1}{n}
+\|
+\boldsymbol{y}
+-
+\boldsymbol{\Phi}\boldsymbol{\theta}
+\|_2^2
++
+\lambda
+\|\boldsymbol{\theta}_{1:}\|_1.
+</span></p>
+<p><strong>Effect:</strong><br>
+- Encourages sparsity. - Some coefficients become exactly zero. - Produces simpler models.</p>
+<section id="interpretation-of-lambda" class="level4" data-number="9.5.4.1">
+<h4 data-number="9.5.4.1" class="anchored" data-anchor-id="interpretation-of-lambda"><span class="header-section-number">9.5.4.1</span> Interpretation of <span class="math inline">\lambda</span></h4>
+<p>The regularisation parameter <span class="math inline">\lambda \ge 0</span> controls the trade-off:</p>
+<ul>
+<li>As <span class="math inline">\lambda \to 0</span>, we recover the unregularised least squares solution.</li>
+<li>As <span class="math inline">\lambda \to \infty</span>, the penalty dominates and coefficients shrink toward zero.</li>
+</ul>
+<p>Thus varying <span class="math inline">\lambda</span> moves us along a spectrum:</p>
+<ul>
+<li>Small <span class="math inline">\lambda</span> → complex, flexible models.</li>
+<li>Large <span class="math inline">\lambda</span> → simpler, smoother models.</li>
+</ul>
 </section>
 </section>
-<section id="sweep-over-lambda" class="level3" data-number="9.5.4">
-<h3 data-number="9.5.4" class="anchored" data-anchor-id="sweep-over-lambda"><span class="header-section-number">9.5.4</span> Sweep over <span class="math inline">\lambda</span></h3>
-<p>Since we want to assess how the regularisation parameter <span class="math inline">\lambda</span> affects LASSO and ridge output, we loop over different <span class="math inline">\lambda</span> values as follows:</p>
-</section>
-<section id="plotting" class="level3" data-number="9.5.5">
-<h3 data-number="9.5.5" class="anchored" data-anchor-id="plotting"><span class="header-section-number">9.5.5</span> Plotting</h3>
-<div id="69f0524f" class="cell" data-execution_count="44">
+<section id="generating-synthetic-data" class="level3" data-number="9.5.5">
+<h3 data-number="9.5.5" class="anchored" data-anchor-id="generating-synthetic-data"><span class="header-section-number">9.5.5</span> Generating synthetic data</h3>
+<p>Our “true” data generating process is the model</p>
+<p><span class="math display">
+y = \sin(3 \pi x) + \epsilon, \qquad \epsilon \sim \mathcal{N}(0, (1/4)^2).
+</span></p>
+<div id="23e7e54c" class="cell" data-execution_count="46">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">0</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.sort(<span class="dv">2</span> <span class="op">*</span> torch.rand(n) <span class="op">-</span> <span class="dv">1</span>)[<span class="dv">0</span>]   <span class="co"># uniform on [-1, 1]</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.sin(<span class="dv">3</span> <span class="op">*</span> torch.pi <span class="op">*</span> x) <span class="op">+</span> <span class="fl">0.25</span> <span class="op">*</span> torch.randn(n)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Dense grid for plotting fitted curves</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>x_grid <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">400</span>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Plotting empirical data:</p>
+<div id="6fabdd0f" class="cell" data-execution_count="51">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, <span class="st">'o'</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Synthetic data points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="51">
+<pre><code>Text(0.5, 1.0, 'Synthetic data points')</code></pre>
+</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2-ml-models-in-pytorch_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="2-ml-models-in-pytorch_files/figure-html/cell-17-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="defining-the-polynomial-features" class="level3" data-number="9.5.6">
+<h3 data-number="9.5.6" class="anchored" data-anchor-id="defining-the-polynomial-features"><span class="header-section-number">9.5.6</span> Defining the polynomial features</h3>
+<div id="94c1461c" class="cell" data-execution_count="47">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> poly_features(x_vec: torch.Tensor, degree: <span class="bu">int</span>) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    powers <span class="op">=</span> torch.arange(<span class="dv">0</span>, degree <span class="op">+</span> <span class="dv">1</span>, dtype<span class="op">=</span>x_vec.dtype)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x_vec.unsqueeze(<span class="dv">1</span>) <span class="op">**</span> powers.unsqueeze(<span class="dv">0</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>DEGREE <span class="op">=</span> <span class="dv">12</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>Phi <span class="op">=</span> poly_features(x, DEGREE)          <span class="co"># (n, p)</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>Phi_grid <span class="op">=</span> poly_features(x_grid, DEGREE)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardise non-intercept columns for numerical stability</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>col_mean <span class="op">=</span> Phi[:, <span class="dv">1</span>:].mean(dim<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>col_std  <span class="op">=</span> Phi[:, <span class="dv">1</span>:].std(dim<span class="op">=</span><span class="dv">0</span>).clamp_min(<span class="fl">1e-12</span>)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>Phi[:, <span class="dv">1</span>:]      <span class="op">=</span> (Phi[:, <span class="dv">1</span>:]      <span class="op">-</span> col_mean) <span class="op">/</span> col_std</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>Phi_grid[:, <span class="dv">1</span>:] <span class="op">=</span> (Phi_grid[:, <span class="dv">1</span>:] <span class="op">-</span> col_mean) <span class="op">/</span> col_std</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="defining-the-model" class="level3" data-number="9.5.7">
+<h3 data-number="9.5.7" class="anchored" data-anchor-id="defining-the-model"><span class="header-section-number">9.5.7</span> Defining the model</h3>
+<div id="794dca95" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PolynomialModel(nn.Module):</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, degree: <span class="bu">int</span>):</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># One learnable weight per polynomial term (including the intercept)</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.theta <span class="op">=</span> nn.Parameter(torch.zeros(degree <span class="op">+</span> <span class="dv">1</span>))</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, Phi):</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co">        Parameters</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">        ----------</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co">        Phi : (n, degree + 1)  pre-computed polynomial design matrix</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">        Returns</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">        -------</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co">        predictions : (n,)</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Phi <span class="op">@</span> <span class="va">self</span>.theta</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="defining-the-regularised-empirical-risk-functions" class="level3" data-number="9.5.8">
+<h3 data-number="9.5.8" class="anchored" data-anchor-id="defining-the-regularised-empirical-risk-functions"><span class="header-section-number">9.5.8</span> Defining the regularised empirical risk functions</h3>
+<div id="218227c2" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> regularised_mse(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    model,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    predictions,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    targets,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    lam,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    penalty <span class="op">=</span> <span class="st">"l2"</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute  (1/n) Σ (yᵢ - ŷᵢ)²  +  λ · R(θ)</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="co">    where R(θ) penalises all coefficients *except* the intercept (θ₀):</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="co">        • penalty="l2"  ⟹  R = ‖θ₁:‖²   (ridge)</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a><span class="co">        • penalty="l1"  ⟹  R = ‖θ₁:‖₁   (lasso)</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> targets.shape[<span class="dv">0</span>]</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    mse <span class="op">=</span> (<span class="fl">1.0</span> <span class="op">/</span> n) <span class="op">*</span> torch.<span class="bu">sum</span>((predictions <span class="op">-</span> targets) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Exclude the intercept from the penalty</span></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>    theta_rest <span class="op">=</span> model.theta[<span class="dv">1</span>:]</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> penalty <span class="op">==</span> <span class="st">"l2"</span>:</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>        reg <span class="op">=</span> torch.<span class="bu">sum</span>(theta_rest <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> penalty <span class="op">==</span> <span class="st">"l1"</span>:</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>        reg <span class="op">=</span> torch.<span class="bu">sum</span>(torch.<span class="bu">abs</span>(theta_rest))</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"Unknown penalty '</span><span class="sc">{</span>penalty<span class="sc">}</span><span class="ss">'; choose 'l1' or 'l2'."</span>)</span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mse <span class="op">+</span> lam <span class="op">*</span> reg</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="training-function" class="level4" data-number="9.5.8.1">
+<h4 data-number="9.5.8.1" class="anchored" data-anchor-id="training-function"><span class="header-section-number">9.5.8.1</span> Training function</h4>
+<div id="e5f74495" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_model(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    Phi,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    y,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    lam,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    penalty,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    lr <span class="op">=</span> <span class="fl">0.01</span>,</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    epochs <span class="op">=</span> <span class="dv">4000</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Create a fresh PolynomialModel, train it with Adam, and return it.</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="co">    Phi     : (n, p) design matrix</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="co">    y       : (n,)   targets</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="co">    lam     : regularisation strength  (λ ≥ 0)</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="co">    penalty : "l1" (lasso) or "l2" (ridge)</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a><span class="co">    lr      : Adam learning rate</span></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a><span class="co">    epochs  : number of gradient steps</span></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> PolynomialModel(degree<span class="op">=</span>Phi.shape[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>    optimiser <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span>lr)</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>        optimiser.zero_grad()</span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>        y_hat <span class="op">=</span> model(Phi)</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> regularised_mse(model, y_hat, y, lam<span class="op">=</span>lam, penalty<span class="op">=</span>penalty)</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>        loss.backward()</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>        optimiser.step()</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="sweep-over-lambda" class="level3" data-number="9.5.9">
+<h3 data-number="9.5.9" class="anchored" data-anchor-id="sweep-over-lambda"><span class="header-section-number">9.5.9</span> Sweep over <span class="math inline">\lambda</span></h3>
+<p>Since we want to assess how the regularisation parameter <span class="math inline">\lambda</span> affects LASSO and ridge output, we loop over different <span class="math inline">\lambda</span> values as follows:</p>
+<div id="77ca3007" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>lambdas <span class="op">=</span> torch.logspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">80</span>).tolist()</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> DEGREE <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>ridge_coefs <span class="op">=</span> torch.zeros(<span class="bu">len</span>(lambdas), p)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>lasso_coefs <span class="op">=</span> torch.zeros(<span class="bu">len</span>(lambdas), p)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Training ridge models …"</span>)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, lam <span class="kw">in</span> <span class="bu">enumerate</span>(lambdas):</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> train_model(Phi, y, lam<span class="op">=</span>lam, penalty<span class="op">=</span><span class="st">"l2"</span>)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    ridge_coefs[i] <span class="op">=</span> model.theta.detach()</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Training lasso models …"</span>)</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, lam <span class="kw">in</span> <span class="bu">enumerate</span>(lambdas):</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> train_model(Phi, y, lam<span class="op">=</span>lam, penalty<span class="op">=</span><span class="st">"l1"</span>)</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    lasso_coefs[i] <span class="op">=</span> model.theta.detach()</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick a few λ values to show fitted curves</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>show_idx <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">79</span>]           <span class="co"># low → high regularisation</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>show_lams <span class="op">=</span> [lambdas[i] <span class="cf">for</span> i <span class="kw">in</span> show_idx]</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>ridge_preds <span class="op">=</span> [(Phi_grid <span class="op">@</span> ridge_coefs[i]).detach() <span class="cf">for</span> i <span class="kw">in</span> show_idx]</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>lasso_preds <span class="op">=</span> [(Phi_grid <span class="op">@</span> lasso_coefs[i]).detach() <span class="cf">for</span> i <span class="kw">in</span> show_idx]</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="plotting" class="level3" data-number="9.5.10">
+<h3 data-number="9.5.10" class="anchored" data-anchor-id="plotting"><span class="header-section-number">9.5.10</span> Plotting</h3>
+<div id="69f0524f" class="cell" data-execution_count="44">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">8</span>))</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ridge coefficient paths</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>, <span class="dv">0</span>]</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, p):</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    ax.plot(lambdas, ridge_coefs[:, j].numpy())</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Ridge: coefficient paths"</span>)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="vs">r"</span><span class="dv">$</span><span class="er">\</span><span class="vs">lambda</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="vs">r"</span><span class="dv">$</span><span class="ch">\t</span><span class="vs">heta_j</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Lasso coefficient paths</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>, <span class="dv">1</span>]</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, p):</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    ax.plot(lambdas, lasso_coefs[:, j].numpy())</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"LASSO: coefficient paths"</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="vs">r"</span><span class="dv">$</span><span class="er">\</span><span class="vs">lambda</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="vs">r"</span><span class="dv">$</span><span class="ch">\t</span><span class="vs">heta_j</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Ridge fitted curves</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>, <span class="dv">0</span>]</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>ax.scatter(x.numpy(), y.numpy(), marker<span class="op">=</span><span class="st">"x"</span>, color<span class="op">=</span><span class="st">"k"</span>, zorder<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">"data"</span>)</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> lam_val, pred <span class="kw">in</span> <span class="bu">zip</span>(show_lams, ridge_preds):</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    ax.plot(x_grid.numpy(), pred.numpy(), label<span class="op">=</span><span class="vs">rf"</span><span class="dv">$</span><span class="er">\</span><span class="vs">lambda=</span><span class="sc">{</span>lam_val<span class="sc">:.1e}</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="vs">r"Ridge: fitted model for various </span><span class="dv">$</span><span class="er">\</span><span class="vs">lambda</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"$x$"</span>)</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="vs">r"</span><span class="dv">$</span><span class="vs">f_</span><span class="ch">\t</span><span class="vs">heta</span><span class="kw">(</span><span class="vs">x</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Lasso fitted curves</span></span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>ax.scatter(x.numpy(), y.numpy(), marker<span class="op">=</span><span class="st">"x"</span>, color<span class="op">=</span><span class="st">"k"</span>, zorder<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">"data"</span>)</span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> lam_val, pred <span class="kw">in</span> <span class="bu">zip</span>(show_lams, lasso_preds):</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>    ax.plot(x_grid.numpy(), pred.numpy(), label<span class="op">=</span><span class="vs">rf"</span><span class="dv">$</span><span class="er">\</span><span class="vs">lambda=</span><span class="sc">{</span>lam_val<span class="sc">:.1e}</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="vs">r"LASSO: fitted model for various </span><span class="dv">$</span><span class="er">\</span><span class="vs">lambda</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"$x$"</span>)</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="vs">r"</span><span class="dv">$</span><span class="vs">f_</span><span class="ch">\t</span><span class="vs">heta</span><span class="kw">(</span><span class="vs">x</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2-ml-models-in-pytorch_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
