@@ -46,6 +46,7 @@ book:
         - content/appendix/formula-sheet.qmd
         - content/appendix/revision-sheet.qmd
         - content/appendix/question-bank.qmd
+        - content/appendix/assignment.qmd
         - content/practicals/assignment-setup.ipynb
   sidebar:
     style: floating

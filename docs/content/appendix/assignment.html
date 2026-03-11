@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Formula Sheet – MAS3919: Foundations of Machine Learning</title>
+<title>Problem Solving Exercises – MAS3919: Foundations of Machine Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,8 +65,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../content/appendix/revision-sheet.html" rel="next">
-<link href="../../content/practicals/3-training-ml-models-in-pytorch.html" rel="prev">
+<link href="../../content/practicals/assignment-setup.html" rel="next">
+<link href="../../content/appendix/question-bank.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -453,7 +488,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/appendix/formula-sheet.html">Additional Material</a></li><li class="breadcrumb-item"><a href="../../content/appendix/formula-sheet.html">Formula Sheet</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/appendix/formula-sheet.html">Additional Material</a></li><li class="breadcrumb-item"><a href="../../content/appendix/assignment.html">Problem Solving Exercises</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -576,7 +611,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/appendix/formula-sheet.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../content/appendix/formula-sheet.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Formula Sheet</span></a>
   </div>
 </li>
@@ -594,7 +629,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/appendix/assignment.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/appendix/assignment.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Problem Solving Exercises</span></a>
   </div>
 </li>
@@ -616,33 +651,21 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#discrete-distributions" id="toc-discrete-distributions" class="nav-link active" data-scroll-target="#discrete-distributions">Discrete distributions</a>
-  <ul class="collapse">
-  <li><a href="#sec-bern" id="toc-sec-bern" class="nav-link" data-scroll-target="#sec-bern">Bernoulli</a></li>
-  <li><a href="#sec-binom" id="toc-sec-binom" class="nav-link" data-scroll-target="#sec-binom">Binomial</a></li>
-  <li><a href="#sec-multinomial" id="toc-sec-multinomial" class="nav-link" data-scroll-target="#sec-multinomial">Multinomial</a></li>
-  <li><a href="#sec-pois" id="toc-sec-pois" class="nav-link" data-scroll-target="#sec-pois">Poisson</a></li>
-  <li><a href="#sec-geom" id="toc-sec-geom" class="nav-link" data-scroll-target="#sec-geom">Geometric</a></li>
-  <li><a href="#sec-negbin" id="toc-sec-negbin" class="nav-link" data-scroll-target="#sec-negbin">Negative Binomial</a></li>
-  </ul></li>
-  <li><a href="#continuous-distributions" id="toc-continuous-distributions" class="nav-link" data-scroll-target="#continuous-distributions">Continuous distributions</a>
-  <ul class="collapse">
-  <li><a href="#sec-unif" id="toc-sec-unif" class="nav-link" data-scroll-target="#sec-unif">Uniform (continuous)</a></li>
-  <li><a href="#sec-exp" id="toc-sec-exp" class="nav-link" data-scroll-target="#sec-exp">Exponential</a></li>
-  <li><a href="#sec-gamma" id="toc-sec-gamma" class="nav-link" data-scroll-target="#sec-gamma">Gamma</a></li>
-  <li><a href="#sec-inv-gamma" id="toc-sec-inv-gamma" class="nav-link" data-scroll-target="#sec-inv-gamma">Inverse Gamma</a></li>
-  <li><a href="#sec-normal" id="toc-sec-normal" class="nav-link" data-scroll-target="#sec-normal">Normal</a></li>
-  <li><a href="#sec-lognormal" id="toc-sec-lognormal" class="nav-link" data-scroll-target="#sec-lognormal">Lognormal</a></li>
-  <li><a href="#sec-chisq" id="toc-sec-chisq" class="nav-link" data-scroll-target="#sec-chisq">Chi-squared</a></li>
-  <li><a href="#sec-t" id="toc-sec-t" class="nav-link" data-scroll-target="#sec-t">Student-<span class="math inline">t</span></a></li>
-  <li><a href="#sec-f" id="toc-sec-f" class="nav-link" data-scroll-target="#sec-f"><span class="math inline">F</span> distribution</a></li>
-  <li><a href="#sec-beta" id="toc-sec-beta" class="nav-link" data-scroll-target="#sec-beta">Beta</a></li>
-  <li><a href="#sec-weibull" id="toc-sec-weibull" class="nav-link" data-scroll-target="#sec-weibull">Weibull</a></li>
-  </ul></li>
-  <li><a href="#multivariate-distributions" id="toc-multivariate-distributions" class="nav-link" data-scroll-target="#multivariate-distributions">Multivariate Distributions</a>
-  <ul class="collapse">
-  <li><a href="#sec-mvnorm" id="toc-sec-mvnorm" class="nav-link" data-scroll-target="#sec-mvnorm">Multivariate Normal</a></li>
-  </ul></li>
+  <li><a href="#submission-format" id="toc-submission-format" class="nav-link active" data-scroll-target="#submission-format">Submission Format</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#dataset" id="toc-dataset" class="nav-link" data-scroll-target="#dataset">Dataset</a></li>
+  <li><a href="#setup-and-loading-data" id="toc-setup-and-loading-data" class="nav-link" data-scroll-target="#setup-and-loading-data">Setup and Loading Data</a></li>
+  <li><a href="#coursework-tasks" id="toc-coursework-tasks" class="nav-link" data-scroll-target="#coursework-tasks">Coursework Tasks</a></li>
+  <li><a href="#task-1-understanding-the-dataset-10-marks" id="toc-task-1-understanding-the-dataset-10-marks" class="nav-link" data-scroll-target="#task-1-understanding-the-dataset-10-marks">Task 1 — Understanding the Dataset (10 marks)</a></li>
+  <li><a href="#task-2-traintest-split-and-pytorch-setup-10-marks" id="toc-task-2-traintest-split-and-pytorch-setup-10-marks" class="nav-link" data-scroll-target="#task-2-traintest-split-and-pytorch-setup-10-marks">Task 2 — Train/Test Split and PyTorch Setup (10 marks)</a></li>
+  <li><a href="#task-3-implement-a-neural-network-10-marks" id="toc-task-3-implement-a-neural-network-10-marks" class="nav-link" data-scroll-target="#task-3-implement-a-neural-network-10-marks">Task 3 — Implement a Neural Network (10 marks)</a></li>
+  <li><a href="#task-4-define-the-loss-function-and-optimiser-20-marks" id="toc-task-4-define-the-loss-function-and-optimiser-20-marks" class="nav-link" data-scroll-target="#task-4-define-the-loss-function-and-optimiser-20-marks">Task 4 — Define the Loss Function and Optimiser (20 marks)</a></li>
+  <li><a href="#task-5-train-the-model-15-marks" id="toc-task-5-train-the-model-15-marks" class="nav-link" data-scroll-target="#task-5-train-the-model-15-marks">Task 5 — Train the Model (15 marks)</a></li>
+  <li><a href="#task-6-model-evaluation-10-marks" id="toc-task-6-model-evaluation-10-marks" class="nav-link" data-scroll-target="#task-6-model-evaluation-10-marks">Task 6 — Model Evaluation (10 marks)</a></li>
+  <li><a href="#task-7-baseline-logistic-regression-5-marks" id="toc-task-7-baseline-logistic-regression-5-marks" class="nav-link" data-scroll-target="#task-7-baseline-logistic-regression-5-marks">Task 7 — Baseline Logistic Regression (5 marks)</a></li>
+  <li><a href="#task-8-model-experiments-10-marks" id="toc-task-8-model-experiments-10-marks" class="nav-link" data-scroll-target="#task-8-model-experiments-10-marks">Task 8 — Model Experiments (10 marks)</a></li>
+  <li><a href="#task-9-discussion-10-marks" id="toc-task-9-discussion-10-marks" class="nav-link" data-scroll-target="#task-9-discussion-10-marks">Task 9 — Discussion (10 marks)</a></li>
+  <li><a href="#suggested-report-structure" id="toc-suggested-report-structure" class="nav-link" data-scroll-target="#suggested-report-structure">Suggested Report Structure</a></li>
   </ul>
 </nav>
     </div>
@@ -650,9 +673,9 @@ window.Quarto = {
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/appendix/formula-sheet.html">Additional Material</a></li><li class="breadcrumb-item"><a href="../../content/appendix/formula-sheet.html">Formula Sheet</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/appendix/formula-sheet.html">Additional Material</a></li><li class="breadcrumb-item"><a href="../../content/appendix/assignment.html">Problem Solving Exercises</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-formula-sheet" class="quarto-section-identifier">Formula Sheet</span></h1>
+<h1 class="title">Problem Solving Exercises</h1>
 </div>
 
 
@@ -669,253 +692,311 @@ window.Quarto = {
 </header>
 
 
-<section id="sec-formula-sheet" class="level6">
-<h6 class="anchored" data-anchor-id="sec-formula-sheet"></h6>
-</section>
-<section id="discrete-distributions" class="level2">
-<h2 class="anchored" data-anchor-id="discrete-distributions">Discrete distributions</h2>
-<section id="sec-bern" class="level3">
-<h3 class="anchored" data-anchor-id="sec-bern">Bernoulli</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{Bern}(\rho)</span> with <span class="math inline">0&lt;\rho&lt;1</span>.<br>
-<strong>Support.</strong> <span class="math inline">x \in \{0,1\}</span>.<br>
-<strong>PMF.</strong> <span class="math display">
-p(x) = \rho^{\,x}(1-\rho)^{1-x}, \quad x\in\{0,1\}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\rho,\quad \operatorname{Var}(X)=\rho(1-\rho).</span></p>
+<section id="submission-format" class="level3">
+<h3 class="anchored" data-anchor-id="submission-format">Submission Format</h3>
+<p>A typeset <strong>≤6-page report (PDF)</strong> based on the tasks below.</p>
+<p>The report must:</p>
+<ul>
+<li>Include explanations of the methods used</li>
+<li>Include figures and results</li>
+<li>Contain key code snippets written by you</li>
+<li>Clearly describe the experiments performed</li>
+</ul>
+<p>Large blocks of code should <strong>not</strong> be included in the report. Only include <strong>short code snippets that illustrate key parts of your implementation</strong>.</p>
+<p>The report should focus on explaining:</p>
+<ul>
+<li><strong>what was implemented</strong></li>
+<li><strong>why the methods work</strong></li>
+<li><strong>what the experimental results show</strong></li>
+</ul>
+<p>You may complete the work in <a href="https://colab.research.google.com/">Google Colab</a> or locally on your own machine.</p>
 <hr>
 </section>
-<section id="sec-binom" class="level3">
-<h3 class="anchored" data-anchor-id="sec-binom">Binomial</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{Binom}(n,p)</span>, <span class="math inline">n\in \mathbb{N}</span>, <span class="math inline">0&lt;p&lt;1</span>.<br>
-<strong>Support.</strong> <span class="math inline">x=0,1,\ldots,n</span>.<br>
-<strong>PMF.</strong> <span class="math display">
-\operatorname{Pr}(X=x) = \binom{n}{x} p^x (1-p)^{n-x}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=np,\quad \operatorname{Var}(X)=np(1-p).</span></p>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>In this coursework you will implement and analyse a machine learning model using <strong>PyTorch</strong>.</p>
+<p>The aim is to apply the fundamental machine learning framework:</p>
+<ul>
+<li>data</li>
+<li>model</li>
+<li>loss function</li>
+<li>optimisation</li>
+</ul>
+<p>to a real dataset.</p>
+<p>You will implement and train a neural network to perform <strong>binary classification</strong> and analyse how well the model learns from data.</p>
+<p>Your report should explain both the <strong>implementation</strong> and the <strong>machine learning concepts</strong> underlying the code.</p>
 <hr>
 </section>
-<section id="sec-multinomial" class="level3">
-<h3 class="anchored" data-anchor-id="sec-multinomial">Multinomial</h3>
-<p><strong>Model.</strong> <span class="math inline">\mathbf{X}=(X_1,\ldots,X_k) \sim \operatorname{Multinomial}(n,\mathbf{p})</span>, with <span class="math inline">n\in\mathbb{N}</span>, <span class="math inline">k\ge 2</span>, <span class="math inline">\mathbf{p}=(p_1,\ldots,p_k)</span>, <span class="math inline">p_i&gt;0</span>, and <span class="math inline">\sum_{i=1}^k p_i=1</span>.<br>
-<strong>Support.</strong> <span class="math inline">\mathbf{x}=(x_1,\ldots,x_k)</span> where <span class="math inline">x_i\in\{0,1,\ldots,n\}</span> and <span class="math inline">\sum_{i=1}^k x_i=n</span>.<br>
-<strong>PMF.</strong> <span class="math display">
-\Pr(\mathbf{X}=\mathbf{x})
-=\frac{n!}{x_1!\cdots x_k!}\prod_{i=1}^k p_i^{\,x_i}.
-</span> <strong>Mean/Cov.</strong> <span class="math display">
-\mathbb{E}[X_i]=n p_i,\qquad
-\operatorname{Var}(X_i)=n p_i(1-p_i),\qquad
-\operatorname{Cov}(X_i,X_j)=-\,n p_i p_j\quad (i\ne j).
-</span> <strong>Vector form.</strong> <span class="math display">
-\mathbb{E}[\mathbf{X}]=n\,\mathbf{p},\qquad
-\operatorname{Cov}(\mathbf{X})=n\left(\operatorname{diag}(\mathbf{p})-\mathbf{p}\mathbf{p}^\top\right).
+<section id="dataset" class="level2">
+<h2 class="anchored" data-anchor-id="dataset">Dataset</h2>
+<p>You will use the <strong>Breast Cancer Wisconsin dataset</strong>, available through scikit-learn.</p>
+<p>This dataset contains measurements extracted from digitised images of breast masses and the task is to classify tumours as:</p>
+<ul>
+<li><strong>malignant</strong></li>
+<li><strong>benign</strong></li>
+</ul>
+<p>The dataset contains:</p>
+<ul>
+<li><strong>569 samples</strong></li>
+<li><strong>30 numerical features</strong></li>
+</ul>
+<p>The classification target is binary.</p>
+<hr>
+</section>
+<section id="setup-and-loading-data" class="level2">
+<h2 class="anchored" data-anchor-id="setup-and-loading-data">Setup and Loading Data</h2>
+<p>To load the data, you may either use the assignment setup here in Colab:</p>
+<p><a href="https://colab.research.google.com/github/MatthewAlexanderFisher/NCL-MAS3919/blob/main/content/practicals/assignment-setup.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
+<p>or run the following code:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> load_breast_cancer</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> load_breast_cancer()</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> data.data</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data.target</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="coursework-tasks" class="level1">
+<h1>Coursework Tasks</h1>
+<p>The total mark for the report is <strong>100 marks</strong>.</p>
+<hr>
+</section>
+<section id="task-1-understanding-the-dataset-10-marks" class="level1">
+<h1>Task 1 — Understanding the Dataset (10 marks)</h1>
+<p>Before training a model it is important to understand the structure of the dataset.</p>
+<ol type="1">
+<li>Print the shape of the feature matrix <code>X</code> and target vector <code>y</code>.</li>
+<li>Determine how many samples belong to each class.</li>
+<li>Identify the meaning of the target labels (malignant vs benign).</li>
+<li>Visualise the class distribution.</li>
+</ol>
+<p>You may find the following code useful:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.shape)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y.shape)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>unique, counts <span class="op">=</span> np.unique(y, return_counts<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">dict</span>(<span class="bu">zip</span>(unique, counts)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Create at least <strong>one visualisation</strong> of the dataset using <code>matplotlib</code>.</p>
+<p>In your report include:</p>
+<ul>
+<li>the size of the dataset</li>
+<li>the meaning of the labels</li>
+<li>whether the dataset is balanced</li>
+<li>at least one plot illustrating the class distribution.</li>
+</ul>
+<hr>
+</section>
+<section id="task-2-traintest-split-and-pytorch-setup-10-marks" class="level1">
+<h1>Task 2 — Train/Test Split and PyTorch Setup (10 marks)</h1>
+<p>Machine learning models must be evaluated on data that was <strong>not used during training</strong>.</p>
+<p>Using either <code>numpy</code> or <code>torch</code>:</p>
+<ol type="1">
+<li>Split the dataset into <strong>training</strong> and <strong>test</strong> sets.</li>
+<li>Standardise the input features.</li>
+<li>Convert the resulting arrays into <strong>PyTorch tensors</strong>.</li>
+</ol>
+<p>Name the resulting tensors:</p>
+<pre><code>X_train, X_test
+y_train, y_test</code></pre>
+<p>In your report explain:</p>
+<ul>
+<li>why datasets are split into training and test sets</li>
+<li>justify your chosen train/test split</li>
+<li>why feature scaling is important for neural networks.</li>
+</ul>
+<hr>
+</section>
+<section id="task-3-implement-a-neural-network-10-marks" class="level1">
+<h1>Task 3 — Implement a Neural Network (10 marks)</h1>
+<p>Implement a <strong>feedforward neural network</strong> in PyTorch.</p>
+<p>Define the model using a class of the form:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Net(nn.Module):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You are free to choose:</p>
+<ul>
+<li>the number of hidden layers</li>
+<li>the number of neurons per layer</li>
+<li>activation functions.</li>
+</ul>
+<p>However, the network must produce <strong>a single output suitable for binary classification</strong>.</p>
+<p>In your report describe and justify:</p>
+<ul>
+<li>the architecture of the network</li>
+<li>the role of each layer</li>
+<li>the purpose of the ReLU activation function</li>
+<li>the choice of the final layer’s non-linearity</li>
+<li>the total number of trainable parameters in your neural network.</li>
+</ul>
+<hr>
+</section>
+<section id="task-4-define-the-loss-function-and-optimiser-20-marks" class="level1">
+<h1>Task 4 — Define the Loss Function and Optimiser (20 marks)</h1>
+<p>Since we are dealing with binary classification, assume a probabilistic model of the form</p>
+<p><span class="math display">
+Y_i \sim \text{Bernoulli}(p_i), \qquad p_i = f_{\boldsymbol{\theta}}(X_i).
 </span></p>
-<p><em>Note.</em> For <span class="math inline">k=2</span>, the first component <span class="math inline">X_1 \sim \operatorname{Bin}(n,p_1)</span> (Binomial).</p>
+<ol type="1">
+<li>Write down the <strong>likelihood function</strong> for this model.</li>
+<li>Derive the <strong>log-likelihood</strong>.</li>
+<li>Show that <strong>maximising the log-likelihood is equivalent to minimising the binary cross-entropy loss</strong>: <span class="math display">  
+L(\boldsymbol{\theta})  
+=  
+-\frac{1}{n}\sum_{i=1}^{n}  
+\left[  
+y_i \log(p_i)  
++  
+(1-y_i)\log(1-p_i)  
+\right].  
+</span></li>
+</ol>
+<p>Implement the resulting empirical risk as a loss function.</p>
+<p>Create an instance of your neural network:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Net(...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Define an optimiser based on the model parameters.</p>
+<p>In your report explain:</p>
+<ul>
+<li>how the loss function relates to maximum likelihood</li>
+<li>what the loss function measures</li>
+<li>why an optimiser is required</li>
+<li>the role of the learning rate in optimisation.</li>
+</ul>
 <hr>
 </section>
-<section id="sec-pois" class="level3">
-<h3 class="anchored" data-anchor-id="sec-pois">Poisson</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{Pois}(\lambda)</span>, <span class="math inline">\lambda&gt;0</span>.<br>
-<strong>Support.</strong> <span class="math inline">x=0,1,2,\ldots</span>.<br>
-<strong>PMF.</strong> <span class="math display">
-\operatorname{Pr}(X=x)=\frac{\lambda^x e^{-\lambda}}{x!}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\lambda,\quad \operatorname{Var}(X)=\lambda.</span></p>
+<section id="task-5-train-the-model-15-marks" class="level1">
+<h1>Task 5 — Train the Model (15 marks)</h1>
+<p>Train your neural network using <strong>gradient-based optimisation</strong>.</p>
+<p>Your implementation should include:</p>
+<ul>
+<li>a forward pass through the network</li>
+<li>computation of the loss</li>
+<li>backpropagation</li>
+<li>parameter updates.</li>
+</ul>
+<p>During training record both:</p>
+<ul>
+<li>training loss</li>
+<li>test loss or test accuracy.</li>
+</ul>
+<p>Produce a plot showing training performance over time.</p>
+<p>For example:</p>
+<ul>
+<li>training loss vs epoch</li>
+<li>test loss or accuracy vs epoch.</li>
+</ul>
+<p>In your report explain:</p>
+<ul>
+<li>how the loss changes during training</li>
+<li>whether the model appears to overfit</li>
+<li>how training and test performance differ</li>
+<li>why this behaviour occurs.</li>
+</ul>
 <hr>
 </section>
-<section id="sec-geom" class="level3">
-<h3 class="anchored" data-anchor-id="sec-geom">Geometric</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{Geom}(p)</span> (trials <strong>until first success</strong>, counting the success), <span class="math inline">0&lt;p&lt;1</span>.<br>
-<strong>Support.</strong> <span class="math inline">x=1,2,\ldots</span>.<br>
-<strong>PMF.</strong> <span class="math display">
-\operatorname{Pr}(X=x)=p(1-p)^{x-1}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\frac{1}{p},\quad \operatorname{Var}(X)=\frac{1-p}{p^2}.</span></p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Parameterisation alert
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Some texts start at <span class="math inline">x=0</span> (failures before the first success).</p>
-</div>
-</div>
+<section id="task-6-model-evaluation-10-marks" class="level1">
+<h1>Task 6 — Model Evaluation (10 marks)</h1>
+<p>Evaluate the trained model using the <strong>test dataset</strong>.</p>
+<p>Compute an appropriate performance metric, such as:</p>
+<ul>
+<li>classification accuracy.</li>
+</ul>
+<p>Explain how the model outputs are converted into <strong>class predictions</strong>.</p>
+<p>In your report:</p>
+<ul>
+<li>report the test accuracy</li>
+<li>interpret the performance of the model</li>
+<li>discuss whether the model appears to generalise well.</li>
+</ul>
+<p>Optionally, you may also include additional evaluation tools such as:</p>
+<ul>
+<li>a confusion matrix</li>
+<li>precision and recall.</li>
+</ul>
 <hr>
 </section>
-<section id="sec-negbin" class="level3">
-<h3 class="anchored" data-anchor-id="sec-negbin">Negative Binomial</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{NegBin}(r,p)</span>: number of trials to achieve the <span class="math inline">r</span>-th success (counts the successes), <span class="math inline">r&gt;0</span> (often integer), <span class="math inline">0&lt;p&lt;1</span>.<br>
-<strong>Support.</strong> <span class="math inline">x=r,r+1,\ldots</span>.<br>
-<strong>PMF.</strong> <span class="math display">
-\operatorname{Pr}(X=x) = \binom{x-1}{r-1} p^{\,r} (1-p)^{x-r}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\frac{r}{p},\quad \operatorname{Var}(X)=\frac{r(1-p)}{p^2}.</span></p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Parameterisation alert
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Another common version counts <strong>failures</strong> before the <span class="math inline">r</span>-th success (<span class="math inline">x=0,1,\dots</span>) with different mean/variance. Always check which one is used.</p>
-</div>
-</div>
+<section id="task-7-baseline-logistic-regression-5-marks" class="level1">
+<h1>Task 7 — Baseline Logistic Regression (5 marks)</h1>
+<p>Implement a <strong>baseline classifier</strong> using logistic regression.</p>
+<p>You may use either:</p>
+<ul>
+<li><code>sklearn.linear_model.LogisticRegression</code>, or<br>
+</li>
+<li>a PyTorch implementation.</li>
+</ul>
+<p>Train the logistic regression model using the same training data.</p>
+<p>Evaluate the model on the test set.</p>
+<p>In your report:</p>
+<ul>
+<li>report the test accuracy</li>
+<li>briefly explain how logistic regression works</li>
+<li>compare the performance of logistic regression with your neural network.</li>
+</ul>
+<p>Discuss whether the neural network provides a meaningful improvement.</p>
 <hr>
 </section>
-</section>
-<section id="continuous-distributions" class="level2">
-<h2 class="anchored" data-anchor-id="continuous-distributions">Continuous distributions</h2>
-<section id="sec-unif" class="level3">
-<h3 class="anchored" data-anchor-id="sec-unif">Uniform (continuous)</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \mathcal{U}(a,b)</span>, <span class="math inline">a&lt;b</span>.<br>
-<strong>Support.</strong> <span class="math inline">a&lt;x&lt;b</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x;a,b)=\frac{1}{b-a}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\frac{a+b}{2},\quad \operatorname{Var}(X)=\frac{(b-a)^2}{12}.</span></p>
+<section id="task-8-model-experiments-10-marks" class="level1">
+<h1>Task 8 — Model Experiments (10 marks)</h1>
+<p>Perform at least <strong>one experiment</strong> modifying the model or training procedure.</p>
+<p>Possible experiments include:</p>
+<ul>
+<li>changing the number of hidden units</li>
+<li>modifying the number of layers</li>
+<li>adding a regularisation term</li>
+<li>changing the learning rate</li>
+<li>training for more or fewer epochs.</li>
+</ul>
+<p>For each experiment:</p>
+<ol type="1">
+<li>Clearly describe the modification.</li>
+<li>Retrain the model.</li>
+<li>Report the resulting performance.</li>
+<li>Discuss how the change affected the results.</li>
+</ol>
 <hr>
 </section>
-<section id="sec-exp" class="level3">
-<h3 class="anchored" data-anchor-id="sec-exp">Exponential</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{Exponential}(\lambda)</span> with <strong>rate</strong> <span class="math inline">\lambda&gt;0</span>.<br>
-<strong>Support.</strong> <span class="math inline">x&gt;0</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x;\lambda)=\lambda e^{-\lambda x}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\frac{1}{\lambda},\quad \operatorname{Var}(X)=\frac{1}{\lambda^2}.</span></p>
+<section id="task-9-discussion-10-marks" class="level1">
+<h1>Task 9 — Discussion (10 marks)</h1>
+<p>Write a short discussion summarising your findings.</p>
+<p>Possible points to consider include:</p>
+<ul>
+<li>How well did the neural network perform on this task?</li>
+<li>What factors influenced training performance?</li>
+<li>What limitations might this model have?</li>
+<li>What improvements could be made?</li>
+</ul>
 <hr>
 </section>
-<section id="sec-gamma" class="level3">
-<h3 class="anchored" data-anchor-id="sec-gamma">Gamma</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{Gamma}(a,b)</span> with <strong>shape</strong> <span class="math inline">a&gt;0</span> and <strong>rate</strong> <span class="math inline">b&gt;0</span>.<br>
-<strong>Support.</strong> <span class="math inline">x&gt;0</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x;a,b)=\frac{b^a}{\Gamma(a)} x^{a-1} e^{-bx}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\frac{a}{b},\quad \operatorname{Var}(X)=\frac{a}{b^2}.</span></p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Parameterisation alert
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Many sources use <strong>scale</strong> <span class="math inline">\beta=1/b</span>: then <span class="math inline">f(x)=\frac{1}{\Gamma(a)\beta^a}x^{a-1}e^{-x/\beta}</span> and <span class="math inline">\mathbb{E}[X]=a\beta</span>.</p>
-</div>
-</div>
-<hr>
-</section>
-<section id="sec-inv-gamma" class="level3">
-<h3 class="anchored" data-anchor-id="sec-inv-gamma">Inverse Gamma</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{InvGamma}(a,b)</span>, with <span class="math inline">a&gt;0</span>, <span class="math inline">b&gt;0</span>.<br>
-<strong>Support.</strong> <span class="math inline">x&gt;0</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x;a,b)=\frac{b^a}{\Gamma(a)} x^{-(a-1)} e^{-bx^{-1}}.
-</span> <strong>Statistics.</strong> <span class="math inline">\mathbb{E}[X]=\frac{b}{a-1},\quad \operatorname{Var}(X)=\frac{b^2}{(a-1)^2(a-2)}</span> and <span class="math inline">\text{Mode}(X) = \frac{b}{a+1}</span> if <span class="math inline">a &gt; 2</span>.</p>
-<hr>
-</section>
-<section id="sec-normal" class="level3">
-<h3 class="anchored" data-anchor-id="sec-normal">Normal</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \mathcal{N}(\mu,\sigma^2)</span> with <span class="math inline">\sigma&gt;0</span>.<br>
-<strong>Support.</strong> <span class="math inline">x\in\mathbb{R}</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x;\mu,\sigma^2)=\frac{1}{\sqrt{2\pi \sigma^2}}
-\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\mu,\quad \operatorname{Var}(X)=\sigma^2.</span></p>
-<section id="sec-normal-properties" class="level4">
-<h4 class="anchored" data-anchor-id="sec-normal-properties">Properties</h4>
-<p>Suppose <span class="math inline">X_1,\ldots, X_n</span> are independent normal random variables, then:</p>
-<hr>
-</section>
-</section>
-<section id="sec-lognormal" class="level3">
-<h3 class="anchored" data-anchor-id="sec-lognormal">Lognormal</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{LogNormal}(\mu,\sigma^2)</span> meaning <span class="math inline">\ln X \sim \mathcal{N}(\mu,\sigma^2)</span>.<br>
-<strong>Support.</strong> <span class="math inline">x&gt;0</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x;\mu,\sigma^2)=\frac{1}{x\sqrt{2\pi\sigma^2}}
-\exp\!\left(-\frac{(\ln x-\mu)^2}{2\sigma^2}\right).
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=e^{\mu+\sigma^2/2},\quad \operatorname{Var}(X)=\big(e^{\sigma^2}-1\big)e^{2\mu+\sigma^2}.</span></p>
-<hr>
-</section>
-<section id="sec-chisq" class="level3">
-<h3 class="anchored" data-anchor-id="sec-chisq">Chi-squared</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \chi^2_\nu</span> with <span class="math inline">\nu&gt;0</span> degrees of freedom.<br>
-<strong>Support.</strong> <span class="math inline">x&gt;0</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x;\nu)=\frac{1}{2^{\nu/2}\Gamma(\nu/2)}x^{\nu/2-1}e^{-x/2}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\nu,\quad \operatorname{Var}(X)=2\nu.</span></p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><span class="math inline">\chi^2_\nu</span> is a special case of Gamma with <span class="math inline">a=\nu/2</span>, <span class="math inline">b=1/2</span>.</p>
-</div>
-</div>
-<hr>
-</section>
-<section id="sec-t" class="level3">
-<h3 class="anchored" data-anchor-id="sec-t">Student-<span class="math inline">t</span></h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim t_\nu</span> with <span class="math inline">\nu&gt;0</span> degrees of freedom.<br>
-<strong>Support.</strong> <span class="math inline">x\in\mathbb{R}</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x;\nu)=\frac{\Gamma\!\left(\frac{\nu+1}{2}\right)}{\sqrt{\nu\pi}\,\Gamma\!\left(\frac{\nu}{2}\right)}
-\left(1+\frac{x^2}{\nu}\right)^{-(\nu+1)/2}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=0</span> for <span class="math inline">\nu&gt;1</span>; undefined for <span class="math inline">\nu\le 1</span>.<br>
-<span class="math inline">\operatorname{Var}(X)=\frac{\nu}{\nu-2}</span> for <span class="math inline">\nu&gt;2</span>; infinite for <span class="math inline">1&lt;\nu\le 2</span>; undefined for <span class="math inline">\nu\le 1</span>.</p>
-<hr>
-</section>
-<section id="sec-f" class="level3">
-<h3 class="anchored" data-anchor-id="sec-f"><span class="math inline">F</span> distribution</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim F_{d_1,d_2}</span> with <span class="math inline">d_1,d_2&gt;0</span> degrees of freedom.<br>
-<strong>Support.</strong> <span class="math inline">x&gt;0</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x;d_1,d_2)=\frac{\Gamma\!\left(\frac{d_1+d_2}{2}\right)}{\Gamma\!\left(\frac{d_1}{2}\right)\Gamma\!\left(\frac{d_2}{2}\right)}
-\left(\frac{d_1}{d_2}\right)^{d_1/2}\frac{x^{d_1/2-1}}{\left(1+\frac{d_1}{d_2}x\right)^{(d_1+d_2)/2}}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\frac{d_2}{d_2-2}</span> for <span class="math inline">d_2&gt;2</span>.<br>
-<span class="math inline">\operatorname{Var}(X)=\frac{2d_2^2(d_1+d_2-2)}{d_1(d_2-2)^2(d_2-4)}</span> for <span class="math inline">d_2&gt;4</span>.</p>
-<hr>
-</section>
-<section id="sec-beta" class="level3">
-<h3 class="anchored" data-anchor-id="sec-beta">Beta</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{Beta}(a,b)</span>, <span class="math inline">a&gt;0, b&gt;0</span>.<br>
-<strong>Support.</strong> <span class="math inline">0&lt;x&lt;1</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x;a,b)=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\,x^{a-1}(1-x)^{b-1}.
-</span> <strong>Mean/Var.</strong> <span class="math inline">\mathbb{E}[X]=\frac{a}{a+b},\quad \operatorname{Var}(X)=\frac{ab}{(a+b)^2(a+b+1)}.</span></p>
-<hr>
-</section>
-<section id="sec-weibull" class="level3">
-<h3 class="anchored" data-anchor-id="sec-weibull">Weibull</h3>
-<p><strong>Model.</strong> <span class="math inline">X \sim \operatorname{Weibull}(\beta,\theta)</span>, <span class="math inline">\beta&gt;0, \theta&gt;0</span>.<br>
-<strong>Support.</strong> <span class="math inline">x &gt; 0</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_X(x) = \frac{\beta}{\theta}x^{\beta - 1} \exp\left(-\frac{x^\beta}{\theta}\right)
-</span></p>
-<hr>
-</section>
-</section>
-<section id="multivariate-distributions" class="level2">
-<h2 class="anchored" data-anchor-id="multivariate-distributions">Multivariate Distributions</h2>
-<section id="sec-mvnorm" class="level3">
-<h3 class="anchored" data-anchor-id="sec-mvnorm">Multivariate Normal</h3>
-<p><strong>Model.</strong> <span class="math inline">\mathbf{X} \sim \mathcal{N}_p(\boldsymbol{\mu},\Sigma)</span> with <span class="math inline">\Sigma</span> positive definite.<br>
-<strong>Support.</strong> <span class="math inline">\mathbf{x}\in\mathbb{R}^p</span>.<br>
-<strong>PDF.</strong> <span class="math display">
-f_{\mathbf{X}}(\mathbf{x};\boldsymbol{\mu},\Sigma)=\frac{1}{(2\pi)^{p/2}(\det\Sigma)^{1/2}}
-\exp\!\left(-\tfrac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^\top \Sigma^{-1}(\mathbf{x}-\boldsymbol{\mu})\right).
-</span> <strong>Mean/Cov.</strong> <span class="math inline">\mathbb{E}[\mathbf{X}]=\boldsymbol{\mu},\quad \operatorname{Var}(\mathbf{X})=\Sigma.</span></p>
-<hr>
+<section id="suggested-report-structure" class="level1">
+<h1>Suggested Report Structure</h1>
+<p>A typical report might include:</p>
+<ol type="1">
+<li>Introduction<br>
+</li>
+<li>Dataset Description<br>
+</li>
+<li>Model Architecture<br>
+</li>
+<li>Training Procedure<br>
+</li>
+<li>Experimental Results<br>
+</li>
+<li>Discussion and Conclusion</li>
+</ol>
+<p>Your report should clearly explain both:</p>
+<ul>
+<li><strong>the implementation</strong></li>
+<li><strong>the machine learning concepts involved</strong>.</li>
+</ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -4688,13 +4769,13 @@ if (document.body.classList.contains('reading-mode')) {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/practicals/3-training-ml-models-in-pytorch.html" class="pagination-link" aria-label="Training Machine Learning Models in Pytorch">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training Machine Learning Models in Pytorch</span></span>
+      <a href="../../content/appendix/question-bank.html" class="pagination-link" aria-label="Question Bank">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Question Bank</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/appendix/revision-sheet.html" class="pagination-link" aria-label="Revision Sheet">
-        <span class="nav-page-text">Revision Sheet</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/practicals/assignment-setup.html" class="pagination-link" aria-label="Assignment Setup">
+        <span class="nav-page-text">Assignment Setup</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -65,7 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../content/practicals/assignment-setup.html" rel="next">
+<link href="../../content/appendix/assignment.html" rel="next">
 <link href="../../content/appendix/revision-sheet.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -629,6 +629,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../../content/appendix/question-bank.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Question Bank</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/appendix/assignment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Problem Solving Exercises</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -2229,7 +2235,7 @@ B
 Solution
 </summary>
 <p>One possible implementation in PyTorch is given below:</p>
-<div id="9af4f1e3" class="cell" data-execution_count="2">
+<div id="05129c7f" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Part 1: create vector and matrices</span></span>
@@ -2323,7 +2329,7 @@ Important&nbsp;20: PyTorch tensors: vectors and matrices II
 <div class="callout-body-container callout-body">
 <p>In PyTorch, it is common to work with a <strong>batch of matrices</strong>, where several matrices are stored together in a single tensor.</p>
 <p>For example, the following code defines a batch of three <span class="math inline">2 \times 2</span> matrices and a vector of length <span class="math inline">2</span>, and computes a matrix–vector product.</p>
-<div id="ddc2aed4" class="cell" data-execution_count="3">
+<div id="40342acc" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.tensor(</span>
@@ -2355,7 +2361,7 @@ Important&nbsp;20: PyTorch tensors: vectors and matrices II
 <li><p>Explain in words why PyTorch is able to perform this computation, even though <code>A</code> is not a single matrix.</p></li>
 <li><p>Suppose that, without changing <code>A</code>, instead we define <code>x</code> as in the following code. State the shape of <code>A @ x</code>.</p></li>
 </ol>
-<div id="12ae775f" class="cell" data-execution_count="4">
+<div id="b47dbd55" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    [</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">1</span>, <span class="dv">2</span>],</span>
@@ -2445,7 +2451,7 @@ Important&nbsp;21: PyTorch tensors: vectors and matrices III
 <div class="callout-body-container callout-body">
 <p>In deep learning, tensors often contain <strong>batches of matrices</strong>, and it is important to understand the shapes of the outputs of matrix multiplication.</p>
 <p>Consider the following PyTorch code.</p>
-<div id="049b41a5" class="cell" data-execution_count="5">
+<div id="12a5a7e0" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.zeros((<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span>
@@ -6280,8 +6286,8 @@ window._ojs.runtime.interpretFromScriptTags();
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/practicals/assignment-setup.html" class="pagination-link" aria-label="Assignment Setup">
-        <span class="nav-page-text">Assignment Setup</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/appendix/assignment.html" class="pagination-link" aria-label="Problem Solving Exercises">
+        <span class="nav-page-text">Problem Solving Exercises</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -515,6 +515,50 @@
     ]
   },
   {
+    "objectID": "content/appendix/assignment.html",
+    "href": "content/appendix/assignment.html",
+    "title": "Problem Solving Exercises",
+    "section": "",
+    "text": "Submission Format\nA typeset ≤6-page report (PDF) based on the tasks below.\nThe report must:\nLarge blocks of code should not be included in the report. Only include short code snippets that illustrate key parts of your implementation.\nThe report should focus on explaining:\nYou may complete the work in Google Colab or locally on your own machine.",
+    "crumbs": [
+      "Additional Material",
+      "Problem Solving Exercises"
+    ]
+  },
+  {
+    "objectID": "content/appendix/assignment.html#overview",
+    "href": "content/appendix/assignment.html#overview",
+    "title": "Problem Solving Exercises",
+    "section": "Overview",
+    "text": "Overview\nIn this coursework you will implement and analyse a machine learning model using PyTorch.\nThe aim is to apply the fundamental machine learning framework:\n\ndata\nmodel\nloss function\noptimisation\n\nto a real dataset.\nYou will implement and train a neural network to perform binary classification and analyse how well the model learns from data.\nYour report should explain both the implementation and the machine learning concepts underlying the code.",
+    "crumbs": [
+      "Additional Material",
+      "Problem Solving Exercises"
+    ]
+  },
+  {
+    "objectID": "content/appendix/assignment.html#dataset",
+    "href": "content/appendix/assignment.html#dataset",
+    "title": "Problem Solving Exercises",
+    "section": "Dataset",
+    "text": "Dataset\nYou will use the Breast Cancer Wisconsin dataset, available through scikit-learn.\nThis dataset contains measurements extracted from digitised images of breast masses and the task is to classify tumours as:\n\nmalignant\nbenign\n\nThe dataset contains:\n\n569 samples\n30 numerical features\n\nThe classification target is binary.",
+    "crumbs": [
+      "Additional Material",
+      "Problem Solving Exercises"
+    ]
+  },
+  {
+    "objectID": "content/appendix/assignment.html#setup-and-loading-data",
+    "href": "content/appendix/assignment.html#setup-and-loading-data",
+    "title": "Problem Solving Exercises",
+    "section": "Setup and Loading Data",
+    "text": "Setup and Loading Data\nTo load the data, you may either use the assignment setup here in Colab:\n\nor run the following code:\nimport torch\nimport torch.nn as nn\nimport torch.optim as optim\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\n\ndata = load_breast_cancer()\n\nX = data.data\ny = data.target",
+    "crumbs": [
+      "Additional Material",
+      "Problem Solving Exercises"
+    ]
+  },
+  {
     "objectID": "content/practicals/assignment-setup.html",
     "href": "content/practicals/assignment-setup.html",
     "title": "Assignment Setup",

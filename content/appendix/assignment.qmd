@@ -1,0 +1,347 @@
+## Problem Solving Exercises {.unnumbered}
+
+### Submission Format
+A typeset **≤6-page report (PDF)** based on the tasks below.
+
+The report must:
+
+* Include explanations of the methods used
+* Include figures and results
+* Contain key code snippets written by you
+* Clearly describe the experiments performed
+
+Large blocks of code should **not** be included in the report. Only include **short code snippets that illustrate key parts of your implementation**.
+
+The report should focus on explaining:
+
+* **what was implemented**
+* **why the methods work**
+* **what the experimental results show**
+
+You may complete the work in [Google Colab](https://colab.research.google.com/) or locally on your own machine.
+
+---
+
+## Overview
+
+In this coursework you will implement and analyse a machine learning model using **PyTorch**.
+
+The aim is to apply the fundamental machine learning framework:
+
+- data
+- model
+- loss function
+- optimisation
+
+to a real dataset.
+
+You will implement and train a neural network to perform **binary classification** and analyse how well the model learns from data.
+
+Your report should explain both the **implementation** and the **machine learning concepts** underlying the code.
+
+---
+
+## Dataset
+
+You will use the **Breast Cancer Wisconsin dataset**, available through scikit-learn.
+
+This dataset contains measurements extracted from digitised images of breast masses and the task is to classify tumours as:
+
+- **malignant**
+- **benign**
+
+The dataset contains:
+
+- **569 samples**
+- **30 numerical features**
+
+The classification target is binary.
+
+---
+
+## Setup and Loading Data
+
+To load the data, you may either use the assignment setup here in Colab:
+
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MatthewAlexanderFisher/NCL-MAS3919/blob/main/content/practicals/assignment-setup.ipynb)
+
+or run the following code:
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+data = load_breast_cancer()
+
+X = data.data
+y = data.target
+```
+
+---
+
+# Coursework Tasks
+
+The total mark for the report is **100 marks**.
+
+---
+
+# Task 1 — Understanding the Dataset (10 marks)
+
+Before training a model it is important to understand the structure of the dataset.
+
+1. Print the shape of the feature matrix `X` and target vector `y`.
+2. Determine how many samples belong to each class.
+3. Identify the meaning of the target labels (malignant vs benign).
+4. Visualise the class distribution.
+
+You may find the following code useful:
+
+```python
+print(X.shape)
+print(y.shape)
+
+unique, counts = np.unique(y, return_counts=True)
+print(dict(zip(unique, counts)))
+```
+
+Create at least **one visualisation** of the dataset using `matplotlib`.
+
+In your report include:
+
+- the size of the dataset
+- the meaning of the labels
+- whether the dataset is balanced
+- at least one plot illustrating the class distribution.
+
+---
+
+# Task 2 — Train/Test Split and PyTorch Setup (10 marks)
+
+Machine learning models must be evaluated on data that was **not used during training**.
+
+Using either `numpy` or `torch`:
+
+1. Split the dataset into **training** and **test** sets.
+2. Standardise the input features.
+3. Convert the resulting arrays into **PyTorch tensors**.
+
+Name the resulting tensors:
+
+```
+X_train, X_test
+y_train, y_test
+```
+
+In your report explain:
+
+- why datasets are split into training and test sets
+- justify your chosen train/test split
+- why feature scaling is important for neural networks.
+
+---
+
+# Task 3 — Implement a Neural Network (10 marks)
+
+Implement a **feedforward neural network** in PyTorch.
+
+Define the model using a class of the form:
+
+```python
+class Net(nn.Module):
+    ...
+```
+
+You are free to choose:
+
+- the number of hidden layers
+- the number of neurons per layer
+- activation functions.
+
+However, the network must produce **a single output suitable for binary classification**.
+
+In your report describe and justify:
+
+- the architecture of the network
+- the role of each layer
+- the purpose of the ReLU activation function
+- the choice of the final layer's non-linearity
+- the total number of trainable parameters in your neural network.
+
+---
+
+# Task 4 — Define the Loss Function and Optimiser (20 marks)
+
+Since we are dealing with binary classification, assume a probabilistic model of the form
+
+$$
+Y_i \sim \text{Bernoulli}(p_i), \qquad p_i = f_{\boldsymbol{\theta}}(X_i).
+$$
+
+1. Write down the **likelihood function** for this model.
+2. Derive the **log-likelihood**.
+3. Show that **maximising the log-likelihood is equivalent to minimising the binary cross-entropy loss**:
+	$$  
+	L(\boldsymbol{\theta})  
+	=  
+	-\frac{1}{n}\sum_{i=1}^{n}  
+	\left[  
+	y_i \log(p_i)  
+	+  
+	(1-y_i)\log(1-p_i)  
+	\right].  
+	$$
+
+Implement the resulting empirical risk as a loss function.
+
+Create an instance of your neural network:
+
+```python
+model = Net(...)
+```
+
+Define an optimiser based on the model parameters.
+
+In your report explain:
+
+- how the loss function relates to maximum likelihood
+- what the loss function measures
+- why an optimiser is required
+- the role of the learning rate in optimisation.
+
+---
+
+# Task 5 — Train the Model (15 marks)
+
+Train your neural network using **gradient-based optimisation**.
+
+Your implementation should include:
+
+- a forward pass through the network
+- computation of the loss
+- backpropagation
+- parameter updates.
+
+During training record both:
+
+- training loss
+- test loss or test accuracy.
+
+Produce a plot showing training performance over time.
+
+For example:
+
+- training loss vs epoch
+- test loss or accuracy vs epoch.
+
+In your report explain:
+
+- how the loss changes during training
+- whether the model appears to overfit
+- how training and test performance differ
+- why this behaviour occurs.
+
+---
+
+# Task 6 — Model Evaluation (10 marks)
+
+Evaluate the trained model using the **test dataset**.
+
+Compute an appropriate performance metric, such as:
+
+- classification accuracy.
+
+Explain how the model outputs are converted into **class predictions**.
+
+In your report:
+
+- report the test accuracy
+- interpret the performance of the model
+- discuss whether the model appears to generalise well.
+
+Optionally, you may also include additional evaluation tools such as:
+
+- a confusion matrix
+- precision and recall.
+
+---
+
+# Task 7 — Baseline Logistic Regression (5 marks)
+
+Implement a **baseline classifier** using logistic regression.
+
+You may use either:
+
+- `sklearn.linear_model.LogisticRegression`, or  
+- a PyTorch implementation.
+
+Train the logistic regression model using the same training data.
+
+Evaluate the model on the test set.
+
+In your report:
+
+- report the test accuracy
+- briefly explain how logistic regression works
+- compare the performance of logistic regression with your neural network.
+
+Discuss whether the neural network provides a meaningful improvement.
+
+---
+
+# Task 8 — Model Experiments (10 marks)
+
+Perform at least **one experiment** modifying the model or training procedure.
+
+Possible experiments include:
+
+- changing the number of hidden units
+- modifying the number of layers
+- adding a regularisation term
+- changing the learning rate
+- training for more or fewer epochs.
+
+For each experiment:
+
+1. Clearly describe the modification.
+2. Retrain the model.
+3. Report the resulting performance.
+4. Discuss how the change affected the results.
+
+---
+
+# Task 9 — Discussion (10 marks)
+
+Write a short discussion summarising your findings.
+
+Possible points to consider include:
+
+- How well did the neural network perform on this task?
+- What factors influenced training performance?
+- What limitations might this model have?
+- What improvements could be made?
+
+---
+
+# Suggested Report Structure
+
+A typical report might include:
+
+1. Introduction  
+2. Dataset Description  
+3. Model Architecture  
+4. Training Procedure  
+5. Experimental Results  
+6. Discussion and Conclusion  
+
+Your report should clearly explain both:
+
+- **the implementation**
+- **the machine learning concepts involved**.
