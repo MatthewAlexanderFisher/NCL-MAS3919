@@ -934,7 +934,7 @@ Figure&nbsp;3.1: Illustrating a differentiable convex function <span class="math
 </figure>
 </div>
 </div>
-<div id="algo-gd" class="pseudocode-container quarto-float" data-pseudocode-number="1" data-line-number="true" data-comment-delimiter="//" data-line-number-punc=":" data-indent-size="1.2em" data-no-end="true" data-caption-prefix="Algorithm">
+<div id="algo-gd" class="pseudocode-container quarto-float" data-caption-prefix="Algorithm" data-indent-size="1.2em" data-no-end="true" data-line-number="true" data-comment-delimiter="//" data-pseudocode-number="1" data-line-number-punc=":">
 <div class="pseudocode">
 \begin{algorithm} \caption{Gradient Descent on $F : \mathbb{R}^p \rightarrow \mathbb{R}$} \begin{algorithmic} \Require gradients $\nabla F : \mathbb{R}^p \rightarrow \mathbb{R}^p$ \Require initial state $\bm{\theta}_0 \in \mathbb{R}^p$ \Require learning rate $\epsilon \in (0,\infty)$ \Require number of steps $T$ \Ensure final parameter estimate $\bm{\theta}_T$ \For{$t = 0, \dots, T-1$} \State $\bm{\theta}_{t+1} \gets \bm{\theta}_t - \epsilon \nabla F(\bm{\theta}_t)$ \EndFor \end{algorithmic} \end{algorithm}
 </div>
@@ -1216,7 +1216,7 @@ Figure&nbsp;3.2: Comparison of gradient descent (left) and stochastic gradient d
 </figure>
 </div>
 </div>
-<div id="algo-sgd" class="pseudocode-container quarto-float" data-pseudocode-number="2" data-line-number="true" data-comment-delimiter="//" data-line-number-punc=":" data-indent-size="1.2em" data-no-end="true" data-caption-prefix="Algorithm">
+<div id="algo-sgd" class="pseudocode-container quarto-float" data-caption-prefix="Algorithm" data-indent-size="1.2em" data-no-end="true" data-line-number="true" data-comment-delimiter="//" data-pseudocode-number="2" data-line-number-punc=":">
 <div class="pseudocode">
 \begin{algorithm} \caption{Stochastic Gradient Descent on $F : \mathbb{R}^p \rightarrow \mathbb{R}$} \begin{algorithmic} \Require stochastic gradients $G_t : \mathbb{R}^p \rightarrow \mathbb{R}^p$ with $\mathbb{E}[G_t(\cdot)] = \nabla F(\cdot)$ \Require initial state $\boldsymbol{\theta}_0 \in \mathbb{R}^p$ \Require learning rate $\epsilon \in (0,\infty)$ \Require number of steps $T$ \For{$t = 0, \dots, T-1$} \State $\boldsymbol{\theta}_{t+1} \gets \boldsymbol{\theta}_t - \epsilon G_t(\boldsymbol{\theta}_t)$ \EndFor \end{algorithmic} \end{algorithm}
 </div>
