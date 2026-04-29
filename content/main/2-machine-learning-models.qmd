@@ -353,7 +353,7 @@ Compared to the standard least squares estimator @eq-least-squares-est we have a
 The inverse $(\bm{\Phi}^\top \bm{\Phi} + n \lambda_n \mathbf{I} )^{-1}$ is well-defined since the sum of a positive semi-definite matrix $\bm{\Phi}^\top \bm{\Phi}$ and a positive definite matrix $n \lambda_n I$ is positive definite, and can thus be inverted.
 To confirm we have found a minimiser of the regularised empirical risk we can compute the Hessian matrix at $\hat{\bm{\theta}}$, which is 
 $$
-\nabla_{\bm{\theta}}^2 [ \mathcal{R}_n(f_{\bm{\theta}}) + \lambda_n R(\bm{\theta}) ] = 2 \left( \frac{1}{n} \bm{\Phi}^\top \bm{\Phi} + \mathbf{I} \right) , 
+\nabla_{\bm{\theta}}^2 [ \mathcal{R}_n(f_{\bm{\theta}}) + \lambda_n R(\bm{\theta}) ] = 2 \left( \frac{1}{n} \bm{\Phi}^\top \bm{\Phi} + \lambda_n \mathbf{I} \right) , 
 $$
 and is positive definite by an analogous argument.
 

@@ -1627,13 +1627,13 @@ Figure&nbsp;1.3: Several companies have emerged to sell <strong>people counters<
 <div class="callout-body-container">
 <div id="def-ml-model" class="definition theorem">
 <p><span class="theorem-title"><strong>Definition 1.2 (Machine Learning Model)</strong></span> A <strong>machine learning model</strong> (or simply <strong>model</strong>) for a supervised learning task as in <a href="#def-supervised-learning-task" class="quarto-xref">Definition&nbsp;<span>1.1</span></a> is a collection <span class="math inline">\mathcal{F}</span> of maps <span class="math display">
-f : \mathcal{X} \rightarrow \mathcal{Y}.
+f : \mathcal{X} \rightarrow \mathcal{Z}.
 </span></p>
 </div>
 </div>
 </div>
 </div>
-<p>In practice the elements of <span class="math inline">\mathcal{F}</span> are usually parametrised, denoted <span class="math inline">f_\theta : \mathcal{X} \rightarrow \mathcal{Y}</span> for some <em>parameters</em> <span class="math inline">\theta</span> from a suitable index set <span class="math inline">\Theta</span>.</p>
+<p>In practice the elements of <span class="math inline">\mathcal{F}</span> are usually parametrised, denoted <span class="math inline">f_\theta : \mathcal{X} \rightarrow \mathcal{Z}</span> for some <em>parameters</em> <span class="math inline">\theta</span> from a suitable index set <span class="math inline">\Theta</span>.</p>
 <p>It is then equivalent to specify either the set <span class="math inline">\mathcal{F}</span> or the form of the parametric function <span class="math inline">f_\theta</span> together with the set of allowed parameters <span class="math inline">\Theta</span>.</p>
 <p><a href="#def-ml-model" class="quarto-xref">Definition&nbsp;<span>1.2</span></a> might be new, but you are already familiar with some instances of machine learning models:</p>
 <div class="callout callout-style-simple callout-caution no-icon">
@@ -1988,7 +1988,7 @@ Figure&nbsp;1.6: Speculated architecture used in OpenAI’s SORA model.. [<a hre
 </div>
 <div class="callout-body-container">
 <div id="def-risk" class="definition theorem">
-<p><span class="theorem-title"><strong>Definition 1.3 (Risk)</strong></span> Given a map <span class="math inline">f : \mathcal{X} \rightarrow \mathcal{Y}</span>, we define the <em>risk</em> as <span class="math display">
+<p><span class="theorem-title"><strong>Definition 1.3 (Risk)</strong></span> Given a map <span class="math inline">f : \mathcal{X} \rightarrow \mathcal{Z}</span>, we define the <em>risk</em> as <span class="math display">
 \mathcal{R}(f) = \mathbb{E}_{(\mathbf{X},\mathbf{Y}) \sim P} [ L(\mathbf{Y},f(\mathbf{X})) ] .
 </span></p>
 </div>
@@ -2023,7 +2023,7 @@ Figure&nbsp;1.6: Speculated architecture used in OpenAI’s SORA model.. [<a hre
 </div>
 <div class="callout-body-container">
 <div id="def-empirical-risk" class="definition theorem">
-<p><span class="theorem-title"><strong>Definition 1.4 (Empirical Risk)</strong></span> Given a map <span class="math inline">f : \mathcal{X} \rightarrow \mathcal{Y}</span>, we define the <em>empirical risk</em> as <span class="math display">
+<p><span class="theorem-title"><strong>Definition 1.4 (Empirical Risk)</strong></span> Given a map <span class="math inline">f : \mathcal{X} \rightarrow \mathcal{Z}</span>, we define the <em>empirical risk</em> as <span class="math display">
 \mathcal{R}_n(f) = \frac{1}{n} \sum_{i=1}^n L(\mathbf{y}_i,f(\mathbf{x}_i)) .
 </span></p>
 </div>

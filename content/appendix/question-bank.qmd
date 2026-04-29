@@ -1269,7 +1269,7 @@ $\langle \boldsymbol{\phi}(\mathbf{x}), \boldsymbol{\phi}(\mathbf{x}') \rangle$,
 
 
 
-::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4 stochastic-gradient-descent" data-difficulty="2"}
+::: {.callout-important .question appearance="minimal" data-tags="exercise-sheet-4 stochastic-gradient-descent" data-difficulty="2" #q-sgd-minibatch-size}
 ## Optimal minibatch size for stochastic gradient descent [{{< fa star >}}{{< fa star >}}]{.advanced title="Non-Examinable content."}
 
 (This question is intended only for students familiar with Lagrange multipliers.)

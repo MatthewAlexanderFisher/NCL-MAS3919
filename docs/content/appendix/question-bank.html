@@ -1850,13 +1850,13 @@ k(\mathbf{x},\mathbf{x}')
 </details>
 </div>
 </div>
-<div class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4 stochastic-gradient-descent" data-difficulty="2">
+<div id="q-sgd-minibatch-size" class="question callout callout-style-simple callout-important no-icon callout-titled" data-tags="exercise-sheet-4 stochastic-gradient-descent" data-difficulty="2">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Optimal minibatch size for stochastic gradient descent <span class="advanced" title="Non-Examinable content."><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>
+Important&nbsp;14: Optimal minibatch size for stochastic gradient descent <span class="advanced" title="Non-Examinable content."><i class="fa-solid fa-star" aria-label="star"></i><i class="fa-solid fa-star" aria-label="star"></i></span>
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1904,7 +1904,7 @@ m = \frac{C}{T}.
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;14: Machine learning tasks
+Important&nbsp;15: Machine learning tasks
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1941,7 +1941,7 @@ Solution
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;15: <span class="math inline">\epsilon</span>-greedy bandits
+Important&nbsp;16: <span class="math inline">\epsilon</span>-greedy bandits
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -2015,7 +2015,7 @@ Solution
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;16: <span class="math inline">k</span>-means
+Important&nbsp;17: <span class="math inline">k</span>-means
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -2043,7 +2043,7 @@ The datum <span class="math inline">5</span> lies exactly half way between <span
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;17: Score matching and maximum likelihood <span class="advanced" title="MAS8607 content"><i class="fa-solid fa-star" aria-label="star"></i></span>
+Important&nbsp;18: Score matching and maximum likelihood <span class="advanced" title="MAS8607 content"><i class="fa-solid fa-star" aria-label="star"></i></span>
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -2150,7 +2150,7 @@ J(\boldsymbol{\mu},\boldsymbol{\Omega})
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;18: Ethical considerations
+Important&nbsp;19: Ethical considerations
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -2185,7 +2185,7 @@ Information on LinkedIn may be incomplete, outdated or inaccurate.</p></li>
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;19: PyTorch tensors: vectors and matrices I
+Important&nbsp;20: PyTorch tensors: vectors and matrices I
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -2235,7 +2235,7 @@ B
 Solution
 </summary>
 <p>One possible implementation in PyTorch is given below:</p>
-<div id="6a34001b" class="cell" data-execution_count="2">
+<div id="45db24f0" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Part 1: create vector and matrices</span></span>
@@ -2323,13 +2323,13 @@ tensor(42.)</code></pre>
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;20: PyTorch tensors: vectors and matrices II
+Important&nbsp;21: PyTorch tensors: vectors and matrices II
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>In PyTorch, it is common to work with a <strong>batch of matrices</strong>, where several matrices are stored together in a single tensor.</p>
 <p>For example, the following code defines a batch of three <span class="math inline">2 \times 2</span> matrices and a vector of length <span class="math inline">2</span>, and computes a matrix–vector product.</p>
-<div id="700adf8a" class="cell" data-execution_count="3">
+<div id="b7d743b4" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.tensor(</span>
@@ -2361,7 +2361,7 @@ Important&nbsp;20: PyTorch tensors: vectors and matrices II
 <li><p>Explain in words why PyTorch is able to perform this computation, even though <code>A</code> is not a single matrix.</p></li>
 <li><p>Suppose that, without changing <code>A</code>, instead we define <code>x</code> as in the following code. State the shape of <code>A @ x</code>.</p></li>
 </ol>
-<div id="95c923cc" class="cell" data-execution_count="4">
+<div id="38bb83e1" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    [</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">1</span>, <span class="dv">2</span>],</span>
@@ -2445,13 +2445,13 @@ Solution
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important&nbsp;21: PyTorch tensors: vectors and matrices III
+Important&nbsp;22: PyTorch tensors: vectors and matrices III
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>In deep learning, tensors often contain <strong>batches of matrices</strong>, and it is important to understand the shapes of the outputs of matrix multiplication.</p>
 <p>Consider the following PyTorch code.</p>
-<div id="3c57c1f1" class="cell" data-execution_count="5">
+<div id="45a1924f" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.zeros((<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span>

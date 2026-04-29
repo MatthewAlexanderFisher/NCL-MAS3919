@@ -769,11 +769,11 @@ The answer to this question will be broken down into two parts:
 ### Machine Learning Model
 A **machine learning model** (or simply **model**) for a supervised learning task as in @def-supervised-learning-task is a collection $\mathcal{F}$ of maps 
 $$
-f : \mathcal{X} \rightarrow \mathcal{Y}.
+f : \mathcal{X} \rightarrow \mathcal{Z}.
 $$
 :::
 
-In practice the elements of $\mathcal{F}$ are usually parametrised, denoted $f_\theta : \mathcal{X} \rightarrow \mathcal{Y}$ for some *parameters* $\theta$ from a suitable index set $\Theta$.
+In practice the elements of $\mathcal{F}$ are usually parametrised, denoted $f_\theta : \mathcal{X} \rightarrow \mathcal{Z}$ for some *parameters* $\theta$ from a suitable index set $\Theta$.
 
 It is then equivalent to specify either the set $\mathcal{F}$ or the form of the parametric function $f_\theta$ together with the set of allowed parameters $\Theta$.
 
@@ -1129,7 +1129,7 @@ To state the idea it is convenient to assign a name to the quantity in @eq-pre-r
 
 ::: {.definition #def-risk}
 ### Risk
-Given a map $f : \mathcal{X} \rightarrow \mathcal{Y}$, we define the *risk* as
+Given a map $f : \mathcal{X} \rightarrow \mathcal{Z}$, we define the *risk* as
 $$
 \mathcal{R}(f) = \mathbb{E}_{(\mathbf{X},\mathbf{Y}) \sim P} [ L(\mathbf{Y},f(\mathbf{X})) ] .
 $$
@@ -1148,7 +1148,7 @@ The key idea of *empirical risk minimisation* is to work instead with an empiric
 
 ::: {.definition #def-empirical-risk}
 ### Empirical Risk
-Given a map $f : \mathcal{X} \rightarrow \mathcal{Y}$, we define the *empirical risk* as
+Given a map $f : \mathcal{X} \rightarrow \mathcal{Z}$, we define the *empirical risk* as
 $$
 \mathcal{R}_n(f) = \frac{1}{n} \sum_{i=1}^n L(\mathbf{y}_i,f(\mathbf{x}_i)) .
 $$

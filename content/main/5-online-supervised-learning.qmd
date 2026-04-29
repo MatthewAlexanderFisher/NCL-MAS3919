@@ -4,7 +4,7 @@ execute:
 jupyter: mas2901
 ---
 
-# Online Supervised Learning
+# Online Supervised Learning {#sec-online-supervised-learning}
 
 Up to this point we have talked about training a machine learning model once, using a fixed dataset, after which the model is deployed for its intended task. 
 

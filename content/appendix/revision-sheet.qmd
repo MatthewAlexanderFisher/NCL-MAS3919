@@ -9,4 +9,5379 @@ tbl-cap-location: bottom
 
 # Revision Sheet {.unnumbered}
 
-Under Construction...
+This page provides a concise summary of all **examinable material** for the MAS3919/MAS8607 exam. If a topic appears in the main notes **but is not included here**, you may assume it is **not examinable**. A dedicated section at the end lists all **non-examinable** content explicitly.
+
+
+:::{.callout-tip}
+### Revision Advice
+The revision sheet is intended to help you identify what you need to revise. 
+
+However, you should also make careful use of the **Specimen Exams** available on [Canvas](https://ncl.instructure.com/courses/69429/modules). 
+
+The specimen exams are very useful revision resources because they illustrate the style, structure, and level of detail of the kinds of questions that may appear in the exam.
+:::
+
+The revision sheet is organised as follows:
+
+1. @sec-exam-details: Addresses common questions about the structure and format of the exam.
+2. @sec-examinable-content-summary: Summarises all examinable material from the notes and highlights the **essential points** to focus on during revision.
+3. @sec-non-examinable-content: Lists all material from the main notes that is **not** examinable.
+
+Similarly to the main notes, the presence of a [{{< fa star >}}]{.advanced title="MAS8607 Content"} symbol indicates content that is examinable for MAS8607 students but not for MAS3919 students. If a topic does not have this symbol, it is examinable for both MAS3919 and MAS8607 students.
+
+
+## Exam Details {#sec-exam-details}
+
+The exam will assess your understanding of the mathematical and statistical ideas developed in the module. Key points:
+
+1. **Formula Sheet**
+
+   * There will be **no separate formula sheet** provided in the exam.
+   * In most questions, any formulae required to answer the question will be provided.
+   * However, you should know some basic standard formulae from the course, such as the probability density function of the Normal distribution and other common distributions encountered in the module.
+
+2. **Statistical Tables**
+
+   * No statistical tables will be provided.
+   * The exam will not require the use of statistical tables.
+
+3. **Use of R/Python**
+
+   * No exam question will require writing, reading, or interpreting R or Python code.
+   * The exam focuses on mathematical understanding, statistical reasoning, and interpretation rather than programming.
+
+4. **Exam Structure**
+
+   The structure of the exam depends on whether you are taking **MAS3919** or **MAS8607**.
+
+   **MAS3919 students**
+
+   * The exam consists of **one part**.
+   * There are **four questions**, each worth **30 marks**.
+   * You may answer all four questions if you wish.
+   * Only your **best three** answers will count towards your final mark.
+   * Therefore, your final mark will be based on a total of **90 marks**.
+
+   **MAS8607 students**
+
+   * The exam consists of **two parts**.
+   * The first part contains **one compulsory question** focusing on MAS8607-only content.
+   * The second part contains the same four questions available to MAS3919 students.
+   * You should answer **two** questions from this second part.
+   * Therefore, MAS8607 students answer **three questions in total**, each worth **30 marks**, for a total of **90 marks**.
+
+5. **General Exam Notes**
+
+   * You should show clear reasoning and use notation carefully.
+   * Marks may be deducted for unsupported answers, incomplete working, or ambiguous notation.
+   * You are expected to understand the role of key mathematical objects introduced in the module, such as input spaces, target spaces, prediction spaces, loss functions, model classes, parameters, risks, and training objectives.
+   * Unless a question explicitly asks for a derivation, the emphasis will usually be on applying definitions, interpreting mathematical expressions, and explaining the statistical meaning of the relevant concepts.
+
+
+# Examinable Content {#sec-examinable-content-summary}
+
+## Chapter 1 - Overview of Machine Learning
+
+<span class="xref-no-num">[Chapter 1 @sec-overview-of-ml introduces]</span> introduces the **foundational concepts** used throughout the course. The main aim of this chapter is to set up machine learning as a mathematical problem: we define the <span class="xref-no-num">[supervised learning task @def-supervised-learning-task]</span>, introduce <span class="xref-no-num">[machine learning models @def-ml-model]</span> as classes of candidate functions, and explain how models are fitted using <span class="xref-no-num">[training objectives @sec-training]</span> such as <span class="xref-no-num">[empirical risk minimisation @sec-erm]</span> and <span class="xref-no-num">[maximum likelihood @sec-max-like]</span>.
+
+The chapter also explains why performance on the training data is not enough: the central goal is to obtain good performance on new data drawn from the same underlying distribution. This motivates the distinction between <span class="xref-no-num">[risk @def-risk]</span> and <span class="xref-no-num">[empirical risk @def-empirical-risk]</span>, as well as practical methods for <span class="xref-no-num">[performance assessment @sec-perf-assess]</span>, such as <span class="xref-no-num">[cross-validation @sec-cross-val]</span> and <span class="xref-no-num">[benchmarking @sec-benchmarking]</span>.
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-supervised-learning-task">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Be able to recall and interpret the <span class="xref-no-num">[definition of a supervised learning task @def-supervised-learning-task]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-supervised-learning-task" hidden>
+
+A **supervised learning task** is a machine learning problem where we are given examples of inputs together with their correct outputs, and the aim is to learn a function which makes good predictions on new, unseen data.
+
+Mathematically, we fix three sets:
+
+- $\mathcal{X}$ is the **input space** or **feature space**.  
+  Each input $\mathbf{x} \in \mathcal{X}$ represents the observed information used to make a prediction.  
+  For example, $\mathcal{X}$ might be $\mathbb{R}^p$ for tabular data with $p$ features, or a set of images.
+
+- $\mathcal{Y}$ is the **target space** or **label space**.  
+  Each target $\mathbf{y} \in \mathcal{Y}$ represents the true value we would like to predict.  
+  For example, in binary classification we might have $\mathcal{Y} = \{0,1\}$, while in regression we might have $\mathcal{Y} = \mathbb{R}$.
+
+- $\mathcal{Z}$ is the **prediction space** or **output space** of the model.  
+  A model does not have to output an element of $\mathcal{Y}$ directly. For example, in classification the true label might satisfy $y \in \{1,\dots,K\}$, while the model output might be a vector of class probabilities in $\mathcal{Z} = [0,1]^K$ or a vector of logits in $\mathcal{Z} = \mathbb{R}^K$.
+
+The data are assumed to come from an unknown probability distribution $P$ on $\mathcal{X} \times \mathcal{Y}$. This means that a random input-output pair $(\mathbf{X},\mathbf{Y})$ is sampled according to
+
+$$
+(\mathbf{X},\mathbf{Y}) \sim P.
+$$
+
+The training dataset
+
+$$
+\{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^n
+$$
+
+consists of $n$ independent samples from this distribution. The key point is that the training data are only a finite sample from the true data-generating distribution $P$.
+
+A supervised learning model is a function
+
+$$
+f : \mathcal{X} \rightarrow \mathcal{Z}.
+$$
+
+Given an input $\mathbf{x}$, the model produces a prediction $f(\mathbf{x}) \in \mathcal{Z}$.
+
+The quality of a prediction is measured using a **loss function**
+
+$$
+L : \mathcal{Y} \times \mathcal{Z} \rightarrow \mathbb{R}.
+$$
+
+The loss compares the true target $\mathbf{Y}$ with the prediction $f(\mathbf{X})$. The expected loss,
+
+$$
+\mathcal{R}(f)
+=
+\mathbb{E}_{(\mathbf{X},\mathbf{Y}) \sim P}
+\left[
+L(\mathbf{Y},f(\mathbf{X}))
+\right],
+$$
+
+is called the **population risk**, **expected risk**, or **generalisation error** of $f$.
+
+The supervised learning task is to find a function $f : \mathcal{X} \rightarrow \mathcal{Z}$ for which this expected loss is as small as possible.
+
+In practice, $P$ is unknown, so we cannot usually compute $\mathcal{R}(f)$ exactly. Instead, we use the training dataset to choose a model that we hope has small expected loss on new data drawn from the same distribution.
+
+</div>
+</div>
+
+
+<details class="practice-details">
+<summary><em> Supervised Learning — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Question Bank | Formulating a supervised learning task | <span class="xref-no-num">[Link @q-formulate-sl-task]</span> |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::
+
+</details>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-ml-model">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Be able to recall and interpret the <span class="xref-no-num">[definition of a machine learning model @def-ml-model]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-ml-model" hidden>
+
+A **machine learning model** is a collection of candidate functions that could be used to solve a supervised learning task.
+
+In the supervised learning task, the aim is to find a function
+
+$$
+f : \mathcal{X} \rightarrow \mathcal{Z}
+$$
+
+which maps an input $\mathbf{x} \in \mathcal{X}$ to a prediction $f(\mathbf{x}) \in \mathcal{Z}$.
+
+A machine learning model specifies which functions we are willing to consider. That is, it defines a set
+
+$$
+\mathcal{F}
+$$
+
+whose elements are possible prediction functions
+
+$$
+f : \mathcal{X} \rightarrow \mathcal{Z}.
+$$
+
+Therefore,
+
+$$
+\mathcal{F}
+=
+\{f : \mathcal{X} \rightarrow \mathcal{Z} \text{ satisfying some chosen structure}\}.
+$$
+
+For example, $\mathcal{F}$ might be:
+
+- the set of all linear functions,
+- the set of all polynomial functions of degree at most $d$,
+- the set of all decision trees up to a certain depth,
+- the set of all neural networks with a given architecture.
+
+The set $\mathcal{F}$ is important because it determines what kinds of relationships the learning algorithm can represent. If $\mathcal{F}$ is too simple, it may not contain a good approximation to the true input-output relationship. If $\mathcal{F}$ is too flexible, it may fit the training data very well but generalise poorly to new data.
+
+In practice, the functions in $\mathcal{F}$ are usually parametrised. We write these functions as
+
+$$
+f_{\boldsymbol{\theta}} : \mathcal{X} \rightarrow \mathcal{Z},
+$$
+
+where $\boldsymbol{\theta}$ is a vector of parameters belonging to some parameter space $\Theta$.
+
+The model can then be written as
+
+$$
+\mathcal{F}
+=
+\{f_{\boldsymbol{\theta}} : \boldsymbol{\theta} \in \Theta\}.
+$$
+
+This means that specifying a machine learning model is equivalent to specifying:
+
+1. the form of the function $f_{\boldsymbol{\theta}}$, and  
+2. the set of allowed parameter values $\Theta$.
+
+For example, in linear regression with $\mathcal{X} = \mathbb{R}^p$ and $\mathcal{Z} = \mathbb{R}$, we might use the model
+
+$$
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\theta_0 + \theta_1 x_1 + \cdots + \theta_p x_p,
+$$
+
+where
+
+$$
+\boldsymbol{\theta}
+=
+(\theta_0,\theta_1,\dots,\theta_p)
+\in \mathbb{R}^{p+1}.
+$$
+
+Here, the machine learning model is the set of all linear functions from $\mathbb{R}^p$ to $\mathbb{R}$.
+
+The distinction between a **model** and **training** is important:
+
+- the **model** is the set $\mathcal{F}$ of candidate functions;
+- **training** is the process of choosing a particular function $f \in \mathcal{F}$, usually by choosing suitable parameter values $\boldsymbol{\theta} \in \Theta$.
+
+So, before training, the model is a whole collection of possible functions. After training, we have selected one particular fitted function from that collection.
+
+</div>
+</div>
+
+
+<details class="practice-details">
+<summary><em>Machine Learning Models — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Question Bank | Neural networks and linear models | <span class="xref-no-num">[Link @q-nn-linear-model]</span> |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::
+
+</details>
+
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-training-objectives">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the two main approaches to <span class="xref-no-num">[training a machine learning model @sec-training]</span>: empirical risk minimisation and maximum likelihood.
+</span>
+</div>
+
+<div class="revision-content" id="rev-training-objectives" hidden>
+
+To **train** a <span class="xref-no-num">[machine learning model @def-ml-model]</span> means to use the training dataset
+
+$$
+\{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^n
+$$
+
+to choose a particular function from the model class $\mathcal{F}$.
+
+Recall that a <span class="xref-no-num">[machine learning model @def-ml-model]</span> is a collection of candidate functions
+
+$$
+\mathcal{F}
+=
+\{f : \mathcal{X} \rightarrow \mathcal{Z}\}.
+$$
+
+Given a <span class="xref-no-num">[supervised learning task @def-supervised-learning-task]</span>, the ideal goal is to find a function $f \in \mathcal{F}$ with small <span class="xref-no-num">[risk @def-risk]</span>
+
+$$
+\mathcal{R}(f)
+=
+\mathbb{E}_{(\mathbf{X},\mathbf{Y}) \sim P}
+\left[
+L(\mathbf{Y},f(\mathbf{X}))
+\right].
+$$
+
+This quantity is called the **population risk**, **expected risk**, or **generalisation error**.
+
+However, the probability distribution $P$ is unknown. Therefore, we cannot usually compute $\mathcal{R}(f)$ exactly. <span class="xref-no-num">[Training @sec-training]</span> is the process of replacing this ideal but unavailable objective with an objective that can be computed from the training data.
+
+In this module, there are two main approaches to training:
+
+1. <span class="xref-no-num">[Empirical risk minimisation @sec-erm]</span>
+
+   In empirical risk minimisation, we replace the unknown population risk by the <span class="xref-no-num">[empirical risk @def-empirical-risk]</span>, which is the average loss on the training dataset. That is, we choose a function $f \in \mathcal{F}$ which makes
+
+   $$
+   \frac{1}{n}
+   \sum_{i=1}^n
+   L(\mathbf{y}_i,f(\mathbf{x}_i))
+   $$
+
+   as small as possible.
+
+   This approach directly says: choose the model that performs well on the observed training examples, according to the chosen loss function.
+
+2. <span class="xref-no-num">[Maximum likelihood @sec-max-like]</span>
+
+   In maximum likelihood, we begin by specifying a probabilistic model for the conditional distribution of the target $\mathbf{Y}$ given the input $\mathbf{X}$. For example, we might specify a model of the form
+
+   $$
+   p_{\boldsymbol{\theta}}(\mathbf{y}\mid \mathbf{x}).
+   $$
+
+   We then choose the parameter value $\boldsymbol{\theta}$ which makes the observed training targets most likely under the model.
+
+   Equivalently, maximum likelihood can often be written as minimising the negative log-likelihood
+
+   $$
+   - \sum_{i=1}^n
+   \log p_{\boldsymbol{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i).
+   $$
+
+   This means that <span class="xref-no-num">[maximum likelihood @sec-max-like]</span> can be viewed as a special case of <span class="xref-no-num">[empirical risk minimisation @sec-erm]</span>, where the loss function is the negative log-likelihood.
+
+The key distinction is:
+
+- <span class="xref-no-num">[Empirical risk minimisation @sec-erm]</span> starts with a loss function and minimises the average training loss;
+- <span class="xref-no-num">[Maximum likelihood @sec-max-like]</span> starts with a probabilistic model and chooses parameters that make the observed data likely.
+
+In many important examples, these two perspectives lead to the same training objective. For example, least squares regression can be interpreted both as empirical risk minimisation with squared error loss and as maximum likelihood under a Gaussian noise model.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-risk-empirical-risk">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the definitions of <span class="xref-no-num">[risk @def-risk]</span> and <span class="xref-no-num">[empirical risk @def-empirical-risk]</span>, and be able to use them to identify empirical risk minimisers in simple cases.
+</span>
+</div>
+
+<div class="revision-content" id="rev-risk-empirical-risk" hidden>
+
+The <span class="xref-no-num">[risk @def-risk]</span> of a prediction function measures its expected loss on new data drawn from the true data-generating distribution.
+
+Given a <span class="xref-no-num">[supervised learning task @def-supervised-learning-task]</span> with input space $\mathcal{X}$, target space $\mathcal{Y}$, prediction space $\mathcal{Z}$, probability distribution $P$ on $\mathcal{X} \times \mathcal{Y}$, and loss function
+
+$$
+L : \mathcal{Y} \times \mathcal{Z} \rightarrow \mathbb{R},
+$$
+
+the risk of a function
+
+$$
+f : \mathcal{X} \rightarrow \mathcal{Z}
+$$
+
+is
+
+$$
+\mathcal{R}(f)
+=
+\mathbb{E}_{(\mathbf{X},\mathbf{Y}) \sim P}
+\left[
+L(\mathbf{Y},f(\mathbf{X}))
+\right].
+$$
+
+The risk is also called the **population risk**, **expected risk**, or **generalisation error**.
+
+The risk is the quantity we would ideally like to minimise. That is, given a <span class="xref-no-num">[machine learning model @def-ml-model]</span> $\mathcal{F}$, we would like to find
+
+$$
+f^\star \in \argmin_{f \in \mathcal{F}} \mathcal{R}(f).
+$$
+
+However, the risk usually cannot be computed exactly, because the distribution $P$ is unknown. In practice, we only observe a finite training dataset
+
+$$
+\{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^n.
+$$
+
+The <span class="xref-no-num">[empirical risk @def-empirical-risk]</span> replaces the unknown expectation over $P$ by an average over the training data:
+
+$$
+\mathcal{R}_n(f)
+=
+\frac{1}{n}
+\sum_{i=1}^n
+L(\mathbf{y}_i,f(\mathbf{x}_i)).
+$$
+
+The empirical risk is therefore the average loss of the model on the observed training examples.
+
+The key distinction is:
+
+- $\mathcal{R}(f)$ is the expected loss on new data from the true distribution $P$;
+- $\mathcal{R}_n(f)$ is the average loss on the training dataset.
+
+<span class="xref-no-num">[Empirical risk minimisation @def-empirical-risk-minimisation]</span> means choosing a function from the model class which minimises the empirical risk:
+
+$$
+f_n \in \argmin_{f \in \mathcal{F}} \mathcal{R}_n(f).
+$$
+
+The notation $\argmin$ returns the set of minimisers. Therefore, if there is <span class="xref-no-num">[more than one function @rem-minimiser-of-risk]</span> with the same minimum empirical risk, any one of them can be chosen as an empirical risk minimiser.
+
+If the model class is parametrised as
+
+$$
+\mathcal{F}
+=
+\{f_{\boldsymbol{\theta}} : \boldsymbol{\theta} \in \Theta\},
+$$
+
+then empirical risk minimisation means choosing parameters
+
+$$
+\hat{\boldsymbol{\theta}}
+\in
+\argmin_{\boldsymbol{\theta} \in \Theta}
+\mathcal{R}_n(f_{\boldsymbol{\theta}}).
+$$
+
+Equivalently,
+
+$$
+\hat{\boldsymbol{\theta}}
+\in
+\argmin_{\boldsymbol{\theta} \in \Theta}
+\frac{1}{n}
+\sum_{i=1}^n
+L(\mathbf{y}_i,f_{\boldsymbol{\theta}}(\mathbf{x}_i)).
+$$
+
+In simple cases, the empirical risk minimiser can be computed directly. The usual strategy is:
+
+1. write down the empirical risk $\mathcal{R}_n(f_{\boldsymbol{\theta}})$;
+2. simplify it as a function of $\boldsymbol{\theta}$;
+3. minimise this function, for example by differentiation or by comparing possible values.
+
+For example, suppose $\mathcal{Y} = \mathcal{Z} = \mathbb{R}$, the loss is squared error,
+
+$$
+L(y,z) = (y-z)^2,
+$$
+
+and the model class contains only constant functions
+
+$$
+f_c(x) = c,
+\qquad c \in \mathbb{R}.
+$$
+
+Then the empirical risk is
+
+$$
+\mathcal{R}_n(f_c)
+=
+\frac{1}{n}
+\sum_{i=1}^n
+(y_i-c)^2.
+$$
+
+This is minimised when
+
+$$
+c
+=
+\frac{1}{n}
+\sum_{i=1}^n y_i.
+$$
+
+So, for this model class and loss function, the empirical risk minimiser is the constant function which always predicts the sample mean of the training targets.
+
+Similarly, if the population risk were computable, the corresponding population risk minimiser in this example would be
+
+$$
+c^\star
+=
+\mathbb{E}[Y].
+$$
+
+This illustrates the relationship between risk and empirical risk: the empirical risk minimiser uses the training sample, while the population risk minimiser depends on the unknown distribution $P$.
+
+</div>
+</div>
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-maximum-likelihood">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[maximum likelihood @sec-max-like]</span> as a training objective, and understand how it can be viewed as a special case of <span class="xref-no-num">[empirical risk minimisation @sec-erm]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-maximum-likelihood" hidden>
+
+<span class="xref-no-num">[Maximum likelihood @sec-max-like]</span> is a statistical method for choosing parameters in a probabilistic model.
+
+In the context of a <span class="xref-no-num">[supervised learning task @def-supervised-learning-task]</span>, suppose we model the conditional distribution of the target $\mathbf{Y}$ given the input $\mathbf{X} = \mathbf{x}$ using a parametric model
+
+$$
+p_{\bm{\theta}}(\mathbf{y} \mid \mathbf{x}),
+$$
+
+where $\bm{\theta} \in \Theta$ is the parameter vector.
+
+Given training data
+
+$$
+\{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^n,
+$$
+
+the likelihood function is
+
+$$
+\bm{\theta}
+\mapsto
+\prod_{i=1}^n
+p_{\bm{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i).
+$$
+
+The maximum likelihood estimator chooses parameter values which make the observed training outputs as likely as possible under the model:
+
+$$
+\hat{\bm{\theta}}
+\in
+\argmax_{\bm{\theta} \in \Theta}
+\prod_{i=1}^n
+p_{\bm{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i).
+$$
+
+Equivalently, since the logarithm is monotone increasing, we can maximise the log-likelihood
+
+$$
+\sum_{i=1}^n
+\log p_{\bm{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i).
+$$
+
+This is the same as minimising the negative log-likelihood:
+
+$$
+\hat{\bm{\theta}}
+\in
+\argmin_{\bm{\theta} \in \Theta}
+\frac{1}{n}
+\sum_{i=1}^n
+-
+\log p_{\bm{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i).
+$$
+
+The factor $1/n$ does not change the minimiser; it simply turns the objective into an average over the training data.
+
+This shows that maximum likelihood can be viewed as a special case of <span class="xref-no-num">[empirical risk minimisation @sec-erm]</span>. In particular, it corresponds to using the loss function
+
+$$
+L(\mathbf{y}, f_{\bm{\theta}}(\mathbf{x}))
+=
+-
+\log p_{\bm{\theta}}(\mathbf{y} \mid \mathbf{x}).
+$$
+
+This loss is called the **negative log-likelihood loss** or **logarithmic loss**.
+
+In this formulation, the model output is not a single predicted label or value. Instead, the model outputs a probability distribution over possible targets. That is, we can think of the model as a map
+
+$$
+f_{\bm{\theta}} : \mathcal{X} \rightarrow \mathcal{P}(\mathcal{Y}),
+$$
+
+where $\mathcal{P}(\mathcal{Y})$ denotes the set of probability distributions on $\mathcal{Y}$. For an input $\mathbf{x}$,
+
+$$
+f_{\bm{\theta}}(\mathbf{x})
+=
+p_{\bm{\theta}}(\cdot \mid \mathbf{x}).
+$$
+
+So, in this setting, the prediction space is
+
+$$
+\mathcal{Z}
+=
+\mathcal{P}(\mathcal{Y}).
+$$
+
+The key connection is:
+
+- <span class="xref-no-num">[Empirical risk minimisation @sec-erm]</span> starts with a loss function and minimises the average loss on the training data.
+- <span class="xref-no-num">[Maximum likelihood @sec-max-like]</span> starts with a probabilistic model and chooses parameters that make the observed data likely.
+- Maximum likelihood becomes empirical risk minimisation when the loss is the negative log-likelihood.
+
+A key example is linear regression with Gaussian noise. Suppose
+
+$$
+Y \mid X = x
+\sim
+\mathcal{N}(\theta_1 + \theta_2 x, \sigma^2),
+$$
+
+where $\sigma^2$ is fixed and
+
+$$
+\bm{\theta}
+=
+(\theta_1,\theta_2).
+$$
+
+Using the density of the <span class="xref-no-num">[normal distribution @sec-normal]</span>, the conditional density is
+
+$$
+p_{\bm{\theta}}(y_i \mid x_i)
+=
+\frac{1}{\sqrt{2\pi\sigma^2}}
+\exp
+\left(
+-
+\frac{1}{2\sigma^2}
+(y_i - (\theta_1 + \theta_2 x_i))^2
+\right).
+$$
+
+Therefore, the likelihood is
+
+$$
+\prod_{i=1}^n
+p_{\bm{\theta}}(y_i \mid x_i)
+=
+\frac{1}{(2\pi\sigma^2)^{n/2}}
+\exp
+\left(
+-
+\frac{1}{2\sigma^2}
+\sum_{i=1}^n
+(y_i - (\theta_1 + \theta_2 x_i))^2
+\right).
+$$
+
+The prefactor does not depend on $\bm{\theta}$, and the exponential function is monotone increasing. Therefore, maximising the likelihood is equivalent to minimising
+
+$$
+\sum_{i=1}^n
+(y_i - (\theta_1 + \theta_2 x_i))^2.
+$$
+
+Thus, in this example, maximum likelihood is equivalent to minimising the <span class="xref-no-num">[empirical risk @def-empirical-risk]</span> with squared error loss
+
+$$
+L(y,z) = (y-z)^2
+$$
+
+and linear model
+
+$$
+f_{\bm{\theta}}(x)
+=
+\theta_1 + \theta_2 x.
+$$
+
+This illustrates an important principle: many familiar machine learning objectives can be understood either as empirical risk minimisation problems or as maximum likelihood problems under a suitable probabilistic model.
+
+However, maximum likelihood is not always the most convenient or robust approach in modern machine learning.
+
+Some limitations are:
+
+1. It requires us to specify a probabilistic model $p_{\bm{\theta}}(\mathbf{y}\mid \mathbf{x})$, which may be difficult for complex data.
+2. It can be sensitive to outliers, because observations assigned very small probability can create very large negative log-likelihood values.
+3. In some settings, especially those related to the <span class="xref-no-num">[manifold hypothesis @def-manifold-hyp]</span>, maximum likelihood may behave poorly because likelihood values can become degenerate or fail to distinguish between models supported on the data manifold.
+
+The more general framework of empirical risk minimisation allows us to choose alternative losses when maximum likelihood is not appropriate. For example, in regression, squared error loss
+
+$$
+L(y,z) = (y-z)^2
+$$
+
+can be replaced by absolute error loss
+
+$$
+L(y,z) = |y-z|,
+$$
+
+which is often less sensitive to large outliers.
+
+</div>
+</div>
+
+<details class="practice-details">
+<summary><em>Empirical Risk Minimisation — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Exercises | Simple Regression Example | @exr-sim-reg-model |
+| Exercises | ERM for the linear model | @exr-least-squares |
+| Exercises | Robustness to outliers with the absolute deviation loss | @exr-absolute-deviation-loss |
+| Question Bank | Cross-entropy Loss | <span class="xref-no-num">[Link @q-cross-entropy-loss]</span> |
+| Question Bank | The 0-1 loss | <span class="xref-no-num">[Link @q-zero-one-loss]</span> |
+| Question Bank | Mean estimation as ERM | <span class="xref-no-num">[Link @q-mean-est]</span> |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::
+
+</details>
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-performance-assessment">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[performance assessment @sec-perf-assess]</span>, including over-fitting, held-out test error, <span class="xref-no-num">[cross-validation @sec-cross-val]</span>, and <span class="xref-no-num">[benchmarking @sec-benchmarking]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-performance-assessment" hidden>
+
+After <span class="xref-no-num">[training a machine learning model @sec-training]</span>, we obtain a fitted function
+
+$$
+f_{\hat{\boldsymbol{\theta}}} \in \mathcal{F}.
+$$
+
+A natural question is whether this trained model is actually any good.
+
+The model may have small <span class="xref-no-num">[empirical risk @def-empirical-risk]</span> on the training dataset,
+
+$$
+\mathcal{R}_n(f_{\hat{\boldsymbol{\theta}}})
+=
+\frac{1}{n}
+\sum_{i=1}^n
+L(\mathbf{y}_i,f_{\hat{\boldsymbol{\theta}}}(\mathbf{x}_i)).
+$$
+
+However, this only measures performance on the data used to train the model. It does not necessarily tell us how well the model will perform on new data.
+
+The quantity we really care about is the <span class="xref-no-num">[risk @def-risk]</span>, or population risk,
+
+$$
+\mathcal{R}(f_{\hat{\boldsymbol{\theta}}})
+=
+\mathbb{E}_{(\mathbf{X},\mathbf{Y}) \sim P}
+\left[
+L(\mathbf{Y},f_{\hat{\boldsymbol{\theta}}}(\mathbf{X}))
+\right].
+$$
+
+This measures the expected loss on a new sample
+
+$$
+(\mathbf{X},\mathbf{Y}) \sim P.
+$$
+
+A model is said to be **over-fitted** if it performs very well on the training data but poorly on new data. In other words, over-fitting occurs when
+
+$$
+\mathcal{R}_n(f_{\hat{\boldsymbol{\theta}}})
+$$
+
+is small, but
+
+$$
+\mathcal{R}(f_{\hat{\boldsymbol{\theta}}})
+$$
+
+is large.
+
+This can happen when the model class $\mathcal{F}$ is sufficiently flexible that it can reproduce the training dataset very accurately, but has not learned a pattern that generalises well to unseen data.
+
+The opposite problem is **under-fitting**. A model under-fits when it is too simple to capture the relevant structure in the data, leading to poor performance on both the training data and new data.
+
+The main goal of performance assessment is to estimate how well a trained model will perform on new data. Since the true distribution $P$ is unknown, we cannot usually compute $\mathcal{R}(f_{\hat{\boldsymbol{\theta}}})$ exactly. Instead, we approximate it using data that were not used to train the model.
+
+The simplest approach is to split the available data into two parts:
+
+1. a **training dataset**, used to fit the model;
+2. a **held-out dataset**, used to assess the fitted model.
+
+If the model is trained on the first $m$ observations, then its performance can be assessed on the remaining observations using
+
+$$
+\hat{\mathcal{R}}(f)
+=
+\frac{1}{n-m}
+\sum_{i=m+1}^n
+L(\mathbf{y}_i,f(\mathbf{x}_i)).
+$$
+
+This is the empirical risk of the fitted model computed on held-out data. It is used as an approximation to the population risk.
+
+The key point is that the held-out data must not have been used to train the model. Otherwise, the estimate may be overly optimistic.
+
+<span class="xref-no-num">[Cross-validation @sec-cross-val]</span> extends this idea by repeatedly splitting the data into training and testing parts.
+
+In **$k$-fold cross-validation**, the dataset is divided into $k$ approximately equal parts, called folds. The procedure is:
+
+1. train the model on $k-1$ folds;
+2. test the model on the remaining fold;
+3. repeat this process $k$ times, so that each fold is used as the test fold once;
+4. average the resulting test errors.
+
+If $I_1,\dots,I_k$ denote the folds, and $f^{(-j)}$ denotes the model trained using all folds except fold $j$, then the $k$-fold cross-validation estimate can be written as
+
+$$
+\frac{1}{k}
+\sum_{j=1}^k
+\left[
+\frac{1}{|I_j|}
+\sum_{i \in I_j}
+L(\mathbf{y}_i,f^{(-j)}(\mathbf{x}_i))
+\right].
+$$
+
+The special case $k=n$ is called **leave-one-out cross-validation**. In this case, each test fold contains exactly one observation. Leave-one-out cross-validation uses as much data as possible for training at each step, but it can be computationally expensive because the model must be retrained $n$ times.
+
+Common choices such as $k=5$ or $k=10$ are often used because they provide a compromise between accuracy and computational cost.
+
+In classification problems, it is often important to use **stratified cross-validation**. This means that each fold is constructed so that it approximately preserves the class proportions from the full dataset. For example, if the full dataset contains 70% cats and 30% dogs, each fold should ideally contain approximately 70% cats and 30% dogs. This avoids training or testing on unrepresentative folds.
+
+Performance assessment is also closely related to <span class="xref-no-num">[benchmarking @sec-benchmarking]</span>.
+
+A **benchmark** is a standard dataset or task used to compare different machine learning methods. Since supervised learning tasks have clearly defined inputs, outputs, and losses, different trained models can be compared by evaluating their empirical risk on the same held-out test dataset.
+
+Benchmarking is only meaningful if the test data are truly held out. If researchers repeatedly tune their methods using the test dataset, then the test performance can become biased and overly optimistic.
+
+The main ideas to remember are:
+
+- small training error does not necessarily imply good performance on new data;
+- the population risk $\mathcal{R}(f)$ is the ideal measure of performance;
+- held-out test error approximates the population risk using data not used for training;
+- cross-validation improves on a single train/test split by averaging over multiple splits;
+- stratified cross-validation is useful when class proportions matter;
+- benchmarking compares methods using common held-out datasets.
+
+</div>
+</div>
+
+<details class="practice-details">
+<summary><em>Performance Assessment — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Question Bank | Training a machine learning model |<span class="xref-no-num">[Link @q-training-ml-model]</span> |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::
+
+</details>
+
+
+
+## Chapter 2 - Machine Learning Models
+
+<span class="xref-no-num">[Chapter 2 @sec-ml-models-in-detail]</span> studies two important classes of <span class="xref-no-num">[machine learning model @def-ml-model]</span>:
+
+1. <span class="xref-no-num">[linear models @sec-linear-model]</span>;
+2. <span class="xref-no-num">[neural networks @sec-nn]</span>.
+
+The chapter also introduces several related ideas, including <span class="xref-no-num">[regularisation @sec-regularisation]</span>, <span class="xref-no-num">[featurisation @sec-featurisation]</span>, and <span class="xref-no-num">[dimensionality reduction @sec-dim-reduction]</span>.
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-linear-model">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the definition of a <span class="xref-no-num">[linear model @def-linear-model]</span>, including the role of feature functions and the feature map.
+</span>
+</div>
+
+<div class="revision-content" id="rev-linear-model" hidden>
+
+A <span class="xref-no-num">[linear model @def-linear-model]</span> is a model whose prediction is linear in its parameters.
+
+In our setting, the input is
+$$
+\mathcal{X} = \mathbb{R}^d
+$$
+
+and the prediction space is
+
+$$
+\mathcal{Z} = \mathbb{R}.
+$$
+
+A linear model has the form
+
+$$
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\theta_1 \phi_1(\mathbf{x})
++
+\cdots
++
+\theta_p \phi_p(\mathbf{x}),
+$$
+
+where
+
+$$
+\boldsymbol{\theta}
+=
+(\theta_1,\dots,\theta_p)^\top
+\in
+\mathbb{R}^p
+$$
+
+is the parameter vector, and
+
+$$
+\phi_1,\dots,\phi_p
+$$
+
+are feature functions
+
+$$
+\phi_i : \mathcal{X} \rightarrow \mathbb{R}.
+$$
+
+The feature functions transform the original input $\mathbf{x}$ into quantities that are used by the model. The model then forms a weighted sum of these features, where the weights are the parameters $\theta_1,\dots,\theta_p$.
+
+It is often useful to collect the feature functions into a single vector-valued function
+
+$$
+\boldsymbol{\phi} : \mathcal{X} \rightarrow \mathbb{R}^p
+$$
+
+defined by
+
+$$
+\boldsymbol{\phi}(\mathbf{x})
+=
+\begin{bmatrix}
+\phi_1(\mathbf{x}) \\
+\vdots \\
+\phi_p(\mathbf{x})
+\end{bmatrix}.
+$$
+
+This function is called the **feature map**.
+
+Using the feature map, the linear model can be written compactly as
+
+$$
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\boldsymbol{\theta}^\top \boldsymbol{\phi}(\mathbf{x}).
+$$
+
+The word "linear" refers to linearity with respect to the parameters $\boldsymbol{\theta}$, not necessarily linearity with respect to the original input $\mathbf{x}$.
+
+For example, the model
+
+$$
+f_{\boldsymbol{\theta}}(x)
+=
+\theta_1
++
+\theta_2 x
++
+\theta_3 x^2
+$$
+
+is a linear model, because it is linear in the parameters $\theta_1,\theta_2,\theta_3$. Here the feature functions are
+
+$$
+\phi_1(x)=1,
+\qquad
+\phi_2(x)=x,
+\qquad
+\phi_3(x)=x^2.
+$$
+
+Even though the model is quadratic as a function of $x$, it is still a linear model in the machine learning sense because it is a linear combination of fixed feature functions.
+
+More generally, the model class associated with a linear model is
+
+$$
+\mathcal{F}
+=
+\{
+f_{\boldsymbol{\theta}} : \boldsymbol{\theta} \in \mathbb{R}^p
+\}.
+$$
+
+Training a linear model means choosing the parameter vector $\boldsymbol{\theta}$, usually by minimising an objective such as the <span class="xref-no-num">[empirical risk @def-empirical-risk]</span>.
+
+For example, with squared error loss, training means choosing $\boldsymbol{\theta}$ to make
+
+$$
+\frac{1}{n}
+\sum_{i=1}^n
+\left(
+y_i - f_{\boldsymbol{\theta}}(\mathbf{x}_i)
+\right)^2
+$$
+
+as small as possible.
+
+The main ideas to remember are:
+
+- a linear model is linear in its parameters $\boldsymbol{\theta}$;
+- the feature functions $\phi_i$ determine how the input $\mathbf{x}$ is represented;
+- the feature map $\boldsymbol{\phi}(\mathbf{x})$ collects the features into a vector;
+- using feature functions allows linear models to represent nonlinear relationships in the original input space;
+- training a linear model means choosing the parameter vector $\boldsymbol{\theta}$.
+
+</div>
+</div>
+
+<details class="practice-details">
+<summary><em>Linear Model — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Exercises | ERM for the linear model | @exr-least-squares |
+| Exercises | Robustness to outliers with the absolute deviation loss | @exr-absolute-deviation-loss |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::
+</details>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-regularisation-intuition">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the intuitive role of <span class="xref-no-num">[regularisation @sec-linear-regularisation]</span>, especially for flexible or over-parameterised models.
+</span>
+</div>
+
+<div class="revision-content" id="rev-regularisation-intuition" hidden>
+
+<span class="xref-no-num">[Empirical risk minimisation @sec-erm]</span> trains a model by choosing a function with small empirical risk on the training dataset. For a parametrised model
+
+$$
+\mathcal{F}
+=
+\{f_{\boldsymbol{\theta}} : \boldsymbol{\theta} \in \Theta\},
+$$
+
+this means choosing parameters
+
+$$
+\hat{\boldsymbol{\theta}}
+\in
+\argmin_{\boldsymbol{\theta} \in \Theta}
+\mathcal{R}_n(f_{\boldsymbol{\theta}}).
+$$
+
+However, empirical risk minimisation can fail when the model is too flexible.
+
+A particularly important case is an **over-parameterised model**, where the number of parameters is large relative to the amount of training data. In a <span class="xref-no-num">[linear model @def-linear-model]</span>, this can lead to a rank-deficient design matrix.
+
+For a linear model, write the fitted values on the training data as
+
+$$
+\boldsymbol{\Phi}\boldsymbol{\theta},
+$$
+
+where $\boldsymbol{\Phi}$ is the $n \times p$ design matrix with entries
+
+$$
+\Phi_{ij}
+=
+\phi_j(\mathbf{x}_i).
+$$
+
+With squared error loss, the empirical risk is minimised by solving the stationarity equation
+
+$$
+\frac{1}{n}
+\left[
+-2\boldsymbol{\Phi}^{\top}\mathbf{y}
++
+2\boldsymbol{\Phi}^{\top}\boldsymbol{\Phi}\boldsymbol{\theta}
+\right]
+=
+\mathbf{0}.
+$$
+
+If $\boldsymbol{\Phi}$ is rank deficient, then this equation can have infinitely many solutions. Indeed, if $\mathbf{v}$ lies in the kernel of $\boldsymbol{\Phi}$, meaning
+
+$$
+\boldsymbol{\Phi}\mathbf{v}
+=
+\mathbf{0},
+$$
+
+then $\boldsymbol{\theta}$ and $\boldsymbol{\theta}+\mathbf{v}$ make the same predictions on the training data.
+
+This means that the empirical risk does not contain enough information to choose a unique set of parameters. More generally, a very flexible model may achieve very small training error but still perform poorly on new data. This is the problem of <span class="xref-no-num">[over-fitting @sec-perf-assess]</span>.
+
+<span class="xref-no-num">[Regularisation @sec-linear-regularisation]</span> addresses this by modifying the training objective. Instead of only asking the model to fit the training data, regularisation adds an extra preference for functions with some desirable property.
+
+Most commonly, regularisation penalises model complexity. Intuitively, it discourages unnecessarily complicated functions, even if those functions fit the training data very well.
+
+For example, if two functions fit the training data equally well, a regularised objective may prefer the smoother function, the function with smaller parameter values, or the function that changes less rapidly with respect to the input.
+
+The main intuition is that regularisation helps choose between functions that have similar training performance but different behaviour away from the training data.
+
+The main ideas to remember are:
+
+- empirical risk minimisation can fail for highly flexible or over-parameterised models;
+- over-parameterisation can lead to non-unique empirical risk minimisers;
+- small training error does not necessarily imply good performance on new data;
+- regularisation adds an extra preference beyond fitting the training data;
+- regularisation is often used to discourage overly complex functions and reduce <span class="xref-no-num">[over-fitting @sec-perf-assess]</span>.
+
+</div>
+</div>
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-additive-regularisation">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Be able to state and interpret the definition of <span class="xref-no-num">[additive regularisation @def-additive-reg]</span> in empirical risk minimisation.
+</span>
+</div>
+
+<div class="revision-content" id="rev-additive-regularisation" hidden>
+
+A **regulariser** is a function
+
+$$
+R : \mathcal{F} \rightarrow [0,\infty)
+$$
+
+which assigns a non-negative penalty to each candidate function in the model class.
+
+In <span class="xref-no-num">[additive regularisation @def-additive-reg]</span>, we train the model by minimising the empirical risk plus a regularisation penalty.
+
+The regularised empirical risk objective is
+
+$$
+f_n
+\in
+\argmin_{f \in \mathcal{F}}
+\left[
+\mathcal{R}_n(f)
++
+\lambda_n R(f)
+\right].
+$$
+
+Here:
+
+- $\mathcal{R}_n(f)$ measures how well the model fits the training data;
+- $R(f)$ is the regularisation penalty;
+- $\lambda_n > 0$ controls the strength of the regularisation.
+
+The parameter $\lambda_n$ controls the trade-off between fitting the training data and satisfying the regularisation penalty.
+
+If $\lambda_n$ is small, the empirical risk term dominates. The model is then allowed to fit the training data closely.
+
+If $\lambda_n$ is large, the regularisation term dominates. The model is then more strongly constrained by the penalty.
+
+If the model is parametrised as
+
+$$
+\mathcal{F}
+=
+\{f_{\boldsymbol{\theta}} : \boldsymbol{\theta} \in \Theta\},
+$$
+
+then the regulariser is often written as a function of the parameters,
+
+$$
+R : \Theta \rightarrow [0,\infty).
+$$
+
+The regularised empirical risk objective becomes
+
+$$
+\hat{\boldsymbol{\theta}}
+\in
+\argmin_{\boldsymbol{\theta} \in \Theta}
+\left[
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
++
+\lambda_n R(\boldsymbol{\theta})
+\right].
+$$
+
+A common example is the squared norm penalty
+
+$$
+R(\boldsymbol{\theta})
+=
+\|\boldsymbol{\theta}\|^2.
+$$
+
+This penalises parameter vectors with large Euclidean norm.
+
+For the simple linear model
+
+$$
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\theta_1 x_1
++
+\cdots
++
+\theta_p x_p,
+$$
+
+we have
+
+$$
+\nabla f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\boldsymbol{\theta}.
+$$
+
+Therefore, a gradient-based regulariser such as
+
+$$
+R(f)
+=
+\int
+\|\nabla f(\mathbf{x})\|^2
+\,
+\mathrm{d}\rho(\mathbf{x})
+$$
+
+reduces to a squared parameter norm penalty
+
+$$
+R(\boldsymbol{\theta})
+=
+\|\boldsymbol{\theta}\|^2.
+$$
+
+This type of penalty discourages functions that change too rapidly with respect to the input. In the linear case, this means discouraging large slopes.
+
+The main ideas to remember are:
+
+- additive regularisation changes the training objective by adding a penalty term;
+- the regulariser $R$ assigns a non-negative penalty to each function or parameter value;
+- $\lambda_n$ controls the strength of the penalty;
+- in parametrised models, regularisation is usually written as a penalty $R(\boldsymbol{\theta})$;
+- squared norm regularisation penalises large parameter values.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-map-regularised-erm">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand how the Bayesian MAP estimator can be interpreted as <span class="xref-no-num">[regularised empirical risk minimisation @def-additive-reg]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-map-regularised-erm" hidden>
+
+The **maximum a posteriori estimator**, or **MAP estimator**, is a Bayesian point estimate obtained by maximising the posterior density.
+
+In the setting of <span class="xref-no-num">[maximum likelihood @sec-max-like]</span>, suppose the conditional distribution of $\mathbf{Y}$ given $\mathbf{X}=\mathbf{x}$ is modelled by a parametric density
+
+$$
+p_{\boldsymbol{\theta}}(\mathbf{y}\mid \mathbf{x}),
+$$
+
+where $\boldsymbol{\theta} \in \Theta$.
+
+Given training data
+
+$$
+\{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^n,
+$$
+
+the likelihood is
+
+$$
+\prod_{i=1}^n
+p_{\boldsymbol{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i).
+$$
+
+To perform a Bayesian analysis, we also place a prior density on the parameter,
+
+$$
+p(\boldsymbol{\theta}).
+$$
+
+By Bayes' theorem, the posterior density is proportional to
+
+$$
+p(\boldsymbol{\theta})
+\prod_{i=1}^n
+p_{\boldsymbol{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i).
+$$
+
+The MAP estimator is a mode of this posterior density:
+
+$$
+\hat{\boldsymbol{\theta}}
+\in
+\argmax_{\boldsymbol{\theta} \in \Theta}
+p(\boldsymbol{\theta})
+\prod_{i=1}^n
+p_{\boldsymbol{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i).
+$$
+
+Taking logarithms gives the equivalent objective
+
+$$
+\hat{\boldsymbol{\theta}}
+\in
+\argmax_{\boldsymbol{\theta} \in \Theta}
+\left[
+\log p(\boldsymbol{\theta})
++
+\sum_{i=1}^n
+\log p_{\boldsymbol{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i)
+\right].
+$$
+
+Equivalently, after multiplying by $-1$ and dividing by $n$, the MAP estimator can be written as
+
+$$
+\hat{\boldsymbol{\theta}}
+\in
+\argmin_{\boldsymbol{\theta} \in \Theta}
+\left[
+\frac{1}{n}
+\sum_{i=1}^n
+-
+\log p_{\boldsymbol{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i)
++
+\frac{1}{n}
+\left(
+-\log p(\boldsymbol{\theta})
+\right)
+\right].
+$$
+
+This has exactly the form of <span class="xref-no-num">[additive regularisation @def-additive-reg]</span>:
+
+$$
+\hat{\boldsymbol{\theta}}
+\in
+\argmin_{\boldsymbol{\theta} \in \Theta}
+\left[
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
++
+\lambda_n R(\boldsymbol{\theta})
+\right],
+$$
+
+where
+
+$$
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
+=
+\frac{1}{n}
+\sum_{i=1}^n
+-
+\log p_{\boldsymbol{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i),
+$$
+
+$$
+\lambda_n
+=
+\frac{1}{n},
+$$
+
+and
+
+$$
+R(\boldsymbol{\theta})
+=
+-\log p(\boldsymbol{\theta}).
+$$
+
+Therefore, the MAP estimator can be interpreted as minimising a regularised empirical risk.
+
+The first term,
+
+$$
+\frac{1}{n}
+\sum_{i=1}^n
+-
+\log p_{\boldsymbol{\theta}}(\mathbf{y}_i \mid \mathbf{x}_i),
+$$
+
+measures how well the model fits the data. It is the negative log-likelihood loss, so it is the same empirical risk objective used in maximum likelihood.
+
+The second term,
+
+$$
+-\log p(\boldsymbol{\theta}),
+$$
+
+comes from the prior. It penalises parameter values that have low prior density.
+
+Thus, from the regularisation perspective, the prior acts like a regulariser:
+
+- parameter values with high prior density receive a small penalty;
+- parameter values with low prior density receive a large penalty.
+
+This is the key connection:
+
+- <span class="xref-no-num">[Maximum likelihood @sec-max-like]</span> minimises the negative log-likelihood empirical risk;
+- MAP estimation minimises the negative log-likelihood empirical risk plus a prior-based penalty;
+- therefore, MAP estimation is a form of regularised empirical risk minimisation.
+
+For example, if the prior density is large near $\boldsymbol{\theta}=\mathbf{0}$ and small when $\|\boldsymbol{\theta}\|$ is large, then the MAP estimator will tend to prefer smaller parameter values. This is similar in spirit to regularisation penalties such as
+
+$$
+R(\boldsymbol{\theta})
+=
+\|\boldsymbol{\theta}\|^2.
+$$
+
+The main ideas to remember are:
+
+- the MAP estimator maximises the posterior density;
+- taking negative logarithms turns the MAP problem into a minimisation problem;
+- the negative log-likelihood gives the empirical risk term;
+- the negative log-prior gives the regularisation term;
+- MAP estimation is not the same as full Bayesian inference, but it can be interpreted as regularised empirical risk minimisation.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-ridge-regression">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[ridge regression @sec-ridge-regression]</span> as Tikhonov-regularised least squares, including the role of the regularisation parameter $\lambda_n$.
+</span>
+</div>
+
+<div class="revision-content" id="rev-ridge-regression" hidden>
+
+#### Ridge regression
+
+<span class="xref-no-num">[Ridge regression @sec-ridge-regression]</span> is the method obtained by training a <span class="xref-no-num">[linear model @def-linear-model]</span> with squared error loss and a squared norm regularisation penalty.
+
+The squared norm regulariser is also called the <span class="xref-no-num">[Tikhonov regulariser @def-tikhonov]</span>. For parameter space
+
+$$
+\Theta = \mathbb{R}^p,
+$$
+
+it is defined by
+
+$$
+R(\boldsymbol{\theta})
+=
+\|\boldsymbol{\theta}\|^2.
+$$
+
+Recall that for a linear model, the predictions on the training data can be written as
+
+$$
+\boldsymbol{\Phi}\boldsymbol{\theta},
+$$
+
+where $\boldsymbol{\Phi}$ is the $n \times p$ design matrix with entries
+
+$$
+\Phi_{ij}
+=
+\phi_j(\mathbf{x}_i).
+$$
+
+With squared error loss, the <span class="xref-no-num">[empirical risk @def-empirical-risk]</span> is
+
+$$
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
+=
+\frac{1}{n}
+\|\mathbf{y}-\boldsymbol{\Phi}\boldsymbol{\theta}\|^2.
+$$
+
+Ridge regression minimises the regularised objective
+
+$$
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
++
+\lambda_n R(\boldsymbol{\theta})
+=
+\frac{1}{n}
+\|\mathbf{y}-\boldsymbol{\Phi}\boldsymbol{\theta}\|^2
++
+\lambda_n
+\|\boldsymbol{\theta}\|^2,
+$$
+
+where
+
+$$
+\lambda_n > 0
+$$
+
+controls the strength of regularisation.
+
+The gradient of the ridge objective is
+
+$$
+\frac{1}{n}
+\left[
+-2\boldsymbol{\Phi}^{\top}\mathbf{y}
++
+2\boldsymbol{\Phi}^{\top}\boldsymbol{\Phi}\boldsymbol{\theta}
+\right]
++
+2\lambda_n\boldsymbol{\theta}.
+$$
+
+Setting this gradient equal to zero gives
+
+$$
+\left(
+\boldsymbol{\Phi}^{\top}\boldsymbol{\Phi}
++
+n\lambda_n \mathbf{I}
+\right)
+\boldsymbol{\theta}
+=
+\boldsymbol{\Phi}^{\top}\mathbf{y}.
+$$
+
+Therefore, the ridge regression estimator is
+
+$$
+\hat{\boldsymbol{\theta}}
+=
+\left(
+\boldsymbol{\Phi}^{\top}\boldsymbol{\Phi}
++
+n\lambda_n \mathbf{I}
+\right)^{-1}
+\boldsymbol{\Phi}^{\top}\mathbf{y}.
+$$
+
+Compared with ordinary least squares, ridge regression adds the term
+
+$$
+n\lambda_n \mathbf{I}
+$$
+
+to $\boldsymbol{\Phi}^{\top}\boldsymbol{\Phi}$.
+
+This is important because $\boldsymbol{\Phi}^{\top}\boldsymbol{\Phi}$ may fail to be invertible, especially when the model is over-parameterised. However, for $\lambda_n>0$,
+
+$$
+\boldsymbol{\Phi}^{\top}\boldsymbol{\Phi}
++
+n\lambda_n \mathbf{I}
+$$
+
+is positive definite, and hence invertible.
+
+The Hessian of the ridge objective is
+
+$$
+2
+\left(
+\frac{1}{n}
+\boldsymbol{\Phi}^{\top}\boldsymbol{\Phi}
++
+\lambda_n \mathbf{I}
+\right),
+$$
+
+which is positive definite when $\lambda_n>0$. Hence the stationary point is the unique minimiser.
+
+The regularisation parameter $\lambda_n$ controls the balance between fitting the training data and penalising large parameter values.
+
+If
+
+$$
+\lambda_n \rightarrow 0,
+$$
+
+then the ridge objective becomes close to the ordinary least squares objective. The model is allowed to fit the training data more closely.
+
+If
+
+$$
+\lambda_n \rightarrow \infty,
+$$
+
+then the penalty term dominates. The fitted parameter vector is forced towards $\mathbf{0}$, so the model becomes simpler.
+
+Thus, varying $\lambda_n$ moves between a more flexible model and a more strongly regularised model.
+
+In practice, $\lambda_n$ can be selected using <span class="xref-no-num">[cross-validation @sec-cross-val]</span>. The idea is to fit ridge regression for several possible values of $\lambda_n$, estimate the held-out prediction error for each value, and choose the value that gives the best held-out performance.
+
+---
+
+#### Connection to MAP estimation
+
+Ridge regression is also connected to <span class="xref-no-num">[MAP estimation @exm-bayes-as-ridge]</span>. If the prior distribution for the parameter is Gaussian,
+
+$$
+\boldsymbol{\theta}
+\sim
+\mathcal{N}(\mathbf{0},\sigma^2\mathbf{I}),
+$$
+
+then
+
+$$
+-\log p(\boldsymbol{\theta})
+=
+\frac{1}{2\sigma^2}
+\|\boldsymbol{\theta}\|^2
++
+\text{constant}.
+$$
+
+Therefore, the negative log-prior is a squared norm penalty. This means that MAP estimation with a Gaussian prior can be interpreted as ridge-type regularisation.
+
+The main ideas to remember are:
+
+- ridge regression is least squares plus a squared norm penalty;
+- the Tikhonov regulariser is $R(\boldsymbol{\theta})=\|\boldsymbol{\theta}\|^2$;
+- the ridge estimator is always well-defined when $\lambda_n>0$;
+- $\lambda_n$ controls the strength of regularisation;
+- small $\lambda_n$ gives behaviour close to ordinary least squares;
+- large $\lambda_n$ shrinks the parameter vector towards $\mathbf{0}$;
+- ridge regression can be interpreted as MAP estimation with a Gaussian prior.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-other-convex-regularisers">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the use of <span class="xref-no-num">[other convex regularisers @sec-other-linear-reg]</span>, including $\ell^s$ norms and the idea of sparsity.
+</span>
+</div>
+
+<div class="revision-content" id="rev-other-convex-regularisers" hidden>
+
+In <span class="xref-no-num">[ridge regression @sec-ridge-regression]</span>, we used the squared Euclidean norm
+
+$$
+R(\boldsymbol{\theta})
+=
+\|\boldsymbol{\theta}\|^2
+$$
+
+as a regulariser.
+
+More generally, we can define regularisers using other norms on $\mathbb{R}^p$. For $1 \leq s < \infty$, the $\ell^s$ norm is defined by
+
+$$
+\|\boldsymbol{\theta}\|_s
+=
+\left(
+\sum_{i=1}^p
+|\theta_i|^s
+\right)^{1/s}.
+$$
+
+Important special cases are:
+
+$$
+\|\boldsymbol{\theta}\|_1
+=
+\sum_{i=1}^p
+|\theta_i|,
+$$
+
+called the **sum norm** or **$\ell^1$ norm**,
+
+$$
+\|\boldsymbol{\theta}\|_2
+=
+\left(
+\sum_{i=1}^p
+\theta_i^2
+\right)^{1/2},
+$$
+
+called the **Euclidean norm**, and
+
+$$
+\|\boldsymbol{\theta}\|_\infty
+=
+\max_{1 \leq i \leq p}
+|\theta_i|,
+$$
+
+called the **maximum norm** or **$\ell^\infty$ norm**.
+
+For $s \geq 1$, these define valid norms and give rise to convex regularisers. Convexity is useful because it makes the resulting optimisation problem more mathematically and computationally tractable.
+
+For $s < 1$, the expression
+
+$$
+\|\boldsymbol{\theta}\|_s
+$$
+
+does not define a valid norm. However, the notation is still sometimes used informally. In particular,
+
+$$
+\|\boldsymbol{\theta}\|_0
+$$
+
+is commonly used to mean the number of non-zero entries of $\boldsymbol{\theta}$. This is not a true norm, but it is useful notation for discussing sparsity.
+
+A vector $\boldsymbol{\theta}$ is called **sparse** if many of its entries are exactly zero.
+
+Sparsity is useful because a model with many zero parameters can be cheaper to store, interpret, and evaluate. For example, in a linear model
+
+$$
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\theta_1 \phi_1(\mathbf{x})
++
+\cdots
++
+\theta_p \phi_p(\mathbf{x}),
+$$
+
+any term with $\theta_j=0$ does not contribute to the prediction. Thus, sparse parameter vectors effectively remove some features from the model.
+
+This is important when the number of parameters $p$ is large. Evaluating a model often has computational cost depending on $p$, so reducing the number of active parameters can reduce computational cost.
+
+There are two broad ways to reduce the cost of using large models:
+
+1. **Quantisation**, where parameters are stored using lower numerical precision.
+2. **Sparsity**, where many parameters are set exactly equal to zero.
+
+In the context of linear models, sparsity is especially easy to interpret: it means that only some features are used by the fitted model.
+
+The main ideas to remember are:
+
+- ridge regression uses a squared Euclidean norm penalty;
+- other norms can also be used as regularisers;
+- $\ell^s$ norms are valid norms when $s \geq 1$;
+- $\|\boldsymbol{\theta}\|_0$ counts the number of non-zero parameters, but is not a true norm;
+- sparsity means that many parameters are exactly zero;
+- sparse models can be easier to compute with and interpret.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-lasso">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the <span class="xref-no-num">[LASSO @exm-lasso]</span> as $\ell^1$-regularised least squares, and understand how it differs from ridge regression.
+</span>
+</div>
+
+<div class="revision-content" id="rev-lasso" hidden>
+
+The **LASSO** stands for the **least absolute shrinkage and selection operator**.
+
+It is a regularised version of least squares for linear models. The key difference from <span class="xref-no-num">[ridge regression @sec-ridge-regression]</span> is that LASSO uses an $\ell^1$ penalty instead of a squared $\ell^2$ penalty.
+
+Recall that for a <span class="xref-no-num">[linear model @def-linear-model]</span>, the empirical risk with squared error loss can be written as
+
+$$
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
+=
+\frac{1}{n}
+\|\mathbf{y}-\boldsymbol{\Phi}\boldsymbol{\theta}\|^2,
+$$
+
+where $\boldsymbol{\Phi}$ is the design matrix.
+
+The LASSO objective is
+
+$$
+\mathcal{R}_n(f_{\boldsymbol{\theta}})
++
+\lambda_n R(\boldsymbol{\theta})
+=
+\frac{1}{n}
+\|\mathbf{y}-\boldsymbol{\Phi}\boldsymbol{\theta}\|^2
++
+\lambda_n
+\|\boldsymbol{\theta}\|_1.
+$$
+
+Here
+
+$$
+\|\boldsymbol{\theta}\|_1
+=
+\sum_{j=1}^p
+|\theta_j|
+$$
+
+is the $\ell^1$ norm, and
+
+$$
+\lambda_n > 0
+$$
+
+controls the strength of regularisation.
+
+The LASSO estimator is therefore
+
+$$
+\hat{\boldsymbol{\theta}}
+\in
+\argmin_{\boldsymbol{\theta} \in \mathbb{R}^p}
+\left[
+\frac{1}{n}
+\|\mathbf{y}-\boldsymbol{\Phi}\boldsymbol{\theta}\|^2
++
+\lambda_n
+\|\boldsymbol{\theta}\|_1
+\right].
+$$
+
+Unlike ridge regression, LASSO usually does not have a simple closed-form solution. The reason is that the function
+
+$$
+\|\boldsymbol{\theta}\|_1
+=
+\sum_{j=1}^p
+|\theta_j|
+$$
+
+is not differentiable whenever one or more components $\theta_j$ are equal to zero.
+
+Therefore, we cannot simply differentiate the objective and solve a linear system in the same way as ridge regression. Instead, LASSO is solved using methods from convex optimisation.
+
+The key property of LASSO is that it encourages **sparsity**. That is, the fitted vector
+
+$$
+\hat{\boldsymbol{\theta}}
+$$
+
+often has many entries exactly equal to zero.
+
+This means that LASSO performs a kind of automatic feature selection. If
+
+$$
+\hat{\theta}_j = 0,
+$$
+
+then the feature $\phi_j(\mathbf{x})$ does not contribute to the fitted model.
+
+The role of $\lambda_n$ is important:
+
+- as $\lambda_n \rightarrow 0$, the LASSO objective becomes close to the ordinary least squares objective;
+- as $\lambda_n \rightarrow \infty$, the penalty dominates and the solution is pushed towards $\hat{\boldsymbol{\theta}}=\mathbf{0}$;
+- intermediate values of $\lambda_n$ produce solutions with varying levels of sparsity.
+
+The value of $\lambda_n$ is often chosen using <span class="xref-no-num">[cross-validation @sec-cross-val]</span>.
+
+The key comparison with ridge regression is:
+
+- ridge regression uses the penalty $\|\boldsymbol{\theta}\|^2$ and shrinks parameters towards zero;
+- LASSO uses the penalty $\|\boldsymbol{\theta}\|_1$ and can set parameters exactly equal to zero.
+
+The main ideas to remember are:
+
+- LASSO is $\ell^1$-regularised least squares;
+- the LASSO objective is empirical risk plus $\lambda_n\|\boldsymbol{\theta}\|_1$;
+- LASSO encourages sparse parameter vectors;
+- sparsity means some fitted coefficients are exactly zero;
+- LASSO can be interpreted as automatic feature selection;
+- unlike ridge regression, LASSO generally requires convex optimisation rather than a closed-form solution.
+
+</div>
+</div>
+
+<details class="practice-details">
+<summary><em>Regularisation — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Examples | Over-parameterised model I | @exm-over-param |
+| Examples | Over-parameterised model II | @exm-over-param2 |
+| Examples | Bayesian MAP estimator as regularised ERM | @exm-bayes-map-erm |
+| Examples | Bayesian inference as ridge regression | @exm-bayes-as-ridge |
+| Exercises | ERM for the linear model | @exr-least-squares |
+| Exercises | Robustness to outliers with the absolute deviation loss | @exr-absolute-deviation-loss |
+| Question Bank | Cross-entropy Loss | <span class="xref-no-num">[Link @q-cross-entropy-loss]</span> |
+| Question Bank | The 0-1 loss | <span class="xref-no-num">[Link @q-zero-one-loss]</span> |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::  
+
+</details>
+
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-features-feature-space">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[features @sec-featurisation]</span>, feature maps, and the definition of <span class="xref-no-num">[feature space @def-feature-space]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-features-feature-space" hidden>
+
+### Features
+
+A **feature** is a measurable property or characteristic of an input $\mathbf{x}$ that may be useful for a machine learning task.
+
+In a <span class="xref-no-num">[supervised learning task @def-supervised-learning-task]</span>, the input is an element
+
+$$
+\mathbf{x} \in \mathcal{X}.
+$$
+
+Rather than using $\mathbf{x}$ directly, we often transform it into a collection of features
+
+$$
+\phi_1(\mathbf{x}),\dots,\phi_p(\mathbf{x}).
+$$
+
+Each feature function is a map
+
+$$
+\phi_i : \mathcal{X} \rightarrow \mathbb{R}.
+$$
+
+For example, if $\mathbf{x}$ represents information about a house, then possible features might include:
+
+- the number of bedrooms;
+- the floor area;
+- the distance to the nearest station;
+- the age of the property.
+
+---
+
+### Feature Maps
+
+The feature functions can be collected into a single vector-valued function
+
+$$
+\boldsymbol{\phi} : \mathcal{X} \rightarrow \mathbb{R}^p
+$$
+
+defined by
+
+$$
+\boldsymbol{\phi}(\mathbf{x})
+=
+\begin{bmatrix}
+\phi_1(\mathbf{x}) \\
+\vdots \\
+\phi_p(\mathbf{x})
+\end{bmatrix}.
+$$
+
+This is called the **feature map**.
+
+For a <span class="xref-no-num">[linear model @def-linear-model]</span>, the feature map is used to define models of the form
+
+$$
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\theta_1 \phi_1(\mathbf{x})
++
+\cdots
++
+\theta_p \phi_p(\mathbf{x}).
+$$
+
+Equivalently,
+
+$$
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\boldsymbol{\theta}^{\top}
+\boldsymbol{\phi}(\mathbf{x}).
+$$
+
+The model is linear in the parameters $\boldsymbol{\theta}$, but it can still be nonlinear in the original input $\mathbf{x}$ because the feature functions $\phi_i$ may be nonlinear.
+
+---
+
+### Feature Space
+
+The <span class="xref-no-num">[feature space @def-feature-space]</span> is the image of the feature map. That is, it is the set of all possible feature vectors
+
+$$
+\boldsymbol{\phi}(\mathbf{x})
+$$
+
+obtained as $\mathbf{x}$ ranges over $\mathcal{X}$.
+
+Since each feature vector belongs to $\mathbb{R}^p$, the feature space can be viewed as a subset of $\mathbb{R}^p$.
+
+The feature space gives a new representation of the data. Instead of representing an input by $\mathbf{x}$ itself, we represent it by
+
+$$
+\boldsymbol{\phi}(\mathbf{x})
+=
+(\phi_1(\mathbf{x}),\dots,\phi_p(\mathbf{x})).
+$$
+
+This representation is useful because the geometry of the data in feature space can make the machine learning task easier.
+
+For example:
+
+- in **classification**, we would like the feature map to represent the data so that different classes are easier to separate;
+- in **clustering**, we would like similar data points to be close together in feature space, so that natural groups can be identified.
+
+---
+
+### Featurisation
+
+Choosing useful features is called **featurisation**.
+
+Good featurisation can make a simple model perform well, while poor featurisation can make even a flexible model struggle.
+
+Some features are more useful than others for a given task. For example, if the task is to predict the price of a house, the size and location of the house are likely to be more useful features than the colour of the front door.
+
+In this module, three important strategies related to featurisation are:
+
+1. <span class="xref-no-num">[Variable selection @sec-variable-selection]</span>, where we choose which variables or features to include.
+2. <span class="xref-no-num">[Dimensionality reduction @sec-dim-reduction]</span>, where we replace many features with a smaller number of informative features.
+3. <span class="xref-no-num">[Kernel methods @sec-kernel-methods]</span>, where we use implicit feature maps to work with rich feature spaces efficiently.
+
+---
+
+### Key Points
+
+- A feature is a measurable property of an input $\mathbf{x}$.
+- A feature function maps an input to a real number.
+- The feature map collects the feature functions into a vector.
+- The feature space is the image of the feature map.
+- Featurisation means designing a useful representation of the data.
+- Good features can make a machine learning task much easier.
+
+</div>
+</div>
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-design-matrix">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the definition and construction of the design matrix $\boldsymbol{\Phi}$.
+</span>
+</div>
+
+<div class="revision-content" id="rev-design-matrix" hidden>
+
+### Definition
+
+For a <span class="xref-no-num">[linear model @def-linear-model]</span> with feature functions
+
+$$
+\phi_1,\dots,\phi_p : \mathcal{X} \rightarrow \mathbb{R},
+$$
+
+and a dataset
+
+$$
+\{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^n,
+$$
+
+the **design matrix** is the matrix
+
+$$
+\boldsymbol{\Phi} \in \mathbb{R}^{n \times p}
+$$
+
+defined by
+
+$$
+\Phi_{i,j} = \phi_j(\mathbf{x}_i).
+$$
+
+---
+
+### Structure
+
+The design matrix has the form
+
+$$
+\boldsymbol{\Phi}
+=
+\begin{pmatrix}
+\phi_1(\mathbf{x}_1) & \phi_2(\mathbf{x}_1) & \cdots & \phi_p(\mathbf{x}_1) \\
+\phi_1(\mathbf{x}_2) & \phi_2(\mathbf{x}_2) & \cdots & \phi_p(\mathbf{x}_2) \\
+\vdots & \vdots & & \vdots \\
+\phi_1(\mathbf{x}_n) & \phi_2(\mathbf{x}_n) & \cdots & \phi_p(\mathbf{x}_n)
+\end{pmatrix}.
+$$
+
+- Each **row** corresponds to a data point $\mathbf{x}_i$.
+- Each **column** corresponds to a feature $\phi_j$.
+
+---
+
+### Dimensions
+
+- Number of rows: $n$ (number of data points).
+- Number of columns: $p$ (number of features).
+
+So
+
+$$
+\boldsymbol{\Phi} \in \mathbb{R}^{n \times p}.
+$$
+
+---
+
+### Role in Linear Models
+
+For a parameter vector
+
+$$
+\boldsymbol{\theta} \in \mathbb{R}^p,
+$$
+
+the vector of predictions on the training data is
+
+$$
+\boldsymbol{\Phi}\boldsymbol{\theta}
+=
+\begin{pmatrix}
+f_{\boldsymbol{\theta}}(\mathbf{x}_1) \\
+\vdots \\
+f_{\boldsymbol{\theta}}(\mathbf{x}_n)
+\end{pmatrix}.
+$$
+
+Thus:
+
+- $\boldsymbol{\Phi}\boldsymbol{\theta}$ gives all predictions in one matrix-vector product.
+- Many formulas (e.g. least squares, ridge regression) are written compactly using $\boldsymbol{\Phi}$.
+
+---
+
+### Special Case
+
+If we use raw inputs as features, i.e.
+
+$$
+\phi_j(\mathbf{x}) = x_j,
+$$
+
+then the design matrix is simply the data matrix:
+
+$$
+\boldsymbol{\Phi}
+=
+\begin{pmatrix}
+x_{1,1} & \cdots & x_{1,p} \\
+\vdots & & \vdots \\
+x_{n,1} & \cdots & x_{n,p}
+\end{pmatrix}.
+$$
+
+---
+
+### Key Points
+
+- $\boldsymbol{\Phi}$ collects all feature evaluations into a matrix.
+- Rows = data points, columns = features.
+- $\boldsymbol{\Phi} \in \mathbb{R}^{n \times p}$.
+- Predictions are given by $\boldsymbol{\Phi}\boldsymbol{\theta}$.
+- It is central to most linear model computations.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-variable-selection">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[variable selection @sec-variable-selection]</span> as a featurisation strategy, including a priori and data-driven approaches.
+</span>
+</div>
+
+<div class="revision-content" id="rev-variable-selection" hidden>
+
+### Basic Idea
+
+In <span class="xref-no-num">[featurisation @sec-featurisation]</span>, we choose feature functions
+
+$$
+\phi_i(\mathbf{x})
+$$
+
+to represent the input $\mathbf{x}$.
+
+The simplest choice is to use the coordinates of $\mathbf{x}$ directly:
+
+$$
+\phi_i(\mathbf{x}) = x_i.
+$$
+
+However, not all components of $\mathbf{x}$ are necessarily useful for the task.
+
+**Variable selection** refers to choosing a subset of variables (features) to include in the model.
+
+---
+
+### Subset Selection
+
+Instead of using all coordinates of $\mathbf{x}$, we select a subset
+
+$$
+\{x_{i_1}, \dots, x_{i_p}\},
+$$
+
+and define features
+
+$$
+\phi_j(\mathbf{x}) = x_{i_j}.
+$$
+
+This reduces the number of features and focuses the model on the most relevant variables.
+
+---
+
+### Example: Time Series
+
+Suppose we want to predict a future value $y_{t+1}$ from past observations
+
+$$
+x_t, x_{t-1}, x_{t-2}, \dots
+$$
+
+It is often reasonable to assume that only recent values are relevant.
+
+A simple variable selection strategy is to use only the most recent $T$ observations:
+
+$$
+x_t, x_{t-1}, \dots, x_{t-T+1}.
+$$
+
+This is an example of selecting features based on domain knowledge.
+
+---
+
+### A Priori vs Data-Driven Selection
+
+There are two main approaches to variable selection:
+
+#### 1. A priori (domain knowledge)
+
+We choose features based on prior knowledge of the problem.
+
+Examples:
+
+- using recent time steps in time series;
+- selecting physically meaningful variables in scientific models.
+
+This approach can be effective when we understand the structure of the problem.
+
+#### 2. Data-driven selection
+
+When it is unclear which features are useful, we let the data determine the selection.
+
+This is important in complex settings, such as image classification, where it is difficult to manually design useful features.
+
+An important example is the <span class="xref-no-num">[LASSO @exm-lasso]</span>, which automatically selects variables by setting some coefficients to zero.
+
+---
+
+### Why Variable Selection Matters
+
+Using too many variables can:
+
+- increase computational cost;
+- make the model harder to interpret;
+- lead to <span class="xref-no-num">[over-fitting @sec-perf-assess]</span>.
+
+Variable selection helps by:
+
+- reducing dimensionality;
+- focusing on relevant information;
+- improving interpretability;
+- improving generalisation performance.
+
+---
+
+### Key Points
+
+- Variable selection chooses a subset of features from the input.
+- The simplest features are the coordinates of $\mathbf{x}$.
+- A priori selection uses domain knowledge.
+- Data-driven selection uses the dataset to choose features.
+- The <span class="xref-no-num">[LASSO @exm-lasso]</span> is a key example of data-driven variable selection.
+- Variable selection can improve efficiency, interpretability, and performance.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-stepwise-variable-selection">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[stepwise variable selection @exm-stepwise-variable-selection]</span>, including forward selection, backward elimination, and their limitations.
+</span>
+</div>
+
+<div class="revision-content" id="rev-stepwise-variable-selection" hidden>
+
+### Basic Idea
+
+<span class="xref-no-num">[Stepwise variable selection @exm-stepwise-variable-selection]</span> is a sequential procedure for selecting which variables (features) to include in a model.
+
+Given candidate covariates
+
+$$
+x_1, \dots, x_p,
+$$
+
+the goal is to choose a subset that gives good predictive performance.
+
+The method proceeds by **iteratively adding or removing variables**, guided by a performance measure such as <span class="xref-no-num">[cross-validation @sec-cross-val]</span>.
+
+---
+
+### Forward Selection
+
+**Forward selection** starts with no variables and adds them one at a time.
+
+Procedure:
+
+1. Start with an empty model.
+2. Add the variable that gives the greatest improvement in performance.
+3. Repeat until adding further variables does not improve performance.
+
+---
+
+### Backward Elimination
+
+**Backward elimination** starts with all variables and removes them one at a time.
+
+Procedure:
+
+1. Start with the full model using all variables.
+2. Remove the variable whose removal improves performance the most (or harms it the least).
+3. Repeat until removing variables no longer improves performance.
+
+---
+
+### Greedy Nature
+
+Both methods typically use a **greedy strategy**:
+
+- at each step, choose the single best variable to add or remove;
+- do not revisit previous decisions.
+
+This makes the procedure computationally efficient, but it does not guarantee finding the globally optimal subset of variables.
+
+---
+
+### When Stepwise Selection Works Well
+
+Stepwise methods are most useful when:
+
+- the number of variables is moderate;
+- variables are **interpretable** (e.g. in scientific or tabular data);
+- we want to understand which variables are important.
+
+---
+
+### Limitations
+
+Stepwise variable selection has several limitations:
+
+- It only considers **axis-aligned features** (i.e. subsets of $x_1,\dots,x_p$).
+- It may miss better models that use **combinations of variables**.
+- It is greedy, so it may not find the best subset of variables.
+- It can be unstable: small changes in the data can lead to different selected variables.
+
+---
+
+### Connection to Other Methods
+
+Stepwise selection contrasts with more general featurisation methods.
+
+In many modern machine learning tasks, useful features are not simply subsets of the original variables.
+
+Instead, we may use:
+
+- **linear combinations of variables**, e.g.
+  $$
+  \phi_i(\mathbf{x}) = a_{i,1} x_1 + \cdots + a_{i,d} x_d
+  $$
+  (see <span class="xref-no-num">[dimensionality reduction @sec-dim-reduction]</span>),
+
+- **nonlinear transformations**, e.g.
+  $$
+  \phi_i(\mathbf{x}) = \text{nonlinear function of } \mathbf{x}
+  $$
+  (see <span class="xref-no-num">[kernel methods @sec-kernel-methods]</span> and <span class="xref-no-num">[neural networks @sec-nn]</span>).
+
+These approaches allow much richer representations of the data than simple variable selection.
+
+---
+
+### Key Points
+
+- Stepwise variable selection builds a model by adding or removing variables sequentially.
+- Forward selection starts empty and adds variables.
+- Backward elimination starts full and removes variables.
+- Both methods are greedy and may not find the optimal subset.
+- Stepwise methods are most useful for interpretable, tabular data.
+- They are limited to axis-aligned features and do not capture interactions or nonlinear structure.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-dimensionality-reduction">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[dimensionality reduction @sec-dim-reduction]</span>, especially linear dimensionality reduction via feature maps.
+</span>
+</div>
+
+<div class="revision-content" id="rev-dimensionality-reduction" hidden>
+
+### Basic Idea
+
+<span class="xref-no-num">[Dimensionality reduction @sec-dim-reduction]</span> refers to transforming a high-dimensional input
+
+$$
+\mathbf{x} \in \mathbb{R}^d
+$$
+
+into a lower-dimensional representation
+
+$$
+\boldsymbol{\phi}(\mathbf{x}) \in \mathbb{R}^p,
+\qquad p < d.
+$$
+
+The goal is to reduce the number of features while retaining the most important information for the machine learning task.
+
+---
+
+### Linear Dimensionality Reduction
+
+In **linear dimensionality reduction**, each feature is a linear combination of the original variables:
+
+$$
+\phi_i(\mathbf{x})
+=
+a_{i,1} x_1 + \cdots + a_{i,d} x_d.
+$$
+
+This can be written compactly using matrix notation as
+
+$$
+\boldsymbol{\phi}(\mathbf{x})
+=
+\mathbf{A}\mathbf{x},
+$$
+
+where
+
+$$
+\mathbf{A} \in \mathbb{R}^{p \times d}.
+$$
+
+Thus, dimensionality reduction corresponds to choosing a matrix $\mathbf{A}$ that defines a new feature map.
+
+---
+
+### Why Dimensionality Reduction?
+
+Reducing the dimension can:
+
+- decrease computational cost;
+- reduce noise and redundancy in the data;
+- improve generalisation by simplifying the model;
+- make data easier to visualise (e.g. when $p=2$ or $p=3$).
+
+---
+
+### Key Idea
+
+Dimensionality reduction is a **featurisation method** where features are constructed as combinations of the original variables, rather than selecting a subset of them.
+
+This contrasts with <span class="xref-no-num">[variable selection @sec-variable-selection]</span>, which only keeps some of the original coordinates.
+
+---
+
+### What Comes Next
+
+A key example of linear dimensionality reduction is **principal component analysis (PCA)**, which provides a principled way to choose the matrix $\mathbf{A}$.
+
+---
+
+### Key Points
+
+- Dimensionality reduction maps $\mathbf{x} \in \mathbb{R}^d$ to $\boldsymbol{\phi}(\mathbf{x}) \in \mathbb{R}^p$ with $p<d$.
+- Linear dimensionality reduction uses features that are linear combinations of the original variables.
+- The feature map can be written as $\boldsymbol{\phi}(\mathbf{x}) = \mathbf{A}\mathbf{x}$.
+- It reduces complexity and can improve performance.
+- It differs from variable selection, which only selects a subset of variables.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-pca">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[principal component analysis (PCA) @sec-dim-reduction]</span>, including the idea of maximising variance and interpreting principal components.
+</span>
+</div>
+
+<div class="revision-content" id="rev-pca" hidden>
+
+### Basic Idea
+
+<span class="xref-no-num">Principal component analysis (PCA)</span> is a method for <span class="xref-no-num">[dimensionality reduction @sec-dim-reduction]</span>.
+
+The goal is to find new features of the form
+
+$$
+\phi(\mathbf{x}) = \mathbf{a}^\top \mathbf{x}
+$$
+
+which capture as much of the variability in the data as possible.
+
+---
+
+### First Principal Component
+
+We seek a vector
+
+$$
+\mathbf{a}_1 \in \mathbb{R}^d
+$$
+
+such that the variance of
+
+$$
+\phi_1(\mathbf{X}) = \mathbf{a}_1^\top \mathbf{X}
+$$
+
+is as large as possible.
+
+Since $\mathrm{Var}[\phi_1(\mathbf{X})] = \mathbf{a}_1^\top \mathbf{S}_n \mathbf{a}_1$, this leads to the optimisation problem
+
+$$
+\max_{\mathbf{a}_1}
+\quad
+\mathbf{a}_1^\top \mathbf{S}_n \mathbf{a}_1
+\qquad
+\text{subject to}
+\qquad
+\|\mathbf{a}_1\| = 1,
+$$
+
+where
+
+$$
+\mathbf{S}_n = \frac{1}{n}\mathbf{D}^\top \mathbf{D}
+$$
+
+is the sample covariance matrix (assuming centred data).
+
+**Key result:**
+
+- The solution $\mathbf{a}_1$ is the eigenvector of $\mathbf{S}_n$ corresponding to the **largest eigenvalue**.
+- This vector is called the **first principal component**.
+
+---
+
+### Subsequent Components
+
+- The **second principal component** $\mathbf{a}_2$ is the eigenvector corresponding to the second largest eigenvalue.
+- It is **orthogonal** to $\mathbf{a}_1$.
+- Further components are defined similarly.
+
+Thus PCA is obtained by an **eigendecomposition** of the covariance matrix:
+
+$$
+\mathbf{S}_n
+=
+\sum_{i=1}^d
+\lambda_i \mathbf{a}_i \mathbf{a}_i^\top.
+$$
+
+---
+
+### Dimensionality Reduction via PCA
+
+To reduce dimension from $d$ to $p$, we take the first $p$ principal components and define the feature map
+
+$$
+\boldsymbol{\phi}(\mathbf{x})
+=
+\begin{bmatrix}
+\mathbf{a}_1^\top \mathbf{x} \\
+\vdots \\
+\mathbf{a}_p^\top \mathbf{x}
+\end{bmatrix}.
+$$
+
+This projects the data onto the directions of highest variance.
+
+---
+
+### Variance Explained
+
+Each eigenvalue $\lambda_j$ represents the variance captured by the $j$th component.
+
+- **Proportion of variance explained by component $j$:**
+$$
+\frac{\lambda_j}{\sum_{i=1}^d \lambda_i}
+$$
+
+- **Total variance explained by first $p$ components:**
+$$
+\frac{\sum_{j=1}^p \lambda_j}{\sum_{i=1}^d \lambda_i}.
+$$
+
+This is used in practice to decide how many components to keep (e.g. using a scree plot).
+
+---
+
+### Interpretation
+
+- PCA finds directions in the data with **maximum variability**.
+- It is an **unsupervised** method: it does not use the response variable.
+- It produces **orthogonal features**.
+- It is a linear method: features are linear combinations of the original variables.
+
+---
+
+### Key Points
+
+- PCA is a linear dimensionality reduction method.
+- The first principal component maximises variance.
+- Principal components are eigenvectors of the covariance matrix.
+- Eigenvalues correspond to variance explained.
+- PCA reduces dimension by projecting onto leading components.
+- It is unsupervised and does not use response data.
+
+</div>
+</div>
+
+<details class="practice-details">
+<summary><em> Linear Dimensionality Reduction — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Question Bank | Principal component analysis | <span class="xref-no-num">[Link @q-pca]</span> |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::  
+
+</details>
+
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-kernel-methods">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">[{{< fa star >}}]{.advanced title="MAS8607 Content"} Understand <span class="xref-no-num">[kernel methods @sec-kernel-methods]</span>, including the idea of the kernel trick and feature inner products.
+</span>
+</div>
+
+<div class="revision-content" id="rev-kernel-methods" hidden>
+
+### Core Idea
+
+<span class="xref-no-num">[Kernel methods @sec-kernel-methods]</span> allow us to use very rich (even infinite-dimensional) feature spaces without explicitly computing the features.
+
+The key observation is that, for a <span class="xref-no-num">[linear model @def-linear-model]</span> trained using squared error loss, predictions can be written in terms of **inner products in feature space**.
+
+---
+
+### Key Observation
+
+Let $\boldsymbol{\phi}(\mathbf{x})$ be the feature map and $\boldsymbol{\Phi}$ the design matrix.
+
+The prediction at a new point $\mathbf{x}_\star$ can be written as
+
+$$
+f_{\hat{\boldsymbol{\theta}}}(\mathbf{x}_\star)
+=
+\boldsymbol{\phi}(\mathbf{x}_\star)^\top \boldsymbol{\Phi}^\top
+(\boldsymbol{\Phi}\boldsymbol{\Phi}^\top)^{-1}
+\mathbf{y}.
+$$
+
+Crucially, the feature map only appears through inner products of the form
+
+$$
+\langle \boldsymbol{\phi}(\mathbf{x}_i), \boldsymbol{\phi}(\mathbf{x}_j) \rangle.
+$$
+
+---
+
+### Kernel Trick
+
+Define a **kernel function**
+
+$$
+k(\mathbf{x},\mathbf{x}')
+=
+\langle \boldsymbol{\phi}(\mathbf{x}), \boldsymbol{\phi}(\mathbf{x}') \rangle.
+$$
+
+Then all computations can be expressed in terms of $k(\mathbf{x},\mathbf{x}')$, without explicitly computing $\boldsymbol{\phi}(\mathbf{x})$.
+
+This is called the **kernel trick**.
+
+---
+
+### Why This Matters
+
+This allows us to:
+
+- work with very high-dimensional feature spaces;
+- even use **infinite-dimensional features**;
+- avoid explicitly computing $\boldsymbol{\phi}(\mathbf{x})$.
+
+For example, we can define models of the form
+
+$$
+f(\mathbf{x})
+=
+\sum_{i=1}^n
+\alpha_i \, k(\mathbf{x}, \mathbf{x}_i),
+$$
+
+where the model depends only on the training data and the kernel function.
+
+---
+
+### Interpretation
+
+- Kernel methods implicitly define a feature space.
+- Instead of computing features directly, we compute inner products via $k(\mathbf{x},\mathbf{x}')$.
+- This enables highly flexible models while keeping computations tractable.
+
+---
+
+### Key Points
+
+- Kernel methods rely on inner products in <span class="xref-no-num">[feature space @def-feature-space]</span>.
+- A kernel function satisfies
+  $$
+  k(\mathbf{x},\mathbf{x}') = \langle \boldsymbol{\phi}(\mathbf{x}), \boldsymbol{\phi}(\mathbf{x}') \rangle.
+  $$
+- The **kernel trick** avoids explicit computation of features.
+- This allows use of high-dimensional or infinite-dimensional feature spaces.
+- Predictions can be written in terms of kernels and training data only.
+- **This content is examinable for MAS8607 only.**
+
+</div>
+</div>
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-kernel-definition">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">[{{< fa star >}}]{.advanced title="MAS8607 Content"} Be able to state the definition of a <span class="xref-no-num">[kernel @def-kernel]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-kernel-definition" hidden>
+
+### Definition
+
+A function
+
+$$
+k : \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}
+$$
+
+is called a **kernel** if it satisfies:
+
+1. **Symmetry**
+   $$
+   k(\mathbf{x},\mathbf{y}) = k(\mathbf{y},\mathbf{x})
+   \quad \text{for all } \mathbf{x},\mathbf{y} \in \mathcal{X}.
+   $$
+
+2. **Positive semi-definiteness**
+   For all $n \in \mathbb{N}$, all $\mathbf{x}_1,\dots,\mathbf{x}_n \in \mathcal{X}$, and all $w_1,\dots,w_n \in \mathbb{R}$,
+
+   $$
+   \sum_{r=1}^n \sum_{s=1}^n
+   w_r w_s \, k(\mathbf{x}_r,\mathbf{x}_s)
+   \geq 0.
+   $$
+
+---
+
+### Equivalent Matrix Interpretation
+
+Given points $\mathbf{x}_1,\dots,\mathbf{x}_n$, define the matrix
+
+$$
+\mathbf{K}
+=
+\begin{pmatrix}
+k(\mathbf{x}_1,\mathbf{x}_1) & \cdots & k(\mathbf{x}_1,\mathbf{x}_n) \\
+\vdots & & \vdots \\
+k(\mathbf{x}_n,\mathbf{x}_1) & \cdots & k(\mathbf{x}_n,\mathbf{x}_n)
+\end{pmatrix}.
+$$
+
+Then $k$ is a kernel if and only if, for any choice of $\mathbf{x}_1,\dots,\mathbf{x}_n$, the matrix $\mathbf{K}$ satisfies: 
+
+- $\mathbf{K}$ is **symmetric**, and  
+- $\mathbf{K}$ is **positive semi-definite**, i.e.
+  $$
+  \mathbf{w}^\top \mathbf{K} \mathbf{w} \geq 0
+  \quad \text{for all } \mathbf{w} \in \mathbb{R}^n.
+  $$
+
+---
+
+### Interpretation
+
+A kernel can be thought of as an **inner product in feature space**:
+
+$$
+k(\mathbf{x},\mathbf{x}')
+=
+\langle \boldsymbol{\phi}(\mathbf{x}), \boldsymbol{\phi}(\mathbf{x}') \rangle,
+$$
+
+for some (possibly high-dimensional) feature map $\boldsymbol{\phi}$.
+
+---
+
+### Key Points
+
+- A kernel is a symmetric, positive semi-definite function.
+- It defines a positive semi-definite matrix for any dataset.
+- Kernels correspond to inner products in a feature space.
+- **This content is examinable for MAS8607 only.**
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-kernel-methods-limitations">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">[{{< fa star >}}]{.advanced title="MAS8607 Content"} Understand the strengths and limitations of <span class="xref-no-num">[kernel methods @sec-kernel-methods]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-kernel-methods-limitations" hidden>
+
+### Why Kernel Methods Work
+
+<span class="xref-no-num">[Kernel methods @sec-kernel-methods]</span> are effective for tasks such as regression and classification because they allow us to work in **high-dimensional feature spaces**.
+
+In these feature spaces, the structure of the data (e.g. separation between classes) can become easier to identify.
+
+---
+
+### Key Limitation
+
+Unlike other <span class="xref-no-num">[featurisation @sec-featurisation]</span> methods:
+
+- <span class="xref-no-num">[variable selection @sec-variable-selection]</span>, and  
+- <span class="xref-no-num">[dimensionality reduction @sec-dim-reduction]</span>,
+
+the feature space in kernel methods is **not learned from the data**.
+
+Instead:
+
+- the feature space is **completely determined by the choice of kernel**.
+
+---
+
+### Consequence
+
+This means:
+
+- performance depends heavily on choosing an appropriate kernel;
+- selecting a good kernel often requires **expert knowledge** of the problem.
+
+---
+
+### Kernel Learning
+
+One approach is to use a **parametric family of kernels**
+
+$$
+\{k_{\boldsymbol{\psi}}\}_{\boldsymbol{\psi} \in \Psi}
+$$
+
+and learn the parameters $\boldsymbol{\psi}$ from the data.
+
+However:
+
+- designing a suitable family $\{k_{\boldsymbol{\psi}}\}$ can still be difficult.
+
+---
+
+### Motivation for Neural Networks
+
+Because of these limitations, **neural networks** are often preferred in modern machine learning:
+
+- they **learn features automatically from data**;
+- they do not require manually specifying a feature map or kernel.
+
+---
+
+### Key Points
+
+- Kernel methods work by mapping data into high-dimensional feature spaces.
+- The feature space is fixed by the choice of kernel.
+- Choosing a good kernel is difficult and problem-dependent.
+- Kernel learning attempts to tune kernels using data.
+- Neural networks provide a fully data-driven alternative.
+- **This content is examinable for MAS8607 only.**
+
+</div>
+</div>
+
+<details class="practice-details">
+<summary><em>[{{< fa star >}}]{.advanced title="MAS8607 Content"} Kernel Methods — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Examples | Kernel on a finite set | @exm-kernel-finite-set |
+| Exercises | Gaussian kernel | @exr-gaussian-kernel |
+| Exercises | Finite-dimensional kernel | @exr-finite-dim-rkhs |
+| Exercises | Bochner kernels | @exr-bochner-kernel |
+| Question Bank | Quadratic kernel | <span class="xref-no-num">[Link @q-quadratic-kernel]</span> |
+| Question Bank | Multivariate Gaussian kernel | <span class="xref-no-num">[Link @q-multivariate-gaussian-kernel]</span> |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::  
+
+</details>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-neural-networks">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the basic idea of <span class="xref-no-num">[neural networks @sec-nn]</span> and the role of <span class="xref-no-num">[activation functions @sec-activation]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-neural-networks" hidden>
+
+### What is a Neural Network?
+
+A **neural network** is a parametric model
+
+$$
+f_{\boldsymbol{\theta}} : \mathcal{X} \rightarrow \mathcal{Z}
+$$
+
+that represents a function as a **composition of layers**.
+
+Each layer applies:
+
+1. a linear transformation;
+2. a nonlinear **activation function**.
+
+This allows neural networks to represent highly complex, nonlinear relationships between input and output.
+
+---
+
+### Role of Activation Functions
+
+An **activation function** is a function
+
+$$
+\sigma : \mathbb{R} \rightarrow \mathbb{R}
+$$
+
+applied after a linear transformation.
+
+**Key idea:**
+
+- Without activation functions, a neural network reduces to a **linear model**.
+- Nonlinearity is what gives neural networks their expressive power.
+
+---
+
+### Common Activation Functions
+
+#### Logistic (Sigmoid)
+
+$$
+\sigma(z) = \frac{1}{1 + e^{-z}}
+$$
+
+- Output in $(0,1)$
+- Useful for binary classification
+- Can suffer from **vanishing gradients**
+
+---
+
+#### ReLU (Rectified Linear Unit)
+
+$$
+\sigma(z) = \max(0, z)
+$$
+
+- Most widely used in practice
+- Simple and computationally efficient
+- Avoids vanishing gradient for $z > 0$
+
+---
+
+#### Leaky ReLU
+
+$$
+\sigma(z) =
+\begin{cases}
+z & z > 0 \\
+\alpha z & z \leq 0
+\end{cases}
+$$
+
+- Fixes the **dying ReLU problem**
+- Keeps a small gradient when $z < 0$
+
+---
+
+### Key Properties
+
+- Activation functions introduce **nonlinearity**
+- Neural networks are **compositions of linear maps + nonlinearities**
+- Output is typically a **continuous function** of the input
+- Choice of activation function affects training performance
+
+---
+
+### Key Points
+
+- Neural networks are flexible nonlinear models.
+- They are built from layers of linear transformations and activation functions.
+- Nonlinearity is essential — otherwise the model is linear.
+- Common activations: sigmoid, ReLU, leaky ReLU.
+- Activation choice affects optimisation and performance.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-nn-regularisation-intuition">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand why <span class="xref-no-num">[regularisation @sec-regularisation]</span> is important in neural networks.
+</span>
+</div>
+
+<div class="revision-content" id="rev-nn-regularisation-intuition" hidden>
+
+### Why Regularisation is Needed
+
+Neural networks often have **very large numbers of parameters**, sometimes far exceeding the number of training data points.
+
+This makes them highly flexible and capable of fitting training data extremely well.
+
+However, this also creates a risk of <span class="xref-no-num">[over-fitting @sec-perf-assess]</span>, where the model performs well on training data but poorly on new data.
+
+---
+
+### Key Idea
+
+**Regularisation** refers to techniques that improve the model’s ability to generalise to new data.
+
+It works by:
+
+- reducing overfitting;
+- encouraging simpler or more stable solutions;
+- preventing the model from fitting noise in the data.
+
+---
+
+### Neural Network Setting
+
+In neural networks:
+
+- models are often **over-parameterised**;
+- optimisation is **high-dimensional and complex**;
+- yet good generalisation is often observed in practice.
+
+This makes regularisation especially important, even if it is not always fully understood theoretically.
+
+---
+
+### Two Types
+
+There are two main types of regularisation:
+
+1. <span class="xref-no-num">[explicit regularisation @sec-explicit-reg-nn]</span>  
+   → directly modifies the training objective or model
+
+2. <span class="xref-no-num">[implicit regularisation @sec-implicit-reg-nn]</span>  
+   → arises from the training process itself
+
+---
+
+### Key Points
+
+- Neural networks are highly flexible and prone to overfitting.
+- Regularisation improves generalisation performance.
+- It is especially important in large, over-parameterised models.
+- There are both explicit and implicit forms of regularisation.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-nn-regularisation-types">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[explicit @sec-explicit-reg-nn]</span> and <span class="xref-no-num">[implicit regularisation @sec-implicit-reg-nn]</span> in neural networks.
+</span>
+</div>
+
+<div class="revision-content" id="rev-nn-regularisation-types" hidden>
+
+### Explicit Regularisation
+
+<span class="xref-no-num">[Explicit regularisation @sec-explicit-reg-nn]</span> involves **deliberately modifying the training objective or model**.
+
+Examples:
+
+- **Additive regularisation**  
+  $$
+  \mathcal{R}_n(f_{\boldsymbol{\theta}}) + \lambda R(\boldsymbol{\theta})
+  $$
+  (e.g. $\|\boldsymbol{\theta}\|^2$ penalty)
+
+- **Dropout**  
+  randomly sets some parameters or activations to zero during training
+
+- **Architecture choices**  
+  e.g. normalisation layers that restrict model behaviour
+
+---
+
+### Implicit Regularisation
+
+<span class="xref-no-num">[Implicit regularisation @sec-implicit-reg-nn]</span> arises from the **training process itself**, without changing the objective.
+
+Examples:
+
+- **Optimisation effects**  
+  stochastic optimisation tends to favour **wide minima**, which generalise better
+
+- **Over-parameterisation**  
+  surprisingly, very large models can generalise well due to optimisation dynamics
+
+- **Early stopping**  
+  stopping training before overfitting occurs
+
+---
+
+### Key Intuition
+
+- **Explicit regularisation** = controlled, designed penalties  
+- **Implicit regularisation** = emerges from how training is performed  
+
+Both help prevent overfitting and improve generalisation.
+
+---
+
+### Key Points
+
+- Explicit regularisation modifies the objective or model.
+- Implicit regularisation comes from optimisation and training dynamics.
+- Both are important in neural networks.
+- Implicit regularisation is less well understood theoretically.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-nn-featurisation">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand how <span class="xref-no-num">[neural networks @sec-nn]</span> perform <span class="xref-no-num">[data-driven featurisation @sec-data-featurisation]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-nn-featurisation" hidden>
+
+### Core Idea
+
+Neural networks can be interpreted as performing **automatic (data-driven) featurisation**.
+
+Instead of manually choosing features (as in <span class="xref-no-num">[variable selection @sec-variable-selection]</span> or <span class="xref-no-num">[dimensionality reduction @sec-dim-reduction]</span>), neural networks **learn features from the data**.
+
+---
+
+### Key Insight
+
+An $L$-layer neural network can be written in the form
+
+$$
+f_{\boldsymbol{\theta}}(\mathbf{x})
+=
+\mathbf{W}^{(L)} \boldsymbol{\phi}(\mathbf{x})
++
+\mathbf{b}^{(L)},
+$$
+
+where
+
+$$
+\boldsymbol{\phi}(\mathbf{x})
+=
+\sigma\big(
+\mathbf{W}^{(L-1)} \sigma(\cdots \sigma(\mathbf{W}^{(1)} \mathbf{x} + \mathbf{b}^{(1)}) \cdots)
+\big).
+$$
+
+---
+
+### Interpretation
+
+- The function $\boldsymbol{\phi}(\mathbf{x})$ acts as a **feature map**.
+- The final layer is just a **linear model** applied to these features.
+- The features themselves depend on parameters learned from the data.
+
+---
+
+### Key Difference from Earlier Methods
+
+- In earlier methods, features are:
+  - **chosen manually**, or
+  - **computed by a fixed rule** (e.g. PCA)
+
+- In neural networks:
+  - features are **learned automatically during training**
+
+---
+
+### Why This is Powerful
+
+This allows neural networks to:
+
+- learn **complex, nonlinear features**;
+- adapt features specifically to the task;
+- avoid manual feature engineering.
+
+For example (conceptually):
+
+- in image data, features may correspond to edges, shapes, or patterns;
+- these would be difficult to design by hand.
+
+---
+
+### Interpretation Challenge
+
+Although neural networks learn useful features:
+
+- these features can be **difficult to interpret**;
+- understanding learned features is an active research area.
+
+---
+
+### Key Points
+
+- Neural networks perform **data-driven featurisation**.
+- Hidden layers define a learned feature map $\boldsymbol{\phi}(\mathbf{x})$.
+- The final layer is a linear model on these features.
+- Features are learned from data, not specified in advance.
+- This enables flexible and powerful models.
+
+</div>
+</div>
+
+## Chapter 3 - Stochastic Optimisation
+
+<span class="xref-no-num">[Chapter 3 @sec-stoch-opt]</span> studies how machine learning models are trained in practice by solving optimisation problems.
+
+In previous chapters, only the training objectives such as <span class="xref-no-num">[empirical risk minimisation @sec-erm]</span> and <span class="xref-no-num">[regularised objectives @def-additive-reg]</span> were discussed. Chapter 3 focusses on the algorithms used to minimise these objectives.
+
+The chapter introduces the main tools used in modern machine learning:
+
+1. <span class="xref-no-num">[gradient descent @sec-grad-desc]</span>;
+2. <span class="xref-no-num">[stochastic gradient descent @sec-sgd]</span> and its variants;
+3. <span class="xref-no-num">[automatic differentiation @sec-autodiff]</span> (**not examinable**)
+
+These methods enable efficient optimisation in high-dimensional settings and underpin the training of models such as <span class="xref-no-num">[neural networks @sec-nn]</span>.
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-stoch-opt-intro">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand why <span class="xref-no-num">[stochastic optimisation @sec-stoch-opt]</span> is used in machine learning.
+</span>
+</div>
+
+<div class="revision-content" id="rev-stoch-opt-intro" hidden>
+
+### The Problem
+
+Training a machine learning model typically involves solving an optimisation problem of the form
+
+$$
+\min_{\boldsymbol{\theta} \in \Theta}
+\mathcal{R}_n(f_{\boldsymbol{\theta}}).
+$$
+
+In modern applications, this is challenging because:
+
+- the parameter $\boldsymbol{\theta}$ is often **high-dimensional**;
+- the dataset size $n$ can be **very large**;
+- computing $\mathcal{R}_n$ requires summing over all data points;
+- the objective may be **non-convex**, with many local minima.
+
+---
+
+### Why Stochastic Optimisation?
+
+To address these issues, we use **stochastic optimisation**.
+
+Key idea:
+
+- replace the full dataset with **random subsets (mini-batches)**;
+- approximate the objective or its gradient using these subsets.
+
+---
+
+### Advantages
+
+This approach:
+
+- is **computationally efficient** (avoids full dataset passes);
+- scales to **large datasets**;
+- allows **frequent parameter updates**;
+- often finds solutions that **generalise well** in practice.
+
+---
+
+### Key Trade-off
+
+- **Faster computation**  
+  vs  
+- **Noisy (approximate) optimisation**
+
+Despite being approximate, stochastic methods are highly effective in practice.
+
+---
+
+### Key Points
+
+- Exact optimisation is often too expensive in large-scale problems.
+- Stochastic optimisation uses random subsets of data.
+- It trades accuracy for speed and scalability.
+- It is the standard approach in modern machine learning.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-gradient-descent">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[gradient descent @sec-grad-desc]</span>, including the update rule and the role of the learning rate.
+</span>
+</div>
+
+<div class="revision-content" id="rev-gradient-descent" hidden>
+
+### Basic Idea
+
+<span class="xref-no-num">[Gradient descent @sec-grad-desc]</span> is an iterative method for minimising an objective function such as the <span class="xref-no-num">[empirical risk @def-empirical-risk]</span>.
+
+The idea is to:
+
+- start from an initial parameter value $\boldsymbol{\theta}_0$;
+- repeatedly move in the direction of **steepest decrease** of the objective.
+
+---
+
+### Update Rule
+
+The gradient descent update is
+
+$$
+\boldsymbol{\theta}_{t+1}
+=
+\boldsymbol{\theta}_t
+-
+\epsilon
+\nabla_{\boldsymbol{\theta}} \mathcal{R}_n(f_{\boldsymbol{\theta}})
+\big|_{\boldsymbol{\theta} = \boldsymbol{\theta}_t}.
+$$
+
+- $\nabla_{\boldsymbol{\theta}} \mathcal{R}_n$ is the gradient of the objective;
+- $\epsilon > 0$ is the **learning rate**.
+
+---
+
+### Role of the Learning Rate
+
+The learning rate $\epsilon$ controls the step size:
+
+- if $\epsilon$ is too **large**, updates may overshoot and fail to converge;
+- if $\epsilon$ is too **small**, convergence is very slow.
+
+Choosing $\epsilon$ appropriately is important in practice.
+
+---
+
+### Gradient of the Empirical Risk
+
+Using the chain rule,
+
+$$
+\nabla_{\boldsymbol{\theta}} \mathcal{R}_n(f_{\boldsymbol{\theta}})
+=
+\frac{1}{n}
+\sum_{i=1}^n
+\nabla_2 L(\mathbf{y}_i, f_{\boldsymbol{\theta}}(\mathbf{x}_i))
+\,
+\nabla_{\boldsymbol{\theta}} f_{\boldsymbol{\theta}}(\mathbf{x}_i).
+$$
+
+- $\nabla_2 L$ = derivative of the loss with respect to predictions;
+- $\nabla_{\boldsymbol{\theta}} f_{\boldsymbol{\theta}}$ = sensitivity of the model output to parameters.
+
+---
+
+### Practical Considerations
+
+- Gradient descent is typically run for a finite number of steps $T$.
+- The final iterate $\boldsymbol{\theta}_T$ is taken as an approximation to the minimiser.
+- Computing gradients is made practical by <span class="xref-no-num">[automatic differentiation @sec-autodiff]</span>.
+
+---
+
+### Key Points
+
+- Gradient descent iteratively updates parameters using the gradient.
+- The update moves in the direction of **steepest decrease**.
+- The learning rate controls the step size.
+- The gradient is computed using the chain rule.
+- It is a fundamental method for training machine learning models.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-convex-functions">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the definition and key properties of a <span class="xref-no-num">[convex function @def-convex-function]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-convex-functions" hidden>
+
+### Definition
+
+A differentiable function $F : \mathbb{R}^p \rightarrow \mathbb{R}$ is **convex** if
+
+$$
+F(\boldsymbol{\vartheta})
+\geq
+F(\boldsymbol{\theta})
++
+\nabla F(\boldsymbol{\theta})^\top (\boldsymbol{\vartheta} - \boldsymbol{\theta})
+$$
+
+for all $\boldsymbol{\theta}, \boldsymbol{\vartheta} \in \mathbb{R}^p$.
+
+---
+
+### Intuition
+
+- The function always lies **above its tangent line**.
+- The graph has a **bowl-shaped** structure (no “dips”).
+
+---
+
+### Key Property
+
+For convex functions:
+
+$$
+\nabla F(\boldsymbol{\theta}_\star) = \mathbf{0}
+\quad \Longrightarrow \quad
+\boldsymbol{\theta}_\star \text{ is a global minimiser.}
+$$
+
+This is crucial:
+
+- **local optimality = global optimality**
+
+---
+
+### Why This Matters
+
+- Gradient-based methods (like <span class="xref-no-num">[gradient descent @sec-grad-desc]</span>) are much easier to analyse.
+- No risk of getting stuck in “bad” local minima.
+
+---
+
+### Key Points
+
+- Convexity ensures the function lies above its tangent.
+- Any stationary point is a global minimum.
+- This makes optimisation tractable and well-behaved.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-gd-convergence">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the <span class="xref-no-num">[convergence of gradient descent @thm-gd]</span> for convex functions (statement and interpretation only).
+</span>
+</div>
+
+<div class="revision-content" id="rev-gd-convergence" hidden>
+
+### Result (Informal)
+
+For a convex and differentiable function $F$, gradient descent produces a sequence $(\boldsymbol{\theta}_t)$ such that
+
+$$
+\frac{1}{T}
+\sum_{t=0}^{T-1}
+F(\boldsymbol{\theta}_t)
+-
+F(\boldsymbol{\theta}_\star)
+\;\; \text{is small for large } T,
+$$
+
+where $\boldsymbol{\theta}_\star$ is a minimiser of $F$.
+
+---
+
+### Interpretation
+
+- The average value of $F(\boldsymbol{\theta}_t)$ gets close to the **optimal value**.
+- Performance improves as:
+  - number of iterations $T$ increases;
+  - learning rate $\epsilon$ is chosen appropriately.
+
+---
+
+### Regret
+
+The quantity
+
+$$
+\frac{1}{T}
+\sum_{t=0}^{T-1}
+F(\boldsymbol{\theta}_t)
+-
+F(\boldsymbol{\theta}_\star)
+$$
+
+is called the **regret**.
+
+- measures how much worse we perform compared to the optimum;
+- goes to **zero** as $T$ increases (with suitable $\epsilon$).
+
+---
+
+### Role of Learning Rate
+
+- $\epsilon$ must be **small enough** for convergence;
+- there is a trade-off:
+  - too large → unstable updates;
+  - too small → slow convergence.
+
+---
+
+### Key Takeaway
+
+- For convex problems, gradient descent is **guaranteed to approach the global minimum**.
+- This provides a theoretical justification for gradient-based methods.
+
+---
+
+### Key Points
+
+- Gradient descent converges for convex objectives.
+- The guarantee is in terms of **average performance (regret)**.
+- Larger $T$ → better approximation.
+- Learning rate choice is critical.
+
+</div>
+</div>
+
+
+<details class="practice-details">
+<summary><em> Gradient Descent — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Exercises | Gradient descent on a quadratic | @exr-least-squares |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::  
+
+</details>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-sgd">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand <span class="xref-no-num">[stochastic gradient descent @sec-sgd]</span> and how it differs from <span class="xref-no-num">[gradient descent @sec-grad-desc]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-sgd" hidden>
+
+### Motivation
+
+In <span class="xref-no-num">[gradient descent @sec-grad-desc]</span>, each update requires computing
+
+$$
+\nabla_{\boldsymbol{\theta}} \mathcal{R}_n(f_{\boldsymbol{\theta}})
+=
+\frac{1}{n} \sum_{i=1}^n (\cdots),
+$$
+
+which involves **all $n$ data points**.
+
+For large datasets, this is computationally expensive.
+
+---
+
+### Key Idea
+
+<span class="xref-no-num">[Stochastic gradient descent @sec-sgd]</span> replaces the full gradient with an approximation using a **random subset (minibatch)**:
+
+$$
+\nabla_{\boldsymbol{\theta}} \mathcal{R}_n(f_{\boldsymbol{\theta}})
+\approx
+\frac{1}{m}
+\sum_{j=1}^m
+\nabla_2 L(\mathbf{y}_{i_j}, f_{\boldsymbol{\theta}}(\mathbf{x}_{i_j}))
+\,
+\nabla_{\boldsymbol{\theta}} f_{\boldsymbol{\theta}}(\mathbf{x}_{i_j}).
+$$
+
+---
+
+### Update Rule
+
+$$
+\boldsymbol{\theta}_{t+1}
+=
+\boldsymbol{\theta}_t
+-
+\epsilon \, G_t(\boldsymbol{\theta}_t),
+$$
+
+where $G_t$ is a **stochastic gradient**.
+
+---
+
+### Key Properties
+
+- $G_t$ is an **unbiased estimate** of the true gradient:
+  $$
+  \mathbb{E}[G_t(\boldsymbol{\theta})] = \nabla F(\boldsymbol{\theta})
+  $$
+- introduces **noise** into the updates
+- cheaper per iteration than full gradient descent
+
+---
+
+### Trade-off
+
+- Smaller minibatch size $m$:
+  - faster computation
+  - higher variance (noisier updates)
+
+- Larger $m$:
+  - more accurate gradient
+  - higher computational cost
+
+---
+
+### Key Differences from Gradient Descent
+
+| Gradient Descent | SGD |
+|-----------------|-----|
+| Uses all data | Uses minibatches |
+| Accurate gradient | Noisy gradient |
+| Expensive per step | Cheap per step |
+
+---
+
+### Key Points
+
+- SGD approximates the gradient using random subsets of data.
+- It is much more scalable than full gradient descent.
+- Updates are noisy but efficient.
+- It is the standard method used in practice.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-sgd-convergence">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the <span class="xref-no-num">[convergence of stochastic gradient descent @thm-sgd]</span> (statement and interpretation only).
+</span>
+</div>
+
+<div class="revision-content" id="rev-sgd-convergence" hidden>
+
+### Result (Informal)
+
+For a convex objective $F$, stochastic gradient descent produces iterates $(\boldsymbol{\theta}_t)$ such that
+
+$$
+\frac{1}{T}
+\sum_{t=0}^{T-1}
+\mathbb{E}[F(\boldsymbol{\theta}_t)]
+-
+F(\boldsymbol{\theta}_\star)
+$$
+
+is small for large $T$.
+
+---
+
+### Interpretation
+
+- On average, SGD gets close to the **optimal value**.
+- Convergence is similar to <span class="xref-no-num">[gradient descent @thm-gd]</span>, but:
+  - includes **expectation** due to randomness;
+  - reflects **noisy updates**.
+
+---
+
+### Key Insight
+
+- SGD behaves like gradient descent **on average**.
+- Noise does not prevent convergence, but affects accuracy.
+
+---
+
+### Role of Learning Rate
+
+- Same trade-off as gradient descent:
+  - too large → unstable;
+  - too small → slow.
+
+---
+
+### Key Takeaway
+
+- SGD converges for convex problems under mild conditions.
+- It provides a theoretical justification for using noisy gradients.
+
+---
+
+### Key Points
+
+- SGD converges in expectation.
+- Noise is introduced but controlled.
+- Larger $T$ improves performance.
+- Similar guarantees to gradient descent, but stochastic.
+
+</div>
+</div>
+
+
+<details class="practice-details">
+<summary><em> Stochastic Gradient Descent — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Question Bank | [{{< fa star >}}{{< fa star >}}]{.advanced title="Non-Examinable content."} Optimal minibatch size for SGD finite set | <span class="xref-no-num">[Link @q-sgd-minibatch-size]</span> |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::  
+
+</details>
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-autodiff">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic"> [{{< fa star >}}]{.advanced title="MAS8607 Content"} Understand <span class="xref-no-num">[automatic differentiation @sec-autodiff]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-autodiff" hidden>
+
+### Core Idea
+
+<span class="xref-no-num">[Automatic differentiation @sec-autodiff]</span> is a computational method for efficiently evaluating derivatives such as
+
+$$
+\nabla_{\boldsymbol{\theta}} \mathcal{R}_n(f_{\boldsymbol{\theta}}).
+$$
+
+It underpins modern machine learning frameworks (e.g. PyTorch, JAX).
+
+---
+
+### Why It Is Needed
+
+Training methods such as:
+
+- <span class="xref-no-num">[gradient descent @sec-grad-desc]</span>
+- <span class="xref-no-num">[stochastic gradient descent @sec-sgd]</span>
+
+require repeated computation of gradients.
+
+For complex models (e.g. <span class="xref-no-num">[neural networks @sec-nn]</span>), computing these derivatives by hand is impractical.
+
+---
+
+### Key Property
+
+Automatic differentiation computes derivatives:
+
+- **exactly** (up to numerical precision);
+- **efficiently**, even for very complex functions.
+
+---
+
+### Comparison with Numerical Differentiation
+
+Finite-difference methods approximate derivatives:
+
+$$
+f'(x) \approx \frac{f(x+\delta) - f(x-\delta)}{2\delta}.
+$$
+
+However, these:
+
+- are **approximate**;
+- can be **numerically unstable**;
+- are **computationally expensive** in high dimensions.
+
+---
+
+### Why Automatic Differentiation Is Better
+
+- avoids approximation error;
+- scales well to high-dimensional parameter spaces;
+- enables efficient training of large models.
+
+---
+
+### Key Points
+
+- Automatic differentiation computes gradients exactly and efficiently.
+- It is essential for training modern machine learning models.
+- It is superior to numerical differentiation in both accuracy and scalability.
+- **This content is examinable for MAS8607 only.**
+
+</div>
+</div>
+
+<details class="practice-details">
+<summary><em> [{{< fa star >}}]{.advanced title="MAS8607 Content"} Automatic Differentiation — Practice Questions</em></summary>
+
+::: {.smaller-table}
+| Location | Description | Link |
+|------|-------------|-------|
+| Examples | Automatic differentiation from scratch | @exm-autodiff |
+
+: {tbl-colwidths="[17, 70, 13]"}
+:::  
+
+</details>
+
+## Chapter 4 - Generalisation Error
+
+<span class="xref-no-num">[Chapter 4 @sec-generalisation]</span> studies how well a trained <span class="xref-no-num">[machine learning model @def-ml-model]</span> performs on new data.
+
+The central object of study is the **generalisation error**, which measures the gap between the performance of a trained model and the best possible model in the class (cf. <span class="xref-no-num">[risk @def-risk]</span>).
+
+This chapter introduces:
+
+1. the definition and intuition behind generalisation error;
+2. [{{< fa star >}}]{.advanced title="MAS8607 Content"} basic generalisation error bounds for <span class="xref-no-num">[empirical risk minimisation @sec-erm]</span>;
+3. [{{< fa star >}}]{.advanced title="MAS8607 Content"} related concepts such as sample complexity and the bias–variance trade-off;
+4. the practical issue of <span class="xref-no-num">[domain shift @sec-domain-shift]</span>.
+
+With the exception of the basic intuition, the mathematical analysis in this chapter is **examinable for MAS8607 students only**.
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-generalisation-error">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the definition and intuition of the <span class="xref-no-num">[generalisation error @def-generalisation-error]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-generalisation-error" hidden>
+
+### Definition
+
+The <span class="xref-no-num">[generalisation error @def-generalisation-error]</span> is
+
+$$
+\mathcal{R}(f_n) - \min_{f \in \mathcal{F}} \mathcal{R}(f),
+$$
+
+where:
+
+- $\mathcal{R}(f)$ is the <span class="xref-no-num">[risk @def-risk]</span> (performance on the true data distribution);
+- $f_n$ is the trained model (e.g. from <span class="xref-no-num">[empirical risk minimisation @sec-erm]</span>);
+- $\mathcal{F}$ is the model class.
+
+---
+
+### Intuition
+
+- $\mathcal{R}(f_n)$ = how well your trained model performs on **new data**;
+- $\min_{f \in \mathcal{F}} \mathcal{R}(f)$ = the **best possible performance** achievable within the model class.
+
+So the generalisation error measures:
+
+> how far your trained model is from the best possible model in $\mathcal{F}$.
+
+---
+
+### Why It Exists
+
+Generalisation error arises because:
+
+- we only observe a **finite dataset**;
+- we optimise the <span class="xref-no-num">[empirical risk @def-empirical-risk]</span>, not the true risk;
+- the empirical risk is only an **approximation** of the population risk.
+
+---
+
+### Key Properties
+
+- Generalisation error is **always non-negative**;
+- It depends on:
+  - the **model class** $\mathcal{F}$;
+  - the **amount of data** $n$;
+  - the **training procedure**.
+
+---
+
+### Key Interpretation
+
+- Small generalisation error ⇒ model is close to optimal.
+- Large generalisation error ⇒ model is suboptimal (e.g. due to overfitting or poor model choice).
+
+---
+
+### Key Points
+
+- Generalisation error measures the gap to the best possible model.
+- It arises from finite data and approximate optimisation.
+- It is the central quantity in evaluating machine learning models.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-hoeffding">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+[{{< fa star >}}]{.advanced title="MAS8607 Content"} Understand <span class="xref-no-num">[Hoeffding's inequality @prp-hoeffding]</span>. **Note: you are not expected to be remember this result for the exam or its proof**.
+</span>
+</div>
+
+<div class="revision-content" id="rev-hoeffding" hidden>
+
+### Statement
+
+Let $Z_1, \dots, Z_n$ be independent random variables with mean $\mu$ and values in $[0,1]$. Then for any $t > 0$,
+
+$$
+\mathbb{P}\left(
+\left|
+\frac{1}{n} \sum_{i=1}^n Z_i - \mu
+\right|
+\geq t
+\right)
+\leq
+2 \exp(-2 n t^2).
+$$
+
+---
+
+### Intuition
+
+- The sample average
+  $$
+  \frac{1}{n} \sum_{i=1}^n Z_i
+  $$
+  concentrates around the true mean $\mu$.
+
+- Large deviations from $\mu$ become **exponentially unlikely** as $n$ increases.
+
+---
+
+### Why It Matters
+
+- Gives a **high-probability bound** on estimation error.
+- Key tool for analysing:
+  - <span class="xref-no-num">[empirical risk @def-empirical-risk]</span> vs  
+  - <span class="xref-no-num">[population risk @def-risk]</span>.
+
+---
+
+### Key Behaviour
+
+- Larger $n$ ⇒ tighter concentration.
+- Larger deviation $t$ ⇒ exponentially smaller probability.
+
+---
+
+### Key Points
+
+- Hoeffding’s inequality bounds how far averages deviate from expectations.
+- Probability of large deviations decays exponentially in $n$.
+- It is a core tool in generalisation analysis.
+- **This content is examinable for MAS8607 only.**
+
+</div>
+</div>
+
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-gen-bound">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+[{{< fa star >}}]{.advanced title="MAS8607 Content"} Understand the <span class="xref-no-num">[generalisation error bound @thm-generalisation-error]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-gen-bound" hidden>
+
+### Statement
+
+For a finite model class $\mathcal{F}$ and loss $L \in [0,1]$, with probability at least $1 - \delta$,
+
+$$
+\mathcal{R}(f_n) - \min_{f \in \mathcal{F}} \mathcal{R}(f)
+\leq
+\sqrt{
+\frac{2}{n}
+\log \frac{2|\mathcal{F}|}{\delta}
+}.
+$$
+
+---
+
+### Interpretation
+
+This bounds the <span class="xref-no-num">[generalisation error @def-generalisation-error]</span>.
+
+It shows that:
+
+- the trained model is close to the best possible model in $\mathcal{F}$;
+- the gap shrinks as the dataset size $n$ increases.
+
+---
+
+### Key Dependencies
+
+The bound depends on:
+
+- **Sample size $n$**  
+  → larger $n$ ⇒ smaller error
+
+- **Model size $|\mathcal{F}|$**  
+  → larger model class ⇒ larger error
+
+- **Confidence level $\delta$**  
+  → higher confidence (smaller $\delta$) ⇒ looser bound
+
+---
+
+### Intuition
+
+There is a trade-off:
+
+- More flexible models (large $\mathcal{F}$):
+  - lower bias
+  - higher variance
+
+- Simpler models (small $\mathcal{F}$):
+  - higher bias
+  - lower variance
+
+This is the **bias–variance trade-off**.
+
+---
+
+### Key Takeaway
+
+- With enough data, empirical risk minimisation performs well.
+- But performance depends on balancing:
+  - model complexity;
+  - dataset size.
+
+---
+
+### Key Points
+
+- Generalisation error decreases as $n$ increases.
+- Larger model classes increase uncertainty.
+- Confidence level affects the tightness of the bound.
+- Captures the bias–variance trade-off.
+- **This content is examinable for MAS8607 only.**
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-gen-proof">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+[{{< fa star >}}]{.advanced title="MAS8607 Content"} Understand the key steps in the <span class="xref-no-num">[proof @prf-generalisation-error]</span> of the <span class="xref-no-num">[generalisation error bound @thm-generalisation-error]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-gen-proof" hidden>
+
+### What You Are Expected to Know
+
+You are **not** expected to reproduce the full proof, but you should understand:
+
+- the **main tools used**;
+- the **logical structure of the argument**;
+- how the final bound is obtained.
+
+---
+
+### Step 1 — Apply Hoeffding (pointwise control)
+
+For each fixed model $f \in \mathcal{F}$:
+
+$$
+\mathbb{P}\left(
+|\mathcal{R}_n(f) - \mathcal{R}(f)| \geq t
+\right)
+\leq
+2 \exp(-2nt^2).
+$$
+
+Interpretation: empirical risk is close to population risk **for a fixed model**.
+
+---
+
+### Step 2 — Union bound (uniform control)
+
+We want this to hold **for all $f \in \mathcal{F}$ simultaneously**.
+
+Use the union bound:
+
+$$
+\mathbb{P}\left(
+\exists f \in \mathcal{F} \text{ such that } |\mathcal{R}_n(f) - \mathcal{R}(f)| \geq t
+\right)
+\leq
+2|\mathcal{F}| e^{-2nt^2}.
+$$
+
+Key idea: control worst-case deviation over the whole model class.
+
+---
+
+### Step 3 — Uniform convergence
+
+With high probability:
+
+$$
+|\mathcal{R}_n(f) - \mathcal{R}(f)| < t
+\quad \text{for all } f \in \mathcal{F}.
+$$
+
+This is called **uniform convergence**.
+
+---
+
+### Step 4 — Relate ERM to optimal model
+
+Let:
+
+- $f_n$ = empirical risk minimiser  
+- $f_\star$ = true (population) risk minimiser  
+
+Then:
+
+$$
+\mathcal{R}(f_n)
+\leq
+\mathcal{R}_n(f_n) + t
+\leq
+\mathcal{R}_n(f_\star) + t
+\leq
+\mathcal{R}(f_\star) + 2t.
+$$
+
+Key logic:
+
+1. empirical ≈ population (uniform convergence)
+2. ERM minimises empirical risk
+3. combine inequalities
+
+---
+
+### Step 5 — Solve for $t$
+
+Set probability level:
+
+$$
+\delta = 2|\mathcal{F}| e^{-2nt^2}
+$$
+Rearranging gives:
+$$
+t =
+\sqrt{
+\frac{1}{2n}
+\log\left(\frac{2|\mathcal{F}|}{\delta}\right)
+}.
+$$
+
+Substitute into bound.
+
+---
+
+### Final Result
+
+$$
+\mathcal{R}(f_n) - \mathcal{R}(f_\star)
+\leq
+\sqrt{
+\frac{2}{n}
+\log \frac{2|\mathcal{F}|}{\delta}
+}.
+$$
+
+---
+
+### Big Picture
+
+The proof combines:
+
+- **concentration inequality** (Hoeffding)
+- **union bound**
+- **ERM optimality**
+
+to show:
+
+> empirical risk minimisation works because empirical risk approximates population risk **uniformly**.
+
+---
+
+### Key Points
+
+- Hoeffding ⇒ control for a fixed model.
+- Union bound ⇒ extend to all models.
+- Uniform convergence ⇒ key concept.
+- ERM + uniform convergence ⇒ generalisation bound.
+- You should understand the **flow of the argument**, not memorise every line.
+- **This content is examinable for MAS8607 only.**
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-domain-shift-content">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the concept of <span class="xref-no-num">[domain shift @sec-domain-shift]</span> and its implications for machine learning performance.
+</span>
+</div>
+
+<div class="revision-content" id="rev-domain-shift-content" hidden>
+
+### Core Idea
+
+In theoretical formulations of supervised learning, we assume that:
+
+- training data are sampled from a distribution $P$;
+- future (deployment) data are drawn from the same distribution.
+
+In practice, this assumption is often violated.
+
+---
+
+### Definition
+
+**Domain shift** refers to the situation where the data distribution at deployment differs from that observed during training.
+
+Equivalently, the deployment risk $\mathcal{R}_\star$ differs from the training risk $\mathcal{R}$.
+
+---
+
+### Why It Occurs
+
+Common sources of domain shift include:
+
+- **Temporal effects**  
+  Data evolve over time (e.g. footfall, financial data).
+
+- **Population differences**  
+  Training and deployment populations differ (e.g. medical datasets).
+
+- **Sampling bias**  
+  Training data are not representative of the true environment.
+
+---
+
+### Why It Matters
+
+Even if:
+
+- empirical risk is small, and  
+- generalisation error is small,
+
+the model may still perform poorly if the deployment distribution differs from the training distribution.
+
+---
+
+### Extended Risk Decomposition
+
+The deployment risk can be decomposed as:
+
+$$
+\mathcal{R}_\star(f_n)
+\leq
+\underbrace{
+\max_{f \in \mathcal{F}} |\mathcal{R}_\star(f) - \mathcal{R}(f)|
+}_{\text{domain shift}}
++
+\underbrace{
+\min_{f \in \mathcal{F}} \mathcal{R}(f)
+}_{\text{bias}}
++
+\underbrace{
+\sqrt{\frac{2}{n} \log \frac{2|\mathcal{F}|}{\delta}}
+}_{\text{variance}}
+$$
+
+You **do not need to memorise this formula**, but you should understand the key terms and their implications.
+
+---
+
+### Interpretation
+
+- **Bias** reflects limitations of the model class $\mathcal{F}$.
+- **Variance** reflects uncertainty due to finite data.
+- **Domain shift** reflects mismatch between training and deployment environments.
+
+Domain shift is not controlled by standard generalisation bounds.
+
+---
+
+### Key Insight
+
+Generalisation theory assumes that training and test data are drawn from the same distribution.  
+It does not account for domain shift.
+
+---
+
+### Practical Implications
+
+- Models should be validated on data that reflect deployment conditions.
+- Distributional assumptions must be carefully assessed.
+- Domain shift is a major cause of:
+  - degraded performance,
+  - unreliable predictions,
+  - ethical concerns (e.g. fairness across populations).
+
+---
+
+### Key Points
+
+- Domain shift is a mismatch between training and deployment data distributions.
+- It is distinct from generalisation error.
+- Standard machine learning theory does not address it.
+- It is often the dominant factor in real-world model performance.
+
+</div>
+</div>
+
+## Chapter 5 - Online Supervised Learning
+
+<span class="xref-no-num">[Chapter 5 @sec-online-supervised-learning]</span> studies a different paradigm for training machine learning models, where data arrive sequentially over time rather than being available in a fixed dataset.
+
+Unlike the standard (offline) setting, where a model is trained once and then deployed, online learning continuously updates the model as new observations are received.
+
+This chapter introduces:
+
+1. the formal definition of an <span class="xref-no-num">[online supervised learning task @def-online-ml-task]</span>;
+2. the distinction between environments with and without feedback;
+3. the concept of cumulative loss as a performance measure over time.
+
+The **examinable content** from this chapter is **entirely intuitive and conceptual**, rather than mathematical.
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-offline-vs-online-content">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the difference between <strong>offline</strong> and <strong>online</strong> supervised learning.
+</span>
+</div>
+
+<div class="revision-content" id="rev-offline-vs-online-content" hidden>
+
+### Offline (Batch) Learning
+
+In the standard supervised learning setting:
+
+- we are given a **fixed dataset**  
+  $$
+  \{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^n;
+  $$
+- the model is trained **once** by minimising empirical risk;
+- after training, the model is **deployed without further updates**.
+
+**Key feature:**  
+All data are available in advance.
+
+---
+
+### Online Learning
+
+In online supervised learning:
+
+- data arrive **sequentially over time**;
+- at time $t$, the model is trained using data  
+  $$
+  \{(\mathbf{x}_i,\mathbf{y}_i)\}_{i=1}^{t-1};
+  $$
+- the model is **updated continuously** as new data arrive.
+
+**Key feature:**  
+The model must adapt in real time.
+
+---
+
+### Key Differences
+
+| Aspect | Offline Learning | Online Learning |
+|------|----------------|----------------|
+| Data availability | Fixed dataset | Sequential / streaming |
+| Training | One-off | Continuous updates |
+| Objective | Minimise empirical risk | Minimise cumulative loss |
+| Adaptation | None after training | Adapts over time |
+| Typical use | Static datasets | Dynamic environments |
+
+---
+
+### When Online Learning Is Needed
+
+Online learning is particularly useful when:
+
+- data arrive in a **stream**;
+- storing all past data is impractical;
+- the underlying distribution may **change over time**  
+  (cf. <span class="xref-no-num">[domain shift @sec-domain-shift]</span>).
+
+---
+
+### Key Points
+
+- Offline learning assumes a fixed dataset and static environment.
+- Online learning updates the model sequentially.
+- The performance measure changes from **risk** to **cumulative loss**.
+- Online learning is essential in **dynamic or real-time settings**.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-bandits-content">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand the <span class="xref-no-num">[multi-armed bandit problem @sec-bandits]</span> and the concept of <strong>regret</strong>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-bandits-content" hidden>
+
+### Core Idea
+
+A **multi-armed bandit** models sequential decision-making under uncertainty:
+
+- there are $B$ possible actions (bandits / arms);
+- each action $i$ has an unknown expected reward $\mu_i$;
+- at each time $t$, we choose an action and observe a reward.
+
+---
+
+### The Challenge
+
+We do **not know** the values of $\mu_i$ in advance.
+
+To perform well, we must:
+
+- **explore**: try different actions to learn their rewards;
+- **exploit**: choose the best-known action to maximise reward.
+
+This creates the fundamental **exploration–exploitation trade-off**.
+
+---
+
+### Objective
+
+Let
+
+$$
+\mu_\star = \max_{1 \leq i \leq B} \mu_i
+$$
+
+be the best possible expected reward.
+
+The goal is to minimise the **regret**:
+
+$$
+\mu_\star - \frac{1}{T} \sum_{t=1}^T R_t
+$$
+
+---
+
+### Interpretation of Regret
+
+- Measures how much reward we **lose** compared to always choosing the best arm.
+- If we always pick the optimal bandit, regret is $0$.
+- In practice, regret is positive because we must explore.
+
+---
+
+### Why Regret Arises
+
+- The optimal action is **unknown initially**.
+- Learning requires **trying suboptimal actions**.
+- This incurs a temporary loss in reward.
+
+---
+
+### Examples of Bandit Problems
+
+- **Online advertising**  
+  Selecting adverts to maximise click-through rates.
+
+- **Clinical trials**  
+  Allocating treatments while learning effectiveness.
+
+---
+
+### Key Insight
+
+Bandits are a simple instance of online learning where:
+
+- decisions are made sequentially;
+- feedback is limited (we only observe the reward of the chosen action);
+- performance is measured over time via **regret**.
+
+---
+
+### Key Points
+
+- Multi-armed bandit = sequential decision problem with unknown rewards.
+- Must balance **exploration** and **exploitation**.
+- Performance is measured using **regret**, not risk.
+- Regret quantifies the cost of learning.
+
+</div>
+</div>
+
+
+
+## Chapter 6 - Beyond Supervised Learning
+
+## Chapter 7 - Ethics of Machine Learning
+
+<span class="xref-no-num">[Chapter 7 @sec-ethics]</span> considers the ethical issues that arise when machine learning models are deployed in real-world settings.
+
+While earlier chapters focused on the mathematical and statistical foundations of machine learning, this chapter highlights that technical performance alone is not sufficient; the use of machine learning systems can have significant societal consequences.
+
+The chapter discusses a range of ethical considerations, including:
+
+1. bias and fairness in model predictions;
+2. responsibility and accountability for decisions made by models;
+3. privacy and consent in the use of data;
+4. broader societal impacts, such as environmental cost and labour market effects.
+
+An important learning outcome is to be able to identify and explain ethical issues that may arise in a given machine learning application.
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-bias-fairness">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand issues of <span class="xref-no-num">[bias and fairness @iss-bias-and-fairness]</span> in machine learning.
+</span>
+</div>
+
+<div class="revision-content" id="rev-bias-fairness" hidden>
+
+### What is the Issue?
+
+Machine learning models are trained on data. If the training data are:
+
+- **unrepresentative**, or  
+- reflect existing **societal biases**,  
+
+then the trained model may produce **biased or unfair predictions**.
+
+---
+
+### Examples
+
+- A medical model trained only on one population (e.g. a single genetic background) may perform poorly on others.
+- A financial model may assign different outcomes (e.g. loan rates) to similar individuals based on features correlated with protected characteristics.
+
+---
+
+### Key Idea
+
+Bias can arise because the model:
+
+- learns patterns present in the data;
+- cannot distinguish between **correlation** and **fairness**.
+
+---
+
+### Defining Fairness
+
+A central difficulty is that **fairness is not uniquely defined**.
+
+Different notions include:
+
+- equal outcomes across groups;
+- equal error rates across groups;
+- decisions based only on “relevant” features.
+
+These definitions can conflict with each other.
+
+---
+
+### Trade-off with Performance
+
+Improving fairness may:
+
+- require constraining the model;
+- reduce performance with respect to the original objective (e.g. prediction accuracy or <span class="xref-no-num">[risk @def-risk]</span>).
+
+---
+
+### Mitigation
+
+Fairness can be incorporated by modifying the training objective, for example:
+
+$$
+\mathcal{R}_n(f) + \lambda R(f),
+$$
+
+where $R(f)$ penalises unfair behaviour.
+
+(See <span class="xref-no-num">[regularisation @sec-linear-regularisation]</span>.)
+
+---
+
+### Key Points
+
+- Bias arises from data and modelling choices.
+- Fairness is difficult to define and measure.
+- Different definitions of fairness may conflict.
+- There is often a trade-off between fairness and performance.
+- Regularisation can be used to encourage fair behaviour.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-autonomy-responsibility">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand issues of **autonomy and responsibility** in machine learning (@iss-autonomy).
+</span>
+</div>
+
+<div class="revision-content" id="rev-autonomy-responsibility" hidden>
+
+### What is the Issue?
+
+When a machine learning model is deployed in the real world, it may make decisions that have **serious consequences** (e.g. financial, legal, or physical harm).
+
+This raises the question:
+
+- **Who is responsible** when something goes wrong?
+
+---
+
+### Sources of Failure
+
+Harmful outcomes may arise from:
+
+- errors in code (bugs);
+- poor or biased training data;
+- incorrect modelling assumptions;
+- **adversarial attacks** (e.g. data poisoning).
+
+Responsibility may depend on the source of the failure.
+
+---
+
+### Accountability
+
+Possible parties include:
+
+- the model developer;
+- the organisation deploying the model;
+- regulators or oversight bodies.
+
+In practice, responsibility is often **unclear and shared**.
+
+---
+
+### Autonomy vs Human Oversight
+
+Machine learning systems can operate with a high degree of **autonomy**.
+
+Key questions:
+
+- Should humans remain **in the loop** for important decisions?
+- Should fully automated decision-making be allowed in high-stakes settings?
+
+---
+
+### Transparency and Explainability
+
+There is increasing demand for:
+
+- the ability to **challenge decisions** made by models;
+- **explanations** of how decisions were made.
+
+However:
+
+- many models (e.g. neural networks) are difficult to interpret;
+- models may be protected as **corporate intellectual property**.
+
+---
+
+### Regulation and Control
+
+Questions arise about:
+
+- whether AI systems should be **regulated**;
+- whether outputs (e.g. political content) should be controlled;
+- how to balance innovation with **safety and accountability**.
+
+---
+
+### Key Points
+
+- Machine learning systems can cause real-world harm.
+- Responsibility for decisions is often unclear.
+- Failures can arise from data, models, or external attacks.
+- There is a tension between autonomy and human oversight.
+- Transparency and regulation are central ethical challenges.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-ai-warfare">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand issues of <span class="xref-no-num">[AI in warfare @iss-warfare]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-ai-warfare" hidden>
+
+### What is the Issue?
+
+Machine learning and AI are increasingly being used in **military contexts**, including:
+
+- surveillance;
+- target identification;
+- autonomous or semi-autonomous weapons systems.
+
+This raises serious **ethical and legal concerns**.
+
+---
+
+### Legal Considerations
+
+Military use of AI must comply with international law, including:
+
+- the **Geneva Convention**;
+- rules prohibiting attacks on civilians.
+
+Key question:
+
+- how can we ensure that decisions made by a model are **legally compliant**?
+
+---
+
+### Human Oversight
+
+A central issue is whether **life-and-death decisions** should be:
+
+- fully automated; or  
+- subject to **human control (“human-in-the-loop”)**.
+
+---
+
+### Risk and Failure
+
+Machine learning systems can:
+
+- fail unpredictably;
+- behave incorrectly in unfamiliar situations;
+- be vulnerable to adversarial manipulation.
+
+In a military setting, such failures could have **catastrophic consequences**.
+
+---
+
+### Responsibility
+
+As with <span class="xref-no-num">[autonomy and responsibility @iss-autonomy]</span>:
+
+- it may be unclear who is accountable for decisions made by AI systems in warfare.
+
+---
+
+### Broader Ethical Questions
+
+- Should AI be used in warfare at all?
+- Does increased effectiveness justify ethical risks?
+- What level of regulation or international agreement is needed?
+
+---
+
+### Key Points
+
+- AI is increasingly used in military decision-making.
+- There are serious concerns about legality and civilian safety.
+- Human oversight is a key ethical issue.
+- Failures can have catastrophic consequences.
+- Responsibility and regulation remain open questions.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-consent-data">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand issues of <span class="xref-no-num">[consent to data use @iss-consent]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-consent-data" hidden>
+
+### What is the Issue?
+
+Machine learning models require **large amounts of data**, often collected from:
+
+- the internet (e.g. text, images);
+- personal or institutional records (e.g. health data).
+
+This raises questions about **consent and ownership** of data.
+
+---
+
+### Copyright and Data Use
+
+- Training data may include **copyrighted material**.
+- Data are often collected without explicit permission from creators.
+
+Key questions:
+
+- Should creators receive **compensation** for use of their data?
+- Is training a model fundamentally different from copying content?
+
+---
+
+### Personal Data and Consent
+
+Even when data are **anonymised**, concerns remain:
+
+- individuals may not be aware their data are used;
+- anonymisation may not fully prevent **re-identification**.
+
+Example:
+
+- health records used for research or commercial purposes.
+
+---
+
+### Trade-offs
+
+There is a tension between:
+
+- **innovation and progress** in AI;
+- **individual rights** to privacy and consent.
+
+Relaxing restrictions may:
+
+- accelerate research and development;
+
+but may also:
+
+- reduce protections for individuals.
+
+---
+
+### Regulation
+
+The legal framework is currently:
+
+- evolving;
+- often unclear.
+
+Governments are actively considering how to regulate:
+
+- data usage;
+- copyright in machine learning.
+
+---
+
+### Key Points
+
+- Machine learning relies on large-scale data collection.
+- Consent is often unclear or absent.
+- Copyright and ownership of training data are contested.
+- Anonymisation does not guarantee privacy.
+- There is a trade-off between innovation and individual protection.
+- Regulation in this area is still developing.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-environmental-impact">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand issues of <span class="xref-no-num">[environmental impact @iss-environmental-impact]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-environmental-impact" hidden>
+
+### What is the Issue?
+
+Training large machine learning models can require **substantial computational resources**, leading to:
+
+- high electricity usage;
+- significant carbon emissions;
+- additional resource costs (e.g. cooling, water).
+
+---
+
+### Scale of the Problem
+
+Modern models (e.g. large language models) can require:
+
+- **massive datasets**;
+- **large-scale parallel computation** (e.g. GPUs running for weeks).
+
+This leads to **very high energy consumption**.
+
+---
+
+### Trade-offs
+
+There is a tension between:
+
+- **environmental cost**, and  
+- **societal benefit** (e.g. improved technology, productivity).
+
+Key questions:
+
+- Are these energy costs justified?
+- Should there be limits on large-scale model training?
+
+---
+
+### Broader Impacts
+
+- Growth in data centres increases overall energy demand.
+- Environmental impact may increase if many organisations compete to train large models.
+
+---
+
+### Regulation and Policy
+
+Possible responses include:
+
+- improving energy efficiency;
+- using renewable energy sources;
+- regulating large-scale compute usage.
+
+---
+
+### Key Points
+
+- Machine learning can have a significant environmental footprint.
+- Training large models requires substantial energy.
+- There is a trade-off between innovation and sustainability.
+- The cumulative impact of widespread model training is a concern.
+- Policy and regulation may play an important role.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-job-impact">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand issues of <span class="xref-no-num">[job displacement and labour market impact @iss-job-impact]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-job-impact" hidden>
+
+### What is the Issue?
+
+Machine learning and AI have the potential to **transform the labour market**, including:
+
+- automating existing jobs;
+- creating new types of work;
+- changing required skill sets.
+
+---
+
+### Job Displacement
+
+Some roles may be at risk, particularly:
+
+- repetitive or routine tasks;
+- roles in manufacturing, logistics, and customer service.
+
+---
+
+### Uncertainty
+
+The overall impact is difficult to predict:
+
+- past technological advances have both **destroyed and created jobs**;
+- new capabilities (e.g. generative models) can disrupt unexpected sectors.
+
+---
+
+### Job Creation
+
+AI may also create:
+
+- roles in development, maintenance, and deployment;
+- new industries and services.
+
+---
+
+### Transition Challenges
+
+Key concerns include:
+
+- speed of change;
+- ability of workers to **retrain or adapt**;
+- potential short-term increases in unemployment or inequality.
+
+---
+
+### Key Questions
+
+- Which sectors will be most affected?
+- Will the overall impact be positive or negative?
+- How will this affect future career paths?
+
+---
+
+### Key Points
+
+- AI can both displace and create jobs.
+- The net effect is uncertain and context-dependent.
+- Rapid change may create social and economic challenges.
+- Adaptation and reskilling are important considerations.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-inequality">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand issues of <span class="xref-no-num">[inequality @iss-inequality]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-inequality" hidden>
+
+### What is the Issue?
+
+Machine learning and AI may **affect different groups unequally**, potentially:
+
+- benefiting some individuals or regions more than others;
+- widening existing social or economic inequalities.
+
+---
+
+### Potential Risks
+
+- Wealthy organisations and nations may have greater access to:
+  - data;
+  - computational resources;
+  - expertise.
+
+- This may lead to **concentration of power and wealth**.
+
+---
+
+### Democratising Potential
+
+On the other hand, AI tools (e.g. chatbots) may:
+
+- provide widespread access to knowledge;
+- lower barriers to education and productivity.
+
+This could have a **democratising effect**.
+
+---
+
+### Key Tension
+
+- **Inequality may increase** due to uneven access to resources;  
+vs  
+- **Inequality may decrease** due to wider access to powerful tools.
+
+---
+
+### Key Points
+
+- AI may either exacerbate or reduce inequality.
+- Outcomes depend on access to technology and resources.
+- Distribution of benefits is a central concern.
+- The long-term impact is uncertain.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-human-interaction">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand issues of <span class="xref-no-num">[human interaction @iss-human-interaction]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-human-interaction" hidden>
+
+### What is the Issue?
+
+AI is increasingly integrated into everyday life, influencing how people:
+
+- interact with technology;
+- communicate with each other;
+- form relationships.
+
+---
+
+### Societal Impact
+
+AI systems (e.g. virtual assistants, chatbots) may:
+
+- change patterns of communication;
+- reduce or replace certain forms of human interaction;
+- influence behaviour and decision-making.
+
+---
+
+### Human–AI Relationships
+
+There is evidence that people may:
+
+- form emotional or personal connections with AI systems;
+- rely on AI for companionship or advice.
+
+This raises concerns about:
+
+- dependency;
+- manipulation;
+- psychological effects.
+
+---
+
+### Vulnerable Groups
+
+Concerns may be greater for:
+
+- children;
+- individuals more susceptible to influence.
+
+This raises questions about **appropriate safeguards and regulation**.
+
+---
+
+### Key Questions
+
+- How should AI systems interact with users?
+- Should there be limits on AI influence?
+- Should children’s interaction with AI be regulated?
+
+---
+
+### Key Points
+
+- AI is changing human interaction patterns.
+- Human–AI relationships raise new ethical concerns.
+- Vulnerable users may require additional protections.
+- The societal impact is still evolving.
+
+</div>
+</div>
+
+<div class="revision-entry">
+<div class="revision-header" role="button" tabindex="0" aria-expanded="false" aria-controls="rev-trust-veracity">
+<span class="toggle-icon" aria-hidden="true"></span>
+<span class="revision-topic">
+Understand issues of <span class="xref-no-num">[veracity and trust @iss-trust]</span>.
+</span>
+</div>
+
+<div class="revision-content" id="rev-trust-veracity" hidden>
+
+### What is the Issue?
+
+Advances in AI (e.g. text-to-image, text-to-video) make it possible to generate highly realistic synthetic content.
+
+This creates challenges for **trust and authenticity**.
+
+---
+
+### Risks
+
+- AI-generated content may be:
+  - misleading;
+  - difficult to distinguish from real data;
+  - used for misinformation or manipulation.
+
+- This can undermine trust in:
+  - media;
+  - institutions;
+  - digital information.
+
+---
+
+### Lack of Safeguards
+
+Currently:
+
+- there is no universal system for verifying authenticity;
+- regulation is limited or evolving.
+
+---
+
+### Key Questions
+
+- How can we detect AI-generated content?
+- Should content be labelled or regulated?
+- What responsibilities do creators and platforms have?
+
+---
+
+### Broader Impact
+
+- Reduced trust in information may affect:
+  - education;
+  - politics;
+  - public discourse.
+
+---
+
+### Key Points
+
+- AI enables realistic synthetic content generation.
+- This creates challenges for trust and authenticity.
+- Misinformation risks are significant.
+- Regulation and detection methods are still developing.
+
+</div>
+</div>
+
+# Non-Examinable Content {#sec-non-examinable-content}
+
+This section covers all the non-examinable content in the course notes.
+
+## Chapter 1 - Overview of Machine Learning
+
+## Chapter 2 - Machine Learning Models
+
+- The section @sec-architectures is **not examinable**.
+
+## Chapter 3 - Stochastic Optimisation
+
+- The <span class="xref-no-num">[proof @prf-gd]</span> of @thm-gd is **not examinable**.
+- The section <span class="xref-no-num">[Beyond "Vanilla" Stochastic Gradient Descent  @sec-beyond-sgd]</span> is **not examinable**.
+
+## Chapter 4 - Generalisation Error
+
+## Chapter 5 - Online Supervised Learning
+
+## Chapter 6 - Beyond Supervised Learning
+
+## Chapter 7 - Ethics of Machine Learning
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.revision-header').forEach(header => {
+    const toggle = (e) => {
+      // Don't toggle if clicking a link
+      if (e.target.closest('a')) return;
+      
+      const expanded = header.getAttribute('aria-expanded') === 'true';
+      header.setAttribute('aria-expanded', !expanded);
+      const content = document.getElementById(header.getAttribute('aria-controls'));
+      content.hidden = expanded;
+    };
+    
+    header.addEventListener('click', toggle);
+    header.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle(e);
+      }
+    });
+  });
+});
+</script>

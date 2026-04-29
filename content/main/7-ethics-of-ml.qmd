@@ -8,6 +8,11 @@ jupyter: mas2901
 
 Now that you are well-versed in the mathematical and statistical foundations of machine learning, we need to confront the elephant in the room; the serious ethical questions that can arise from deployment of powerful machine learning tools in the real world.
 
+@iss-bias-and-fairness 
+
+<span class="xref-no-num">[AI in warfare @iss-bias-and-fairness ]</span>
+
+
 
 ::: {.remark #rem-ml-vs-ai}
 ### Machine Learning or AI?
